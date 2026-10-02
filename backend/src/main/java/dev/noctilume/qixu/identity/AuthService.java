@@ -75,7 +75,9 @@ public class AuthService {
     public void requireAdmin(Actor actor,long floor) {
         if (!actor.role().equals("ADMIN") || !scopes(actor).contains(floor)) throw DomainException.forbidden();
     }
+    @Transactional(isolation=Isolation.READ_COMMITTED)
     public void logout(Session session) {
+        jdbc.queryForList("SELECT id FROM identity_user WHERE id=? FOR UPDATE",session.actor().id());
         jdbc.update("DELETE FROM auth_session WHERE token_hash=? AND user_id=?",session.tokenHash(),session.actor().id());
     }
 }
