@@ -1,6 +1,6 @@
 # 本地运行与验收
 
-当前后端包含 M1 基础与 M2 短约/场地/活动候选，端点见 API 合同。批次和两个前端按里程碑继续施工，不能从启动说明推定它们已完成。
+当前后端包含 M1/M2与M3长期席位施工候选，具体资格见各阶段acceptance。两个前端按里程碑继续施工，不能从启动说明推定已完成。
 
 ## 工具与隔离
 
@@ -23,3 +23,9 @@ Java17、Maven3.9、MySQL8。开发库 `qixu`，测试库 `qixu_test`；两套�
 安装公开 Core0.13.0 后，从干净提交运行 `python scripts/veritrail_native.py --stage m1 --maven <mvn可执行文件>`。采集器先封存 Plan，再执行 clean verify，不能读取旧报告冒充本次成功。私有原始日志和 Bundle 保留于 artifacts/local，每次有全新身份；仅规定范围的事实进入 Core，不声称生产容量或真实校园身份已获证明。
 
 M2使用相同环境与命令改为`--stage m2`，同时验证基础及业务直接事实；可恢复的站内投递默认每5秒、每批最多32项，短约到期每轮最多100项。开发演示使用真实服务器时钟，夜间不伪造白天开放。测试另注入明确测试Clock、关闭后台调度，不将测试日期冒充真实设备时钟。
+
+M3用`--stage m3`，另读Surefire离线与Failsafe真实HTTP/MySQL证据。运行前要求Node24及在randomness目录执行`npm ci --ignore-scripts`，依赖锁定drand-client1.4.2。IDE若工作目录为backend，需要把`QIXU_RANDOM_VERIFIER`设为项目root/randomness/verify.mjs的绝对路径；不会隐式下载安装或改用本地随机。初次验签/计算不持数据库锁，读不到固定未来round时保留原坐标，到公开截止明确失败。
+
+已公布批次公开GET完整包后，可保存JSON并运行`python scripts/verify_allocation.py packet.json --node <node可执行文件>`。Python独立复算整批、校验声明的时间链及输入/输出原字节摘要；官方离线Node另验BLS。复算相同不单独证明服务器诚实冻结时点、生产容量或不存在管理员旁路，需配合冻结来源与项目验收证据。
+
+调度线程池2：短约与通知、长期批次各有定时扫描。每轮最多2个冻结、2个精确轮次计算、10个期限失败/周期维护；旧任务始终在事务内读当前阶段和时点，任务延迟不延长期限。所有权利读由主库事务/当前时间投影，不靠某轮任务恰好运行。第一版无MQ依赖，MySQL outbox产生可恢复站内消息。
