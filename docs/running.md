@@ -1,6 +1,6 @@
 # 本地运行与验收
 
-当前入口只覆盖 M1 后端基础链路。预约、批次、活动和两个前端按里程碑继续施工，不能从这个启动说明推定它们已完成。
+当前后端包含 M1 基础与 M2 短约/场地/活动候选，端点见 API 合同。批次和两个前端按里程碑继续施工，不能从启动说明推定它们已完成。
 
 ## 工具与隔离
 
@@ -21,3 +21,5 @@ Java17、Maven3.9、MySQL8。开发库 `qixu`，测试库 `qixu_test`；两套�
 独立测试库配置 `QIXU_TEST_DB_URL` / `QIXU_TEST_DB_USER` / `QIXU_TEST_DB_PASSWORD`，URL 必须是 qixu_test 或 CI 临时 qixu_ci，缺配置直接失败，不替换成 H2。`mvn -B -ntp -Pmysql-it clean verify` 启动实际 HTTP 服务、运行真实迁移和 MySQL 断言；测试 JVM 结束后服务停止。
 
 安装公开 Core0.13.0 后，从干净提交运行 `python scripts/veritrail_native.py --stage m1 --maven <mvn可执行文件>`。采集器先封存 Plan，再执行 clean verify，不能读取旧报告冒充本次成功。私有原始日志和 Bundle 保留于 artifacts/local，每次有全新身份；仅规定范围的事实进入 Core，不声称生产容量或真实校园身份已获证明。
+
+M2使用相同环境与命令改为`--stage m2`，同时验证基础及业务直接事实；可恢复的站内投递默认每5秒、每批最多32项，短约到期每轮最多100项。开发演示使用真实服务器时钟，夜间不伪造白天开放。测试另注入明确测试Clock、关闭后台调度，不将测试日期冒充真实设备时钟。
