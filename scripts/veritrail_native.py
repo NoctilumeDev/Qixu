@@ -90,10 +90,10 @@ def main() -> int:
     assertions += [assertion("case-" + str(i), "/facts/tests/" + name, True) for i, name in enumerate(required)]
     for case, statuses in HTTP_STATUSES.items():
         for i, status in enumerate(statuses):
-            assertions.append(assertion("http-" + case + "-" + str(i), f"/facts/observations/{case}/requests/{i}/status", status))
+            assertions.append(assertion("http-" + str(len(assertions)), f"/facts/observations/{case}/requests/{i}/status", status))
     for case, measures in DATABASE_MEASURES.items():
         for key, value in measures.items():
-            assertions.append(assertion("db-" + key, f"/facts/observations/{case}/database/{key}", value))
+            assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
         "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 2,
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
