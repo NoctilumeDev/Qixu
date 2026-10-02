@@ -1,0 +1,41 @@
+{
+  "boundary": "M0_DOCUMENT_STRUCTURE_ONLY_NOT_PRODUCT_ACCEPTANCE",
+  "core_version": "0.13.0",
+  "records": [
+    {
+      "role": "candidate",
+      "identity": "m0-24be4d9d4fcf4fc191628144969c2fa7",
+      "subject_sha": "d2274ef9c35dc662024cba64afcccd03aefc014d",
+      "verdict": "PASS",
+      "manifest_sha256": "1c853378cd2a1d81ac244ef43e064d74722d8efa8ecd843ff7a84a5cbb7bff55"
+    },
+    {
+      "role": "missing-contract-control",
+      "identity": "m0-4013f83410a143de99ec7029098f5cc7",
+      "subject_sha": "d2274ef9c35dc662024cba64afcccd03aefc014d",
+      "verdict": "FAIL",
+      "manifest_sha256": "fb052a6a9e4b51c5be268458ca9f3d0f62adc03970d5228ae3b9c23dab82201f"
+    },
+    {
+      "role": "exact-main-first",
+      "identity": "m0-d570ac3b6a9e46658db02230db3e448c",
+      "subject_sha": "fd8d235c0b04e45c721b4ab80477e149854698d2",
+      "verdict": "PASS",
+      "manifest_sha256": "f5e992acc346629a46c73c34b454a460354ef3c272e3d8c022f6bf8606a5a03f"
+    },
+    {
+      "role": "exact-main-repeat",
+      "identity": "m0-1cae7d76378d4172bf00183bb2a32dfa",
+      "subject_sha": "fd8d235c0b04e45c721b4ab80477e149854698d2",
+      "verdict": "PASS",
+      "manifest_sha256": "685deb9a065a950ee24cd143d2f97b2bf2ea40d50ebc46647186934d3934b37d"
+    },
+    {
+      "role": "fresh-checkout",
+      "identity": "m0-f847f94f231b498da08a6e9bfc1d3c07",
+      "subject_sha": "fd8d235c0b04e45c721b4ab80477e149854698d2",
+      "verdict": "PASS",
+      "manifest_sha256": "38d7441f286c23fc82d74c9e34db233ee15954ee764177e275a110a2b1164c40"
+    }
+  ]
+}
