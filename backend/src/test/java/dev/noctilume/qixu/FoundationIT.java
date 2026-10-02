@@ -32,6 +32,9 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.boot.availability.AvailabilityChangeEvent;
+import org.springframework.boot.availability.ReadinessState;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -43,6 +46,7 @@ class FoundationIT {
     @Autowired JdbcTemplate jdbc;
     @Autowired JsonMapper json;
     @Autowired PlatformTransactionManager transactionManager;
+    @Autowired ApplicationContext applicationContext;
     private final HttpClient client=HttpClient.newHttpClient();
     private static final Map<String,Object> OBSERVATIONS=new java.util.concurrent.ConcurrentHashMap<>();
     private final Map<String,Object> measures=new LinkedHashMap<>();
@@ -226,5 +230,15 @@ class FoundationIT {
             assertThrows(IllegalStateException.class,()->new DemoInitializer(null,json,environment,true).run(null));
         }
         assertDoesNotThrow(()->new DemoInitializer(null,json,new MockEnvironment(),false).run(null));
+    }
+    @Test void initializationAndDrainDoNotAdvertiseFalseReadiness() throws Exception {
+        AvailabilityChangeEvent.publish(applicationContext,ReadinessState.REFUSING_TRAFFIC);
+        try {
+            error(request("GET","/api/health",null),503,"APPLICATION_NOT_READY");
+            error(login("student1","BEARER"),503,"APPLICATION_NOT_READY");
+            measure("sessionsBeforeReadiness",jdbc.queryForObject("SELECT COUNT(*) FROM auth_session",Integer.class));
+        } finally { AvailabilityChangeEvent.publish(applicationContext,ReadinessState.ACCEPTING_TRAFFIC); }
+        assertEquals(200,request("GET","/api/health",null).status());
+        assertEquals(200,login("student1","BEARER").status());
     }
 }

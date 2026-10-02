@@ -1,0 +1,55 @@
+{
+  "boundary": "M1_FOUNDATION_ONLY",
+  "entries": [
+    {
+      "identity": "m1-612a18385f7c4b27a395cf2d74ac846c",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "c95d626c8bc1bebce1e67528a7d92a6de4fc7506"
+      },
+      "verdict": "FAIL",
+      "manifest_sha256": "aaf7c0c3e98adfd7846d0650cf68eacbba5d4065ee99c4130f1b65b61915100d"
+    },
+    {
+      "identity": "m1-8db89ba8c4bf4847a3c0f2e38c806eb2",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "2bb7e94d802b4bb2d0a06e45c41ed038f9483864"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "50e1c219d89b8ca67cd8250943c6e1a4ee4b943f5457e4d351e018c621af90c2"
+    },
+    {
+      "identity": "m1-463db59044d64809b7374dbe928b3015",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "3fff79ac36400a2bbdf1253e5e5287aa7dd501d1"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "82c9e78c2d3dcbe318f71af0eafbc1ed6f8cab3c96155ec42472cd3e307875b1"
+    },
+    {
+      "identity": "m1-355b0f8ae2a04782a9bc1d6d7c97c5db",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "9f1dcfdafab686dc3e7c4c466b21e11090cd1072"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "26644e9c5b5fc0f86bda9401d8475f6bab59dc5fdb5641fa24218ba0496ad655"
+    },
+    {
+      "identity": "m1-9a702466d97c4fdba49d2be764afe42c",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "ca4b7accb8736444f207a4d2fa751cc3e1403b29"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "7675dcb33852ea7817d45225c31b77aab6717f9e152f1c53380469da6955d912"
+    }
+  ]
+}

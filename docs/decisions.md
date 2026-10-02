@@ -39,3 +39,13 @@
 独立公开仓库已建立；PR #1 受保护合入 `main@fd8d235c0b04e45c721b4ab80477e149854698d2`。原 PR 与 exact-main 的 Document integrity 均成功。公开 Core 0.13.0 实际执行正常候选、显式缺合同控制、主线两轮及干净检出；四次 PASS 和一份预期 FAIL 同时保留，范围仅为 M0 文档。证据坐标见 [M0 事实记录](acceptance/m0.md)。
 
 未发生：产品启动、建表、页面验收、身份/随机源集成和 Release。M0 事实发布自身的门禁通过后才正式进入 M1 架构及基础链路。
+
+## 2026-10-03 · D003 · 基础运行、首次失败与就绪生命周期
+
+M1 候选建立真实 MySQL/Flyway、schema-scoped 账号、opaque session 与空间读取。通过 PR #4 原始 CI 后受保护合入 main@9f1dcfd，exact-main CI 和 fresh Core 观察成立，见 [执行事实](acceptance/m1.md)。两项 CI 均进入管理员同样受限的 strict required checks。
+
+首次运行因 MySQL LocalDateTime 类型误转失败，保留 FAIL 后修复。随后真实进程启动发现 health 早于演示初始化提交而宣称 READY，触发登录 401；这是产品缺陷，不以加长等待掩盖。readiness 修复候选 ca4b7ac 增加真实 HTTP 反例，14 例及直接数据库事实 PASS，完整公开门禁待本次 PR 闭合。
+
+借用户提供的工程历史形成 [生命周期合同](lifecycle.md)。后续写业务仍要实现锁后当前时间/权限复核、未知提交收据、任务版本和前端 generation 保护；基础入口检查不冒充提交资格。
+
+Bundle 原字节进入公共索引，gitattributes 禁止其文本换行转换，CI 校验 manifest 的大小/摘要及完整文件集合。该检查证明保留字节未漂移，不升级历史裁决。
