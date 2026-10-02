@@ -63,10 +63,12 @@ class FoundationIT {
         r.add("spring.datasource.username",()->System.getenv().getOrDefault("QIXU_TEST_DB_USER","qixu_test_app"));
         r.add("spring.datasource.password",()->password);
         r.add("qixu.allowed-origins",()->"http://localhost:6968");
+        r.add("qixu.tasks-enabled",()->"false");
     }
     @BeforeEach void reset(TestInfo info) {
         caseName=info.getTestMethod().orElseThrow().getName();
         assertTrue(java.util.Set.of("qixu_test","qixu_ci").contains(jdbc.queryForObject("SELECT DATABASE()",String.class)));
+        TestData.clearBusiness(jdbc);
         jdbc.update("DELETE FROM auth_session");
         jdbc.update("DELETE FROM login_attempt");
         jdbc.update("DELETE FROM audit_entry");

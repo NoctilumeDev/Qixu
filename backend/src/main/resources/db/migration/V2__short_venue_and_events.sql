@@ -1,0 +1,143 @@
+CREATE TABLE short_reservation (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ user_id BIGINT NOT NULL,
+ space_id BIGINT NOT NULL,
+ floor_id BIGINT NOT NULL,
+ starts_at DATETIME(6) NOT NULL,
+ ends_at DATETIME(6) NOT NULL,
+ check_in_deadline DATETIME(6) NOT NULL,
+ status VARCHAR(20) NOT NULL,
+ version BIGINT NOT NULL DEFAULT 1,
+ created_at DATETIME(6) NOT NULL,
+ FOREIGN KEY(user_id) REFERENCES identity_user(id),
+ FOREIGN KEY(space_id,floor_id) REFERENCES space(id,floor_id),
+ INDEX ix_short_space(space_id,status,starts_at,ends_at),
+ INDEX ix_short_user(user_id,status,starts_at,ends_at),
+ INDEX ix_short_expiry(status,check_in_deadline,ends_at),
+ CHECK (starts_at < ends_at AND check_in_deadline > starts_at AND check_in_deadline <= ends_at),
+ CHECK (status IN ('PENDING','CHECKED_IN','CANCELED','ENDED','EXPIRED'))
+) ENGINE=InnoDB;
+CREATE TABLE venue_request (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ user_id BIGINT NOT NULL,
+ space_id BIGINT NOT NULL,
+ floor_id BIGINT NOT NULL,
+ starts_at DATETIME(6) NOT NULL,
+ ends_at DATETIME(6) NOT NULL,
+ people INT NOT NULL,
+ purpose VARCHAR(200) NOT NULL,
+ description VARCHAR(500) NOT NULL,
+ contact VARCHAR(80) NOT NULL,
+ status VARCHAR(20) NOT NULL DEFAULT 'SUBMITTED',
+ decision_note VARCHAR(500) NOT NULL DEFAULT '',
+ version BIGINT NOT NULL DEFAULT 1,
+ created_at DATETIME(6) NOT NULL,
+ FOREIGN KEY(user_id) REFERENCES identity_user(id),
+ FOREIGN KEY(space_id,floor_id) REFERENCES space(id,floor_id),
+ INDEX ix_venue_scope(floor_id,status,starts_at),
+ INDEX ix_venue_user(user_id,created_at),
+ CHECK (starts_at < ends_at AND people > 0),
+ CHECK (status IN ('SUBMITTED','APPROVED','REJECTED','CANCELED'))
+) ENGINE=InnoDB;
+CREATE TABLE venue_entitlement (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ request_id BIGINT NOT NULL UNIQUE,
+ user_id BIGINT NOT NULL,
+ space_id BIGINT NOT NULL,
+ floor_id BIGINT NOT NULL,
+ starts_at DATETIME(6) NOT NULL,
+ ends_at DATETIME(6) NOT NULL,
+ status VARCHAR(12) NOT NULL,
+ FOREIGN KEY(request_id) REFERENCES venue_request(id),
+ FOREIGN KEY(user_id) REFERENCES identity_user(id),
+ FOREIGN KEY(space_id,floor_id) REFERENCES space(id,floor_id),
+ INDEX ix_venue_right(floor_id,status,starts_at,ends_at),
+ CHECK (starts_at < ends_at AND status IN ('ACTIVE','CLOSED'))
+) ENGINE=InnoDB;
+CREATE TABLE campus_event (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ owner_id BIGINT NOT NULL,
+ venue_request_id BIGINT NOT NULL UNIQUE,
+ title VARCHAR(120) NOT NULL,
+ event_type VARCHAR(24) NOT NULL,
+ speaker VARCHAR(100) NOT NULL,
+ description VARCHAR(2000) NOT NULL,
+ notice VARCHAR(500) NOT NULL,
+ registration_opens_at DATETIME(6) NOT NULL,
+ registration_closes_at DATETIME(6) NOT NULL,
+ promotion_until DATETIME(6) NOT NULL,
+ capacity INT NOT NULL,
+ confirmed_count INT NOT NULL DEFAULT 0,
+ next_sequence BIGINT NOT NULL DEFAULT 1,
+ status VARCHAR(16) NOT NULL DEFAULT 'DRAFT',
+ version BIGINT NOT NULL DEFAULT 1,
+ created_at DATETIME(6) NOT NULL,
+ FOREIGN KEY(owner_id) REFERENCES identity_user(id),
+ FOREIGN KEY(venue_request_id) REFERENCES venue_request(id),
+ INDEX ix_event_public(status,registration_closes_at),
+ CHECK (capacity > 0 AND confirmed_count >= 0 AND confirmed_count <= capacity),
+ CHECK (registration_opens_at < registration_closes_at AND registration_closes_at <= promotion_until),
+ CHECK (status IN ('DRAFT','PUBLISHED','CANCELED')),
+ CHECK (event_type IN ('READING','CLASS','LECTURE','OTHER'))
+) ENGINE=InnoDB;
+CREATE TABLE event_participation (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ event_id BIGINT NOT NULL,
+ user_id BIGINT NOT NULL,
+ sequence_number BIGINT NOT NULL,
+ status VARCHAR(24) NOT NULL,
+ version BIGINT NOT NULL DEFAULT 1,
+ created_at DATETIME(6) NOT NULL,
+ UNIQUE KEY uq_participant(event_id,user_id),
+ UNIQUE KEY uq_event_sequence(event_id,sequence_number),
+ INDEX ix_event_queue(event_id,status,sequence_number),
+ FOREIGN KEY(event_id) REFERENCES campus_event(id),
+ FOREIGN KEY(user_id) REFERENCES identity_user(id),
+ CHECK (status IN ('CONFIRMED','WAITLISTED','CANCELED','EVENT_CANCELED'))
+) ENGINE=InnoDB;
+CREATE TABLE favorite_space (
+ user_id BIGINT NOT NULL,
+ space_id BIGINT NOT NULL,
+ created_at DATETIME(6) NOT NULL,
+ PRIMARY KEY(user_id,space_id),
+ FOREIGN KEY(user_id) REFERENCES identity_user(id),
+ FOREIGN KEY(space_id) REFERENCES space(id)
+) ENGINE=InnoDB;
+CREATE TABLE idempotency_receipt (
+ actor_id BIGINT NOT NULL,
+ request_key VARCHAR(80) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ operation VARCHAR(80) NOT NULL,
+ body_hash CHAR(64) NOT NULL,
+ response_json JSON NOT NULL,
+ created_at DATETIME(6) NOT NULL,
+ PRIMARY KEY(actor_id,request_key),
+ FOREIGN KEY(actor_id) REFERENCES identity_user(id)
+) ENGINE=InnoDB;
+CREATE TABLE notification_outbox (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ recipient_id BIGINT NOT NULL,
+ event_key VARCHAR(160) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ title VARCHAR(120) NOT NULL,
+ message VARCHAR(1000) NOT NULL,
+ entity_type VARCHAR(32) NOT NULL,
+ entity_id BIGINT NOT NULL,
+ created_at DATETIME(6) NOT NULL,
+ delivered_at DATETIME(6) NULL,
+ UNIQUE KEY uq_outbox_event(recipient_id,event_key),
+ INDEX ix_outbox_pending(delivered_at,id),
+ FOREIGN KEY(recipient_id) REFERENCES identity_user(id)
+) ENGINE=InnoDB;
+CREATE TABLE inbox (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ outbox_id BIGINT NOT NULL UNIQUE,
+ recipient_id BIGINT NOT NULL,
+ title VARCHAR(120) NOT NULL,
+ message VARCHAR(1000) NOT NULL,
+ entity_type VARCHAR(32) NOT NULL,
+ entity_id BIGINT NOT NULL,
+ read_at DATETIME(6) NULL,
+ created_at DATETIME(6) NOT NULL,
+ INDEX ix_inbox_recipient(recipient_id,id),
+ FOREIGN KEY(outbox_id) REFERENCES notification_outbox(id),
+ FOREIGN KEY(recipient_id) REFERENCES identity_user(id)
+) ENGINE=InnoDB;

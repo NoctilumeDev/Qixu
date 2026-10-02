@@ -17,6 +17,8 @@
 
 ## 后续独立事实表
 
+M2 V2已实现独立short_reservation、venue_request/venue_entitlement、campus_event/event_participation、favorite_space、idempotency_receipt、notification_outbox和inbox。confirmed_count在event协调行内更新且有CHECK防超额；参与event+user唯一和数据库序号，短约区间仍依floor/user guard，不误称SQL唯一索引能排除时段重叠。M3–M4表族还未迁移，下面是规划。
+
 | 阶段 | 表族 | 硬边界 |
 | --- | --- | --- |
 | M2 | short_reservation / venue_request / venue_entitlement / event / participation / idempotency_receipt / notification_outbox / inbox | 名额/独占权/待审分别存；有效冲突在floor+user锁内计算；确认计数与队列序号在event协调锁内变更 |
