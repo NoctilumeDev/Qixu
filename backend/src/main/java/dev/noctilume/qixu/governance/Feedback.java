@@ -2,7 +2,7 @@ package dev.noctilume.qixu.governance;
 
 import dev.noctilume.qixu.common.*;
 import dev.noctilume.qixu.identity.*;
-import dev.noctilume.qixu.spaces.SpaceRights;
+import dev.noctilume.qixu.spaces.*;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.*;
@@ -11,7 +11,7 @@ import tools.jackson.databind.json.JsonMapper;
 /** A private report, a verified public fact and a repair are three different facts. */
 @Service
 public class Feedback {
-    private final Business b;private final SpaceRights rights;private final JsonMapper json;
+    private final Business b;private final SpaceRights rights;private final SpaceFactChanges changes;private final BlockNotices notices;private final SpaceBlocks blocks;private final JsonMapper json;
     public record Create(long spaceId,String category,String description) {}
     public record Fact(String key,Object value) {}
     public record Action(long version,String action,String reason,List<Fact> facts) {}
@@ -19,8 +19,9 @@ public class Feedback {
     public record ReportRef(long id,long version) {}
     public record RepairCreate(List<ReportRef> reports,String description) {}
     public record RepairAction(long version,String action,String reason,String assignee,Boolean verified,List<Fact> facts,List<ReportRef> reports) {}
+    public record LimitLink(long version,long blockId,long blockVersion,String reason) {}
     public record Attachment(byte[] bytes,String type,String sha256,long id) {}
-    public Feedback(Business b,SpaceRights rights,JsonMapper json) {this.b=b;this.rights=rights;this.json=json;}
+    public Feedback(Business b,SpaceRights rights,SpaceFactChanges changes,BlockNotices notices,SpaceBlocks blocks,JsonMapper json) {this.b=b;this.rights=rights;this.changes=changes;this.notices=notices;this.blocks=blocks;this.json=json;}
     private Map<String,Object> row(String table,long id) {
         if(!Set.of("feedback_report","repair_ticket","feedback_attachment").contains(table))throw new IllegalArgumentException();
         var rows=b.jdbc.queryForList("SELECT * FROM "+table+" WHERE id=?",id);if(rows.isEmpty())throw DomainException.missing();return rows.get(0);
@@ -108,13 +109,13 @@ public class Feedback {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> decide(AuthService.Session session,long id,String key,Action body,String requestId) {
-        var initial=row("feedback_report",id);long floor=Business.number(initial,"floor_id");rights.lockFloors(List.of(floor));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);b.admin(actor,floor);
+        var initial=row("feedback_report",id);long floor=Business.number(initial,"floor_id");var impact=changes.lock(Business.number(initial,"space_id"),List.of(),List.of(session.actor().id(),Business.number(initial,"user_id")),List.of(floor));var actor=b.current(session);b.admin(actor,floor);
         return b.once(actor,key,"feedback.decide:"+id,body,()->{
             var report=row("feedback_report",id);Business.version(Business.number(report,"version"),body.version());Business.text(body.reason(),500,true);
             if(!Set.of("REPORTED","ACKNOWLEDGED").contains(report.get("status")))throw Business.conflict("FEEDBACK_STATE_CONFLICT","该反馈已进入其他处理阶段，请查看当前记录。");
             String next=switch(body.action()==null?"":body.action()) {case "ACKNOWLEDGE"->"ACKNOWLEDGED";case "VERIFY"->"VERIFIED";case "NOT_REPRODUCED"->"NOT_REPRODUCED";case "REJECT"->"REJECTED";default->throw DomainException.invalid("核实操作不正确。");};
             if(!next.equals("VERIFIED") && body.facts()!=null && !body.facts().isEmpty())throw DomainException.invalid("未核实的报告不能发布空间事实。");
-            if(next.equals("VERIFIED"))facts(body.facts(),Business.number(report,"space_id"),floor,id,null,actor.id(),body.reason());
+            if(next.equals("VERIFIED")) {facts(body.facts(),Business.number(report,"space_id"),floor,id,null,actor.id(),body.reason());if(body.facts()!=null&&!body.facts().isEmpty())changes.notify(Business.number(report,"space_id"),impact);}
             reportState(id,next,body.reason());history(id,actor.id(),next,body.reason());b.audit(actor.id(),"FEEDBACK_"+next,"FEEDBACK",id,requestId);notice(report,"decision:"+(body.version()+1),"处理状态："+next+"；"+body.reason());return detail(actor,id);
         });
     }
@@ -165,6 +166,7 @@ public class Feedback {
     public Map<String,Object> repairDetail(Actor actor,long id) {
         var ticket=row("repair_ticket",id);b.admin(actor,Business.number(ticket,"floor_id"));var value=b.view(ticket);value.remove("active_space");
         value.put("reports",b.jdbc.queryForList("SELECT report_id FROM repair_report WHERE repair_id=? ORDER BY report_id",id));
+        value.put("limits",b.jdbc.queryForList("SELECT l.block_id,l.reason,l.created_at,k.status,k.version,k.kind FROM repair_limit l JOIN space_block k ON l.block_id=k.id WHERE l.repair_id=?",id).stream().map(b::view).toList());
         value.put("history",b.jdbc.queryForList("SELECT id,action,message,created_at FROM repair_history WHERE repair_id=? ORDER BY id",id).stream().map(b::view).toList());return value;
     }
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
@@ -178,8 +180,9 @@ public class Feedback {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> repairAction(AuthService.Session session,long id,String key,RepairAction body,String requestId) {
         if(!session.actor().role().equals("ADMIN"))throw DomainException.forbidden();
-        var initial=row("repair_ticket",id);long floor=Business.number(initial,"floor_id");var added=body.reports()==null?List.<Map<String,Object>>of():refs(body.reports(),false);var floors=new ArrayList<Long>(List.of(floor));added.forEach(r->floors.add(Business.number(r,"floor_id")));rights.lockFloors(floors);var reports=b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id);
-        var users=reportUsers(reports,session.actor().id());users.addAll(reportUsers(added,session.actor().id()));b.users(users);var actor=b.current(session);b.admin(actor,floor);for(var report:added)b.admin(actor,Business.number(report,"floor_id"));
+        var initial=row("repair_ticket",id);long floor=Business.number(initial,"floor_id");var added=body.reports()==null?List.<Map<String,Object>>of():refs(body.reports(),false);var floors=new ArrayList<Long>(List.of(floor));added.forEach(r->floors.add(Business.number(r,"floor_id")));var reports=b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id);
+        var users=reportUsers(reports,session.actor().id());users.addAll(reportUsers(added,session.actor().id()));var source=repairLimit(id);var batches=new TreeSet<Long>();if(source!=null) {batches.addAll(notices.batches(Business.number(source,"id")));users.addAll(notices.users(Business.number(source,"id")));}
+        var impact=changes.lock(Business.number(initial,"space_id"),batches,users,floors);var currentSource=repairLimit(id);if(source==null&&currentSource!=null||source!=null&&(currentSource==null||Business.number(source,"id")!=Business.number(currentSource,"id")))throw Business.conflict("IMPACT_COORDINATES_CHANGED","维修来源在等待期间变化，请重试。");var actor=b.current(session);b.admin(actor,floor);for(var report:added)b.admin(actor,Business.number(report,"floor_id"));
         return b.once(actor,key,"repair.action:"+id,body,()->{
             var ticket=row("repair_ticket",id);Business.version(Business.number(ticket,"version"),body.version());Business.text(body.reason(),500,true);
             if(ticket.get("status").equals("VERIFIED_CLOSED"))throw Business.conflict("REPAIR_STATE_CONFLICT","维修事项已复验关闭；新问题请重新报告。");
@@ -198,12 +201,29 @@ public class Feedback {
             }
             if(!body.action().equals("VERIFY") && body.facts()!=null && !body.facts().isEmpty())throw DomainException.invalid("只有复验通过才能发布修复事实。");
             b.jdbc.update("UPDATE repair_ticket SET status=?,updated_at=?,version=version+1 WHERE id=?",next,b.now(),id);repairHistory(id,actor.id(),action,body.reason());
+            if(next.equals("VERIFIED_CLOSED")) {
+                if(body.facts()!=null&&!body.facts().isEmpty())changes.notify(Business.number(ticket,"space_id"),impact);
+                var limit=repairLimit(id);if(limit!=null&&limit.get("status").equals("ACTIVE"))blocks.revoke(session,Business.number(limit,"id"),"repair-"+id+"-"+Digests.sha256(key).substring(0,24),new SpaceBlocks.Revoke(Business.number(limit,"version"),"维修事项 "+id+" 已复验通过，详见原维修记录。"),requestId);
+            }
             for(var report:b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id)) {
                 if(next.equals("VERIFIED_CLOSED")) {reportState(Business.number(report,"id"),"RESOLVED",body.reason());history(Business.number(report,"id"),actor.id(),"RESOLVED",body.reason());}
                 else if(next.equals("WORK_DONE"))history(Business.number(report,"id"),actor.id(),"REPAIR_DONE","维修工作完成，等待复验；尚未宣称问题已解决。");
                 notice(report,"repair:"+id+":"+(body.version()+1),"维修进展："+next+"；"+body.reason());
             }
             b.audit(actor.id(),"REPAIR_"+action,"REPAIR",id,requestId);return repairDetail(actor,id);
+        });
+    }
+    private Map<String,Object> repairLimit(long repair) {var rows=b.jdbc.queryForList("SELECT k.* FROM repair_limit l JOIN space_block k ON l.block_id=k.id WHERE l.repair_id=?",repair);return rows.isEmpty()?null:rows.get(0);}
+    @Transactional(isolation=Isolation.READ_COMMITTED)
+    public Map<String,Object> linkLimit(AuthService.Session session,long id,String key,LimitLink body,String requestId) {
+        if(!b.current(session).role().equals("ADMIN"))throw DomainException.forbidden();
+        var ticket=row("repair_ticket",id);var sourceRows=b.jdbc.queryForList("SELECT * FROM space_block WHERE id=?",body.blockId());if(sourceRows.isEmpty())throw DomainException.missing();var source=sourceRows.get(0);var users=new TreeSet<Long>(List.of(session.actor().id()));users.addAll(notices.users(body.blockId()));for(var r:b.jdbc.queryForList("SELECT f.user_id FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=?",id))users.add(Business.number(r,"user_id"));
+        changes.lock(Business.number(ticket,"space_id"),notices.batches(body.blockId()),users,List.of(Business.number(ticket,"floor_id"),Business.number(source,"floor_id")));var actor=b.current(session);b.admin(actor,Business.number(ticket,"floor_id"));blocks.get(actor,body.blockId());
+        return b.once(actor,key,"repair.limit:"+id,body,()->{
+            var current=row("repair_ticket",id);Business.version(Business.number(current,"version"),body.version());var block=b.jdbc.queryForMap("SELECT * FROM space_block WHERE id=?",body.blockId());Business.version(Business.number(block,"version"),body.blockVersion());Business.text(body.reason(),450,true);
+            if(current.get("status").equals("VERIFIED_CLOSED")||!block.get("status").equals("ACTIVE")||!Set.of("MAINTENANCE","SAFETY").contains(block.get("kind"))||Business.number(current,"space_id")!=Business.number(block,"space_id")||Business.number(current,"floor_id")!=Business.number(block,"floor_id"))throw Business.conflict("REPAIR_LIMIT_INVALID","只能关联未关闭维修与同一精确空间的有效安全维护来源。");
+            if(b.jdbc.queryForObject("SELECT COUNT(*) FROM repair_limit WHERE repair_id=? OR block_id=?",Integer.class,id,body.blockId())>0)throw Business.conflict("REPAIR_LIMIT_ALREADY_LINKED","维修或来源已经有关联，不能暗换来源。");
+            b.jdbc.update("INSERT INTO repair_limit(repair_id,block_id,space_id,floor_id,actor_id,reason,created_at) VALUES(?,?,?,?,?,?,?)",id,body.blockId(),current.get("space_id"),current.get("floor_id"),actor.id(),body.reason(),b.now());b.jdbc.update("UPDATE repair_ticket SET status=IF(status='WORK_DONE','OPEN',status),version=version+1,updated_at=? WHERE id=?",b.now(),id);b.audit(actor.id(),"REPAIR_LIMIT_LINKED","REPAIR",id,requestId);return repairDetail(actor,id);
         });
     }
 }

@@ -62,3 +62,8 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 # M4 通知恢复施工 · 原失败保留
 
 `m4-spatial-tests-1c2c9ba570c04dfba9d5a099b06f388c` 首次 V6 真实迁移及19项空间观察，18通过、1失败。退出申请的测试使用了不存在的 `/application/withdraw`，真实接口是 `/withdraw`，收到404 NOT_FOUND；分类为测试路由错误，不改产品授权/路由以适应夹具。私人原 source ZIP 摘要 `52561c2acd1d69221ff2e1e9547d09017fe82f4df3a68c8955215366f31b4bbe`、原 stdout/XML 已留存。V6 已执行，之后不改迁移字节；修正路由并增加活动解除事务与 batch/floor 等待的真实锁观察。新施工身份 `m4-spatial-tests-72b2bce4a2c14dad9bd78b220e23fde6` 21项全部通过，source ZIP `621118617745e416e8ffd6e6af53abc433f0aed8d185f212f2a43af3b37b3057`，不是整个M4资格。
+# M4 设施与维修来源施工 · 首败
+
+`m4-spatial-tests-998d71fce77a44fb9bb852e1f80663f7` 真实V7升级、空间28项及原反馈8项，35/36通过。夹具先建立同空间课程占用，验证不能关联维修后却没有撤课程，继续期待新维护成功，收到正确 EXCLUSIVE_BLOCK_CONFLICT。分类测试前提冲突，保留原 source ZIP `7745e1797a8a307d8b836f6b6dd23d889cbf85b6b4bf378bce67042eed35f8ed` 和原XML/输出。修正为显式撤课程后再建合法维修来源，不放宽独占约束。新增事实会修改演示设施画像，测试清理同时恢复明确DEMO基线，避免下一用例继承其他用例的核实结果；只操作限定测试schema和固定演示坐标。V7已执行，不改旧迁移。
+
+同条件复验 `m4-spatial-tests-702ff32ba66b4fb0adf740844741b9d9` 的36项全部通过；私人 source ZIP `db655fad5f8d35aac82bdb4e4dd4ee9da3a521d258fa4792fd6519ee15c6837a` 绑定本次施工世界，原失败保留。范围是设施确认摘要、保留原临时要求/未知历史拒绝、维修仅解除自身来源及故障回滚；治理尚未实现，不声明M4整体资格。

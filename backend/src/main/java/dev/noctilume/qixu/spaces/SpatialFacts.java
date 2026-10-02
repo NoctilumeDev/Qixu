@@ -4,12 +4,14 @@ import dev.noctilume.qixu.common.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
 
 /** A temporal projection of independent facts, never a second owner/state table. */
 @Service
 public class SpatialFacts {
     private final Business b;
-    public SpatialFacts(Business b) {this.b=b;}
+    private final JsonMapper json;
+    public SpatialFacts(Business b,JsonMapper json) {this.b=b;this.json=json;}
     public record Root(String kind,long id,long user,long space,long floor,long batch,long version,long secondaryVersion,
                        LocalDateTime start,LocalDateTime end,String status,Map<String,Object> fact) {}
     public record Limit(long id,long space,long floor,String kind,Long venue,LocalDateTime start,LocalDateTime end,Map<String,Object> fact) {}
@@ -111,18 +113,33 @@ public class SpatialFacts {
             var value=new LinkedHashMap<String,Object>();value.put("startsAt",Business.iso(p.start()));value.put("endsAt",Business.iso(p.end()));value.put("originalSpaceId",root.get().space());value.put("spaceId",p.location());value.put("state",!p.unresolved().isEmpty()?"ARRANGEMENT_REQUIRED":p.location()==null?"TEMPORARILY_UNAVAILABLE":"TEMPORARY");value.put("sourceIds",p.sources());view.add(value);
             p.sources().forEach(id->s.limits().stream().filter(k->k.id()==id).forEach(k->evidence.add(b.view(k.fact()))));
         }
-        var source=new TreeMap<String,Object>();source.put("offerId",offer);source.put("deadline",Business.iso(Business.date(row,"deadline")));source.put("segments",view);source.put("limits",evidence);
+        var resourceIds=new TreeSet<Long>(List.of(Business.number(row,"space_id")));var arrangements=s.arrangements().stream().filter(a->a.offer()==offer).toList();for(var a:arrangements) {resourceIds.add(a.from());if(a.target()!=null)resourceIds.add(a.target());}
+        var source=new TreeMap<String,Object>();source.put("offerId",offer);source.put("deadline",Business.iso(Business.date(row,"deadline")));source.put("segments",view);source.put("limits",evidence);source.put("resources",resourceIds.stream().map(s.spaces()::get).map(b::view).toList());source.put("arrangements",arrangements.stream().map(a->b.view(a.fact())).toList());
         return Map.of("segments",view,"impactHash",Digests.sha256(new dev.noctilume.qixu.preparation.FrozenJson(tools.jackson.databind.json.JsonMapper.builder().build()).encode(source)),"requiresAcknowledgement",!view.isEmpty());
     }
     public void freeForOffer(long offer,long user,LocalDateTime start,LocalDateTime end,long batch,Long upgradedEntitlement) {
         var s=snapshot(start,end);var root=s.roots().stream().filter(r->r.kind().equals("LONG")&&r.id()==offer&&r.user()==user).findFirst().orElseThrow(DomainException::missing);
         for(var p:pieces(s,root,start,end)) {
             if(!p.unresolved().isEmpty())throw Business.conflict("ARRANGEMENT_REQUIRED","席位受限且尚无明确安排，不能猜测可用。");
+            for(var a:s.arrangements())if(a.offer()==offer&&p.sources().contains(a.block())&&overlap(a.start(),a.end(),p.start(),p.end())) {
+                if(a.fact().get("required_features_json")==null)throw Business.conflict("TEMPORARY_FACTS_UNPROVEN","旧临时安排没有创建时设施要求证据，请管理员重新完整核实，未把当前画像当作历史事实。");
+                if(a.target()!=null)temporaryFacilities(json.readValue(a.fact().get("required_features_json").toString(),Map.class),s.spaces().get(a.target()));
+            }
             if(p.location()==null)continue;
             var check=conflicts(s,p.location(),p.start(),p.end(),-1,-1,offer,upgradedEntitlement);
             // Only the original pool protects this exact original position; target pools remain exclusions.
             check=check.stream().filter(c->!("BATCH_PROTECTION".equals(c.get("conflict_type"))&&p.location()==root.space()&&s.roots().stream().anyMatch(r->r.kind().equals("POOL")&&r.batch()==batch&&r.space()==Business.number(c,"space_id")))).toList();
             if(!check.isEmpty())throw Business.conflict("SPACE_CONFLICT","当前实际或临时位置已有冲突，确认未生效，旧使用权保持。");
+        }
+    }
+    public Map<String,Boolean> requiredFeatures(Map<String,Object> original) {
+        var result=new TreeMap<String,Boolean>();var features=json.readTree(original.get("profile_json").toString()).path("features");for(String f:List.of("window","outlet","quiet","accessible"))if(features.path(f).asBoolean())result.put(f,true);return result;
+    }
+    public void temporaryFacilities(Map<String,Boolean> required,Map<String,Object> target) {
+        if(target==null||!Boolean.TRUE.equals(target.get("active"))||!"SEAT".equals(target.get("kind"))||!Set.of("BOOKABLE","PREPARATION").contains(target.get("use_mode")))throw Business.conflict("TEMPORARY_RESOURCE_CHANGED","临时位置当前不再是有效可用席位，请重新核实安排。");
+        var profile=json.readTree(target.get("profile_json").toString());for(var entry:required.entrySet())if(Boolean.TRUE.equals(entry.getValue())) {
+            if(!profile.path("features").path(entry.getKey()).asBoolean())throw Business.conflict("TEMPORARY_RESOURCE_CHANGED","临时位置已不满足承诺的设施要求，旧归属保持，请重新核实。");
+            String condition=switch(entry.getKey()) {case "outlet"->"outletCondition";case "quiet"->"environmentCondition";default->"";};if(!condition.isEmpty()&&Set.of("BROKEN","REPAIRING").contains(profile.path("conditions").path(condition).asString()))throw Business.conflict("TEMPORARY_RESOURCE_CHANGED","临时位置必需设施已核实损坏或维修中，不能冒充可用。");
         }
     }
 }

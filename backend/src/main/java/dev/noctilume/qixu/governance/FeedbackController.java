@@ -33,4 +33,5 @@ public class FeedbackController {
     @GetMapping("/admin/repairs/{id}") Object repair(@PathVariable long id,HttpServletRequest r) {return Api.ok(service.getRepair(session(r).actor(),id),r);}
     @PostMapping("/admin/repairs") Object createRepair(@RequestHeader(value="Idempotency-Key",required=false) String key,@RequestBody Feedback.RepairCreate body,HttpServletRequest r) {return Api.ok(service.createRepair(session(r),key,body,requestId(r)),r);}
     @PostMapping("/admin/repairs/{id}/actions") Object repairAction(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false) String key,@RequestBody Feedback.RepairAction body,HttpServletRequest r) {return Api.ok(service.repairAction(session(r),id,key,body,requestId(r)),r);}
+    @PostMapping("/admin/repairs/{id}/limits") Object linkLimit(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false) String key,@RequestBody Feedback.LimitLink body,HttpServletRequest r) {return Api.ok(service.linkLimit(session(r),id,key,body,requestId(r)),r);}
 }

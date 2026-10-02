@@ -93,7 +93,8 @@ public class SpaceBlocks {
                 if(root.kind().equals("LONG")) {
                     boolean unavailable="UNAVAILABLE".equals(action);if(!("TEMPORARY".equals(action)||unavailable)||unavailable&&(!Set.of("MAINTENANCE","SAFETY").contains(p.kind())||choice.targetSpaceId()!=null)||!unavailable&&choice.targetSpaceId()==null||choice.replacementVenueId()!=null)throw DomainException.invalid("长期权只允许明确临时替代；仅安全维护可说明真实无替代。");
                     var source=c.snapshot().spaces().get(i.from());Map<String,Object> target=unavailable?null:rights.space(choice.targetSpaceId());if(target!=null)compatible(c.snapshot().spaces().get(root.space()),target);
-                    b.insert("INSERT INTO long_temporary_arrangement(block_id,offer_id,from_space_id,from_floor_id,target_space_id,target_floor_id,starts_at,ends_at,created_at) VALUES(?,?,?,?,?,?,?,?,?)",id,root.id(),i.from(),source.get("floor_id"),target==null?null:target.get("id"),target==null?null:target.get("floor_id"),i.start(),i.end(),b.now());
+                    var required=facts.requiredFeatures(c.snapshot().spaces().get(root.space()));if(target!=null)facts.temporaryFacilities(required,target);
+                    b.insert("INSERT INTO long_temporary_arrangement(block_id,offer_id,from_space_id,from_floor_id,target_space_id,target_floor_id,starts_at,ends_at,created_at,required_features_json) VALUES(?,?,?,?,?,?,?,?,?,?)",id,root.id(),i.from(),source.get("floor_id"),target==null?null:target.get("id"),target==null?null:target.get("floor_id"),i.start(),i.end(),b.now(),json.writeValueAsString(required));
                 } else if(root.kind().equals("SHORT")) {
                     if(!Set.of("CANCEL","MOVE").contains(action==null?"":action)||choice.replacementVenueId()!=null)throw DomainException.invalid("短约须明确取消或迁移。");
                     var previous=changed.putIfAbsent("SHORT:"+root.id(),choice);if(previous==null)shortChange(id,root,choice,p.reason());else sameChoice(previous,choice);
