@@ -81,3 +81,9 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 实施前合同 `42dd721f20ada68ac11997a26a174ba9f769ea36`。首轮 `m4-spatial-tests-76ab1ed9a24c4fb7a54f3df90f4be5d1` 真实V8迁移及16项治理见证全部通过，source ZIP `af1fd53efd888f957d5e99b72780ab37d7d698aa201b87bc78f1d996a007446d`。实际观察私有通知/陈述、24小时与7天边界、等待中撤范围、并发裁决、独立复核、不抢夺合法递补、维修冲突、处罚到期、原回执及无人持权取消；通知故障是主动控制，不记为生产事故。
 
 扩展 `m4-spatial-tests-7cb5a51bdc1e41148b8bc216738eb688` 20项全部通过，source ZIP `e0b3d424c1040be32571292d5d76977fbc52d179da9ff089ec014525bf8b6b0c`。新增处罚在提交之后/冻结之后/要约之后/跨周期候补期间变化：冻结排除但保留提交版本，发布整轮停止且不缩冻结集合，确认拒绝且维护将旧offer标INVALID，稳定候补当前不合法者不递补、可查当前资格原因。原16项保持，V8已执行不改迁移字节。仍为施工观察；整个M4正式Plan、全回归、公开门禁及fresh-main尚待，不继承M3资格覆盖新治理。
+
+## M4 native测量器首败 · 处罚主键不是id
+
+`a87a15f37bf5d2f230fcb7b8aaa02bde430f1778` 的M4 Plan1 / native0.9 `m4-3f6425d538a9441796b3cde14cf42987` 为FAIL，110项中52项通过，58项M4在AfterEach采集出现SQL错误。原V8明确处罚表PK为case_id，新采集查询错误使用ORDER BY status,id。分类验证器缺陷；不是58个产品故障，更不能把缺M4观察默认成0。原Bundle、stdout/stderr和fresh XML原文件保留。
+
+最小修复只按status排序；同值在仅状态投影里不可区分。保留原5项SQL不变量及全部110项要求、Plan1和native0.9语义，同合同新identity重跑；不得追溯修改原FAIL。

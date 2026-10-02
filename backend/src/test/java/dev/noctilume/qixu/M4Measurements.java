@@ -19,7 +19,8 @@ final class M4Measurements {
         checks.forEach((name, sql) -> raw.put(name, jdbc.queryForObject(sql, Long.class)));
         target.put("invariants", raw);
         for (var table : new String[]{"governance_case", "seat_entitlement", "long_application_penalty", "preparation_batch", "long_offer", "space_block", "repair_ticket", "feedback_report"}) {
-            target.put(table+"States", jdbc.queryForList("SELECT status FROM "+table+" ORDER BY status,id", String.class));
+            // Equal status values are indistinguishable; not every table has an id column.
+            target.put(table+"States", jdbc.queryForList("SELECT status FROM "+table+" ORDER BY status", String.class));
         }
     }
 
