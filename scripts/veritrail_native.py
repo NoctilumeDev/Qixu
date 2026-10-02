@@ -79,9 +79,9 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    request = {"source_sha": sha, "stage": args.stage, "collector": "qixu-native/0.2"}
+    request = {"source_sha": sha, "stage": args.stage, "collector": "qixu-native/0.3"}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
-    spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": "0.2"},
+    spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": "0.3"},
             "evidence_type": "qixu.native.observation", "coordinates": request,
             "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations"],
             "canonicalization_profile": "veritrail-json-c14n/1"}
@@ -98,7 +98,7 @@ def main() -> int:
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 2,
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 3,
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -133,8 +133,8 @@ def main() -> int:
     measurements_path = ROOT / "backend/target/failsafe-reports/qixu-m1-observation.json"
     measurements = json.loads(measurements_path.read_text(encoding="utf-8")) if measurements_path.exists() else {}
     facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": "M1_FOUNDATION_ONLY"}
-    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": "qixu-native/0.2", "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
-                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed and measurements else "ERROR", "normalization_semantics_version": "qixu-native/0.2", "facts_digest": sha256_json(facts)}}}
+    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": "qixu-native/0.3", "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
+                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed and measurements else "ERROR", "normalization_semantics_version": "qixu-native/0.3", "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)
     report = create_acceptance_bundle(plan=plan, evidence_paths=[output / "evidence.json"], output=output / "bundle", acceptance_id=identity, execution_status=execution)
     print(json.dumps({"identity": identity, "source_sha": sha, "verdict": report["verdict"], "observed_cases": len(observed), "passed_cases": sum(observed.values()), "command_exit": exit_code, "bundle": str(output / "bundle"), "boundary": facts["boundary"]}, ensure_ascii=False))
