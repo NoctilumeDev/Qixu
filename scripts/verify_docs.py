@@ -13,6 +13,7 @@ REQUIRED = (
     "docs/decisions.md", "docs/failure-notebook.md", "docs/verification.md",
     "docs/contracts/allocation.md", "docs/contracts/waitlist.md",
     "docs/contracts/venue.md", "docs/contracts/conflicts.md",
+    "docs/contracts/events.md",
 )
 
 
