@@ -11,6 +11,13 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +44,10 @@ class FoundationIT {
     @Autowired JsonMapper json;
     @Autowired PlatformTransactionManager transactionManager;
     private final HttpClient client=HttpClient.newHttpClient();
+    private static final Map<String,Object> OBSERVATIONS=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<String,Object> measures=new LinkedHashMap<>();
+    private final java.util.List<Map<String,Object>> requests=new ArrayList<>();
+    private String caseName;
     record Reply(int status,JsonNode body,HttpResponse<String> raw) {}
 
     @DynamicPropertySource static void database(DynamicPropertyRegistry r) {
@@ -49,7 +60,8 @@ class FoundationIT {
         r.add("spring.datasource.password",()->password);
         r.add("qixu.allowed-origins",()->"http://localhost:6968");
     }
-    @BeforeEach void reset() {
+    @BeforeEach void reset(TestInfo info) {
+        caseName=info.getTestMethod().orElseThrow().getName();
         assertTrue(java.util.Set.of("qixu_test","qixu_ci").contains(jdbc.queryForObject("SELECT DATABASE()",String.class)));
         jdbc.update("DELETE FROM auth_session");
         jdbc.update("DELETE FROM login_attempt");
@@ -57,12 +69,19 @@ class FoundationIT {
         jdbc.update("DELETE FROM external_identity");
         jdbc.update("UPDATE identity_user SET active=TRUE,auth_version=1 WHERE id BETWEEN 1 AND 5");
     }
+    @AfterEach void record() { OBSERVATIONS.put(caseName,Map.of("requests",requests,"database",measures)); }
+    @AfterAll static void retainNativeMeasurements() throws Exception {
+        var target=Path.of("target/failsafe-reports/qixu-m1-observation.json"); Files.createDirectories(target.getParent());
+        Files.writeString(target,JsonMapper.builder().build().writeValueAsString(OBSERVATIONS));
+    }
+    void measure(String key,Object value) { measures.put(key,value); }
     Reply request(String method,String path,Object body,String... headers) throws Exception {
         var builder=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+path)).timeout(java.time.Duration.ofSeconds(10));
         for(int i=0;i<headers.length;i+=2) builder.header(headers[i],headers[i+1]);
         if (body!=null) builder.header("Content-Type","application/json");
         builder.method(method,body==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body)));
         var response=client.send(builder.build(),HttpResponse.BodyHandlers.ofString());
+        requests.add(Map.of("method",method,"path",path,"status",response.statusCode()));
         return new Reply(response.statusCode(),response.body().isBlank()?json.createObjectNode():json.readTree(response.body()),response);
     }
     Reply login(String user,String mode) throws Exception { return request("POST","/api/v1/auth/login",Map.of("username",user,"password","qixu-demo","mode",mode)); }
@@ -79,8 +98,11 @@ class FoundationIT {
         var session=get("/api/v1/auth/session",token);
         assertEquals(200,session.status()); assertEquals("STUDENT",session.body().at("/data/actor/role").asString());
         assertEquals(Digests.sha256(token),jdbc.queryForObject("SELECT token_hash FROM auth_session",String.class));
+        measure("hashedSessionRows",jdbc.queryForObject("SELECT COUNT(*) FROM auth_session WHERE token_hash=?",Integer.class,Digests.sha256(token)));
+        measure("rawTokenRows",jdbc.queryForObject("SELECT COUNT(*) FROM auth_session WHERE token_hash=?",Integer.class,token));
         String audit=jdbc.queryForObject("SELECT CAST(detail_json AS CHAR) FROM audit_entry",String.class);
         assertFalse(audit.contains(token)); assertFalse(audit.contains("qixu-demo"));
+        measure("rawCredentialAuditRows",jdbc.queryForObject("SELECT COUNT(*) FROM audit_entry WHERE CAST(detail_json AS CHAR) LIKE ? OR CAST(detail_json AS CHAR) LIKE '%qixu-demo%'",Integer.class,"%"+token+"%"));
         assertEquals("no-store",session.raw().headers().firstValue("Cache-Control").orElse(""));
     }
     @Test void cookieSessionNeedsBoundCsrfAndLogoutOnlyRevokesOneSession() throws Exception {
@@ -124,26 +146,31 @@ class FoundationIT {
         for(int i=0;i<5;i++) error(request("POST","/api/v1/auth/login",Map.of("username","student1","password","wrong")),401,"LOGIN_REJECTED");
         error(login("student1","BEARER"),429,"LOGIN_RATE_LIMIT");
         assertEquals(5,jdbc.queryForObject("SELECT failures FROM login_attempt",Integer.class));
+        measure("persistedFailures",jdbc.queryForObject("SELECT failures FROM login_attempt",Integer.class));
         jdbc.update("UPDATE login_attempt SET window_end=UTC_TIMESTAMP(6)-INTERVAL 1 SECOND");
         assertEquals(200,login("student1","BEARER").status());
         assertEquals(0,jdbc.queryForObject("SELECT failures FROM login_attempt",Integer.class));
+        measure("resetFailures",jdbc.queryForObject("SELECT failures FROM login_attempt",Integer.class));
     }
     @Test void unknownAccountAndInactiveIdentityUseSameRejection() throws Exception {
         error(request("POST","/api/v1/auth/login",Map.of("username","unknown1","password","qixu-demo")),401,"LOGIN_REJECTED");
         jdbc.update("UPDATE identity_user SET active=FALSE WHERE id=1");
         error(login("student1","BEARER"),401,"LOGIN_REJECTED");
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM auth_session",Integer.class));
+        measure("createdSessions",jdbc.queryForObject("SELECT COUNT(*) FROM auth_session",Integer.class));
     }
     @Test void publicProfilesDoNotLeakOccupantAndFiltersAreLiteral() throws Exception {
         String token=token("student1");
         var profiles=get("/api/v1/spaces?floor=100&kind=SEAT&tag=window&size=50",token);
         assertEquals(200,profiles.status()); assertEquals(8,profiles.body().at("/data/total").asInt());
+        measure("windowSeatMatches",profiles.body().at("/data/total").asInt());
         for(var space:profiles.body().at("/data/items")) {
             assertTrue(space.at("/profile/features/window").asBoolean()); assertEquals("NOT_QUERIED",space.path("availability").asString());
             assertEquals("DEMO",space.at("/profile/source").asString()); assertTrue(space.path("userId").isMissingNode());
         }
         var injection=get("/api/v1/spaces?search=%27%20OR%201%3D1%20--",token);
         assertEquals(0,injection.body().at("/data/total").asInt());
+        measure("injectedQueryMatches",injection.body().at("/data/total").asInt());
         assertEquals(0,get("/api/v1/spaces?search=%25",token).body().at("/data/total").asInt());
         assertEquals(200,get("/api/v1/spaces/2000",token).status());
     }
@@ -159,15 +186,19 @@ class FoundationIT {
         error(request("POST","/api/v1/auth/login",Map.of("username","student1","password","啊".repeat(25))),422,"INVALID_INPUT");
     }
     @Test void migrationAndIsolationAreRealMysqlAndSchemaPrivilegesAreContained() {
-        assertTrue(jdbc.queryForObject("SELECT VERSION()",String.class).startsWith("8."));
+        String version=jdbc.queryForObject("SELECT VERSION()",String.class); measure("mysqlVersion",version); assertTrue(version.startsWith("8."));
         assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version='1'",Integer.class));
+        measure("successfulV1Migrations",jdbc.queryForObject("SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version='1'",Integer.class));
         var tx=new TransactionTemplate(transactionManager); tx.setIsolationLevel(org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED);
-        assertEquals("READ-COMMITTED",tx.execute(status->jdbc.queryForObject("SELECT @@transaction_isolation",String.class)));
+        String isolation=tx.execute(status->jdbc.queryForObject("SELECT @@transaction_isolation",String.class)); measure("transactionIsolation",isolation); assertEquals("READ-COMMITTED",isolation);
         String schema=jdbc.queryForObject("SELECT DATABASE()",String.class);
+        int outside=0;
         for(String grant:jdbc.query("SHOW GRANTS",(rs,n)->rs.getString(1))) {
+            if (!grant.startsWith("GRANT USAGE ON *.*") && !grant.contains("`"+schema+"`.*")) outside++;
             if (grant.contains(" ON *.*")) assertTrue(grant.startsWith("GRANT USAGE ON *.*"));
             else assertTrue(grant.contains("`"+schema+"`.*"));
         }
+        measure("outsideSchemaGrants",outside);
     }
     @Test void databaseRejectsCrossFloorParentAndInvalidGeometry() {
         assertThrows(DataIntegrityViolationException.class,()->jdbc.update("UPDATE space SET parent_id=1000 WHERE id=2200"));
@@ -178,12 +209,16 @@ class FoundationIT {
         }
         assertEquals(65,jdbc.queryForObject("SELECT map_x FROM space WHERE id=2000",Integer.class));
         assertEquals(1,jdbc.queryForObject("SELECT capacity FROM space WHERE id=2000",Integer.class));
+        measure("mapXAfterRejectedWrites",jdbc.queryForObject("SELECT map_x FROM space WHERE id=2000",Integer.class));
+        measure("capacityAfterRejectedWrites",jdbc.queryForObject("SELECT capacity FROM space WHERE id=2000",Integer.class));
     }
     @Test void externalIdentityNamesAndIdsCannotCollideAcrossProviders() {
         jdbc.update("INSERT INTO external_identity(provider,subject,user_id) VALUES('darkroom','7',1),('campus','7',2)");
         assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM external_identity WHERE subject='7'",Integer.class));
+        measure("sameSubjectDistinctProviderRows",jdbc.queryForObject("SELECT COUNT(*) FROM external_identity WHERE subject='7'",Integer.class));
         assertThrows(DataIntegrityViolationException.class,()->jdbc.update("INSERT INTO external_identity(provider,subject,user_id) VALUES('darkroom','7',2)"));
         assertEquals("STUDENT",jdbc.queryForObject("SELECT role FROM identity_user WHERE id=1",String.class));
+        measure("localRoleAfterExternalBinding",jdbc.queryForObject("SELECT role FROM identity_user WHERE id=1",String.class));
     }
     @Test void demoCannotSeedWithoutExplicitProfileOrInProduction() {
         for(String[] profiles:new String[][]{{},{"prod"},{"demo","prod"},{"demo","production"}}) {

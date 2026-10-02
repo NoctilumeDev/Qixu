@@ -33,6 +33,26 @@ FOUNDATION_CASES = [
     "externalIdentityNamesAndIdsCannotCollideAcrossProviders",
     "demoCannotSeedWithoutExplicitProfileOrInProduction",
 ]
+HTTP_STATUSES = {
+    FOUNDATION_CASES[0]: [200, 200],
+    FOUNDATION_CASES[1]: [200, 200, 403, 403, 200, 401, 200],
+    FOUNDATION_CASES[2]: [200, 401, 403, 204],
+    FOUNDATION_CASES[3]: [200, 401, 200, 401, 200, 401],
+    FOUNDATION_CASES[4]: [200, 403, 200, 403, 200, 200, 403, 200, 200],
+    FOUNDATION_CASES[5]: [401, 401, 401, 401, 401, 429, 200],
+    FOUNDATION_CASES[6]: [401, 401],
+    FOUNDATION_CASES[7]: [200, 200, 200, 200, 200],
+    FOUNDATION_CASES[8]: [200, 422, 422, 422, 422, 422, 404, 404, 422],
+}
+DATABASE_MEASURES = {
+    FOUNDATION_CASES[0]: {"hashedSessionRows": 1, "rawTokenRows": 0, "rawCredentialAuditRows": 0},
+    FOUNDATION_CASES[5]: {"persistedFailures": 5, "resetFailures": 0},
+    FOUNDATION_CASES[6]: {"createdSessions": 0},
+    FOUNDATION_CASES[7]: {"windowSeatMatches": 8, "injectedQueryMatches": 0},
+    FOUNDATION_CASES[9]: {"successfulV1Migrations": 1, "transactionIsolation": "READ-COMMITTED", "outsideSchemaGrants": 0},
+    FOUNDATION_CASES[10]: {"mapXAfterRejectedWrites": 65, "capacityAfterRejectedWrites": 1},
+    FOUNDATION_CASES[11]: {"sameSubjectDistinctProviderRows": 2, "localRoleAfterExternalBinding": "STUDENT"},
+}
 
 
 def git(*args: str) -> str:
@@ -56,11 +76,11 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    request = {"source_sha": sha, "stage": args.stage, "collector": "qixu-native/0.1"}
+    request = {"source_sha": sha, "stage": args.stage, "collector": "qixu-native/0.2"}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
-    spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": "0.1"},
+    spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": "0.2"},
             "evidence_type": "qixu.native.observation", "coordinates": request,
-            "projections": ["source_sha", "source_clean", "command_exit", "tests"],
+            "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations"],
             "canonicalization_profile": "veritrail-json-c14n/1"}
 
     def assertion(name: str, path: str, value: object) -> dict:
@@ -68,8 +88,14 @@ def main() -> int:
 
     assertions = [assertion("exact-source", "/facts/source_sha", sha), assertion("clean-source", "/facts/source_clean", True), assertion("execution-success", "/facts/command_exit", 0)]
     assertions += [assertion("case-" + str(i), "/facts/tests/" + name, True) for i, name in enumerate(required)]
+    for case, statuses in HTTP_STATUSES.items():
+        for i, status in enumerate(statuses):
+            assertions.append(assertion("http-" + case + "-" + str(i), f"/facts/observations/{case}/requests/{i}/status", status))
+    for case, measures in DATABASE_MEASURES.items():
+        for key, value in measures.items():
+            assertions.append(assertion("db-" + key, f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 1,
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 2,
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -101,9 +127,11 @@ def main() -> int:
             passed = not any(case.find(kind) is not None for kind in ["failure", "error", "skipped"])
             # A duplicated case is ambiguous rather than silently last-one-wins.
             observed[name] = passed if name not in observed else False
-    facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "required_cases": required, "boundary": "M1_FOUNDATION_ONLY"}
-    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": "qixu-native/0.1", "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
-                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed else "ERROR", "normalization_semantics_version": "qixu-native/0.1", "facts_digest": sha256_json(facts)}}}
+    measurements_path = ROOT / "backend/target/failsafe-reports/qixu-m1-observation.json"
+    measurements = json.loads(measurements_path.read_text(encoding="utf-8")) if measurements_path.exists() else {}
+    facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": "M1_FOUNDATION_ONLY"}
+    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": "qixu-native/0.2", "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
+                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed and measurements else "ERROR", "normalization_semantics_version": "qixu-native/0.2", "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)
     report = create_acceptance_bundle(plan=plan, evidence_paths=[output / "evidence.json"], output=output / "bundle", acceptance_id=identity, execution_status=execution)
     print(json.dumps({"identity": identity, "source_sha": sha, "verdict": report["verdict"], "observed_cases": len(observed), "passed_cases": sum(observed.values()), "command_exit": exit_code, "bundle": str(output / "bundle"), "boundary": facts["boundary"]}, ensure_ascii=False))
