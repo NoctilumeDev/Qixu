@@ -58,4 +58,4 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 `85354ed5c0c340d6a1c2f0d558ef0900`15例中14通过1失败：活动参与使event.version从2推进到3，夹具仍用2取消，被正确STALE_VERSION拒绝。保留明确旧版本拒绝，再经真实GET读当前版本发起取消，未绕过版本检查。`m4-spatial-tests-f35b1df9545d4046b925cf150857c01d`15例全部通过，包括完整处置活动与原维护互不误撤、两个迁移计划争一个目标、影响集合减少、半开边界及安全无真实替代。原8例条件保持；只是M4b施工证据，整体治理/验迹资格仍未成立。
 # M4 全回归首次失败 · 测试夹具边界
 
-固定 `fb2612bfb0d689b7a488f2b7dcaf89c03d41a971` 的 native `m3-bb4df6c1518b44bf8f1ede7ce2c27707` 观察 75 项、74 项通过，Core FAIL。Foundation 的公开靠窗筛选观察到 9 个而原标准是 8 个。空间测试临时夹具 5801 留在隔离库，跨 suite 污染基线，分类为测试基础隔离缺陷，不能改原断言或解释成产品 PASS。原 Bundle 与私人 XML/source ZIP 已保留；清理在限定 qixu_test/qixu_ci 中、业务 FK 依赖清除后只删除明确测试坐标。修复后的完整观察须另有身份，尚未复验。
+固定 `fb2612bfb0d689b7a488f2b7dcaf89c03d41a971` 的 native `m3-bb4df6c1518b44bf8f1ede7ce2c27707` 观察 75 项、74 项通过，Core FAIL。Foundation 的公开靠窗筛选观察到 9 个而原标准是 8 个。空间测试临时夹具 5801 留在隔离库，跨 suite 污染基线，分类为测试基础隔离缺陷，不能改原断言或解释成产品 PASS。原 Bundle 与私人 XML/source ZIP 已保留；清理在限定 qixu_test/qixu_ci 中、业务 FK 依赖清除后只删除明确测试坐标。修复 `7987ac91fd3f9cccf6d57437705dd3f6df9cd013` 的 fresh native `m3-d491d0ece1b44fa4a01f20c93e687a1a` 75项全部通过；仍是 M3 Plan8 加施工例观察，不升级为整个M4资格。
