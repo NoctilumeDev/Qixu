@@ -53,6 +53,7 @@ class BookingIT {
         name=info.getTestMethod().orElseThrow().getName(); clock.instant=Instant.parse("2026-10-10T01:00:00Z");
         TestData.clearBusiness(jdbc); jdbc.update("DELETE FROM auth_session"); jdbc.update("DELETE FROM login_attempt"); jdbc.update("DELETE FROM audit_entry");
         jdbc.update("UPDATE identity_user SET active=TRUE,auth_version=1 WHERE id BETWEEN 1 AND 5");
+        jdbc.update("INSERT IGNORE INTO space(id,floor_id,code,name,kind,use_mode,capacity,map_x,map_y,map_w,map_h,profile_json) VALUES(3900,101,'R-C','验收专用研讨室','ROOM','VENUE',8,0,700,100,100,JSON_OBJECT('source','TEST_FIXTURE'))");
     }
     @AfterEach void record() { OBSERVATIONS.put(name,Map.of("requests",requests,"database",facts)); }
     @AfterAll static void retain() throws Exception { var p=Path.of("target/failsafe-reports/qixu-m2-observation.json"); Files.createDirectories(p.getParent()); Files.writeString(p,JsonMapper.builder().build().writeValueAsString(OBSERVATIONS)); }
@@ -85,24 +86,24 @@ class BookingIT {
         } finally { pool.shutdownNow(); }
     }
     @Test void sameSeatAndCrossFloorPersonalConflictsSerialize() throws Exception {
-        String a=token("student1"),c=token("student2"); var body=shortBody(seat("A01",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
+        String a=token("student1"),c=token("student2"); var body=shortBody(seat("A001",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
         var result=race(()->request("POST","/reservations",body,a,"seat-race-a"),()->request("POST","/reservations",body,c,"seat-race-c"));
         assertEquals(List.of(200,409),result.stream().map(Reply::status).sorted().toList()); facts.put("sameSeatRights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
         TestData.clearBusiness(jdbc);
-        result=race(()->request("POST","/reservations",shortBody(seat("A01",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"personal-one"),()->request("POST","/reservations",shortBody(seat("C01",101),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"personal-two"));
+        result=race(()->request("POST","/reservations",shortBody(seat("A001",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"personal-one"),()->request("POST","/reservations",shortBody(seat("C001",101),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"personal-two"));
         assertEquals(List.of(200,409),result.stream().map(Reply::status).sorted().toList()); facts.put("personalRights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
     }
     @Test void sameKeyRecoversCommittedResultAndRejectsChangedBody() throws Exception {
-        String a=token("student1"),c=token("student2"); var body=shortBody(seat("A01",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
+        String a=token("student1"),c=token("student2"); var body=shortBody(seat("A001",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
         var result=race(()->request("POST","/reservations",body,a,"same-request"),()->request("POST","/reservations",body,a,"same-request"));
         assertEquals(List.of(200,200),result.stream().map(Reply::status).toList()); assertEquals(result.get(0).id(),result.get(1).id());
-        error(request("POST","/reservations",shortBody(seat("A02",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"same-request"),409,"IDEMPOTENCY_CONFLICT");
+        error(request("POST","/reservations",shortBody(seat("A002",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"same-request"),409,"IDEMPOTENCY_CONFLICT");
         error(request("GET","/receipts/same-request",null,c,null),404,"RESOURCE_NOT_FOUND");
         assertEquals(result.get(0).id(),request("GET","/receipts/same-request",null,a,null).data().at("/result/id").asLong());
         facts.put("rights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class)); facts.put("receipts",jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt",Integer.class));
     }
     @Test void adjacentIntervalsAndDeadlineUseCurrentServerTime() throws Exception {
-        String a=token("student1"),c=token("student2"); long seat=seat("A01",100);
+        String a=token("student1"),c=token("student2"); long seat=seat("A001",100);
         var first=request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"create-first"); assertEquals(200,first.status());
         assertEquals(200,request("POST","/reservations",shortBody(seat,"2026-10-10T02:00:00Z","2026-10-10T03:00:00Z"),c,"create-adjacent").status());
         error(request("POST","/reservations/"+first.id()+"/actions",Map.of("version",1,"action","CHECK_IN"),a,"early-checkin"),409,"CHECK_IN_WINDOW");
@@ -110,13 +111,13 @@ class BookingIT {
         // Old expiry work cannot release the newly checked-in right.
         clock.instant=Instant.parse("2026-10-10T01:11:00Z"); shorts.expire(first.id());
         facts.put("checkedInAfterOldSweep",jdbc.queryForObject("SELECT status FROM short_reservation WHERE id=?",String.class,first.id()));
-        error(request("POST","/reservations",shortBody(seat("A02",100),"2026-10-10T01:12:00Z","2026-10-10T02:00:00Z"),a,"still-conflicts"),409,"PERSONAL_CONFLICT");
+        error(request("POST","/reservations",shortBody(seat("A002",100),"2026-10-10T01:12:00Z","2026-10-10T02:00:00Z"),a,"still-conflicts"),409,"PERSONAL_CONFLICT");
         clock.instant=Instant.parse("2026-10-10T02:10:00Z");
         error(request("POST","/reservations/"+request("GET","/reservations",null,c,null).data().get(0).path("id").asLong()+"/actions",Map.of("version",1,"action","CHECK_IN"),c,"at-deadline"),409,"RESERVATION_EXPIRED");
         assertEquals(200,request("POST","/reservations",shortBody(seat,"2026-10-10T02:11:00Z","2026-10-10T03:00:00Z"),a,"released-pending").status());
     }
     @Test void lockWaitRechecksSessionAndClockBeforeWriting() throws Exception {
-        final String a=token("student1"); long seat=seat("A01",100); var body=shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
+        final String a=token("student1"); long seat=seat("A001",100); var body=shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
         var pool=Executors.newSingleThreadExecutor();
         var barrier=new java.util.concurrent.atomic.AtomicReference<>(new CountDownLatch(1));
         org.mockito.Mockito.doAnswer(invocation->{barrier.get().countDown(); return invocation.callRealMethod();}).when(business).floors(org.mockito.ArgumentMatchers.anyCollection());
@@ -141,9 +142,9 @@ class BookingIT {
         try { assertTrue(barrier.await(5,TimeUnit.SECONDS)); } catch(InterruptedException e) { Thread.currentThread().interrupt(); throw new RuntimeException(e); }
     }
     @Test void areaApprovalAndSeatBookingCannotBothCommit() throws Exception {
-        String teacher=token("teacher1"),admin=token("admin1"),student=token("student1"); long area=jdbc.queryForObject("SELECT parent_id FROM space WHERE code='A01' AND floor_id=100",Long.class);
+        String teacher=token("teacher1"),admin=token("admin1"),student=token("student1"); long area=jdbc.queryForObject("SELECT parent_id FROM space WHERE code='A001' AND floor_id=100",Long.class);
         var v=venue(teacher,area,"area-request");
-        var result=race(()->decision(admin,v.id(),1,"APPROVE","area-approval"),()->request("POST","/reservations",shortBody(seat("A01",100),"2026-10-10T03:00:00Z","2026-10-10T04:00:00Z"),student,"child-booking"));
+        var result=race(()->decision(admin,v.id(),1,"APPROVE","area-approval"),()->request("POST","/reservations",shortBody(seat("A001",100),"2026-10-10T03:00:00Z","2026-10-10T04:00:00Z"),student,"child-booking"));
         assertEquals(List.of(200,409),result.stream().map(Reply::status).sorted().toList());
         facts.put("exclusiveEffects",jdbc.queryForObject("SELECT (SELECT COUNT(*) FROM venue_entitlement)+(SELECT COUNT(*) FROM short_reservation)",Integer.class));
     }
@@ -153,7 +154,7 @@ class BookingIT {
         assertTrue(request("GET","/spaces/"+room+"/availability?start=2026-10-10T03:00:00Z&end=2026-10-10T04:00:00Z",null,teacher,null).data().path("available").asBoolean());
         var result=race(()->decision(admin,a.id(),1,"APPROVE","parallel-admin-a"),()->decision(other,c.id(),1,"APPROVE","parallel-admin-c")); assertEquals(List.of(200,409),result.stream().map(Reply::status).sorted().toList());
         facts.put("venueRights",jdbc.queryForObject("SELECT COUNT(*) FROM venue_entitlement WHERE status='ACTIVE'",Integer.class));
-        var elsewhere=venue(teacher,seat("H-A",101),"outside-request"); error(decision(other,elsewhere.id(),1,"APPROVE","outside-approve"),403,"SCOPE_FORBIDDEN");
+        var elsewhere=venue(teacher,seat("R-C",101),"outside-request"); error(decision(other,elsewhere.id(),1,"APPROVE","outside-approve"),403,"SCOPE_FORBIDDEN");
         error(request("GET","/venue-requests/"+a.id(),null,token("student1"),null),403,"SCOPE_FORBIDDEN");
     }
     @Test void eventRequiresApprovedVenueAndCannotBypassOwnership() throws Exception {
