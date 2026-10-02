@@ -82,8 +82,8 @@ public class AllocationPublisher {
         }
         var mapping=new HashMap<String,Map<String,Object>>();people.forEach(person->mapping.put(person.get("anonymous_id").toString(),person));
         for(var person:people) {
-            long user=Business.number(person,"user_id");var identity=p.business().jdbc.queryForMap("SELECT active,student_verified FROM identity_user WHERE id=?",user);
-            if(!Boolean.TRUE.equals(identity.get("active")) || !Boolean.TRUE.equals(identity.get("student_verified"))) {p.failLocked(batch,"INPUT_INVALIDATED_ELIGIBILITY",actor);return;}
+            long user=Business.number(person,"user_id");
+            if(p.eligibility().reason(user)!=null) {p.failLocked(batch,"INPUT_INVALIDATED_ELIGIBILITY",actor);return;}
             try{p.checkOtherParticipation(user,id,Business.date(batch,"cycle_starts_at"),Business.date(batch,"cycle_ends_at"));}catch(DomainException e){p.failLocked(batch,"INPUT_INVALIDATED_PERSONAL_CYCLE",actor);return;}
         }
         var seenCandidates=new HashSet<String>();var seenSeats=new HashSet<String>();

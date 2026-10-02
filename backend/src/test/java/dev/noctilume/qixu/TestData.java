@@ -7,6 +7,7 @@ final class TestData {
         if(!java.util.Set.of("qixu_test","qixu_ci").contains(jdbc.queryForObject("SELECT DATABASE()",String.class))) throw new IllegalStateException("Refuse to reset outside isolated test schema");
         // Clear the nullable cyclic historical upgrade pointer before deleting its referenced right.
         jdbc.update("UPDATE long_offer SET upgrade_from_id=NULL");
+        for(String table:java.util.List.of("long_application_penalty","governance_history","governance_case"))jdbc.update("DELETE FROM "+table);
         jdbc.update("DELETE FROM repair_limit");
         for(String table:java.util.List.of("block_recipient","block_batch","block_history","short_relocation","long_temporary_arrangement","block_impact","space_block"))jdbc.update("DELETE FROM "+table);
         for(String table:java.util.List.of("space_fact","repair_history","repair_report","repair_ticket","feedback_attachment","feedback_history","feedback_report"))jdbc.update("DELETE FROM "+table);

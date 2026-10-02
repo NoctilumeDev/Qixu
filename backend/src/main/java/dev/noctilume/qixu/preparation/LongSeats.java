@@ -65,7 +65,7 @@ public class LongSeats {
             if(body.action().equals("ACCEPT")) {
                 var impact=p.rights().offerImpact(offerId,actor.id());
                 if(Boolean.TRUE.equals(impact.get("requiresAcknowledgement"))&&!Objects.equals(body.impactHash(),impact.get("impactHash")))throw Business.conflict("STALE_OFFER_IMPACT","请查看当前每段限制和临时安排后确认；摘要变化时旧确认不生效，原期限保持。");
-                Business.student(actor);LocalDateTime start=Business.date(batch,"cycle_starts_at"),end=Business.date(batch,"cycle_ends_at");var now=p.business().now();if(start.isBefore(now))start=now;
+                Business.student(actor);p.eligibility().require(actor.id());LocalDateTime start=Business.date(batch,"cycle_starts_at"),end=Business.date(batch,"cycle_ends_at");var now=p.business().now();if(start.isBefore(now))start=now;
                 p.checkOtherParticipation(actor.id(),batchId,start,end);personalShortFree(actor.id(),start,end);checkSeat(batch,row);
                 var old=rights(batchId,actor.id());Object upgrade=row.get("upgrade_from_id");
                 if(upgrade==null && !old.isEmpty() || upgrade!=null && (old.size()!=1 || Business.number(old.get(0),"id")!=((Number)upgrade).longValue()))throw Business.conflict("UPGRADE_CHANGED","原使用权已经变化，升级必须重新核实；不会释放任何旧席位。");
@@ -117,8 +117,7 @@ public class LongSeats {
         var now=p.business().now();
         for(var row:p.business().jdbc.queryForList("SELECT * FROM long_offer WHERE batch_id=? AND status='OPEN' ORDER BY id",id)) {
             long user=Business.number(row,"user_id"),offer=Business.number(row,"id");String state=null;
-            var identity=p.business().jdbc.queryForMap("SELECT active,student_verified FROM identity_user WHERE id=?",user);
-            if(!Boolean.TRUE.equals(identity.get("active")) || !Boolean.TRUE.equals(identity.get("student_verified")))state="INVALID";
+            if(p.eligibility().reason(user)!=null)state="INVALID";
             else if(!now.isBefore(Business.date(row,"deadline")) || !now.isBefore(Business.date(batch,"cycle_ends_at")))state="EXPIRED";
             if(state!=null) {
                 p.business().jdbc.update("UPDATE long_offer SET status=?,version=version+1 WHERE id=?",state,offer);
@@ -153,8 +152,7 @@ public class LongSeats {
         var graphPeople=new ArrayList<AllocationGraph.Candidate>();var mapping=new HashMap<String,Map<String,Object>>();var oldRights=new HashMap<String,Map<String,Object>>();
         for(var person:queue) {
             long user=Business.number(person,"user_id"),application=Business.number(person,"application_id");String candidate="c"+user;
-            var identity=p.business().jdbc.queryForMap("SELECT active,student_verified FROM identity_user WHERE id=?",user);
-            if(!Boolean.TRUE.equals(identity.get("active")) || !Boolean.TRUE.equals(identity.get("student_verified")))continue;
+            if(p.eligibility().reason(user)!=null)continue;
             if(p.business().jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND user_id=? AND status='OPEN'",Integer.class,id,user)>0)continue;
             var previous=rights(id,user);if(previous.size()>1)throw new IllegalStateException("Multiple long rights");
             int best=previous.isEmpty()?Integer.MAX_VALUE:Math.toIntExact(Business.number(previous.get(0),"preference_rank"));

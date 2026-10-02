@@ -54,6 +54,11 @@ public class SpaceRights {
     public void freeForBatch(long space,long floor,LocalDateTime start,LocalDateTime end,long batch) {
         if(!conflicts(space,floor,start,end,-1,batch).isEmpty())throw Business.conflict("SPACE_CONFLICT","本批次资源与其他当前有效事实冲突。");
     }
+    public void freeForRestoration(long space,LocalDateTime start,LocalDateTime end,long batch,long entitlement) {
+        var snapshot=facts.snapshot(start,end);var conflicts=facts.conflicts(snapshot,space,start,end,-1,-1,null,entitlement);
+        conflicts=conflicts.stream().filter(c->!("BATCH_PROTECTION".equals(c.get("conflict_type"))&&Business.number(c,"space_id")==space&&snapshot.roots().stream().anyMatch(r->r.kind().equals("POOL")&&r.batch()==batch&&r.space()==space))).toList();
+        if(!conflicts.isEmpty())throw Business.conflict("SPACE_CONFLICT","原位当前已有真实权或限制，不能为申诉恢复覆盖别人。");
+    }
     public void personalFree(long user,LocalDateTime start,LocalDateTime end) {
         var now=b.now();
         if(b.jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation WHERE user_id=? AND starts_at<? AND ends_at>? AND ends_at>? AND (status='CHECKED_IN' OR (status='PENDING' AND check_in_deadline>?))",Integer.class,user,end,start,now,now)>0)

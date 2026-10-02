@@ -49,8 +49,7 @@ public class BatchFreezer {
         var seatIds=new HashSet<>(pool.stream().map(s->Business.number(s,"space_id")).toList());
         for(var application:applications) {
             long user=Business.number(application,"user_id"),applicationId=Business.number(application,"id");String reason=null;
-            var identity=p.business().jdbc.queryForMap("SELECT active,student_verified FROM identity_user WHERE id=?",user);
-            if(!Boolean.TRUE.equals(identity.get("active")) || !Boolean.TRUE.equals(identity.get("student_verified")))reason="ELIGIBILITY_INVALID_AT_FREEZE";
+            if(p.eligibility().reason(user)!=null)reason="ELIGIBILITY_INVALID_AT_FREEZE";
             else try{p.checkOtherParticipation(user,id,Business.date(batch,"cycle_starts_at"),Business.date(batch,"cycle_ends_at"));}catch(DomainException e){reason=e.code();}
             if(reason!=null) {
                 p.business().jdbc.update("UPDATE preparation_application SET status='EXCLUDED',reason=? WHERE id=?",reason,applicationId);

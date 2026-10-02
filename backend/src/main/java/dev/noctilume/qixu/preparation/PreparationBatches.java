@@ -11,19 +11,20 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class PreparationBatches {
-    private final Business b; private final SpaceRights rights; private final JsonMapper json; private final FrozenJson frozenJson;
+    private final Business b; private final SpaceRights rights; private final JsonMapper json; private final FrozenJson frozenJson;private final LongEligibility eligibility;
     public record Create(String title,String purpose,OffsetDateTime startsAt,OffsetDateTime endsAt,
         OffsetDateTime opensAt,OffsetDateTime closesAt,OffsetDateTime freezeDeadline,OffsetDateTime randomAt,
         OffsetDateTime resultDeadline,OffsetDateTime confirmationDeadline,OffsetDateTime promotionUntil,int promotionSeconds,List<Long> seatIds) {}
     public record Preference(long seatId,int rank) {}
     public record Submit(int version,List<Preference> preferences,boolean keepWaitlist) {}
     public record Action(long version,String action) {}
-    public PreparationBatches(Business b,SpaceRights rights,JsonMapper json) {this.b=b;this.rights=rights;this.json=json;this.frozenJson=new FrozenJson(json);}
+    public PreparationBatches(Business b,SpaceRights rights,JsonMapper json,LongEligibility eligibility) {this.b=b;this.rights=rights;this.json=json;this.frozenJson=new FrozenJson(json);this.eligibility=eligibility;}
     // Access methods dispatch to the actual Spring target; reading fields of a transaction proxy does not.
     public Business business() {return b;}
     public SpaceRights rights() {return rights;}
     public JsonMapper json() {return json;}
     public FrozenJson frozenJson() {return frozenJson;}
+    public LongEligibility eligibility() {return eligibility;}
     Map<String,Object> batch(long id,boolean lock) {
         var rows=b.jdbc.queryForList("SELECT * FROM preparation_batch WHERE id=?"+(lock?" FOR UPDATE":""),id);
         if(rows.isEmpty())throw DomainException.missing();return rows.get(0);
@@ -96,12 +97,14 @@ public class PreparationBatches {
         var outcomes=b.jdbc.queryForList("SELECT * FROM allocation_outcome WHERE batch_id=? AND application_id=?",id,result.get("id"));
         result.put("outcome",outcomes.isEmpty()?Map.of():b.view(outcomes.get(0)));
         result.put("nextSteps",List.of("查看具体要约与确认期限","保留或退出稳定候补","选择真实可用的普通短约/其他空间","明确退出本轮"));
+        String qualification=eligibility.reason(user);result.put("currentEligibility",Map.of("eligible",qualification==null,"reason",qualification==null?"":qualification));
         result.put("applied",true);result.put("batch",detail(id));return result;
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> submit(AuthService.Session session,long id,String key,Submit body,String requestId) {
         var batch=batch(id,true);b.users(List.of(session.actor().id()));var actor=b.current(session);Business.student(actor);
         return b.once(actor,key,"preparation.submit:"+id,body,()->{
+            eligibility.require(actor.id());
             state(batch,"OPEN");var now=b.now();
             if(now.isBefore(Business.date(batch,"opens_at")) || !now.isBefore(Business.date(batch,"closes_at")))throw Business.conflict("APPLICATION_WINDOW_CLOSED","当前不在申请窗口，原已提交版本仍可查看。");
             checkOtherParticipation(actor.id(),id,Business.date(batch,"cycle_starts_at"),Business.date(batch,"cycle_ends_at"));
