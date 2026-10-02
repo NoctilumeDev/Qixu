@@ -32,6 +32,7 @@ FOUNDATION_CASES = [
     "databaseRejectsCrossFloorParentAndInvalidGeometry",
     "externalIdentityNamesAndIdsCannotCollideAcrossProviders",
     "demoCannotSeedWithoutExplicitProfileOrInProduction",
+    "initializationAndDrainDoNotAdvertiseFalseReadiness",
 ]
 HTTP_STATUSES = {
     FOUNDATION_CASES[0]: [200, 200],
@@ -43,6 +44,7 @@ HTTP_STATUSES = {
     FOUNDATION_CASES[6]: [401, 401],
     FOUNDATION_CASES[7]: [200, 200, 200, 200, 200],
     FOUNDATION_CASES[8]: [200, 422, 422, 422, 422, 422, 404, 404, 422],
+    FOUNDATION_CASES[13]: [503, 503, 200, 200],
 }
 DATABASE_MEASURES = {
     FOUNDATION_CASES[0]: {"hashedSessionRows": 1, "rawTokenRows": 0, "rawCredentialAuditRows": 0},
@@ -52,6 +54,7 @@ DATABASE_MEASURES = {
     FOUNDATION_CASES[9]: {"successfulV1Migrations": 1, "transactionIsolation": "READ-COMMITTED", "outsideSchemaGrants": 0},
     FOUNDATION_CASES[10]: {"mapXAfterRejectedWrites": 65, "capacityAfterRejectedWrites": 1},
     FOUNDATION_CASES[11]: {"sameSubjectDistinctProviderRows": 2, "localRoleAfterExternalBinding": "STUDENT"},
+    FOUNDATION_CASES[13]: {"sessionsBeforeReadiness": 0},
 }
 
 

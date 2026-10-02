@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.availability.ApplicationAvailability;
+import org.springframework.boot.availability.ReadinessState;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,8 +26,9 @@ public class SessionFilter extends OncePerRequestFilter {
     private final AuthService auth;
     private final JsonMapper json;
     private final Set<String> origins;
-    public SessionFilter(AuthService auth,JsonMapper json,@Value("${qixu.allowed-origins}") String origins) {
-        this.auth=auth; this.json=json; this.origins=Arrays.stream(origins.split(",")).map(String::trim).collect(Collectors.toUnmodifiableSet());
+    private final ApplicationAvailability availability;
+    public SessionFilter(AuthService auth,JsonMapper json,ApplicationAvailability availability,@Value("${qixu.allowed-origins}") String origins) {
+        this.auth=auth; this.json=json; this.availability=availability; this.origins=Arrays.stream(origins.split(",")).map(String::trim).collect(Collectors.toUnmodifiableSet());
     }
     public static AuthService.Session session(HttpServletRequest r) {
         var value=r.getAttribute("qixu.session");
@@ -50,6 +53,8 @@ public class SessionFilter extends OncePerRequestFilter {
                 }
             }
             String path=request.getRequestURI();
+            if (path.startsWith("/api/") && availability.getReadinessState()!=ReadinessState.ACCEPTING_TRAFFIC)
+                throw new DomainException(503,"APPLICATION_NOT_READY","服务正在准备，请稍后重试。");
             boolean anonymous=(path.equals("/api/health") && request.getMethod().equals("GET"))
                 || (path.equals("/api/v1/auth/login") && request.getMethod().equals("POST"))
                 || (path.equals("/api/v1/auth/options") && request.getMethod().equals("GET"));
