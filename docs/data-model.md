@@ -1,6 +1,6 @@
 # 数据模型与迁移边界 0.1
 
-状态：M1候选。真相存MySQL InnoDB；业务时间UTC，呈现上海时区。JSON仅用于设施/展示画像、冻结快照及回执，不用JSON中的字符串状态替代有索引的业务约束。
+状态：M1–M3限定资格已闭合；M4施工。真相存MySQL InnoDB；业务时间UTC，呈现上海时区。JSON仅用于设施/展示画像、冻结快照及回执，不用JSON中的字符串状态替代有索引的业务约束。
 
 ## M1迁移
 
@@ -17,7 +17,7 @@
 
 ## 后续独立事实表
 
-M2 V2已实现独立short_reservation、venue_request/venue_entitlement、campus_event/event_participation、favorite_space、idempotency_receipt、notification_outbox和inbox。confirmed_count在event协调行内更新且有CHECK防超额；参与event+user唯一和数据库序号，短约区间仍依floor/user guard，不误称SQL唯一索引能排除时段重叠。M3 V3已迁移并取得限定主线资格；M4 V4反馈表族在隔离库施工验证，Block/治理表尚未实施。下面未带实际迁移号的项仍为规划。
+M2 V2已实现独立short_reservation、venue_request/venue_entitlement、campus_event/event_participation、favorite_space、idempotency_receipt、notification_outbox和inbox。confirmed_count在event协调行内更新且有CHECK防超额；参与event+user唯一和数据库序号，短约区间仍依floor/user guard，不误称SQL唯一索引能排除时段重叠。M3 V3已迁移并取得限定主线资格；M4 V4反馈及V5空间限制在隔离库施工验证，治理表尚未实施。下面未带实际迁移号的项仍为规划。
 
 | 阶段 | 表族 | 硬边界 |
 | --- | --- | --- |
@@ -36,3 +36,9 @@ MySQL没有通用区间排除约束；不能谎称普通唯一索引能排除任
 feedback_report保留不可覆盖原文，feedback_history追加各次补充/核实/重开；feedback_attachment存私有受限原始位图，不存路径或外部URL。repair_ticket与repair_history分开记录工作完成/复验；repair_report复合FK确保关联同一个空间和楼层，同类只能一个未闭维修。space_fact只由明确核实/修复复验产生，保留依据引用；公开只投影最新值/核实时点，私有来源不公开。设施画像在同一floor guard内有版本更新。
 
 V4已实际迁移到qixu_test，后续不改旧SQL；新Block/治理结构追加迁移。尚未宣称现实维修、整个M4验迹或页面资格。
+
+## M4 V5 · 限制与临时实际位置
+
+space_block记录独立来源、半开窗口、创建/撤销和场地绑定；block_impact逐服务器摘要项保存明确处置。long_temporary_arrangement绑定原offer、受限实际位置及每个Block窗口，目标可为明确不可用；不改变seat_entitlement.space_id。short_relocation连接关闭的原短约与新短约，原期限保留。block_history追加来源动作及创建摘要。
+
+实际足迹由当前原权、OPEN要约期限、有效Block及安排实时推导，限制结束/退出/原子升级不靠AVAILABLE字段或延迟任务。历史跨层映射形成协调连通分量，新增映射前锁全关联层并复查；权事实仍各自存表。V5已经真实迁移到qixu_test，后续追加，不改其SQL校验和。完整M4仍在施工，治理、通知对象保留/恢复及维修与限制联动尚待闭合。

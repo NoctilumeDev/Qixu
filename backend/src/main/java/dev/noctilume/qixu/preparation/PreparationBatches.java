@@ -40,7 +40,7 @@ public class PreparationBatches {
         if(body.seatIds()==null || body.seatIds().isEmpty() || body.seatIds().size()>400 || body.seatIds().stream().anyMatch(Objects::isNull) || new HashSet<>(body.seatIds()).size()!=body.seatIds().size())throw DomainException.invalid("资源池须包含1–400个不同席位。");
         var selected=body.seatIds().stream().map(rights::space).toList();
         var floorIds=selected.stream().map(r->Business.number(r,"floor_id")).distinct().sorted().toList();
-        b.floors(floorIds);b.users(List.of(session.actor().id()));var actor=b.current(session);floorIds.forEach(f->b.admin(actor,f));
+        rights.lockFloors(floorIds);b.users(List.of(session.actor().id()));var actor=b.current(session);floorIds.forEach(f->b.admin(actor,f));
         return b.once(actor,key,"preparation.create",body,()->{
             Business.text(body.title(),100,true);
             if(!Set.of("POSTGRADUATE","CIVIL_SERVICE","OTHER").contains(body.purpose()==null?"":body.purpose()))throw DomainException.invalid("请选择明确的备考批次用途。");

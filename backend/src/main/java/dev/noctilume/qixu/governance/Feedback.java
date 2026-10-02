@@ -64,7 +64,7 @@ public class Feedback {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> create(AuthService.Session session,String key,Create body,String requestId) {
-        var initial=rights.space(body.spaceId());long floor=Business.number(initial,"floor_id");b.floors(List.of(floor));b.users(List.of(session.actor().id()));var actor=b.current(session);Business.student(actor);
+        var initial=rights.space(body.spaceId());long floor=Business.number(initial,"floor_id");rights.lockFloors(List.of(floor));b.users(List.of(session.actor().id()));var actor=b.current(session);Business.student(actor);
         return b.once(actor,key,"feedback.create",body,()->{
             rights.space(body.spaceId());Business.text(body.description(),2000,true);
             if(!Set.of("OUTLET","LIGHT","DESK","ENVIRONMENT","INFORMATION","OTHER").contains(body.category()==null?"":body.category()))throw DomainException.invalid("反馈类别不正确。");
@@ -74,7 +74,7 @@ public class Feedback {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> supplement(AuthService.Session session,long id,String key,Supplement body,String requestId) {
-        var initial=row("feedback_report",id);b.floors(List.of(Business.number(initial,"floor_id")));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);
+        var initial=row("feedback_report",id);rights.lockFloors(List.of(Business.number(initial,"floor_id")));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);
         if(Business.number(initial,"user_id")!=actor.id())throw DomainException.missing();
         return b.once(actor,key,"feedback.supplement:"+id,body,()->{
             var report=row("feedback_report",id);Business.version(Business.number(report,"version"),body.version());Business.text(body.message(),2000,true);
@@ -108,7 +108,7 @@ public class Feedback {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> decide(AuthService.Session session,long id,String key,Action body,String requestId) {
-        var initial=row("feedback_report",id);long floor=Business.number(initial,"floor_id");b.floors(List.of(floor));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);b.admin(actor,floor);
+        var initial=row("feedback_report",id);long floor=Business.number(initial,"floor_id");rights.lockFloors(List.of(floor));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);b.admin(actor,floor);
         return b.once(actor,key,"feedback.decide:"+id,body,()->{
             var report=row("feedback_report",id);Business.version(Business.number(report,"version"),body.version());Business.text(body.reason(),500,true);
             if(!Set.of("REPORTED","ACKNOWLEDGED").contains(report.get("status")))throw Business.conflict("FEEDBACK_STATE_CONFLICT","该反馈已进入其他处理阶段，请查看当前记录。");
@@ -126,7 +126,7 @@ public class Feedback {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> attach(AuthService.Session session,long id,String key,byte[] bytes,String requestId) {
         var info=RasterEvidence.inspect(bytes);String digest=Digests.sha256(bytes);
-        var initial=row("feedback_report",id);b.floors(List.of(Business.number(initial,"floor_id")));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);
+        var initial=row("feedback_report",id);rights.lockFloors(List.of(Business.number(initial,"floor_id")));b.users(List.of(session.actor().id(),Business.number(initial,"user_id")));var actor=b.current(session);
         if(Business.number(initial,"user_id")!=actor.id())throw DomainException.missing();
         var fingerprint=Map.of("report",id,"sha256",digest,"type",info.type(),"size",bytes.length);
         return b.once(actor,key,"feedback.attach:"+id,fingerprint,()->{
@@ -154,7 +154,7 @@ public class Feedback {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> createRepair(AuthService.Session session,String key,RepairCreate body,String requestId) {
         if(!session.actor().role().equals("ADMIN"))throw DomainException.forbidden();
-        var initial=refs(body.reports(),false);var first=initial.get(0);long floor=Business.number(first,"floor_id");b.floors(initial.stream().map(r->Business.number(r,"floor_id")).toList());b.users(reportUsers(initial,session.actor().id()));var actor=b.current(session);for(var report:initial)b.admin(actor,Business.number(report,"floor_id"));
+        var initial=refs(body.reports(),false);var first=initial.get(0);long floor=Business.number(first,"floor_id");rights.lockFloors(initial.stream().map(r->Business.number(r,"floor_id")).toList());b.users(reportUsers(initial,session.actor().id()));var actor=b.current(session);for(var report:initial)b.admin(actor,Business.number(report,"floor_id"));
         return b.once(actor,key,"repair.create",body,()->{
             var reports=refs(body.reports(),true);Business.text(body.description(),2000,true);
             if(b.jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket WHERE space_id=? AND category=? AND status<>'VERIFIED_CLOSED'",Integer.class,first.get("space_id"),first.get("category"))>0)throw Business.conflict("REPAIR_ALREADY_OPEN","已有同类维修事项，请把反馈关联到现有事项。");
@@ -178,7 +178,7 @@ public class Feedback {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> repairAction(AuthService.Session session,long id,String key,RepairAction body,String requestId) {
         if(!session.actor().role().equals("ADMIN"))throw DomainException.forbidden();
-        var initial=row("repair_ticket",id);long floor=Business.number(initial,"floor_id");var added=body.reports()==null?List.<Map<String,Object>>of():refs(body.reports(),false);var floors=new ArrayList<Long>(List.of(floor));added.forEach(r->floors.add(Business.number(r,"floor_id")));b.floors(floors);var reports=b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id);
+        var initial=row("repair_ticket",id);long floor=Business.number(initial,"floor_id");var added=body.reports()==null?List.<Map<String,Object>>of():refs(body.reports(),false);var floors=new ArrayList<Long>(List.of(floor));added.forEach(r->floors.add(Business.number(r,"floor_id")));rights.lockFloors(floors);var reports=b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id);
         var users=reportUsers(reports,session.actor().id());users.addAll(reportUsers(added,session.actor().id()));b.users(users);var actor=b.current(session);b.admin(actor,floor);for(var report:added)b.admin(actor,Business.number(report,"floor_id"));
         return b.once(actor,key,"repair.action:"+id,body,()->{
             var ticket=row("repair_ticket",id);Business.version(Business.number(ticket,"version"),body.version());Business.text(body.reason(),500,true);

@@ -10,7 +10,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class SpaceRights {
     private final Business b;
-    public SpaceRights(Business b) { this.b=b; }
+    private final SpatialFacts facts;
+    public SpaceRights(Business b,SpatialFacts facts) { this.b=b; this.facts=facts; }
+    public Set<Long> lockFloors(Collection<Long> floors) {return facts.lockFloors(floors);}
+    public Map<String,Object> offerImpact(long id,long owner) {return facts.offerImpact(id,owner);}
+    public void freeForOffer(long id,long owner,LocalDateTime start,LocalDateTime end,long batch,Long upgrade) {facts.freeForOffer(id,owner,start,end,batch,upgrade);}
+    public List<Long> venueLimitUsers(long venue) {
+        var rows=b.jdbc.queryForList("SELECT DISTINCT o.user_id FROM long_temporary_arrangement a JOIN space_block k ON a.block_id=k.id JOIN long_offer o ON a.offer_id=o.id WHERE k.venue_request_id=? AND k.status='ACTIVE' ORDER BY o.user_id LIMIT 2001",venue);
+        if(rows.size()>2000)throw Business.conflict("IMPACT_RECIPIENT_LIMIT","活动临时安排用户超过协调上限，未截断通知。");return rows.stream().map(r->Business.number(r,"user_id")).toList();
+    }
+    /** Called only under the venue's coordinated floors, inside its cancellation/rebinding transaction. */
+    public void closeVenueBlock(long venue,long actor,String reason) {
+        for(var block:b.jdbc.queryForList("SELECT id FROM space_block WHERE venue_request_id=? AND status='ACTIVE'",venue)) {
+            long id=Business.number(block,"id");b.jdbc.update("UPDATE space_block SET status='REVOKED',version=version+1,revoked_at=?,revoke_reason=? WHERE id=?",b.now(),reason,id);
+            b.jdbc.update("INSERT INTO block_history(block_id,actor_id,action,reason,impact_hash,created_at) VALUES(?,?,'VENUE_CLOSED',?,?,?)",id,actor,reason,"0".repeat(64),b.now());
+            for(var r:b.jdbc.queryForList("SELECT DISTINCT o.user_id FROM long_temporary_arrangement a JOIN long_offer o ON a.offer_id=o.id WHERE a.block_id=?",id))b.notify(Business.number(r,"user_id"),"block:"+id+":venue-closed","活动空间限制已撤销","原归属保持，实际安排由所有仍有效限制共同决定。"+reason,"BLOCK",id);
+        }
+    }
     public Map<String,Object> space(long id) {
         var rows=b.jdbc.queryForList("SELECT * FROM space WHERE id=? AND active=TRUE",id);
         if(rows.isEmpty()) throw DomainException.missing();
@@ -29,14 +45,7 @@ public class SpaceRights {
     }
     public List<Map<String,Object>> conflicts(long space,long floor,LocalDateTime start,LocalDateTime end,long excludeVenue,long excludeBatch) {
         if(!start.isBefore(end)) throw DomainException.invalid("结束时间须晚于开始时间。");
-        var parents=new HashMap<Long,Long>();
-        b.jdbc.queryForList("SELECT id,parent_id FROM space WHERE floor_id=?",floor).forEach(r->parents.put(Business.number(r,"id"),r.get("parent_id")==null?null:Business.number(r,"parent_id")));
-        var now=b.now(); var rows=new ArrayList<Map<String,Object>>();
-        rows.addAll(b.jdbc.queryForList("SELECT space_id,starts_at,ends_at,'SHORT' AS conflict_type FROM short_reservation WHERE floor_id=? AND starts_at<? AND ends_at>? AND ends_at>? AND (status='CHECKED_IN' OR (status='PENDING' AND check_in_deadline>?))",floor,end,start,now,now));
-        rows.addAll(b.jdbc.queryForList("SELECT space_id,starts_at,ends_at,'VENUE' AS conflict_type FROM venue_entitlement WHERE floor_id=? AND request_id<>? AND status='ACTIVE' AND starts_at<? AND ends_at>? AND ends_at>?",floor,excludeVenue,end,start,now));
-        rows.addAll(b.jdbc.queryForList("SELECT space_id,starts_at,ends_at,'LONG' AS conflict_type FROM seat_entitlement WHERE floor_id=? AND batch_id<>? AND status='ACTIVE' AND starts_at<? AND ends_at>? AND ends_at>?",floor,excludeBatch,end,start,now));
-        rows.addAll(b.jdbc.queryForList("SELECT p.space_id,t.cycle_starts_at AS starts_at,t.cycle_ends_at AS ends_at,'BATCH_PROTECTION' AS conflict_type FROM preparation_pool p JOIN preparation_batch t ON p.batch_id=t.id WHERE p.floor_id=? AND t.id<>? AND t.status IN ('OPEN','FROZEN','RESULT_PUBLISHED') AND t.cycle_starts_at<? AND t.cycle_ends_at>? AND t.cycle_ends_at>?",floor,excludeBatch,end,start,now));
-        return rows.stream().filter(r->related(space,Business.number(r,"space_id"),parents)).map(b::view).toList();
+        return facts.conflicts(facts.snapshot(start,end),space,start,end,excludeVenue,excludeBatch,null,null);
     }
     public void free(long space,long floor,LocalDateTime start,LocalDateTime end,long excludeVenue) {
         if(!conflicts(space,floor,start,end,excludeVenue).isEmpty()) throw Business.conflict("SPACE_CONFLICT","该空间或所属区域在此时段已有使用权，请选择其他时间或空间。");

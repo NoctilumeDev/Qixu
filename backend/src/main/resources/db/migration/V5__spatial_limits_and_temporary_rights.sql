@@ -1,0 +1,83 @@
+CREATE TABLE space_block (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ space_id BIGINT NOT NULL,
+ floor_id BIGINT NOT NULL,
+ kind VARCHAR(20) NOT NULL,
+ starts_at DATETIME(6) NOT NULL,
+ ends_at DATETIME(6) NOT NULL,
+ reason VARCHAR(500) NOT NULL,
+ venue_request_id BIGINT NULL UNIQUE,
+ creator_id BIGINT NOT NULL,
+ status VARCHAR(12) NOT NULL DEFAULT 'ACTIVE',
+ version BIGINT NOT NULL DEFAULT 1,
+ created_at DATETIME(6) NOT NULL,
+ revoked_at DATETIME(6) NULL,
+ revoke_reason VARCHAR(500) NULL,
+ FOREIGN KEY(space_id,floor_id) REFERENCES space(id,floor_id),
+ FOREIGN KEY(venue_request_id) REFERENCES venue_request(id),
+ FOREIGN KEY(creator_id) REFERENCES identity_user(id),
+ INDEX ix_block_interval(floor_id,status,starts_at,ends_at),
+ CHECK(starts_at<ends_at AND ends_at<=DATE_ADD(starts_at,INTERVAL 30 DAY)),
+ CHECK(kind IN ('MAINTENANCE','SAFETY','COURSE','EVENT')),
+ CHECK(status IN ('ACTIVE','REVOKED')),
+ CHECK((kind='EVENT' AND venue_request_id IS NOT NULL) OR (kind<>'EVENT' AND venue_request_id IS NULL))
+) ENGINE=InnoDB;
+CREATE TABLE block_impact (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ block_id BIGINT NOT NULL,
+ impact_key CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ kind VARCHAR(12) NOT NULL,
+ origin_id BIGINT NOT NULL,
+ from_space_id BIGINT NOT NULL,
+ starts_at DATETIME(6) NOT NULL,
+ ends_at DATETIME(6) NOT NULL,
+ action VARCHAR(24) NOT NULL,
+ detail_json JSON NOT NULL,
+ UNIQUE KEY uq_block_impact(block_id,impact_key),
+ FOREIGN KEY(block_id) REFERENCES space_block(id),
+ FOREIGN KEY(from_space_id) REFERENCES space(id),
+ CHECK(starts_at<ends_at),
+ CHECK(kind IN ('SHORT','LONG','VENUE','POOL')),
+ CHECK(action IN ('CANCEL','MOVE','RELOCATE','TEMPORARY','UNAVAILABLE','RESOURCE_NOTICE'))
+) ENGINE=InnoDB;
+CREATE TABLE long_temporary_arrangement (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ block_id BIGINT NOT NULL,
+ offer_id BIGINT NOT NULL,
+ from_space_id BIGINT NOT NULL,
+ from_floor_id BIGINT NOT NULL,
+ target_space_id BIGINT NULL,
+ target_floor_id BIGINT NULL,
+ starts_at DATETIME(6) NOT NULL,
+ ends_at DATETIME(6) NOT NULL,
+ created_at DATETIME(6) NOT NULL,
+ FOREIGN KEY(block_id) REFERENCES space_block(id),
+ FOREIGN KEY(offer_id) REFERENCES long_offer(id),
+ FOREIGN KEY(from_space_id,from_floor_id) REFERENCES space(id,floor_id),
+ FOREIGN KEY(target_space_id,target_floor_id) REFERENCES space(id,floor_id),
+ UNIQUE KEY uq_temp_segment(block_id,offer_id,from_space_id,starts_at,ends_at),
+ INDEX ix_temp_offer(offer_id,starts_at,ends_at),
+ CHECK(starts_at<ends_at),
+ CHECK((target_space_id IS NULL AND target_floor_id IS NULL) OR (target_space_id IS NOT NULL AND target_floor_id IS NOT NULL AND target_space_id<>from_space_id))
+) ENGINE=InnoDB;
+CREATE TABLE short_relocation (
+ original_id BIGINT PRIMARY KEY,
+ replacement_id BIGINT NOT NULL UNIQUE,
+ block_id BIGINT NOT NULL,
+ created_at DATETIME(6) NOT NULL,
+ FOREIGN KEY(original_id) REFERENCES short_reservation(id),
+ FOREIGN KEY(replacement_id) REFERENCES short_reservation(id),
+ FOREIGN KEY(block_id) REFERENCES space_block(id),
+ CHECK(original_id<>replacement_id)
+) ENGINE=InnoDB;
+CREATE TABLE block_history (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ block_id BIGINT NOT NULL,
+ actor_id BIGINT NOT NULL,
+ action VARCHAR(24) NOT NULL,
+ reason VARCHAR(500) NOT NULL,
+ impact_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ created_at DATETIME(6) NOT NULL,
+ FOREIGN KEY(block_id) REFERENCES space_block(id),
+ FOREIGN KEY(actor_id) REFERENCES identity_user(id)
+) ENGINE=InnoDB;

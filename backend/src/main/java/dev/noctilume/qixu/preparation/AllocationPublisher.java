@@ -43,7 +43,7 @@ public class AllocationPublisher {
     }
     private List<Map<String,Object>> people(long id) {return p.business().jdbc.queryForList("SELECT * FROM frozen_person WHERE batch_id=? ORDER BY anonymous_id",id);}
     private void guards(long id,List<Map<String,Object>> people,AuthService.Session session) {
-        p.business().floors(p.floors(id));var ids=new ArrayList<>(people.stream().map(row->Business.number(row,"user_id")).toList());
+        p.rights().lockFloors(p.floors(id));var ids=new ArrayList<>(people.stream().map(row->Business.number(row,"user_id")).toList());
         if(session!=null)ids.add(session.actor().id());p.business().users(ids);
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)

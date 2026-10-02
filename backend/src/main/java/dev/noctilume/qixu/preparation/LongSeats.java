@@ -11,9 +11,10 @@ import org.springframework.transaction.annotation.*;
 @Service
 public class LongSeats {
     private final PreparationBatches p;
+    public record Response(long version,String action,String impactHash) {}
     public LongSeats(PreparationBatches p) {this.p=p;}
     private Map<String,Object> locked(long id,Long actor) {
-        var batch=p.batch(id,true);p.business().floors(p.floors(id));
+        var batch=p.batch(id,true);p.rights().lockFloors(p.floors(id));
         var users=new ArrayList<>(p.business().jdbc.queryForList("SELECT user_id FROM preparation_application WHERE batch_id=?",id).stream().map(r->Business.number(r,"user_id")).toList());
         if(actor!=null)users.add(actor);p.business().users(users);return batch;
     }
@@ -37,7 +38,7 @@ public class LongSeats {
         var current=p.rights().space(space);var frozen=p.business().jdbc.queryForMap("SELECT space_version FROM preparation_pool WHERE batch_id=? AND space_id=?",id,space);
         if(Business.number(current,"version")!=Business.number(frozen,"space_version"))throw Business.conflict("RESOURCE_CHANGED","该席位事实已变化，请等待管理员核实，原席位不会因此被释放。");
         var start=Business.date(batch,"cycle_starts_at");if(start.isBefore(p.business().now()))start=p.business().now();
-        p.rights().freeForBatch(space,floor,start,Business.date(batch,"cycle_ends_at"),id);
+        p.rights().freeForOffer(Business.number(offer,"id"),Business.number(offer,"user_id"),start,Business.date(batch,"cycle_ends_at"),id,offer.get("upgrade_from_id")==null?null:Business.number(offer,"upgrade_from_id"));
         if(p.business().jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE batch_id=? AND space_id=? AND status='ACTIVE' AND ends_at>?",Integer.class,id,space,p.business().now())>0)throw Business.conflict("LONG_SEAT_TAKEN","该席位已有当前使用权，不能重复确认。");
     }
     private void personalShortFree(long user,LocalDateTime start,LocalDateTime end) {
@@ -45,8 +46,14 @@ public class LongSeats {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> respond(AuthService.Session session,long offerId,String key,PreparationBatches.Action body) {
+        return respondInside(session,offerId,key,new Response(body.version(),body.action(),null));
+    }
+    @Transactional(isolation=Isolation.READ_COMMITTED)
+    public Map<String,Object> respond(AuthService.Session session,long offerId,String key,Response body) {return respondInside(session,offerId,key,body);}
+    private Map<String,Object> respondInside(AuthService.Session session,long offerId,String key,Response body) {
         long batchId=offerBatch(offerId,session.actor().id());var batch=locked(batchId,session.actor().id());var actor=p.business().current(session);
-        return p.business().once(actor,key,"preparation.offer:"+offerId,body,()->{
+        Object fingerprint=body.impactHash()==null?new PreparationBatches.Action(body.version(),body.action()):body;
+        return p.business().once(actor,key,"preparation.offer:"+offerId,fingerprint,()->{
             var row=offer(offerId);if(Business.number(row,"user_id")!=actor.id())throw DomainException.missing();
             Business.version(Business.number(row,"version"),body.version());published(batch);
             if(!Set.of("ACCEPT","DECLINE").contains(body.action()==null?"":body.action()))throw DomainException.invalid("请选择接受或拒绝本次要约。");
@@ -56,6 +63,8 @@ public class LongSeats {
             if(!"SUBMITTED".equals(application.get("status")))throw Business.conflict("APPLICATION_STATE_CONFLICT","申请已退出或资格不成立。");
             Long entitlement=null;
             if(body.action().equals("ACCEPT")) {
+                var impact=p.rights().offerImpact(offerId,actor.id());
+                if(Boolean.TRUE.equals(impact.get("requiresAcknowledgement"))&&!Objects.equals(body.impactHash(),impact.get("impactHash")))throw Business.conflict("STALE_OFFER_IMPACT","请查看当前每段限制和临时安排后确认；摘要变化时旧确认不生效，原期限保持。");
                 Business.student(actor);LocalDateTime start=Business.date(batch,"cycle_starts_at"),end=Business.date(batch,"cycle_ends_at");var now=p.business().now();if(start.isBefore(now))start=now;
                 p.checkOtherParticipation(actor.id(),batchId,start,end);personalShortFree(actor.id(),start,end);checkSeat(batch,row);
                 var old=rights(batchId,actor.id());Object upgrade=row.get("upgrade_from_id");

@@ -25,6 +25,7 @@ public class Events {
     }
     private List<Long> affected(long event,long actor,long owner) {
         var users=new ArrayList<Long>(List.of(actor,owner));
+        users.addAll(rights.venueLimitUsers(Business.number(b.row("campus_event",event),"venue_request_id")));
         b.jdbc.queryForList("SELECT user_id FROM event_participation WHERE event_id=? AND status IN ('CONFIRMED','WAITLISTED')",event).forEach(r->users.add(Business.number(r,"user_id"))); return users;
     }
     private void binding(Map<String,Object> venue,int capacity) {
@@ -35,7 +36,7 @@ public class Events {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> create(AuthService.Session session,String key,Create body,String requestId) {
-        var initial=b.row("venue_request",body.venueRequestId()); b.floors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(session.actor().id())); var actor=b.current(session); Business.organizer(actor);
+        var initial=b.row("venue_request",body.venueRequestId()); rights.lockFloors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(session.actor().id())); var actor=b.current(session); Business.organizer(actor);
         if(Business.number(initial,"user_id")!=actor.id()) throw DomainException.forbidden();
         if(actor.role().equals("ADMIN")) b.admin(actor,Business.number(initial,"floor_id"));
         return b.once(actor,key,"event.create",body,()->{
@@ -75,7 +76,7 @@ public class Events {
     public Map<String,Object> change(AuthService.Session session,long id,String key,Change body,String requestId) {
         var initial=lock(id); var oldVenue=b.row("venue_request",Business.number(initial,"venue_request_id"));
         var newVenue=body.venueRequestId()==null?oldVenue:b.row("venue_request",body.venueRequestId());
-        b.floors(List.of(Business.number(oldVenue,"floor_id"),Business.number(newVenue,"floor_id"))); b.users(affected(id,session.actor().id(),Business.number(initial,"owner_id"))); var actor=b.current(session); owner(actor,initial,oldVenue);
+        rights.lockFloors(List.of(Business.number(oldVenue,"floor_id"),Business.number(newVenue,"floor_id"))); b.users(affected(id,session.actor().id(),Business.number(initial,"owner_id"))); var actor=b.current(session); owner(actor,initial,oldVenue);
         return b.once(actor,key,"event.change:"+id,body,()->{
             var event=b.row("campus_event",id); Business.version(Business.number(event,"version"),body.version()); Business.text(body.reason(),500,true);
             switch(body.action()==null?"":body.action()) {
@@ -93,6 +94,7 @@ public class Events {
                     binding(newVenue,(int)Business.number(event,"capacity"));
                     if(Business.date(event,"promotion_until").isAfter(Business.date(newVenue,"starts_at"))) throw Business.conflict("EVENT_WINDOW_CONFLICT","新时间早于既有报名/递补期限，请取消重发或选择更晚时间。");
                     b.jdbc.update("UPDATE venue_entitlement SET status='CLOSED' WHERE request_id=?",Business.number(event,"venue_request_id"));
+                    rights.closeVenueBlock(Business.number(event,"venue_request_id"),actor.id(),body.reason());
                     b.jdbc.update("UPDATE venue_request SET status='CANCELED',decision_note=?,version=version+1 WHERE id=?","活动已换场地/时间："+body.reason(),Business.number(event,"venue_request_id"));
                     b.jdbc.update("UPDATE campus_event SET venue_request_id=?,version=version+1 WHERE id=?",body.venueRequestId(),id);
                     notifyParticipants(id,"changed:"+(body.version()+1),"活动时间或场地已变更","报名继续有效，请查看新安排；如不合适可以取消。"+body.reason());
@@ -103,6 +105,7 @@ public class Events {
                     b.jdbc.update("UPDATE event_participation SET status='EVENT_CANCELED',version=version+1 WHERE event_id=? AND status IN ('CONFIRMED','WAITLISTED')",id);
                     b.jdbc.update("UPDATE campus_event SET status='CANCELED',confirmed_count=0,version=version+1 WHERE id=?",id);
                     b.jdbc.update("UPDATE venue_entitlement SET status='CLOSED' WHERE request_id=?",Business.number(event,"venue_request_id"));
+                    rights.closeVenueBlock(Business.number(event,"venue_request_id"),actor.id(),body.reason());
                     b.jdbc.update("UPDATE venue_request SET status='CANCELED',decision_note=?,version=version+1 WHERE id=?",body.reason(),Business.number(event,"venue_request_id"));
                 }
                 default -> throw DomainException.invalid("活动操作不正确。");
@@ -117,7 +120,7 @@ public class Events {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> participate(AuthService.Session session,long id,String key,Participate body,String requestId) {
-        var event=lock(id); var venue=b.row("venue_request",Business.number(event,"venue_request_id")); b.floors(List.of(Business.number(venue,"floor_id"))); b.users(affected(id,session.actor().id(),Business.number(event,"owner_id"))); var actor=b.current(session); Business.student(actor);
+        var event=lock(id); var venue=b.row("venue_request",Business.number(event,"venue_request_id")); rights.lockFloors(List.of(Business.number(venue,"floor_id"))); b.users(affected(id,session.actor().id(),Business.number(event,"owner_id"))); var actor=b.current(session); Business.student(actor);
         return b.once(actor,key,"event.participate:"+id,body,()->{
             var now=b.now(); if(!event.get("status").equals("PUBLISHED") || !Business.date(venue,"starts_at").isAfter(now)) throw Business.conflict("EVENT_UNAVAILABLE","活动尚未发布、已取消或已开始。");
             var parts=b.jdbc.queryForList("SELECT * FROM event_participation WHERE event_id=? AND user_id=?",id,actor.id()); var old=parts.isEmpty()?null:parts.get(0);

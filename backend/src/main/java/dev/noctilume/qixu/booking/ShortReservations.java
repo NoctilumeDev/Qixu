@@ -18,7 +18,7 @@ public class ShortReservations {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> create(AuthService.Session session,String key,Create body,String requestId) {
         var initial=rights.space(body.spaceId()); long floor=Business.number(initial,"floor_id");
-        b.floors(List.of(floor)); b.users(List.of(session.actor().id())); var actor=b.current(session); Business.student(actor);
+        rights.lockFloors(List.of(floor)); b.users(List.of(session.actor().id())); var actor=b.current(session); Business.student(actor);
         return b.once(actor,key,"short.create",body,()->{
             var space=rights.space(body.spaceId()); var start=Business.time(body.startsAt()); var end=Business.time(body.endsAt());
             if(!space.get("kind").equals("SEAT")) throw DomainException.invalid("短期预约只适用于单人座位。");
@@ -42,7 +42,7 @@ public class ShortReservations {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> change(AuthService.Session session,long id,String key,Change body,String requestId) {
-        var initial=b.row("short_reservation",id); b.floors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(session.actor().id())); var actor=b.current(session);
+        var initial=b.row("short_reservation",id); rights.lockFloors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(session.actor().id())); var actor=b.current(session);
         if(Business.number(initial,"user_id")!=actor.id()) throw DomainException.forbidden();
         return b.once(actor,key,"short.change:"+id,body,()->{
             var row=b.row("short_reservation",id); Business.version(Business.number(row,"version"),body.version());
@@ -63,7 +63,7 @@ public class ShortReservations {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public void expire(long id) {
-        var initial=b.row("short_reservation",id); b.floors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(Business.number(initial,"user_id")));
+        var initial=b.row("short_reservation",id); rights.lockFloors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(Business.number(initial,"user_id")));
         var row=b.row("short_reservation",id); var now=b.now(); String next=null;
         if(row.get("status").equals("PENDING") && !Business.date(row,"check_in_deadline").isAfter(now)) next="EXPIRED";
         if(row.get("status").equals("CHECKED_IN") && !Business.date(row,"ends_at").isAfter(now)) next="ENDED";

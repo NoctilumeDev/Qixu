@@ -12,7 +12,7 @@ public class BatchFreezer {
     public BatchFreezer(PreparationBatches p) {this.p=p;}
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> freeze(AuthService.Session session,long id,String key,PreparationBatches.Action body) {
-        var batch=p.batch(id,true);var applications=applications(id);p.business().floors(p.floors(id));
+        var batch=p.batch(id,true);var applications=applications(id);p.rights().lockFloors(p.floors(id));
         var users=new ArrayList<>(applications.stream().map(a->Business.number(a,"user_id")).toList());users.add(session.actor().id());p.business().users(users);
         var actor=p.business().current(session);p.scope(actor,id);
         return p.business().once(actor,key,"preparation.freeze:"+id,body,()->{
@@ -27,7 +27,7 @@ public class BatchFreezer {
     public void freezeDue(long id) {
         var batch=p.batch(id,true);
         if(!"OPEN".equals(batch.get("status")) || p.business().now().isBefore(Business.date(batch,"closes_at")))return;
-        var applications=applications(id);p.business().floors(p.floors(id));p.business().users(applications.stream().map(a->Business.number(a,"user_id")).toList());
+        var applications=applications(id);p.rights().lockFloors(p.floors(id));p.business().users(applications.stream().map(a->Business.number(a,"user_id")).toList());
         freezeLocked(batch,applications,null);
     }
     private List<Map<String,Object>> applications(long id) {

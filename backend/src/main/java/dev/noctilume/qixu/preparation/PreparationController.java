@@ -22,7 +22,7 @@ public class PreparationController {
             default -> throw DomainException.invalid("请选择冻结或分配，不提供指定中签者/种子接口。");
         },r);
     }
-    @PostMapping("/api/v1/long-offers/{id}/actions") Object offer(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false)String key,@RequestBody PreparationBatches.Action body,HttpServletRequest r) {return Api.ok(seats.respond(SessionFilter.session(r),id,key,body),r);}
+    @PostMapping("/api/v1/long-offers/{id}/actions") Object offer(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false)String key,@RequestBody LongSeats.Response body,HttpServletRequest r) {return Api.ok(seats.respond(SessionFilter.session(r),id,key,body),r);}
     @PostMapping("/api/v1/preparation-batches/{id}/exit") Object exit(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false)String key,@RequestBody PreparationBatches.Action body,HttpServletRequest r) {return Api.ok(seats.exit(SessionFilter.session(r),id,key,body),r);}
     @PostMapping("/api/v1/preparation-batches/{id}/waitlist-exit") Object waitlistExit(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false)String key,@RequestBody PreparationBatches.Action body,HttpServletRequest r) {return Api.ok(seats.exitWaitlist(SessionFilter.session(r),id,key,body),r);}
     @GetMapping("/api/public/batches/{publicId}/verification") Object verification(@PathVariable String publicId,HttpServletRequest r) {return Api.ok(freezer.verification(publicId),r);}
