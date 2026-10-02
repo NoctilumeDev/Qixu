@@ -49,6 +49,7 @@
 | [API](docs/api.md) / [数据模型](docs/data-model.md) | 当前实施范围与后续规划边界 |
 | [视觉合同](docs/design.md) | 两端目标、素材和真实页面验收 |
 | [生命周期合同](docs/lifecycle.md) | 时间、会话、重试、就绪及前端请求所有权 |
+| [可靠性合同](docs/reliability.md) | 断网、未知提交、原键恢复与通知事实 |
 | [运行说明](docs/running.md) | 独立 MySQL、明确演示模式和当前后端入口 |
 
 ## 独立积木

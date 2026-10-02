@@ -218,4 +218,41 @@ class BookingIT {
         error(request("POST","/reservations/"+created.id()+"/actions",Map.of("version",9,"action","CANCEL"),a,"stale-cancel"),409,"STALE_VERSION");
         facts.put("statusAfterForeignWrites",jdbc.queryForObject("SELECT status FROM short_reservation WHERE id=?",String.class,created.id()));
     }
+    @Test void lostConfirmationResponseAfterCommitRecoversPastDeadline() throws Exception {
+        String a=token("student1");
+        var created=request("POST","/reservations",shortBody(seat("A001",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"create-loss-case"); assertEquals(200,created.status());
+        clock.instant=Instant.parse("2026-10-10T01:10:59Z");
+        var relay=com.sun.net.httpserver.HttpServer.create(new InetSocketAddress("127.0.0.1",0),0); var executor=Executors.newSingleThreadExecutor(); relay.setExecutor(executor);
+        var upstream=new java.util.concurrent.atomic.AtomicInteger(); var committed=new CountDownLatch(1);
+        String path="/reservations/"+created.id()+"/actions"; var body=Map.of("version",1,"action","CHECK_IN");
+        relay.createContext("/drop",exchange->{
+            try {
+                exchange.getRequestBody().readAllBytes(); var r=request("POST",path,body,a,"confirm-response-lost"); upstream.set(r.status());
+                clock.instant=Instant.parse("2026-10-10T01:11:01Z"); committed.countDown();
+                // Upstream responded after its transaction committed. Deliberately
+                // close the transport without returning any headers or body.
+            } catch(Exception e) { committed.countDown(); } finally { exchange.close(); }
+        }); relay.start();
+        try {
+            var wire=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+relay.getAddress().getPort()+"/drop")).timeout(Duration.ofSeconds(5)).POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build();
+            assertThrows(java.io.IOException.class,()->client.send(wire,HttpResponse.BodyHandlers.ofString())); assertTrue(committed.await(5,TimeUnit.SECONDS)); assertEquals(200,upstream.get());
+            var replay=request("POST",path,body,a,"confirm-response-lost"); assertEquals(200,replay.status()); assertEquals("CHECKED_IN",replay.data().path("status").asString());
+            shorts.expire(created.id());
+            facts.put("rightAfterResponseLoss",jdbc.queryForObject("SELECT status FROM short_reservation WHERE id=?",String.class,created.id())); facts.put("confirmReceipts",jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='confirm-response-lost'",Integer.class)); facts.put("rights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
+        } finally { relay.stop(0); executor.shutdownNow(); }
+    }
+    @Test void missingReceiptDuringFlightIsNotProofOfNoCommit() throws Exception {
+        String a=token("student1"); var body=shortBody(seat("A001",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"); var entered=new CountDownLatch(1);
+        org.mockito.Mockito.doAnswer(invocation->{entered.countDown(); return invocation.callRealMethod();}).when(business).floors(org.mockito.ArgumentMatchers.anyCollection());
+        var pool=Executors.newSingleThreadExecutor(); final Future<Reply>[] future=new Future[1];
+        try {
+            new TransactionTemplate(manager).execute(status->{
+                jdbc.queryForList("SELECT id FROM floor WHERE id=100 FOR UPDATE"); future[0]=pool.submit(()->request("POST","/reservations",body,a,"in-flight-request")); awaitBarrier(entered);
+                try { error(request("GET","/receipts/in-flight-request",null,a,null),404,"RESOURCE_NOT_FOUND"); } catch(Exception e) { throw new RuntimeException(e); }
+                return null;
+            });
+            var first=future[0].get(15,TimeUnit.SECONDS); assertEquals(200,first.status()); var retry=request("POST","/reservations",body,a,"in-flight-request"); assertEquals(200,retry.status()); assertEquals(first.id(),retry.id());
+            facts.put("rights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class)); facts.put("receipts",jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='in-flight-request'",Integer.class));
+        } finally { pool.shutdownNow(); }
+    }
 }
