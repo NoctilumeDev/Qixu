@@ -71,6 +71,30 @@ BOOKING_MEASURES = {
     "lostConfirmationResponseAfterCommitRecoversPastDeadline": {"rightAfterResponseLoss": "CHECKED_IN", "confirmReceipts": 1, "rights": 1},
     "missingReceiptDuringFlightIsNotProofOfNoCommit": {"rights": 1, "receipts": 1},
 }
+PREPARATION_MEASURES = {
+    "roleScopeAndPoolRightsAreNotCreationPrivileges": {"batches": 1, "shorts": 0},
+    "immutableVersionsFreezeExactWinnerAndRejectOfflineOverwrite": {"versions": 2, "frozenRevision": 2},
+    "crossBatchConcurrentApplicationsHaveOneIntervalFact": {"applications": 1},
+    "publicPacketIsCompleteReproducibleAndContainsNoIdentityMap": {"maximum": 2, "outcomes": 2, "resultNotices": 2},
+    "sourceUnavailableAndResultDeadlineCannotSwitchEntropy": {"results": 0, "failedNotices": 1, "sourceCalls": 1},
+    "resourceChangeInvalidatesEntireFrozenInput": {"status": "FAILED_NO_RESULT", "results": 0, "offers": 0},
+    "publicationFaultRetainsCandidateButRollsBackWholeResult": {"resultsAfterRecovery": 1, "offersAfterRecovery": 2, "sourceCalls": 1, "formalRuns": 1},
+    "publicationCrossingDeadlineHasNoPartialRights": {"results": 0, "offers": 0, "candidateRuns": 1},
+    "allLosingApplicantsReceivePersistentResultsAndStableWaitlist": {"offers": 1, "waitlist": 1, "resultInbox": 2},
+    "fallbackUpgradeIsAtomicAndDuplicateConfirmationReturnsReceipt": {"activeSeat": 2100, "activeRights": 1, "replaced": 1},
+    "expiredUpgradeAndOldTaskKeepFallbackAndRejectForeignOwner": {"fallbackSeat": 2000, "openOffers": 0, "upgradeState": "EXPIRED"},
+    "upgradeWriteFaultAndDeadlineNeverReleaseOldRight": {"fallbackSeat": 2000, "acceptedUpgrades": 0},
+    "concurrentExitAndConfirmCannotResurrectAndCycleCloses": {"activeRights": 0, "openOffers": 0},
+    "invalidManualWriteNeverObtainsCandidateAndMissedFreezeIsExplicit": {"sourceCalls": 0, "candidateRuns": 0, "missedFreezeStatus": "FAILED_NO_RESULT"},
+    "residualPromotionsCannotRecreateArtificialScarcity": {"openPromotions": 2, "flexibleSeat": 2000, "constrainedSeat": 2100},
+    "queuedFreezeRechecksDeadlineAndDoesNotExposeLateInput": {"frozenInputs": 0, "status": "FAILED_NO_RESULT", "failedNotices": 1},
+}
+PREPARATION_UNITS = {
+    "AllocationGraphTest": ["flexibleFirstCannotManufactureScarcity", "allThreeByThreeGraphsAgreeWithIndependentExhaustiveOracle", "frozenOrderingIsIndependentOfInputContainerOrderAndNeverOversells", "hundredApplicantsHaveRealFallbackAndBoundedShortage", "malformedGraphAndExhaustedBudgetDoNotProduceCandidateResult"],
+    "FrozenJsonTest": ["mysqlJsonKeyReorderingDoesNotChangeDomainDigestBytes"],
+    "HttpRandomnessSourceTest": ["javaProcessProtocolVerifiesRetainedProofAndRejectsBadRoundAndSignature", "missingHelperIsNotAnAuthorizationToUseLocalRandomness"],
+    "RandomnessClockTest": ["futureRoundUsesCeilingAndExactBoundaryIsStable"],
+}
 
 
 def git(*args: str) -> str:
@@ -85,7 +109,7 @@ def write_new(path: Path, value: dict) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", choices=["m1", "m2"], default="m1")
+    parser.add_argument("--stage", choices=["m1", "m2", "m3"], default="m1")
     parser.add_argument("--maven", default="mvn")
     args = parser.parse_args()
     if version("veritrail") != "0.13.0" or git("status", "--porcelain"):
@@ -94,11 +118,15 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    request = {"source_sha": sha, "stage": args.stage, "collector": "qixu-native/0.6"}
+    collector = "qixu-native/0.7" if args.stage == "m3" else "qixu-native/0.6"
+    request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
-    if args.stage == "m2":
+    if args.stage in ("m2", "m3"):
         required += ["dev.noctilume.qixu.BookingIT." + name for name in BOOKING_MEASURES]
-    spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": "0.6"},
+    if args.stage == "m3":
+        required += ["dev.noctilume.qixu.PreparationIT." + name for name in PREPARATION_MEASURES]
+        required += ["dev.noctilume.qixu.preparation." + cls + "." + name for cls, names in PREPARATION_UNITS.items() for name in names]
+    spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": collector.split("/")[1]},
             "evidence_type": "qixu.native.observation", "coordinates": request,
             "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations"],
             "canonicalization_profile": "veritrail-json-c14n/1"}
@@ -112,13 +140,15 @@ def main() -> int:
         for i, status in enumerate(statuses):
             assertions.append(assertion("http-" + str(len(assertions)), f"/facts/observations/{case}/requests/{i}/status", status))
     stage_measures = dict(DATABASE_MEASURES)
-    if args.stage == "m2":
+    if args.stage in ("m2", "m3"):
         stage_measures.update(BOOKING_MEASURES)
+    if args.stage == "m3":
+        stage_measures.update(PREPARATION_MEASURES)
     for case, measures in stage_measures.items():
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 6,
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 7 if args.stage == "m3" else 6,
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -144,7 +174,10 @@ def main() -> int:
         execution = "ERROR"
         (output / "execution-error.txt").write_text("COMMAND_TIMEOUT", encoding="utf-8")
     observed = {}
-    for path in (ROOT / "backend/target/failsafe-reports").glob("TEST-*.xml"):
+    report_dirs = [ROOT / "backend/target/failsafe-reports"]
+    if args.stage == "m3":
+        report_dirs.append(ROOT / "backend/target/surefire-reports")
+    for path in [p for directory in report_dirs for p in directory.glob("TEST-*.xml")]:
         for case in ET.parse(path).getroot().iter("testcase"):
             name = case.attrib["classname"] + "." + case.attrib["name"]
             passed = not any(case.find(kind) is not None for kind in ["failure", "error", "skipped"])
@@ -152,13 +185,18 @@ def main() -> int:
             observed[name] = passed if name not in observed else False
     measurements_path = ROOT / "backend/target/failsafe-reports/qixu-m1-observation.json"
     measurements = json.loads(measurements_path.read_text(encoding="utf-8")) if measurements_path.exists() else {}
-    if args.stage == "m2":
+    if args.stage in ("m2", "m3"):
         booking_path = ROOT / "backend/target/failsafe-reports/qixu-m2-observation.json"
         if booking_path.exists():
             measurements.update(json.loads(booking_path.read_text(encoding="utf-8")))
-    facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": "M1_FOUNDATION_ONLY" if args.stage == "m1" else "M2_API_MYSQL_ONLY_NOT_UI_OR_ALLOCATION"}
-    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": "qixu-native/0.6", "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
-                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed and measurements else "ERROR", "normalization_semantics_version": "qixu-native/0.6", "facts_digest": sha256_json(facts)}}}
+    if args.stage == "m3":
+        preparation_path = ROOT / "backend/target/failsafe-reports/qixu-m3-observation.json"
+        if preparation_path.exists():
+            measurements.update(json.loads(preparation_path.read_text(encoding="utf-8")))
+    boundaries = {"m1": "M1_FOUNDATION_ONLY", "m2": "M2_API_MYSQL_ONLY_NOT_UI_OR_ALLOCATION", "m3": "M3_NATIVE_TRANSACTIONS_AND_OFFLINE_PROOF_NOT_FUTURE_BEACON_OR_UI"}
+    facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": boundaries[args.stage]}
+    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": collector, "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
+                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed and measurements else "ERROR", "normalization_semantics_version": collector, "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)
     report = create_acceptance_bundle(plan=plan, evidence_paths=[output / "evidence.json"], output=output / "bundle", acceptance_id=identity, execution_status=execution)
     print(json.dumps({"identity": identity, "source_sha": sha, "verdict": report["verdict"], "observed_cases": len(observed), "passed_cases": sum(observed.values()), "command_exit": exit_code, "bundle": str(output / "bundle"), "boundary": facts["boundary"]}, ensure_ascii=False))

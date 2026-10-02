@@ -7,6 +7,10 @@ server:
 spring:
   application:
     name: qixu
+  task:
+    scheduling:
+      pool:
+        size: 2
   datasource:
     url: ${QIXU_DB_URL:jdbc:mysql://127.0.0.1:3306/qixu?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8}
     username: ${QIXU_DB_USERNAME:qixu_app}

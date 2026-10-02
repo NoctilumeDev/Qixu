@@ -62,15 +62,20 @@ public class Business {
     }
     public static long number(Map<String,Object> row,String key) { return ((Number)row.get(key)).longValue(); }
     public static LocalDateTime date(Map<String,Object> row,String key) { var v=row.get(key); return v instanceof LocalDateTime t?t:((java.sql.Timestamp)v).toLocalDateTime(); }
-    public Map<String,Object> once(Actor actor,String key,String operation,Object body,Supplier<Map<String,Object>> effect) {
+    public Optional<Map<String,Object>> replay(Actor actor,String key,String operation,Object body) {
         if(key==null || !key.matches("[A-Za-z0-9_-]{8,80}")) throw DomainException.invalid("请提供有效的请求标识。");
         String digest=Digests.sha256(json.writeValueAsString(body));
         var receipts=jdbc.queryForList("SELECT operation,body_hash,response_json FROM idempotency_receipt WHERE actor_id=? AND request_key=?",actor.id(),key);
         if(!receipts.isEmpty()) {
             var r=receipts.get(0);
             if(!r.get("operation").equals(operation) || !r.get("body_hash").equals(digest)) throw conflict("IDEMPOTENCY_CONFLICT","同一请求标识不能用于不同内容。");
-            return json.readValue(r.get("response_json").toString(),Map.class);
+            return Optional.of(json.readValue(r.get("response_json").toString(),Map.class));
         }
+        return Optional.empty();
+    }
+    public Map<String,Object> once(Actor actor,String key,String operation,Object body,Supplier<Map<String,Object>> effect) {
+        var previous=replay(actor,key,operation,body);if(previous.isPresent())return previous.get();
+        String digest=Digests.sha256(json.writeValueAsString(body));
         var acceptedAt=now().truncatedTo(java.time.temporal.ChronoUnit.MICROS);
         var value=new LinkedHashMap<>(effect.get());
         value.put("receipt",Map.of("key",key,"operation",operation,"acceptedAt",iso(acceptedAt),"status","COMMITTED"));

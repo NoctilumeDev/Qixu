@@ -53,7 +53,7 @@ public class HttpRandomnessSource implements RandomnessSource {
         try {
             if(body.length>12000 || !Files.isRegularFile(helper))throw unavailable("RANDOM_VERIFIER_UNAVAILABLE");
             var beacon=json.readValue(body,Map.class);
-            if(!(beacon.get("round") instanceof Number number) || number.longValue()!=round
+            if(!(beacon.get("round") instanceof Number number) || number.longValue()!=round || number.doubleValue()!=(double)round
                     || !(beacon.get("signature") instanceof String sig) || !sig.matches("[0-9a-f]{96}")
                     || !(beacon.get("randomness") instanceof String rand) || !rand.matches("[0-9a-f]{64}") || beacon.containsKey("previous_signature"))throw unavailable("RANDOM_SOURCE_INVALID");
             // A small allowlisted message cannot fill the child's stdin pipe before waitFor's budget starts.
@@ -67,7 +67,7 @@ public class HttpRandomnessSource implements RandomnessSource {
             if(child.exitValue()!=0 || output.length>4096)throw unavailable("RANDOM_SOURCE_INVALID");
             var result=json.readValue(output,Map.class);
             if(!Boolean.TRUE.equals(result.get("verified")) || !CHAIN.equals(result.get("chain")) || !VERIFIER.equals(result.get("verifier"))
-                    || !(result.get("round") instanceof Number n) || n.longValue()!=round
+                    || !(result.get("round") instanceof Number n) || n.longValue()!=round || n.doubleValue()!=(double)round
                     || !(result.get("signature") instanceof String signature) || !signature.matches("[0-9a-f]{96}")
                     || !(result.get("randomness") instanceof String randomness) || !randomness.matches("[0-9a-f]{64}"))throw unavailable("RANDOM_SOURCE_INVALID");
             return new Proof(CHAIN,round,signature,randomness,VERIFIER);

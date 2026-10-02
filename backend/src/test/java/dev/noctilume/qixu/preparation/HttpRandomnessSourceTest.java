@@ -18,6 +18,8 @@ class HttpRandomnessSourceTest {
         assertEquals(RandomnessSource.CHAIN,proof.chain());assertEquals(RandomnessSource.VERIFIER,proof.verifier());
         assertEquals(32721736,proof.round());
         assertEquals("RANDOM_SOURCE_INVALID",assertThrows(DomainException.class,()->source.verify(fixture,32721737)).code());
+        var fractional=json.readValue(fixture,Map.class);fractional.put("round",32721736.5);
+        assertEquals("RANDOM_SOURCE_INVALID",assertThrows(DomainException.class,()->source.verify(json.writeValueAsBytes(fractional),32721736)).code());
         var broken=json.readValue(fixture,Map.class);broken.put("signature","00".repeat(48));
         var invalid=assertThrows(DomainException.class,()->source.verify(json.writeValueAsBytes(broken),32721736));
         assertEquals(503,invalid.status());assertEquals("RANDOM_SOURCE_INVALID",invalid.code());
