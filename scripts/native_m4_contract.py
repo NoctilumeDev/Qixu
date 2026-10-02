@@ -81,7 +81,7 @@ SPECIFIC = {
     "scopeRevokedDuringFloorWaitCannotCreateLimit": {"space_block": 0},
     "plannedCourseCrossingStartDuringWritesCannotCommit": {"space_block": 0},
     "secondNotificationFaultRollsBackLimitArrangementsAndShortChanges": {"space_block": 0, "short_relocation": 0},
-    "overlappingLimitsKeepOriginalRightAndRevokeOnlyOneSource": {"space_blockStates": ["ACTIVE", "REVOKED"], "seat_entitlementStates": ["ACTIVE"]},
+    "overlappingLimitsKeepOriginalRightAndRevokeOnlyOneSource": {"oneSourceStates": ["ACTIVE", "REVOKED"], "afterOneTemporaryAvailable": False, "space_blockStates": ["REVOKED", "REVOKED"], "finalTemporaryAvailable": True, "seat_entitlementStates": ["ACTIVE"]},
     "repairVerificationReleasesOnlyOwnSourceAfterFailedAttempt": {"space_blockStates": ["ACTIVE", "REVOKED"], "repair_ticketStates": ["VERIFIED_CLOSED"], "feedback_reportStates": ["RESOLVED"]},
     "secondRepairRestoreNoticeRollsBackFactsReportsSourceAndReceipt": {"fault/space_blockStates": ["ACTIVE"], "fault/repair_ticketStates": ["WORK_DONE"], "fault/feedback_reportStates": ["IN_REPAIR", "IN_REPAIR"], "fault/facts": 0, "fault/receipts": 0, "space_blockStates": ["REVOKED"], "repair_ticketStates": ["VERIFIED_CLOSED"]},
     "noticeIsPrivateAndCannotRevokeBeforeAtLeastTwentyFourHours": {"governance_caseStates": ["NOTICE"], "seat_entitlementStates": ["ACTIVE"], "long_application_penaltyStates": []},

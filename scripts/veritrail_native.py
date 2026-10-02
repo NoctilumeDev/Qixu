@@ -121,7 +121,7 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.9"}.get(args.stage, "qixu-native/0.6")
+    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10"}.get(args.stage, "qixu-native/0.6")
     request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
     if args.stage in ("m2", "m3", "m4"):
@@ -157,7 +157,7 @@ def main() -> int:
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 1}.get(args.stage, 6),
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2}.get(args.stage, 6),
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
