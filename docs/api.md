@@ -59,3 +59,16 @@ M2的行式响应保留snake_case数据库字段，追加展示字段为camelCas
 | 消息/审计 | 本人收件箱，范围内审计 | 已读/恢复任务，不授予或撤销业务权 |
 
 API实现不能接受客户端actor/role/scope授权值。请求正文、响应字段与实际端点在各阶段提交中对齐；缺端点用未实现状态，不提供假的成功按钮。
+# M3新增接口（施工候选，资格见acceptance/m3.md）
+
+- `GET/POST /api/v1/preparation-batches`：公开规则/池查询，创建仅池内全部楼层管理员。
+- `GET /api/v1/preparation-batches/{id}`：批次期限、池、完整正式结果摘要；候选不是正式结果。
+- `GET/POST /api/v1/preparation-batches/{id}/application`：仅本人当前/冻结版本、结果、要约/权和稳定候补；提交版本与可接受seat/rank及保留更高志愿候补选择。
+- `POST /api/v1/preparation-batches/{id}/withdraw`：申请期本人撤回，正文Action=`{version,action:"WITHDRAW"}`。
+- `POST /api/v1/preparation-batches/{id}/actions`：仅范围管理员FREEZE/ALLOCATE，不提供改中签者/种子动作。
+- `POST /api/v1/long-offers/{id}/actions`：本人ACCEPT/DECLINE、预期offer版本；过期投影立即失效，原成功回执可恢复。
+- `POST /api/v1/preparation-batches/{id}/exit`：本人EXIT、预期application版本，结束要约/候补/旧权并保留历史。
+- `POST /api/v1/preparation-batches/{id}/waitlist-exit`：本人EXIT_WAITLIST、预期waitlist版本，仅退出候补并取消未确认升级，不丢已有席位。
+- `GET /api/public/batches/{publicUUID}/verification`：唯一新增匿名GET，只给原始输入字节/摘要及已正式发布的证明/输出字节；不含姓名、学号、内部user/application映射。
+
+所有写仍需当前会话、范围、同正文请求键和锁后时限。Clock用UTC，界面按Asia/Shanghai展示。查不到收据不能证明在途请求没有提交。

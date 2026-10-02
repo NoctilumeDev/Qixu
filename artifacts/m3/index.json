@@ -1,0 +1,65 @@
+{
+  "boundary": "M3_NATIVE_AND_SINGLE_FUTURE_BATCH_NOT_UI_OR_PRODUCTION",
+  "entries": [
+    {
+      "identity": "m3-1b2619b154ca4d529c29e2c159bddbb7",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "fdbfae8f2820a3330553a0d76a2485c4b5e6fab2"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "2184b16d1af1e2c6e5fa0dd8b686afac8962cee3ab52d74e671f10115f735faf"
+    },
+    {
+      "identity": "m3-5e6b9095507a49d4ab06d9bd9f787b19",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "7ac2147e69d504959229dec061f54b2aa33fe9b0"
+      },
+      "verdict": "FAIL",
+      "manifest_sha256": "3b2529411084faeed83e933be94c1bed47280ad2b9bd53b98fdd9fee56284949"
+    },
+    {
+      "identity": "m3-c27a61fc32b14e0b9344962183f1fe67",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "c010363ba1f72a9aae231e67795e5614f52c1bb8"
+      },
+      "verdict": "FAIL",
+      "manifest_sha256": "5283cd7e81cdfcb6ca6f091c8136a9c0396d866a3fc5c8c5593519ba9e824509"
+    },
+    {
+      "identity": "m3-d717708adda44d98b06c5aa5919c8a19",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "cfd7785531cb8f343725b4a1c4bf0ee06f0c969a"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "7ed7106a599caee0ebb6f6629dd64b1485f301835804b248dc7c32bec83f2487"
+    },
+    {
+      "identity": "m3-live-a9c15c1bd9d44879aacc737c3be57bf4",
+      "subject": {
+        "id": "qixu-m3-live",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "fdbfae8f2820a3330553a0d76a2485c4b5e6fab2"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "3f322c7ddd6b5dfae981cb0fd3d437aa86cd9570ab3f9edadbc52766e6a23dc3"
+    },
+    {
+      "identity": "m3-live-b65b97cab2ae4e169204ffde5c17f4b8",
+      "subject": {
+        "id": "qixu-m3-live",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "fdbfae8f2820a3330553a0d76a2485c4b5e6fab2"
+      },
+      "verdict": "PENDING",
+      "manifest_sha256": "dbd2a38ade49e6e3224122772963da91aa152228898216d51522c38aca78c764"
+    }
+  ]
+}

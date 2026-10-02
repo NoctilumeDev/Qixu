@@ -57,7 +57,8 @@ public class SessionFilter extends OncePerRequestFilter {
                 throw new DomainException(503,"APPLICATION_NOT_READY","服务正在准备，请稍后重试。");
             boolean anonymous=(path.equals("/api/health") && request.getMethod().equals("GET"))
                 || (path.equals("/api/v1/auth/login") && request.getMethod().equals("POST"))
-                || (path.equals("/api/v1/auth/options") && request.getMethod().equals("GET"));
+                || (path.equals("/api/v1/auth/options") && request.getMethod().equals("GET"))
+                || (request.getMethod().equals("GET") && path.matches("/api/public/batches/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/verification"));
             if (path.startsWith("/api/") && !anonymous) {
                 String authorization=request.getHeader("Authorization");
                 boolean bearer=authorization!=null && authorization.startsWith("Bearer ");

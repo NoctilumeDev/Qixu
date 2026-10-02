@@ -1,0 +1,9 @@
+{
+  "name": "qixu-randomness-verifier",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": { "test": "node --test verify.test.mjs" },
+  "dependencies": { "drand-client": "1.4.2" }
+}

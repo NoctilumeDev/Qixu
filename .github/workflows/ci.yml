@@ -37,6 +37,14 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.14.0'
+          package-manager-cache: false
+      - name: Install locked offline proof verifier and test real public signatures
+        run: |
+          npm ci --prefix randomness --ignore-scripts --no-audit --no-fund
+          npm test --prefix randomness
       - name: Provision schema-scoped ephemeral test identity
         env:
           MYSQL_PWD: qixu-ci-root-only
