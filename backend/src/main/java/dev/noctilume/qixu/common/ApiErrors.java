@@ -18,7 +18,7 @@ public class ApiErrors {
     ResponseEntity<Object> domain(DomainException e, HttpServletRequest r) {
         return ResponseEntity.status(e.status()).body(Api.error(e.code(),e.getMessage(),r));
     }
-    @ExceptionHandler({MethodArgumentNotValidException.class,HttpMessageNotReadableException.class,MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class,HttpMessageNotReadableException.class,MethodArgumentTypeMismatchException.class,org.springframework.web.bind.MissingServletRequestParameterException.class})
     ResponseEntity<Object> invalid(Exception e, HttpServletRequest r) {
         return ResponseEntity.status(422).body(Api.error("INVALID_INPUT","请检查填写内容和时间格式。",r));
     }

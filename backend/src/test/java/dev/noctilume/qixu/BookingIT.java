@@ -212,6 +212,7 @@ class BookingIT {
         error(request("POST","/reservations",shortBody(seat,"2026-10-10T14:00:00Z","2026-10-10T15:00:00Z"),a,"invalid-night"),422,"INVALID_INPUT");
         error(request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T06:00:00Z"),a,"invalid-length"),422,"INVALID_INPUT");
         error(request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,null),422,"INVALID_INPUT");
+        error(request("GET","/spaces/"+seat+"/availability",null,a,null),422,"INVALID_INPUT");
         facts.put("rightsAfterInvalid",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
         var created=request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"valid-owner"); assertEquals(200,created.status());
         error(request("POST","/reservations/"+created.id()+"/actions",Map.of("version",1,"action","CANCEL"),c,"foreign-cancel"),403,"SCOPE_FORBIDDEN");
@@ -237,6 +238,7 @@ class BookingIT {
             var wire=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+relay.getAddress().getPort()+"/drop")).timeout(Duration.ofSeconds(5)).POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build();
             assertThrows(java.io.IOException.class,()->client.send(wire,HttpResponse.BodyHandlers.ofString())); assertTrue(committed.await(5,TimeUnit.SECONDS)); assertEquals(200,upstream.get());
             var replay=request("POST",path,body,a,"confirm-response-lost"); assertEquals(200,replay.status()); assertEquals("CHECKED_IN",replay.data().path("status").asString());
+            assertEquals("2026-10-10T01:10:59Z",replay.data().at("/receipt/acceptedAt").asString());
             shorts.expire(created.id());
             facts.put("rightAfterResponseLoss",jdbc.queryForObject("SELECT status FROM short_reservation WHERE id=?",String.class,created.id())); facts.put("confirmReceipts",jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='confirm-response-lost'",Integer.class)); facts.put("rights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
         } finally { relay.stop(0); executor.shutdownNow(); }

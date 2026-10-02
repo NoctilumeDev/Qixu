@@ -71,14 +71,16 @@ public class Business {
             if(!r.get("operation").equals(operation) || !r.get("body_hash").equals(digest)) throw conflict("IDEMPOTENCY_CONFLICT","同一请求标识不能用于不同内容。");
             return json.readValue(r.get("response_json").toString(),Map.class);
         }
-        var value=effect.get();
-        jdbc.update("INSERT INTO idempotency_receipt(actor_id,request_key,operation,body_hash,response_json,created_at) VALUES(?,?,?,?,?,?)",actor.id(),key,operation,digest,json.writeValueAsString(value),now());
+        var acceptedAt=now().truncatedTo(java.time.temporal.ChronoUnit.MICROS);
+        var value=new LinkedHashMap<>(effect.get());
+        value.put("receipt",Map.of("key",key,"operation",operation,"acceptedAt",iso(acceptedAt),"status","COMMITTED"));
+        jdbc.update("INSERT INTO idempotency_receipt(actor_id,request_key,operation,body_hash,response_json,created_at) VALUES(?,?,?,?,?,?)",actor.id(),key,operation,digest,json.writeValueAsString(value),acceptedAt);
         return value;
     }
     public Object receipt(long actor,String key) {
         var rows=jdbc.queryForList("SELECT operation,response_json,created_at FROM idempotency_receipt WHERE actor_id=? AND request_key=?",actor,key);
         if(rows.isEmpty()) throw DomainException.missing();
-        return Map.of("operation",rows.get(0).get("operation"),"result",json.readValue(rows.get(0).get("response_json").toString(),Map.class),"status","COMMITTED");
+        return Map.of("operation",rows.get(0).get("operation"),"acceptedAt",iso(date(rows.get(0),"created_at")),"result",json.readValue(rows.get(0).get("response_json").toString(),Map.class),"status","COMMITTED");
     }
     public void audit(long actor,String action,String entity,long id,String requestId) {
         jdbc.update("INSERT INTO audit_entry(actor_id,action,entity_type,entity_id,request_id,detail_json,created_at) VALUES(?,?,?,?,?,JSON_OBJECT(),?)",actor,action,entity,Long.toString(id),requestId,now());
