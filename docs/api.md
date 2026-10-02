@@ -105,3 +105,5 @@ API实现不能接受客户端actor/role/scope授权值。请求正文、响应�
 来源MAINTENANCE/SAFETY允许明确UNAVAILABLE；COURSE/EVENT不能用无替代覆盖长期权。EVENT计划精确绑定SUBMITTED场地申请、版本和窗口，完整处置与场地批准同事务。学生报名继续使用既有活动端点，活动取消只关闭自己的来源。短约MOVE关闭原记录并生成新记录/typed来源链，不延长到场期限；长期TEMPORARY留原归属，不改正式分配结果。
 
 关联层协调、最大资源/片段/通知数、循环和新坐标停止边界见[实施细则](contracts/space-impact.md)。V5已在隔离库迁移，原始施工失败和恢复见[错题记录](failure-notebook.md)。治理、维修来源限制解除及整个M4的Core资格尚待后续闭合。
+
+V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象，追加关联批次当前申请人；第二条站内outbox写失败整笔回滚，外部推送延迟另行重试。COURSE/EVENT在最终写入仍须早于开始时刻。相同key/body恢复历史回执，不因为临时目标后来停用而重做迁移。当前不含维修来源联动或治理资格。

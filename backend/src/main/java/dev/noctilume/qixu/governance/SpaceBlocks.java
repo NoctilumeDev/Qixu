@@ -15,8 +15,8 @@ import tools.jackson.databind.json.JsonMapper;
 /** Plans act on complete current footprints. They do not rewrite allocation or original ownership. */
 @Service
 public class SpaceBlocks {
-    private final Business b;private final SpaceRights rights;private final SpatialFacts facts;private final Events events;private final VenueRequests venues;private final JsonMapper json;private final FrozenJson canonical;
-    public SpaceBlocks(Business b,SpaceRights rights,SpatialFacts facts,Events events,VenueRequests venues,JsonMapper json) {this.b=b;this.rights=rights;this.facts=facts;this.events=events;this.venues=venues;this.json=json;canonical=new FrozenJson(json);}
+    private final Business b;private final SpaceRights rights;private final SpatialFacts facts;private final BlockNotices notices;private final Events events;private final VenueRequests venues;private final JsonMapper json;private final FrozenJson canonical;
+    public SpaceBlocks(Business b,SpaceRights rights,SpatialFacts facts,BlockNotices notices,Events events,VenueRequests venues,JsonMapper json) {this.b=b;this.rights=rights;this.facts=facts;this.notices=notices;this.events=events;this.venues=venues;this.json=json;canonical=new FrozenJson(json);}
     public record Resolution(String impactKey,String action,Long targetSpaceId,Long replacementVenueId) {}
     public record Plan(long spaceId,String kind,OffsetDateTime startsAt,OffsetDateTime endsAt,String reason,Long venueRequestId,Long venueVersion,List<Resolution> resolutions,String impactHash) {}
     public record Revoke(long version,String reason) {}
@@ -54,12 +54,15 @@ public class SpaceBlocks {
         if(impacts.stream().filter(i->!i.root().kind().equals("POOL")).count()>500||impacts.stream().filter(i->i.root().kind().equals("POOL")).count()>2000)throw Business.conflict("IMPACT_LIMIT","影响范围超过首版上限，请分段处理；未截断任何权。");
         if(p.venueRequestId()!=null) {users.add(Business.number(b.row("venue_request",p.venueRequestId()),"user_id"));for(var e:b.jdbc.queryForList("SELECT id FROM campus_event WHERE venue_request_id=? AND status<>'CANCELED'",p.venueRequestId()))eventIds.add(Business.number(e,"id"));}
         for(var r:resolutions(p))if(r.replacementVenueId()!=null) {users.add(Business.number(b.row("venue_request",r.replacementVenueId()),"user_id"));for(var e:b.jdbc.queryForList("SELECT id FROM campus_event WHERE venue_request_id=? AND status<>'CANCELED'",r.replacementVenueId()))eventIds.add(Business.number(e,"id"));}
+        var closingSources=new TreeSet<Long>();for(var i:impacts)if(i.root().kind().equals("VENUE"))closingSources.add(i.root().id());
+        var sourceEvidence=new ArrayList<Map<String,Object>>();for(long venue:closingSources) {batches.addAll(rights.venueLimitBatches(venue));users.addAll(rights.venueLimitUsers(venue));for(var k:b.jdbc.queryForList("SELECT id FROM space_block WHERE venue_request_id=? AND status='ACTIVE' ORDER BY id",venue)) {long block=Business.number(k,"id");sourceEvidence.add(Map.of("blockId",block,"hash",notices.currentHash(block)));}}
         var applicants=new ArrayList<Map<String,Object>>();for(long batch:batches)for(var a:b.jdbc.queryForList("SELECT id,batch_id,user_id,current_version,status FROM preparation_application WHERE batch_id=? AND status='SUBMITTED' ORDER BY id",batch)) {applicants.add(a);users.add(Business.number(a,"user_id"));}
         var eventRows=new ArrayList<Map<String,Object>>();for(long id:eventIds) {var e=b.row("campus_event",id);eventRows.add(b.view(e));users.add(Business.number(e,"owner_id"));for(var r:b.jdbc.queryForList("SELECT * FROM event_participation WHERE event_id=? AND status IN ('CONFIRMED','WAITLISTED') ORDER BY id",id)) {users.add(Business.number(r,"user_id"));eventRows.add(b.view(r));}}
         if(users.size()>2000)throw Business.conflict("IMPACT_RECIPIENT_LIMIT","相关用户超过首版通知协调上限，未截断通知。");
         floors=facts.connected(floors);var boundFloors=floors;
         var evidence=new TreeMap<String,Object>();evidence.put("plan",normalized(p));evidence.put("spaces",s.spaces().values().stream().filter(r->boundFloors.contains(Business.number(r,"floor_id"))).map(b::view).toList());evidence.put("roots",s.roots().stream().filter(r->boundFloors.contains(r.floor())).map(r->b.view(r.fact())).toList());evidence.put("limits",s.limits().stream().filter(k->boundFloors.contains(k.floor())).map(k->b.view(k.fact())).toList());evidence.put("arrangements",s.arrangements().stream().filter(a->boundFloors.contains(Business.number(a.fact(),"from_floor_id"))).map(a->b.view(a.fact())).toList());evidence.put("events",eventRows);evidence.put("applicants",applicants.stream().map(b::view).toList());
         var replacement=new ArrayList<Map<String,Object>>();for(var r:resolutions(p))if(r.replacementVenueId()!=null)replacement.add(b.view(b.row("venue_request",r.replacementVenueId())));if(p.venueRequestId()!=null)replacement.add(b.view(b.row("venue_request",p.venueRequestId())));evidence.put("venueRequests",replacement);
+        evidence.put("closingSources",sourceEvidence);
         return new Context(s,floors,batches,eventIds,users,List.copyOf(impacts),eventRows,applicants,Digests.sha256(canonical.encode(evidence)));
     }
     private void scope(Actor actor,Plan p,Context c) {for(long floor:bodyFloors(p))b.admin(actor,floor);for(var i:c.impacts())b.admin(actor,i.root().floor());}
@@ -105,9 +108,10 @@ public class SpaceBlocks {
             for(var i:c.impacts())if(i.root().kind().equals("LONG"))facts.freeForOffer(i.root().id(),i.root().user(),start,end,i.root().batch(),i.root().fact().get("upgrade_from_id")==null?null:Business.number(i.root().fact(),"upgrade_from_id"));
             for(var k:finalFacts.limits())if(k.id()!=id&&Set.of("COURSE","EVENT").contains(k.kind())&&SpatialFacts.related(p.spaceId(),k.space(),finalFacts.parents())&&SpatialFacts.overlap(start,end,k.start(),k.end()))throw Business.conflict("EXCLUSIVE_BLOCK_CONFLICT","该窗口仍有未处置课程或活动占用，不能覆盖。");
             if(p.venueRequestId()!=null)approveResolved(actor,p,id);
+            notices.retain(id,c.batches(),c.users());
             for(long user:c.users())b.notify(user,"block:"+id+":created","空间使用安排发生变化",p.reason()+"。请查看原申请和每段临时安排；原长期归属保留，限制不改变原确认期限。","BLOCK",id);
             b.jdbc.update("INSERT INTO block_history(block_id,actor_id,action,reason,impact_hash,created_at) VALUES(?,?,'CREATED',?,?,?)",id,actor.id(),p.reason(),c.hash(),b.now());b.audit(actor.id(),"BLOCK_CREATED","BLOCK",id,requestId);
-            if(!b.now().isBefore(end))throw Business.conflict("LIMIT_WINDOW_ENDED","提交过程中限制窗口已结束，整次处置未生效。");return get(actor,id);
+            if(!b.now().isBefore(end))throw Business.conflict("LIMIT_WINDOW_ENDED","提交过程中限制窗口已结束，整次处置未生效。");if(Set.of("COURSE","EVENT").contains(p.kind())&&!b.now().isBefore(start))throw Business.conflict("LIMIT_WINDOW_STARTED","提交过程中计划窗口已开始，整次处置未生效。");return get(actor,id);
         });
     }
     private void compatible(Map<String,Object> origin,Map<String,Object> target) {
@@ -151,9 +155,9 @@ public class SpaceBlocks {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> revoke(AuthService.Session session,long id,String key,Revoke body,String requestId) {
-        var first=row(id);rights.lockFloors(List.of(Business.number(first,"floor_id")));var users=new TreeSet<Long>(List.of(session.actor().id()));for(var r:b.jdbc.queryForList("SELECT DISTINCT o.user_id FROM long_temporary_arrangement a JOIN long_offer o ON a.offer_id=o.id WHERE a.block_id=?",id))users.add(Business.number(r,"user_id"));if(users.size()>2000)throw Business.conflict("IMPACT_RECIPIENT_LIMIT","相关用户超过通知协调上限。");b.users(users);var actor=b.current(session);get(actor,id);
+        var first=row(id);notices.lockBatches(notices.batches(id));rights.lockFloors(List.of(Business.number(first,"floor_id")));var recipients=notices.users(id);var users=new TreeSet<>(recipients);users.add(session.actor().id());b.users(users);var actor=b.current(session);get(actor,id);
         return b.once(actor,key,"block.revoke:"+id,body,()->{var current=row(id);Business.version(Business.number(current,"version"),body.version());Business.text(body.reason(),500,true);if(current.get("venue_request_id")!=null)throw Business.conflict("EVENT_BOUND","活动来源限制必须随其场地/活动变更或取消，不能单独撤销。");if(!current.get("status").equals("ACTIVE"))throw Business.conflict("BLOCK_STATE_CONFLICT","限制已撤销。");
-            b.jdbc.update("UPDATE space_block SET status='REVOKED',version=version+1,revoked_at=?,revoke_reason=? WHERE id=?",b.now(),body.reason(),id);b.jdbc.update("INSERT INTO block_history(block_id,actor_id,action,reason,impact_hash,created_at) VALUES(?,?,'REVOKED',?,?,?)",id,actor.id(),body.reason(),"0".repeat(64),b.now());for(long user:users)if(user!=actor.id())b.notify(user,"block:"+id+":revoked","一项空间限制已撤销",body.reason()+"；实际位置仍由其他有效限制共同决定，原长期归属不变。","BLOCK",id);b.audit(actor.id(),"BLOCK_REVOKED","BLOCK",id,requestId);return get(actor,id);});
+            var hash=notices.currentHash(id);b.jdbc.update("UPDATE space_block SET status='REVOKED',version=version+1,revoked_at=?,revoke_reason=? WHERE id=?",b.now(),body.reason(),id);b.jdbc.update("INSERT INTO block_history(block_id,actor_id,action,reason,impact_hash,created_at) VALUES(?,?,'REVOKED',?,?,?)",id,actor.id(),body.reason(),hash,b.now());for(long user:recipients)b.notify(user,"block:"+id+":revoked","一项空间限制已撤销",body.reason()+"；实际位置仍由其他有效限制共同决定，原长期归属不变。","BLOCK",id);b.audit(actor.id(),"BLOCK_REVOKED","BLOCK",id,requestId);return get(actor,id);});
     }
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public List<Map<String,Object>> publicLimits(long space,LocalDateTime start,LocalDateTime end) {

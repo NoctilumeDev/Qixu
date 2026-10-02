@@ -41,7 +41,7 @@ public class VenueRequests {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> decide(AuthService.Session session,long id,String key,Decision body,String requestId) {
         // Event-bound cancellation uses Events.cancel, which acquires event before floor.
-        var initial=b.row("venue_request",id); rights.lockFloors(List.of(Business.number(initial,"floor_id")));var people=new ArrayList<Long>(List.of(session.actor().id(),Business.number(initial,"user_id")));people.addAll(rights.venueLimitUsers(id));b.users(people); var actor=b.current(session);
+        var initial=b.row("venue_request",id);var batches=rights.venueLimitBatches(id);rights.lockLimitBatches(batches);rights.lockFloors(List.of(Business.number(initial,"floor_id")));rights.checkVenueLimitBatches(id,batches);var people=new ArrayList<Long>(List.of(session.actor().id(),Business.number(initial,"user_id")));people.addAll(rights.venueLimitUsers(id));b.users(people); var actor=b.current(session);
         String action=body.action()==null?"":body.action();
         if(action.equals("CANCEL")) { if(Business.number(initial,"user_id")!=actor.id()) b.admin(actor,Business.number(initial,"floor_id")); }
         else b.admin(actor,Business.number(initial,"floor_id"));

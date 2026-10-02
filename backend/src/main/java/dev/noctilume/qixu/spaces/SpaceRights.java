@@ -11,20 +11,21 @@ import org.springframework.stereotype.Service;
 public class SpaceRights {
     private final Business b;
     private final SpatialFacts facts;
-    public SpaceRights(Business b,SpatialFacts facts) { this.b=b; this.facts=facts; }
+    private final BlockNotices notices;
+    public SpaceRights(Business b,SpatialFacts facts,BlockNotices notices) { this.b=b; this.facts=facts; this.notices=notices; }
     public Set<Long> lockFloors(Collection<Long> floors) {return facts.lockFloors(floors);}
     public Map<String,Object> offerImpact(long id,long owner) {return facts.offerImpact(id,owner);}
     public void freeForOffer(long id,long owner,LocalDateTime start,LocalDateTime end,long batch,Long upgrade) {facts.freeForOffer(id,owner,start,end,batch,upgrade);}
-    public List<Long> venueLimitUsers(long venue) {
-        var rows=b.jdbc.queryForList("SELECT DISTINCT o.user_id FROM long_temporary_arrangement a JOIN space_block k ON a.block_id=k.id JOIN long_offer o ON a.offer_id=o.id WHERE k.venue_request_id=? AND k.status='ACTIVE' ORDER BY o.user_id LIMIT 2001",venue);
-        if(rows.size()>2000)throw Business.conflict("IMPACT_RECIPIENT_LIMIT","活动临时安排用户超过协调上限，未截断通知。");return rows.stream().map(r->Business.number(r,"user_id")).toList();
-    }
+    public Set<Long> venueLimitUsers(long venue) {return notices.venueUsers(venue);}
+    public Set<Long> venueLimitBatches(long venue) {return notices.venueBatches(venue);}
+    public void lockLimitBatches(Collection<Long> batches) {notices.lockBatches(batches);}
+    public void checkVenueLimitBatches(long venue,Collection<Long> batches) {notices.checkVenueBatches(venue,batches);}
     /** Called only under the venue's coordinated floors, inside its cancellation/rebinding transaction. */
     public void closeVenueBlock(long venue,long actor,String reason) {
         for(var block:b.jdbc.queryForList("SELECT id FROM space_block WHERE venue_request_id=? AND status='ACTIVE'",venue)) {
-            long id=Business.number(block,"id");b.jdbc.update("UPDATE space_block SET status='REVOKED',version=version+1,revoked_at=?,revoke_reason=? WHERE id=?",b.now(),reason,id);
-            b.jdbc.update("INSERT INTO block_history(block_id,actor_id,action,reason,impact_hash,created_at) VALUES(?,?,'VENUE_CLOSED',?,?,?)",id,actor,reason,"0".repeat(64),b.now());
-            for(var r:b.jdbc.queryForList("SELECT DISTINCT o.user_id FROM long_temporary_arrangement a JOIN long_offer o ON a.offer_id=o.id WHERE a.block_id=?",id))b.notify(Business.number(r,"user_id"),"block:"+id+":venue-closed","活动空间限制已撤销","原归属保持，实际安排由所有仍有效限制共同决定。"+reason,"BLOCK",id);
+            long id=Business.number(block,"id");var hash=notices.currentHash(id);var users=notices.users(id);b.jdbc.update("UPDATE space_block SET status='REVOKED',version=version+1,revoked_at=?,revoke_reason=? WHERE id=?",b.now(),reason,id);
+            b.jdbc.update("INSERT INTO block_history(block_id,actor_id,action,reason,impact_hash,created_at) VALUES(?,?,'VENUE_CLOSED',?,?,?)",id,actor,reason,hash,b.now());
+            for(long user:users)b.notify(user,"block:"+id+":venue-closed","活动空间限制已撤销","原归属保持，实际安排由所有仍有效限制共同决定。"+reason,"BLOCK",id);
         }
     }
     public Map<String,Object> space(long id) {

@@ -25,7 +25,6 @@ public class Events {
     }
     private List<Long> affected(long event,long actor,long owner) {
         var users=new ArrayList<Long>(List.of(actor,owner));
-        users.addAll(rights.venueLimitUsers(Business.number(b.row("campus_event",event),"venue_request_id")));
         b.jdbc.queryForList("SELECT user_id FROM event_participation WHERE event_id=? AND status IN ('CONFIRMED','WAITLISTED')",event).forEach(r->users.add(Business.number(r,"user_id"))); return users;
     }
     private void binding(Map<String,Object> venue,int capacity) {
@@ -74,9 +73,13 @@ public class Events {
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> change(AuthService.Session session,long id,String key,Change body,String requestId) {
-        var initial=lock(id); var oldVenue=b.row("venue_request",Business.number(initial,"venue_request_id"));
+        var peek=b.row("campus_event",id);long previousVenue=Business.number(peek,"venue_request_id");var first=b.current(session);owner(first,peek,b.row("venue_request",previousVenue));var receipt=b.replay(first,key,"event.change:"+id,body);if(receipt.isPresent())return receipt.get();
+        // Closing a limit changes its batch applicants' arrangements: batch before event/floor.
+        var batches=rights.venueLimitBatches(previousVenue);rights.lockLimitBatches(batches);
+        var initial=lock(id);if(Business.number(initial,"venue_request_id")!=previousVenue)throw Business.conflict("IMPACT_COORDINATES_CHANGED","等待期间活动已换场地，请重试，未逆序追加批次锁。");rights.checkVenueLimitBatches(previousVenue,batches);
+        var oldVenue=b.row("venue_request",previousVenue);
         var newVenue=body.venueRequestId()==null?oldVenue:b.row("venue_request",body.venueRequestId());
-        rights.lockFloors(List.of(Business.number(oldVenue,"floor_id"),Business.number(newVenue,"floor_id"))); b.users(affected(id,session.actor().id(),Business.number(initial,"owner_id"))); var actor=b.current(session); owner(actor,initial,oldVenue);
+        rights.lockFloors(List.of(Business.number(oldVenue,"floor_id"),Business.number(newVenue,"floor_id")));rights.checkVenueLimitBatches(previousVenue,batches);var users=new TreeSet<>(affected(id,session.actor().id(),Business.number(initial,"owner_id")));users.addAll(rights.venueLimitUsers(previousVenue));b.users(users); var actor=b.current(session); owner(actor,initial,oldVenue);
         return b.once(actor,key,"event.change:"+id,body,()->{
             var event=b.row("campus_event",id); Business.version(Business.number(event,"version"),body.version()); Business.text(body.reason(),500,true);
             switch(body.action()==null?"":body.action()) {

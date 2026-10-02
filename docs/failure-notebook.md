@@ -59,3 +59,6 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 # M4 全回归首次失败 · 测试夹具边界
 
 固定 `fb2612bfb0d689b7a488f2b7dcaf89c03d41a971` 的 native `m3-bb4df6c1518b44bf8f1ede7ce2c27707` 观察 75 项、74 项通过，Core FAIL。Foundation 的公开靠窗筛选观察到 9 个而原标准是 8 个。空间测试临时夹具 5801 留在隔离库，跨 suite 污染基线，分类为测试基础隔离缺陷，不能改原断言或解释成产品 PASS。原 Bundle 与私人 XML/source ZIP 已保留；清理在限定 qixu_test/qixu_ci 中、业务 FK 依赖清除后只删除明确测试坐标。修复 `7987ac91fd3f9cccf6d57437705dd3f6df9cd013` 的 fresh native `m3-d491d0ece1b44fa4a01f20c93e687a1a` 75项全部通过；仍是 M3 Plan8 加施工例观察，不升级为整个M4资格。
+# M4 通知恢复施工 · 原失败保留
+
+`m4-spatial-tests-1c2c9ba570c04dfba9d5a099b06f388c` 首次 V6 真实迁移及19项空间观察，18通过、1失败。退出申请的测试使用了不存在的 `/application/withdraw`，真实接口是 `/withdraw`，收到404 NOT_FOUND；分类为测试路由错误，不改产品授权/路由以适应夹具。私人原 source ZIP 摘要 `52561c2acd1d69221ff2e1e9547d09017fe82f4df3a68c8955215366f31b4bbe`、原 stdout/XML 已留存。V6 已执行，之后不改迁移字节；修正路由并增加活动解除事务与 batch/floor 等待的真实锁观察。新施工身份 `m4-spatial-tests-72b2bce4a2c14dad9bd78b220e23fde6` 21项全部通过，source ZIP `621118617745e416e8ffd6e6af53abc433f0aed8d185f212f2a43af3b37b3057`，不是整个M4资格。

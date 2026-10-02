@@ -42,3 +42,7 @@ V4已实际迁移到qixu_test，后续不改旧SQL；新Block/治理结构追加
 space_block记录独立来源、半开窗口、创建/撤销和场地绑定；block_impact逐服务器摘要项保存明确处置。long_temporary_arrangement绑定原offer、受限实际位置及每个Block窗口，目标可为明确不可用；不改变seat_entitlement.space_id。short_relocation连接关闭的原短约与新短约，原期限保留。block_history追加来源动作及创建摘要。
 
 实际足迹由当前原权、OPEN要约期限、有效Block及安排实时推导，限制结束/退出/原子升级不靠AVAILABLE字段或延迟任务。历史跨层映射形成协调连通分量，新增映射前锁全关联层并复查；权事实仍各自存表。V5已经真实迁移到qixu_test，后续追加，不改其SQL校验和。完整M4仍在施工，治理、通知对象保留/恢复及维修与限制联动尚待闭合。
+
+## M4 V6 · 原通知对象与解除协调
+
+block_recipient与block_batch在创建事务中保留原对象和影响批次，复合主键/实体FK；解除对象是原对象与批次当前有效申请人并集，不以消息是否已清理为依据。批次先于event/floor/user锁，活动换场地导致未知坐标则409不补逆序锁；解除历史保存动作前真实摘要。V6已真实升级qixu_test；21项空间施工例见原身份，不等同整个M4资格。旧V5数据的回填只取实际创建outbox、POOL来源批次及原offer批次，含已有历史数据的干净升级另留M6专项控制，不冒充本次空表升级已经证明。
