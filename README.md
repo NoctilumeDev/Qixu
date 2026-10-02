@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-2026-10-03：**M0文档、M1基础、M2短约及M3长期分配的API/MySQL范围已验收，M4冲突与治理施工中**。登录、权限、空间、短约、场地批准、活动参与和网络回执已在真实HTTP/MySQL验证。长期分配有真实未来来源及独立复算的限定证据；治理和两端页面尚未完成；参考图不是产品运行截图。首次失败、修复及公开门禁分别见 [M1事实](docs/acceptance/m1.md)、[M2事实](docs/acceptance/m2.md)、[M3事实](docs/acceptance/m3.md)，阶段PASS不代表整个工程完成。
+2026-10-03：**M0文档与M1–M4限定API/MySQL范围已验收，M5两端页面进入合同阶段**。长期分配有真实未来来源和独立复算；冲突、私有反馈、维修复验与明确治理有受保护主线及fresh原生/安装证据。两端页面尚未实现，参考图不是产品运行截图。首次失败、修复和门禁见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)；阶段PASS不代表整个工程完成。
 
 | 部分 | 设计方向 |
 | --- | --- |
@@ -47,6 +47,7 @@
 | [验迹接入合同](docs/verification.md) | 本工程的封存、真实证据、外部裁决与能力边界 |
 | [M1架构](docs/architecture.md) | 身份、权限、事务、模块与工具链 |
 | [API](docs/api.md) / [数据模型](docs/data-model.md) | 当前实施范围与后续规划边界 |
+| [M5实施合同](docs/contracts/frontend-implementation.md) | 页面、请求恢复、权限投影与限定管理读取 |
 | [视觉合同](docs/design.md) | 两端目标、素材和真实页面验收 |
 | [生命周期合同](docs/lifecycle.md) | 时间、会话、重试、就绪及前端请求所有权 |
 | [可靠性合同](docs/reliability.md) | 断网、未知提交、原键恢复与通知事实 |

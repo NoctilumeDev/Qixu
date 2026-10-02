@@ -1,6 +1,6 @@
 # 里程碑与完成条件
 
-当前：M0文档、M1基础、M2/M3限定API/MySQL范围已闭合，M4先提交实施合同后施工。`PLANNED` 是计划；`IN_PROGRESS` 是施工；`VERIFIED` 需要可定位的执行事实；`BOUNDARY` 表示能力有明确待验边界。
+当前：M0文档、M1–M4限定范围已闭合，M5先冻结两端实施合同后施工。`PLANNED` 是计划；`IN_PROGRESS` 是施工；`VERIFIED` 需要可定位的执行事实；`BOUNDARY` 表示能力有明确待验边界。
 
 | 阶段 | 当前状态 | 本阶段交付 | 退出条件 |
 | --- | --- | --- | --- |
@@ -8,8 +8,8 @@
 | M1 架构与可运行基础 | VERIFIED_FOUNDATION | 数据模型、API、锁序/事务、身份边界、工具链锁定、迁移、运行入口、基础 CI | PR#5 / main@709e529 两项 CI、fresh Core14例与实际就绪后登录闭合，范围见M1记录 |
 | M2 短期预约与空间申请 | VERIFIED_API_MYSQL | 空间筛选/档案、收藏API、短约、场地审批、活动与参与；对比界面留M5 | PR#7 / main@a996593 两项CI及fresh Core27例；无页面资格 |
 | M3 长期分配与候补 | VERIFIED_API_MYSQL_PROOF | 批次、资格、志愿、冻结、固定来源、结果、确认、候补与解释 | PR#8 / main@ca09396：两项CI、fresh Core52例、producer-bound未来round及独立全字节复算；非UI/生产容量 |
-| M4 冲突、反馈与治理 | IN_PROGRESS | 层级阻断、影响处置、临时替代、反馈核实/维修复验、通知与审计 | 并发审批/预约一致；原归属保留；权限隔离；反馈不直接成为事实 |
-| M5 两端真实链路 | PLANNED | uni-app 小程序及 H5 验证入口、响应式管理 Web、全部主流程 | PC/手机视口真实页面通过；返回上下文、错误恢复、键盘边界明确 |
+| M4 冲突、反馈与治理 | VERIFIED_API_MYSQL_INSTALLED | 层级阻断、影响处置、临时替代、反馈核实/维修复验、通知与审计 | PR#9/main@02c3665两项CI、fresh native110及producer-bound installed PASS；见M4记录，非现实维修/UI |
+| M5 两端真实链路 | CONTRACT_FROZEN | uni-app 小程序及 H5 验证入口、响应式管理 Web、全部主流程 | PC/手机视口真实页面通过；返回上下文、错误恢复、键盘边界明确 |
 | M6 回归与外部接入 | PLANNED | 真实 MySQL 并发/故障回归、暗室身份适配、公共复算与干净检出 | 模拟与真实接口分开；原始失败保留；集成不可用不会越权 |
 | M7 外部错题复核与修复 | PLANNED | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | 新反例有证据分类；阻断修复且原条件复验；未证明边界公开，测试数量不替代资格 |
 | M8 独立测试及产品复验 | PLANNED | 两个子代理：测试验收者、产品经理；固定提交独立审阅 | 有依据的反馈完成处置；关键链路重新验收；未验能力明确列出 |
@@ -46,4 +46,4 @@
 
 真实微信手机行为依赖用户设备和微信平台。可以先完成开发工具及 H5 的真实链路，但未经手机观察的键盘/扫码行为必须保留待验状态。公开随机源和暗室服务可用性分别记录，不能以本地模拟覆盖真实供应商失败。
 
-M0文档、M1基础、M2 API/MySQL各有资格，见 [M0](acceptance/m0.md)、[M1](acceptance/m1.md)、[M2](acceptance/m2.md)。M3闭合见[M3事实](acceptance/m3.md)。M4按[实施合同](contracts/governance-implementation.md)施工；治理、页面、外部接入和交付尚未完成。
+M0文档、M1基础、M2 API/MySQL各有资格，见 [M0](acceptance/m0.md)、[M1](acceptance/m1.md)、[M2](acceptance/m2.md)。M3闭合见[M3事实](acceptance/m3.md)。M4限定范围闭合见[M4事实](acceptance/m4.md)；M5按[两端实施合同](contracts/frontend-implementation.md)推进。页面、外部接入和交付尚未完成。

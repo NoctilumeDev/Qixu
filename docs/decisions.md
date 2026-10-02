@@ -103,3 +103,11 @@ V5真实隔离迁移后发现OPEN要约的null排除缺陷，保留首败并修�
 # 2026-10-03 · D011 · 设施事实和维修解除边界
 
 通知解除施工 b6463d6 fresh native 997af40观察81项全部通过，M3限定Plan8未升级整个M4。下一细则先于实现固定临时要求留证、设施版本摘要、事实变更通知及维修只解除自己的来源，见[facts-and-repair-limits](contracts/facts-and-repair-limits.md)。旧施工安排没有历史设施证明时保留未知，不回填当前值冒充旧事实。治理与申诉仍待施工，不宣称M4完整。
+
+## 2026-10-03 · D012 · M4闭合、观察合同纠正和M5起点
+
+M4业务V7/V8与治理在PR#9受保护合入main@02c366553e43048b8def6464b20d07e605b94f12。候选原CI与exact-main CI两项success；fresh主线native110 PASS和producer-bound实际安装PASS，真实未来round32725658。限定资格和原始失败见[M4](acceptance/m4.md)。
+
+观察器处罚主键错误、Plan最终/中间采样点错误、live秒精度错误分别保留原FAIL/PENDING，并先版本化最小合同再修测量；缺字段Core PENDING、矛盾Core FAIL及旧producer/改JAR启动前拒绝控制均保留。测试通过不等于整个M4资格，M4资格不等于全工程完成。
+
+M5先固定[两端实施合同](contracts/frontend-implementation.md)，沿用用户选定图的学生暖朱砂/米白、管理员灰绿地图布局。真实uni-app微信/H5与Vue管理端、共享请求所有权与未知恢复、限定管理读取和真实浏览器QA；不复制后端裁决，不制作假成功按钮。前端代码尚未发生。M6/M7/M8/M9各自证明边界不减少。
