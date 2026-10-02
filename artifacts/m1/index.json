@@ -50,6 +50,26 @@
       },
       "verdict": "PASS",
       "manifest_sha256": "7675dcb33852ea7817d45225c31b77aab6717f9e152f1c53380469da6955d912"
+    },
+    {
+      "identity": "m1-d701678d55e747558c6a670a2f3c1036",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "30a65c6e076ba6606ce9c13caeb42da59b843b0b"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "92ab8c672f7694cd96cbced57bfa3aea9649310ae134598c159b56c6f511f88d"
+    },
+    {
+      "identity": "m1-3335faee67804a048149a87569635119",
+      "subject": {
+        "id": "qixu-m1",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "709e5296c6b47e1b6a57c622660efa20d21f7b53"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "ccc77303edf194d8e9b122e89866317ac6320b314ed138defa42e8e879c094a7"
     }
   ]
 }
