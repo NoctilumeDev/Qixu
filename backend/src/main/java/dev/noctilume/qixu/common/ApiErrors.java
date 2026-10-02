@@ -13,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 @RestControllerAdvice
 public class ApiErrors {
+    private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(ApiErrors.class);
     @ExceptionHandler(DomainException.class)
     ResponseEntity<Object> domain(DomainException e, HttpServletRequest r) {
         return ResponseEntity.status(e.status()).body(Api.error(e.code(),e.getMessage(),r));
@@ -35,6 +36,7 @@ public class ApiErrors {
     }
     @ExceptionHandler(Exception.class)
     ResponseEntity<Object> unexpected(Exception e, HttpServletRequest r) {
+        LOG.error("Unexpected API error; requestId={}",r.getAttribute("requestId"),e);
         return ResponseEntity.status(500).body(Api.error("INTERNAL_ERROR","服务暂时出现问题，请稍后重试。",r));
     }
 }

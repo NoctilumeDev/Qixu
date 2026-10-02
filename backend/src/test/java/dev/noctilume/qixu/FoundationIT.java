@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.test.context.ActiveProfiles;
@@ -91,12 +92,12 @@ class FoundationIT {
         error(request("POST","/api/v1/auth/logout",Map.of(),"Cookie",cookie),403,"CSRF_REQUIRED");
         error(request("POST","/api/v1/auth/logout",Map.of(),"Cookie",cookie,"X-CSRF-Token","wrong"),403,"CSRF_REQUIRED");
         assertEquals(200,request("POST","/api/v1/auth/logout",Map.of(),"Cookie",cookie,"X-CSRF-Token",csrf).status());
-        error(request("GET","/api/v1/auth/session",null,"Cookie",cookie),401,"AUTH_REQUIRED");
+        error(request("GET","/api/v1/auth/session",null,"Cookie",cookie),401,"SESSION_REQUIRED");
         assertEquals(200,get("/api/v1/auth/session",other).status());
     }
     @Test void originAndMalformedAuthorizationDoNotFallBackToCookie() throws Exception {
         var login=login("student1","COOKIE"); String cookie=login.raw().headers().firstValue("Set-Cookie").orElseThrow().split(";")[0];
-        error(request("GET","/api/v1/auth/session",null,"Cookie",cookie,"Authorization","Basic bad"),401,"AUTH_REQUIRED");
+        error(request("GET","/api/v1/auth/session",null,"Cookie",cookie,"Authorization","Basic bad"),401,"SESSION_REQUIRED");
         error(request("GET","/api/health",null,"Origin","https://untrusted.example"),403,"ORIGIN_FORBIDDEN");
         var preflight=request("OPTIONS","/api/v1/auth/logout",null,"Origin","http://localhost:6968");
         assertEquals(204,preflight.status()); assertEquals("http://localhost:6968",preflight.raw().headers().firstValue("Access-Control-Allow-Origin").orElse(""));
@@ -104,19 +105,19 @@ class FoundationIT {
     @Test void expiryActiveFlagAndAuthVersionAreRechecked() throws Exception {
         String token=token("student1");
         jdbc.update("UPDATE auth_session SET expires_at=?",Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1)));
-        error(get("/api/v1/auth/session",token),401,"AUTH_REQUIRED");
+        error(get("/api/v1/auth/session",token),401,"SESSION_REQUIRED");
         token=token("student1"); jdbc.update("UPDATE identity_user SET auth_version=2 WHERE id=1");
-        error(get("/api/v1/auth/session",token),401,"AUTH_REQUIRED");
+        error(get("/api/v1/auth/session",token),401,"SESSION_REQUIRED");
         token=token("student1"); jdbc.update("UPDATE identity_user SET active=FALSE WHERE id=1");
-        error(get("/api/v1/auth/session",token),401,"AUTH_REQUIRED");
+        error(get("/api/v1/auth/session",token),401,"SESSION_REQUIRED");
     }
     @Test void claimedRoleDoesNotGrantAuthorityAndAdminFloorScopeIsEnforced() throws Exception {
         var attempt=request("POST","/api/v1/auth/login",Map.of("username","student1","password","qixu-demo","mode","BEARER","role","ADMIN","userId",4,"scope",101));
         assertEquals(200,attempt.status()); String student=attempt.body().at("/data/token").asString();
-        error(get("/api/v1/admin/scope",student),403,"FORBIDDEN");
-        error(get("/api/v1/admin/scope",token("teacher1")),403,"FORBIDDEN");
+        error(get("/api/v1/admin/scope",student),403,"SCOPE_FORBIDDEN");
+        error(get("/api/v1/admin/scope",token("teacher1")),403,"SCOPE_FORBIDDEN");
         String admin=token("admin2"); assertEquals(200,get("/api/v1/admin/scope?floor=100",admin).status());
-        error(get("/api/v1/admin/scope?floor=101",admin),403,"FORBIDDEN");
+        error(get("/api/v1/admin/scope?floor=101",admin),403,"SCOPE_FORBIDDEN");
         assertEquals(200,get("/api/v1/admin/scope?floor=101",token("admin1")).status());
     }
     @Test void invalidPasswordAttemptsSurviveRollbackAndResetOnlyAfterWindow() throws Exception {
@@ -153,7 +154,7 @@ class FoundationIT {
         error(get("/api/v1/spaces?tag=%24.password",token),422,"INVALID_INPUT");
         error(get("/api/v1/spaces?kind=DROP",token),422,"INVALID_INPUT");
         error(get("/api/v1/spaces?floor=abc",token),422,"INVALID_INPUT");
-        error(get("/api/v1/spaces/999999",token),404,"NOT_FOUND");
+        error(get("/api/v1/spaces/999999",token),404,"RESOURCE_NOT_FOUND");
         error(get("/api/v1/does-not-exist",token),404,"NOT_FOUND");
         error(request("POST","/api/v1/auth/login",Map.of("username","student1","password","啊".repeat(25))),422,"INVALID_INPUT");
     }
@@ -170,8 +171,13 @@ class FoundationIT {
     }
     @Test void databaseRejectsCrossFloorParentAndInvalidGeometry() {
         assertThrows(DataIntegrityViolationException.class,()->jdbc.update("UPDATE space SET parent_id=1000 WHERE id=2200"));
-        assertThrows(DataIntegrityViolationException.class,()->jdbc.update("UPDATE space SET map_x=999 WHERE id=2000"));
-        assertThrows(DataIntegrityViolationException.class,()->jdbc.update("UPDATE space SET capacity=0 WHERE id=2000"));
+        for(String sql:java.util.List.of("UPDATE space SET map_x=999 WHERE id=2000","UPDATE space SET capacity=0 WHERE id=2000")) {
+            var failure=assertThrows(DataAccessException.class,()->jdbc.update(sql));
+            assertInstanceOf(java.sql.SQLException.class,failure.getMostSpecificCause());
+            assertEquals(3819,((java.sql.SQLException)failure.getMostSpecificCause()).getErrorCode());
+        }
+        assertEquals(65,jdbc.queryForObject("SELECT map_x FROM space WHERE id=2000",Integer.class));
+        assertEquals(1,jdbc.queryForObject("SELECT capacity FROM space WHERE id=2000",Integer.class));
     }
     @Test void externalIdentityNamesAndIdsCannotCollideAcrossProviders() {
         jdbc.update("INSERT INTO external_identity(provider,subject,user_id) VALUES('darkroom','7',1),('campus','7',2)");

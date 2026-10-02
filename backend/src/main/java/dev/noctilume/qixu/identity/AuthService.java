@@ -25,6 +25,7 @@ public class AuthService {
     private final String dummyHash=encoder.encode(Digests.token());
     public record Session(Actor actor,String tokenHash,String csrf) {}
     public record Login(Actor actor,String token,String csrf) {}
+    private record Attempt(int failures,LocalDateTime windowEnd) {}
     public AuthService(JdbcTemplate jdbc,Clock clock,@Value("${qixu.session-hours:12}") int sessionHours) {
         this.jdbc=jdbc; this.clock=clock; this.sessionHours=sessionHours;
     }
@@ -41,9 +42,9 @@ public class AuthService {
         String attempt=Digests.sha256(remote+"\n"+account);
         var at=now();
         jdbc.update("INSERT IGNORE INTO login_attempt(attempt_key,failures,window_end) VALUES(?,0,?)",attempt,at.plusMinutes(10));
-        Map<String,Object> limits=jdbc.queryForMap("SELECT failures,window_end FROM login_attempt WHERE attempt_key=? FOR UPDATE",attempt);
-        LocalDateTime end=((java.sql.Timestamp)limits.get("window_end")).toLocalDateTime();
-        int failures=((Number)limits.get("failures")).intValue();
+        Attempt limits=jdbc.queryForObject("SELECT failures,window_end FROM login_attempt WHERE attempt_key=? FOR UPDATE",(rs,n)->new Attempt(rs.getInt("failures"),rs.getObject("window_end",LocalDateTime.class)),attempt);
+        LocalDateTime end=limits.windowEnd();
+        int failures=limits.failures();
         if (!end.isAfter(at)) { failures=0; jdbc.update("UPDATE login_attempt SET failures=0,window_end=? WHERE attempt_key=?",at.plusMinutes(10),attempt); }
         if (failures>=5) throw new DomainException(429,"LOGIN_RATE_LIMIT","尝试次数较多，请稍后再登录。");
         var users=jdbc.query("SELECT * FROM identity_user WHERE username=?",(rs,n)->Map.entry(actor(rs),rs.getString("password_hash")),account);
