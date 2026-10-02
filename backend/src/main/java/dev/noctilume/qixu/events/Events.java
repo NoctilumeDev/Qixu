@@ -86,7 +86,7 @@ public class Events {
                     b.jdbc.update("UPDATE campus_event SET status='PUBLISHED',version=version+1 WHERE id=?",id);
                 }
                 case "REBIND" -> {
-                    if(!event.get("status").equals("PUBLISHED") || body.venueRequestId()==null || body.venueRequestId()==Business.number(event,"venue_request_id")) throw Business.conflict("STATE_CONFLICT","请为已发布活动选择新的获批申请。");
+                    if(!event.get("status").equals("PUBLISHED") || !Business.date(oldVenue,"starts_at").isAfter(b.now()) || body.venueRequestId()==null || body.venueRequestId()==Business.number(event,"venue_request_id")) throw Business.conflict("STATE_CONFLICT","请为尚未开始的已发布活动选择新的获批申请。");
                     if(Business.number(newVenue,"user_id")!=Business.number(event,"owner_id")) throw DomainException.forbidden();
                     if(actor.role().equals("ADMIN")) b.admin(actor,Business.number(newVenue,"floor_id"));
                     if(b.jdbc.queryForObject("SELECT COUNT(*) FROM campus_event WHERE venue_request_id=?",Integer.class,body.venueRequestId())>0) throw Business.conflict("EVENT_BOUND","新申请已关联其他活动。");

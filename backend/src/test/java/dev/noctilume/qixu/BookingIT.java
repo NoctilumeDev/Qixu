@@ -134,6 +134,14 @@ class BookingIT {
                 jdbc.queryForList("SELECT id FROM floor WHERE id=100 FOR UPDATE"); future[0]=pool.submit(()->request("POST","/reservations",body,current,"queued-clock")); awaitBarrier(barrier.get()); clock.instant=Instant.parse("2026-10-10T01:02:00Z"); return null;
             });
             error(future[0].get(15,TimeUnit.SECONDS),422,"INVALID_INPUT"); facts.put("createdRights",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
+            barrier.set(new CountDownLatch(1));
+            var later=shortBody(seat,"2026-10-10T01:03:00Z","2026-10-10T02:00:00Z");
+            tx.execute(status->{
+                jdbc.queryForList("SELECT id FROM floor WHERE id=100 FOR UPDATE"); future[0]=pool.submit(()->request("POST","/reservations",later,current,"queued-logout")); awaitBarrier(barrier.get());
+                try { assertEquals(200,request("POST","/auth/logout",Map.of(),current,null).status()); } catch(Exception e) { throw new RuntimeException(e); }
+                return null;
+            });
+            error(future[0].get(15,TimeUnit.SECONDS),401,"SESSION_REQUIRED"); facts.put("rightsAfterLogout",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
         } finally { pool.shutdownNow(); }
     }
     void awaitBarrier(CountDownLatch barrier) {
@@ -189,5 +197,25 @@ class BookingIT {
         facts.put("pendingNotifications",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox WHERE delivered_at IS NULL",Integer.class));
         version=request("GET","/events/"+id,null,teacher,null).data().path("version").asLong(); assertEquals(200,eventAction(teacher,id,version,"CANCEL",null,"event-cancel").status());
         facts.put("participationAfterCancel",jdbc.queryForObject("SELECT status FROM event_participation WHERE event_id=?",String.class,id)); facts.put("activeVenueAfterCancel",jdbc.queryForObject("SELECT COUNT(*) FROM venue_entitlement WHERE status='ACTIVE'",Integer.class));
+    }
+    @Test void notificationFailureRollsBackEffectAndSameKeyCanRecover() throws Exception {
+        String a=token("student1"); var body=shortBody(seat("A001",100),"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z");
+        org.mockito.Mockito.doThrow(new org.springframework.dao.DataAccessResourceFailureException("Injected outbox failure")).when(business).notify(org.mockito.ArgumentMatchers.anyLong(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyLong());
+        error(request("POST","/reservations",body,a,"recover-write"),503,"DATABASE_UNAVAILABLE");
+        facts.put("rightsAfterFailure",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class)); facts.put("receiptsAfterFailure",jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt",Integer.class));
+        org.mockito.Mockito.doCallRealMethod().when(business).notify(org.mockito.ArgumentMatchers.anyLong(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyLong());
+        assertEquals(200,request("POST","/reservations",body,a,"recover-write").status());
+        facts.put("rightsAfterRecovery",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class)); facts.put("notificationEvents",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox",Integer.class));
+    }
+    @Test void invalidWindowsAndForeignActionsHaveNoEffects() throws Exception {
+        String a=token("student1"),c=token("student2"); long seat=seat("A001",100);
+        error(request("POST","/reservations",shortBody(seat,"2026-10-10T14:00:00Z","2026-10-10T15:00:00Z"),a,"invalid-night"),422,"INVALID_INPUT");
+        error(request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T06:00:00Z"),a,"invalid-length"),422,"INVALID_INPUT");
+        error(request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,null),422,"INVALID_INPUT");
+        facts.put("rightsAfterInvalid",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation",Integer.class));
+        var created=request("POST","/reservations",shortBody(seat,"2026-10-10T01:01:00Z","2026-10-10T02:00:00Z"),a,"valid-owner"); assertEquals(200,created.status());
+        error(request("POST","/reservations/"+created.id()+"/actions",Map.of("version",1,"action","CANCEL"),c,"foreign-cancel"),403,"SCOPE_FORBIDDEN");
+        error(request("POST","/reservations/"+created.id()+"/actions",Map.of("version",9,"action","CANCEL"),a,"stale-cancel"),409,"STALE_VERSION");
+        facts.put("statusAfterForeignWrites",jdbc.queryForObject("SELECT status FROM short_reservation WHERE id=?",String.class,created.id()));
     }
 }
