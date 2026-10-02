@@ -72,4 +72,6 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 
 原施工坐标 `25d28f6f4315cf48c33440f38a30d64227f298d9`。第一次探针 `m4-spatial-tests-2f3d87033b314cf0a0f6051e365ac376` 的断言读错 `/profile/features/outletCondition`，空值使其通过；这是验证器缺陷，该PASS不能证明目标性质。原ZIP `ef6be0dd14b8e2b63877fd5baf48f99e9bfe648d95951f01b17634e5dde1075c`、观察和输出保留。改读实际 `/profile/conditions/outletCondition`，并先断言BROKEN前置条件。
 
-纠正后的真实反例 `m4-spatial-tests-3ae7ddbe1efb4edb82573b82a140a78c` FAIL：VERIFY true只提交outlet=true得到200，报告RESOLVED，但公开条件仍BROKEN。原ZIP `bba86aef06ef6427ce02fb2db4e9de693325708c10abb04f0acb651cff6ea0e4` 保留。分类产品事实矛盾；最小重开设施/维修细则0.2，要求明确修正已知坏状态，不自动推断WORKING。修复与原条件复验待执行，不能拿先前36项通过排除这个缺陷。
+纠正后的真实反例 `m4-spatial-tests-3ae7ddbe1efb4edb82573b82a140a78c` FAIL：VERIFY true只提交outlet=true得到200，报告RESOLVED，但公开条件仍BROKEN。原ZIP `bba86aef06ef6427ce02fb2db4e9de693325708c10abb04f0acb651cff6ea0e4` 保留。分类产品事实矛盾；最小重开设施/维修细则0.2，要求明确修正已知坏状态，不自动推断WORKING。
+
+修复后 `m4-spatial-tests-aeea3484eca54295a459d8337adbe9f2` 38项全部通过（原空间28/反馈8，新增同一设施闭环与已结束来源两项）。原反例条件保持并断言409 REPAIR_FACT_REQUIRED、无回执/状态变化，UNKNOWN/BROKEN/REPAIRING均不能擦除问题，明确WORKING及outlet=true才恢复。旧第二通知故障例补齐正确修复事实以继续到达其原503回滚边界；不把事实拒绝当通知故障证据。source ZIP `f1ade1af240c19a8a1fa43b70c6404e92ffa7a8a068f2b72000be05b193a1a06`、请求/SQL/原输出保留；仍非整个M4资格。

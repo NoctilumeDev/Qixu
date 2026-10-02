@@ -99,10 +99,25 @@ class FeedbackIT {
         assertEquals(200,repairAction(admin,repair.id(),1,"ASSIGN",null,null,"assign-repair-fault").status());assertEquals(200,repairAction(admin,repair.id(),2,"WORK_DONE",null,null,"done-repair-fault").status());
         int initialFacts=jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class);var counter=new java.util.concurrent.atomic.AtomicInteger();
         org.mockito.Mockito.doAnswer(invocation->{if(invocation.getArgument(2).equals("空间反馈处理进展") && counter.incrementAndGet()==2)throw new org.springframework.dao.DataAccessResourceFailureException("TEST_SECOND_NOTIFICATION_FAULT");return invocation.callRealMethod();}).when(business).notify(org.mockito.ArgumentMatchers.anyLong(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyLong());
-        try {error(repairAction(admin,repair.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true)),"verify-fault-repair"),503,"DATABASE_UNAVAILABLE");}finally {org.mockito.Mockito.reset(business);}
+        try {error(repairAction(admin,repair.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value","WORKING")),"verify-fault-repair"),503,"DATABASE_UNAVAILABLE");}finally {org.mockito.Mockito.reset(business);}
         assertEquals("WORK_DONE",jdbc.queryForObject("SELECT status FROM repair_ticket WHERE id=?",String.class,repair.id()));assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'",Integer.class));assertEquals(initialFacts,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));
-        assertEquals(200,repairAction(admin,repair.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true)),"verify-fault-repair").status());assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'",Integer.class));
+        assertEquals(200,repairAction(admin,repair.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value","WORKING")),"verify-fault-repair").status());assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'",Integer.class));
         facts.put("resolutionsAfterRecovery",2);facts.put("formalRepairClosures",jdbc.queryForObject("SELECT COUNT(*) FROM repair_history WHERE action='VERIFIED_CLOSED'",Integer.class));
+    }
+    @Test void verificationCannotCloseTheSameFacilityWhileItsKnownBrokenFactRemains() throws Exception {
+        var student=token("student1");var admin=token("admin1");var r=verify(admin,report(student,"report-known-broken").id());var ticket=repair(admin,List.of(r),"repair-known-broken");
+        assertEquals(200,repairAction(admin,ticket.id(),1,"ASSIGN",null,null,"assign-known-broken").status());assertEquals(200,repairAction(admin,ticket.id(),2,"WORK_DONE",null,null,"done-known-broken").status());
+        assertEquals("BROKEN",request("GET","/spaces/4990",null,student,null).data().at("/profile/conditions/outletCondition").asString());
+        var result=repairAction(admin,ticket.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true)),"verify-known-broken");
+        var current=request("GET","/spaces/4990",null,student,null);var reportNow=request("GET","/feedback/"+r.id(),null,student,null);
+        facts.put("verificationStatus",result.status());facts.put("publicCondition",current.data().at("/profile/conditions/outletCondition").asString());facts.put("reportStatus",reportNow.data().path("status").asString());
+        assertFalse(result.status()==200 && reportNow.data().path("status").asString().equals("RESOLVED") && Set.of("BROKEN","REPAIRING").contains(current.data().at("/profile/conditions/outletCondition").asString()),"successful repair closure contradicted its own public facility fact");
+        error(result,409,"REPAIR_FACT_REQUIRED");assertEquals("WORK_DONE",jdbc.queryForObject("SELECT status FROM repair_ticket WHERE id=?",String.class,ticket.id()));assertEquals("IN_REPAIR",reportNow.data().path("status").asString());
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='verify-known-broken'",Integer.class));
+        for(String value:List.of("UNKNOWN","BROKEN","REPAIRING"))error(repairAction(admin,ticket.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value",value)),"verify-known-"+value),409,"REPAIR_FACT_REQUIRED");
+        error(repairAction(admin,ticket.id(),3,"VERIFY",true,List.of(Map.of("key","outletCondition","value","WORKING")),"verify-absent-outlet"),409,"REPAIR_FACT_REQUIRED");
+        assertEquals(200,repairAction(admin,ticket.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value","WORKING")),"verify-known-working").status());
+        assertEquals("WORKING",request("GET","/spaces/4990",null,student,null).data().at("/profile/conditions/outletCondition").asString());assertEquals("RESOLVED",request("GET","/feedback/"+r.id(),null,student,null).data().path("status").asString());
     }
     byte[] image(int rgb) throws Exception {var image=new BufferedImage(2,2,BufferedImage.TYPE_INT_RGB);image.setRGB(0,0,rgb);var stream=new ByteArrayOutputStream();assertTrue(ImageIO.write(image,"png",stream));return stream.toByteArray();}
     Reply upload(String token,long report,byte[] content,String key) throws Exception {

@@ -107,6 +107,16 @@ public class Feedback {
         profile.put("features",features);profile.put("conditions",conditions);profile.put("factsReviewedAt",Business.iso(b.now()));
         b.jdbc.update("UPDATE space SET profile_json=?,version=version+1 WHERE id=?",json.writeValueAsString(profile),space);
     }
+    private void repairedFact(Map<String,Object> ticket,List<Fact> facts) {
+        String condition=switch(ticket.get("category").toString()) {case "OUTLET"->"outletCondition";case "LIGHT"->"lightCondition";case "DESK"->"deskCondition";case "ENVIRONMENT"->"environmentCondition";default->null;};
+        if(condition==null)return;
+        var profile=json.readValue(rights.space(Business.number(ticket,"space_id")).get("profile_json").toString(),Map.class);
+        Object old=profile.get("conditions") instanceof Map<?,?> values?values.get(condition):null;
+        Object proposed=null,outlet=profile.get("features") instanceof Map<?,?> values?values.get("outlet"):null;
+        if(facts!=null)for(var fact:facts)if(fact!=null) {if(condition.equals(fact.key()))proposed=fact.value();if("outlet".equals(fact.key()))outlet=fact.value();}
+        if(Set.of("BROKEN","REPAIRING").contains(Objects.toString(proposed,"")) || Set.of("BROKEN","REPAIRING").contains(Objects.toString(old,""))&&!"WORKING".equals(proposed) || condition.equals("outletCondition")&&Boolean.FALSE.equals(outlet))
+            throw Business.conflict("REPAIR_FACT_REQUIRED","复验通过须明确修正这项设施的已知损坏事实，不能同时保留损坏或缺失状态。");
+    }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> decide(AuthService.Session session,long id,String key,Action body,String requestId) {
         var initial=row("feedback_report",id);long floor=Business.number(initial,"floor_id");var impact=changes.lock(Business.number(initial,"space_id"),List.of(),List.of(session.actor().id(),Business.number(initial,"user_id")),List.of(floor));var actor=b.current(session);b.admin(actor,floor);
@@ -193,7 +203,7 @@ public class Feedback {
                 case "LINK_REPORTS" -> {link(id,refs(body.reports(),true),actor.id());next=ticket.get("status").equals("WORK_DONE")?"OPEN":ticket.get("status").toString();action="REPORT_LINKED";}
                 case "VERIFY" -> {
                     if(!ticket.get("status").equals("WORK_DONE") || body.verified()==null)throw Business.conflict("REPAIR_STATE_CONFLICT","请对已完成工作的事项给出明确复验结果。");
-                    if(body.verified()) {next="VERIFIED_CLOSED";action="VERIFIED_CLOSED";facts(body.facts(),Business.number(ticket,"space_id"),floor,null,id,actor.id(),body.reason());}
+                    if(body.verified()) {repairedFact(ticket,body.facts());next="VERIFIED_CLOSED";action="VERIFIED_CLOSED";facts(body.facts(),Business.number(ticket,"space_id"),floor,null,id,actor.id(),body.reason());}
                     else {if(body.facts()!=null && !body.facts().isEmpty())throw DomainException.invalid("复验失败不能写入已修复事实。");next="OPEN";action="VERIFICATION_FAILED";}
                     b.jdbc.update("UPDATE repair_ticket SET verification_note=? WHERE id=?",body.reason(),id);
                 }
@@ -221,7 +231,7 @@ public class Feedback {
         changes.lock(Business.number(ticket,"space_id"),notices.batches(body.blockId()),users,List.of(Business.number(ticket,"floor_id"),Business.number(source,"floor_id")));var actor=b.current(session);b.admin(actor,Business.number(ticket,"floor_id"));blocks.get(actor,body.blockId());
         return b.once(actor,key,"repair.limit:"+id,body,()->{
             var current=row("repair_ticket",id);Business.version(Business.number(current,"version"),body.version());var block=b.jdbc.queryForMap("SELECT * FROM space_block WHERE id=?",body.blockId());Business.version(Business.number(block,"version"),body.blockVersion());Business.text(body.reason(),450,true);
-            if(current.get("status").equals("VERIFIED_CLOSED")||!block.get("status").equals("ACTIVE")||!Set.of("MAINTENANCE","SAFETY").contains(block.get("kind"))||Business.number(current,"space_id")!=Business.number(block,"space_id")||Business.number(current,"floor_id")!=Business.number(block,"floor_id"))throw Business.conflict("REPAIR_LIMIT_INVALID","只能关联未关闭维修与同一精确空间的有效安全维护来源。");
+            if(current.get("status").equals("VERIFIED_CLOSED")||!block.get("status").equals("ACTIVE")||!b.now().isBefore(Business.date(block,"ends_at"))||!Set.of("MAINTENANCE","SAFETY").contains(block.get("kind"))||Business.number(current,"space_id")!=Business.number(block,"space_id")||Business.number(current,"floor_id")!=Business.number(block,"floor_id"))throw Business.conflict("REPAIR_LIMIT_INVALID","只能关联未关闭维修与同一精确空间的有效安全维护来源。");
             if(b.jdbc.queryForObject("SELECT COUNT(*) FROM repair_limit WHERE repair_id=? OR block_id=?",Integer.class,id,body.blockId())>0)throw Business.conflict("REPAIR_LIMIT_ALREADY_LINKED","维修或来源已经有关联，不能暗换来源。");
             b.jdbc.update("INSERT INTO repair_limit(repair_id,block_id,space_id,floor_id,actor_id,reason,created_at) VALUES(?,?,?,?,?,?,?)",id,body.blockId(),current.get("space_id"),current.get("floor_id"),actor.id(),body.reason(),b.now());b.jdbc.update("UPDATE repair_ticket SET status=IF(status='WORK_DONE','OPEN',status),version=version+1,updated_at=? WHERE id=?",b.now(),id);b.audit(actor.id(),"REPAIR_LIMIT_LINKED","REPAIR",id,requestId);return repairDetail(actor,id);
         });
