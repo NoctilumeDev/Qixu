@@ -87,3 +87,9 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 `a87a15f37bf5d2f230fcb7b8aaa02bde430f1778` 的M4 Plan1 / native0.9 `m4-3f6425d538a9441796b3cde14cf42987` 为FAIL，110项中52项通过，58项M4在AfterEach采集出现SQL错误。原V8明确处罚表PK为case_id，新采集查询错误使用ORDER BY status,id。分类验证器缺陷；不是58个产品故障，更不能把缺M4观察默认成0。原Bundle、stdout/stderr和fresh XML原文件保留。
 
 最小修复只按status排序；同值在仅状态投影里不可区分。保留原5项SQL不变量及全部110项要求、Plan1和native0.9语义，同合同新identity重跑；不得追溯修改原FAIL。
+
+## M4 Plan投影首败 · 中间事实与终态混用
+
+`1056e4230e9f7d1496f80047346c46575bf85520` / `m4-7ea7ca0c04fb4b278c719a963e28482c` Maven0、110项全PASS，但Core FAIL(db-335)：计划要求最后space_blockStates为ACTIVE/REVOKED，真实最终为REVOKED/REVOKED。原用例有明确的两次解除，且各自HTTP/SQL断言正确；因此不是产品误撤另一个来源，是计划绑定错时点。
+
+最小重开观察合同0.2/Plan2/native0.10：第一步单独测量来源仍有效及临时占用保留，第二步测量完整撤销后临时位释放；原权保持，所有其余义务不变。保留原Plan1 FAIL、输出和fresh XML，不能把110个绿灯冒充Core通过。

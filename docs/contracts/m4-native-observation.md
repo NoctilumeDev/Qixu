@@ -29,3 +29,9 @@
 本Plan证明声明的HTTP/MySQL操作、受控Clock/故障及测试随机源下的事务事实；不证明现实维修、生产规模、备份外部副作用对账、两端页面或微信真机。公开未来beacon仍沿用独立producer-bound安装链，不将受控随机源冒充真实未来来源。M7扩展复合序列与独立oracle，M8才进行用户要求的两名独立审阅。
 
 阶段资格仍需候选原始CI、受保护合入、exact-main CI和fresh-main native/安装观察。文档与证据发表是新的提交，必须取得该提交自己的门禁；不得追溯升级旧M3通过。
+
+## 0.2 · 最小重开：分步解除的观察时点
+
+Plan1 / native0.9在 `1056e4230e9f7d1496f80047346c46575bf85520` 的 `m4-7ea7ca0c04fb4b278c719a963e28482c` 用例110/110通过但Core FAIL。overlappingLimits用例先撤a、验证z仍生效，再撤z、验证临时足迹释放；原计划错误将中间预期ACTIVE/REVOKED绑定最终集合REVOKED/REVOKED。分类Plan投影时点错误，原合同不允许因此取消来源隔离义务。
+
+新 `qixu-native/0.10` / M4 Plan2保留110项及所有其他要求，新增撤a后直接SQL状态ACTIVE/REVOKED和临时位不可用的HTTP测量，终态直接SQL状态REVOKED/REVOKED和临时位可用测量；原权仍ACTIVE且原归属不漂移。先提交本修订再修改采集点。原Plan1/两个FAIL Bundle及XML不变；新identity正常复验和负向控制均消费Plan2，不追溯升级旧报告。
