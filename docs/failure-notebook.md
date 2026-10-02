@@ -67,3 +67,9 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 `m4-spatial-tests-998d71fce77a44fb9bb852e1f80663f7` 真实V7升级、空间28项及原反馈8项，35/36通过。夹具先建立同空间课程占用，验证不能关联维修后却没有撤课程，继续期待新维护成功，收到正确 EXCLUSIVE_BLOCK_CONFLICT。分类测试前提冲突，保留原 source ZIP `7745e1797a8a307d8b836f6b6dd23d889cbf85b6b4bf378bce67042eed35f8ed` 和原XML/输出。修正为显式撤课程后再建合法维修来源，不放宽独占约束。新增事实会修改演示设施画像，测试清理同时恢复明确DEMO基线，避免下一用例继承其他用例的核实结果；只操作限定测试schema和固定演示坐标。V7已执行，不改旧迁移。
 
 同条件复验 `m4-spatial-tests-702ff32ba66b4fb0adf740844741b9d9` 的36项全部通过；私人 source ZIP `db655fad5f8d35aac82bdb4e4dd4ee9da3a521d258fa4792fd6519ee15c6837a` 绑定本次施工世界，原失败保留。范围是设施确认摘要、保留原临时要求/未知历史拒绝、维修仅解除自身来源及故障回滚；治理尚未实现，不声明M4整体资格。
+
+## M4 维修闭环反例 · 已解决与已知损坏并存
+
+原施工坐标 `25d28f6f4315cf48c33440f38a30d64227f298d9`。第一次探针 `m4-spatial-tests-2f3d87033b314cf0a0f6051e365ac376` 的断言读错 `/profile/features/outletCondition`，空值使其通过；这是验证器缺陷，该PASS不能证明目标性质。原ZIP `ef6be0dd14b8e2b63877fd5baf48f99e9bfe648d95951f01b17634e5dde1075c`、观察和输出保留。改读实际 `/profile/conditions/outletCondition`，并先断言BROKEN前置条件。
+
+纠正后的真实反例 `m4-spatial-tests-3ae7ddbe1efb4edb82573b82a140a78c` FAIL：VERIFY true只提交outlet=true得到200，报告RESOLVED，但公开条件仍BROKEN。原ZIP `bba86aef06ef6427ce02fb2db4e9de693325708c10abb04f0acb651cff6ea0e4` 保留。分类产品事实矛盾；最小重开设施/维修细则0.2，要求明确修正已知坏状态，不自动推断WORKING。修复与原条件复验待执行，不能拿先前36项通过排除这个缺陷。

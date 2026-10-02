@@ -1,4 +1,4 @@
-# M4 · 核实事实与维修来源实施细则 0.1
+# M4 · 核实事实与维修来源实施细则 0.2
 
 前置：空间/通知施工 `b6463d6` 的 fresh M3 Plan8 native `m3-997af40314ed4cadb1e8ee118af1d7b8` 观察81项全部通过，仍非整个M4资格。本细则在V7及相关实现前提交；继承治理0.1、空间影响0.3，V1–V6已执行迁移不改字节。
 
@@ -19,3 +19,11 @@ ASSIGN/WORK_DONE不会解除来源。VERIFY false保留来源、原报告和失�
 ## 真实证明义务
 
 原座事实影响批次/当前offer通知、临时目标损坏拒绝旧和当前不合格确认、新画像不改变正式结果；原要求不随画像减少、未知历史明确拒绝；维修关联范围/类型/版本/唯一约束；WORK_DONE与失败复验保留来源；成功仅撤自己来源并保留另一项；第二条通知故障回滚完整事实；事实变更在批次/活动/floor等待期间复核。施工与M7独立组合攻击各留原失败及复验身份，不宣称现实维修已发生。
+
+## 最小重开：同一设施不能既已修复又已知损坏
+
+`25d28f6` 的真实HTTP反例已观察到插座报告RESOLVED而公开outletCondition仍BROKEN。该矛盾重开的是维修复验的事实闭环，原0.1设施影响、来源归属、迁移和历史输入不改。
+
+OUTLET/LIGHT/DESK/ENVIRONMENT分别对应outletCondition/lightCondition/deskCondition/environmentCondition。当前对应状态为BROKEN或REPAIRING时，VERIFY true必须明确提交该项WORKING；不能省略、写UNKNOWN擦除已知问题，或继续写BROKEN/REPAIRING同时宣布解决。插座复验的最终明确outlet=false也不能与“插座已修复”并存。缺少或矛盾事实返回REPAIR_FACT_REQUIRED，维修、报告、限制、画像和回执全部保持。INFORMATION/OTHER没有强行猜测的设施字段；未知也不会由服务器自动变成WORKING。
+
+已知结束的ACTIVE来源不再具备新的维修关联资格；LINK_LIMIT要求endsAt大于当前服务端时刻，历史旧关联继续可查、原回执继续重放。此规则不续期来源，也不把维修关联当成新增空间权。验证缺事实/UNKNOWN/仍损坏、正确补充事实恢复、来源已结束及原事务故障，保留拒绝与复验身份。
