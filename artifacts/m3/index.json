@@ -60,6 +60,56 @@
       },
       "verdict": "PENDING",
       "manifest_sha256": "dbd2a38ade49e6e3224122772963da91aa152228898216d51522c38aca78c764"
+    },
+    {
+      "identity": "m3-7f95bec8b7e54cd38070b99503df59a9",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "6d70751dd6465983c4582e6aab4d973e3a1382de"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "724f2e2df691753d52604436a4483629fa2115dbdee31f425762e4d750cc2b53"
+    },
+    {
+      "identity": "m3-d35a0620b5dd4571a6c3ba72b144eccc",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "f02c0c91188ad6c91e4660df9437cb6282e7bdae"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "04ea03ae3e777f253d6d59952d88b82daad21ba1f3232667592cac6774c1dec5"
+    },
+    {
+      "identity": "m3-live-0180400995104efaaa18375c4921aca1",
+      "subject": {
+        "id": "qixu-m3-live",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "f02c0c91188ad6c91e4660df9437cb6282e7bdae"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "8806cbb8b1ad44bb05756955ca0658c6eaea851854d8bef6d099f846d1e8e54f"
+    },
+    {
+      "identity": "m3-bbb2c5370fea40b495006376991cd7f8",
+      "subject": {
+        "id": "qixu-m3",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "ca09396746573c0cc4a6979a30013814320c654a"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "997b82d2e33b813267f0dd8ffd74c83ef85b231aac800df77754885a7577aaae"
+    },
+    {
+      "identity": "m3-live-0ed2814df0684fff8792631d57f527da",
+      "subject": {
+        "id": "qixu-m3-live",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "ca09396746573c0cc4a6979a30013814320c654a"
+      },
+      "verdict": "PASS",
+      "manifest_sha256": "60d5a839698434f07eddac1fcfb4f14dc22997b16ceefa4edcd9cc9ad49157b5"
     }
   ]
 }

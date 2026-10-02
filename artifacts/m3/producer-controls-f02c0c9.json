@@ -1,0 +1,17 @@
+{
+  "source_sha": "f02c0c91188ad6c91e4660df9437cb6282e7bdae",
+  "jar_restored_sha256": "55916f644402a26f7c8d35ad099edb368305904a40ee24e41f4f1f43b1220ebb",
+  "boundary": "TWO_PREFLIGHT_CONTROLS_NOT_NATIVE_OR_LIVE_QUALIFICATION",
+  "controls": [
+    {
+      "expected": "Native producer does not qualify this source",
+      "exit": 1,
+      "observed_expected_rejection": true
+    },
+    {
+      "expected": "Current jar lacks exact fresh producer binding",
+      "exit": 1,
+      "observed_expected_rejection": true
+    }
+  ]
+}
