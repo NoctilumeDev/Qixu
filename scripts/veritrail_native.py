@@ -5,6 +5,8 @@ it does not acquire DB lifecycle authority or prove production capacity.
 """
 from __future__ import annotations
 import argparse
+import hashlib
+import time
 from datetime import datetime, timezone
 from importlib.metadata import version
 import json
@@ -118,7 +120,7 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    collector = "qixu-native/0.7" if args.stage == "m3" else "qixu-native/0.6"
+    collector = "qixu-native/0.8" if args.stage == "m3" else "qixu-native/0.6"
     request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
     if args.stage in ("m2", "m3"):
@@ -128,13 +130,15 @@ def main() -> int:
         required += ["dev.noctilume.qixu.preparation." + cls + "." + name for cls, names in PREPARATION_UNITS.items() for name in names]
     spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": collector.split("/")[1]},
             "evidence_type": "qixu.native.observation", "coordinates": request,
-            "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations"],
+            "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations", "package"],
             "canonicalization_profile": "veritrail-json-c14n/1"}
 
     def assertion(name: str, path: str, value: object) -> dict:
         return {"id": name, "severity": "HARD", "left": {"requirement_id": "native", "path": path}, "operator": "eq", "right": value}
 
     assertions = [assertion("exact-source", "/facts/source_sha", sha), assertion("clean-source", "/facts/source_clean", True), assertion("execution-success", "/facts/command_exit", 0)]
+    if args.stage == "m3":
+        assertions += [assertion("current-built-artifact", "/facts/package/current_build", True), assertion("artifact-producer-source", "/facts/package/source_sha", sha)]
     assertions += [assertion("case-" + str(i), "/facts/tests/" + name, True) for i, name in enumerate(required)]
     for case, statuses in HTTP_STATUSES.items():
         for i, status in enumerate(statuses):
@@ -148,7 +152,7 @@ def main() -> int:
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 7 if args.stage == "m3" else 6,
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": 8 if args.stage == "m3" else 6,
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -164,6 +168,7 @@ def main() -> int:
     write_new(output / "request.json", request)
     exit_code = -1
     execution = "COMPLETED"
+    command_started = time.time()
     try:
         # Fresh reports prevent a failed command from replaying stale green XML.
         completed = subprocess.run([args.maven, "-B", "-ntp", "-Pmysql-it", "clean", "verify"], cwd=ROOT / "backend", capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900)
@@ -195,6 +200,12 @@ def main() -> int:
             measurements.update(json.loads(preparation_path.read_text(encoding="utf-8")))
     boundaries = {"m1": "M1_FOUNDATION_ONLY", "m2": "M2_API_MYSQL_ONLY_NOT_UI_OR_ALLOCATION", "m3": "M3_NATIVE_TRANSACTIONS_AND_OFFLINE_PROOF_NOT_FUTURE_BEACON_OR_UI"}
     facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": boundaries[args.stage]}
+    if args.stage == "m3":
+        jar = ROOT / "backend/target/qixu-api-0.1.0-SNAPSHOT.jar"
+        if jar.is_file():
+            facts["package"] = {"source_sha": sha, "sha256": hashlib.sha256(jar.read_bytes()).hexdigest(), "size": jar.stat().st_size, "current_build": exit_code == 0 and jar.stat().st_mtime >= command_started}
+        else:
+            facts["package"] = {"source_sha": sha, "current_build": False}
     evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": collector, "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
                 "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-native-collector", "coverage": "COMPLETE" if observed and measurements else "ERROR", "normalization_semantics_version": collector, "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)

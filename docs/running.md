@@ -30,4 +30,4 @@ M3用`--stage m3`，另读Surefire离线与Failsafe真实HTTP/MySQL证据。运�
 
 调度线程池2：短约与通知、长期批次各有定时扫描。每轮最多2个冻结、2个精确轮次计算、10个期限失败/周期维护；旧任务始终在事务内读当前阶段和时点，任务延迟不延长期限。所有权利读由主库事务/当前时间投影，不靠某轮任务恰好运行。第一版无MQ依赖，MySQL outbox产生可恢复站内消息。
 
-已构建的干净提交可运行`python scripts/veritrail_future_batch.py --java <java> --node <node> --mysql <mysql>`。使用明确提供的QIXU_TEST_DB三项环境，只接受qixu_test/qixu_ci；会在6967启动并持有自己的demo JVM handle，现有端口占用直接停止，不杀占用者。默认不删任何业务数据；保留本次批次原文、正式结果、数据库计数与独立复算，停止自己的JVM。应先执行native清理验收，再执行live，避免上一轮池保护和申请仍参与下一轮；要用新候选重建事实时用新的原生验收身份，不能改旧批次/种子。
+已构建的干净提交可运行`python scripts/veritrail_future_batch.py --producer-bundle <本提交native0.8原Bundle目录> --java <java> --node <node> --mysql <mysql>`。使用明确提供的QIXU_TEST_DB三项环境，只接受qixu_test/qixu_ci；会在6967启动并持有自己的demo JVM handle，现有端口占用直接停止，不杀占用者。默认不删任何业务数据；保留本次批次原文、正式结果、数据库计数与独立复算，停止自己的JVM。应先执行native清理验收，再执行live，避免上一轮池保护和申请仍参与下一轮；要用新候选重建事实时用新的原生验收身份，不能改旧批次/种子。
