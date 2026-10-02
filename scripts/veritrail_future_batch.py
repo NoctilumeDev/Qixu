@@ -113,7 +113,7 @@ def installed_m4(admin,one,two,bid,packet):
     observed['repair_status']=sql(f'SELECT status FROM repair_ticket WHERE id={tid}');observed['report_status']=sql(f'SELECT status FROM feedback_report WHERE id={rid}')
     observed['condition']=request('GET',f'/api/v1/spaces/{sid}',token=one)['profile']['conditions']['outletCondition']
     # Actual clock, generous announced notice interval, no synthetic day passage.
-    notice=request('POST','/api/v1/admin/governance-cases',{'entitlementId':entitlement['id'],'entitlementVersion':entitlement['version'],'reasonCode':'EXPLICIT_RULE_VIOLATION','evidence':'DEMO_PRIVATE_M4_CASE: synthetic notice only','statementUntil':iso(datetime.now(timezone.utc)+timedelta(hours=24,minutes=5))},admin,'installed-notice')
+    notice=request('POST','/api/v1/admin/governance-cases',{'entitlementId':entitlement['id'],'entitlementVersion':entitlement['version'],'reasonCode':'EXPLICIT_RULE_VIOLATION','evidence':'DEMO_PRIVATE_M4_CASE: synthetic notice only','statementUntil':iso(datetime.now(timezone.utc).replace(microsecond=0)+timedelta(hours=24,minutes=5))},admin,'installed-notice')
     cid=notice['id'];request('GET',f'/api/v1/governance-cases/{cid}',token=two,expected=404,code='RESOURCE_NOT_FOUND');observed['private_case_status']=facts['requests'][-1]['status']
     statement=request('POST',f'/api/v1/governance-cases/{cid}/statements',{'version':notice['version'],'message':'Synthetic student statement, retain notice rights'},one,'installed-statement')
     request('POST',f'/api/v1/admin/governance-cases/{cid}/decisions',{'version':statement['version'],'action':'REVOKE','reason':'Premature real clock control'},admin,'installed-premature-revoke',expected=409,code='STATEMENT_WINDOW_OPEN')

@@ -93,3 +93,9 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 `1056e4230e9f7d1496f80047346c46575bf85520` / `m4-7ea7ca0c04fb4b278c719a963e28482c` Maven0、110项全PASS，但Core FAIL(db-335)：计划要求最后space_blockStates为ACTIVE/REVOKED，真实最终为REVOKED/REVOKED。原用例有明确的两次解除，且各自HTTP/SQL断言正确；因此不是产品误撤另一个来源，是计划绑定错时点。
 
 最小重开观察合同0.2/Plan2/native0.10：第一步单独测量来源仍有效及临时占用保留，第二步测量完整撤销后临时位释放；原权保持，所有其余义务不变。保留原Plan1 FAIL、输出和fresh XML，不能把110个绿灯冒充Core通过。
+
+## M4安装探针 · 秒精度合同的正确拒绝
+
+`559b13ca79782ad44fc6c63185ddf0b734e59763` 的native Plan2 PASS110，producer-bound `m4-live-0e54e4f2266447d3b4a0281fec8c6b58` 在真实未来round32725403冻结/发布和私有反馈、维修闭环后为execution ERROR/Core PENDING：治理通知POST422 INVALID_INPUT。探针statementUntil由Python当前微秒时间加24小时5分钟生成，违反既有Business.time的精确到秒要求；不是治理无法创建，也不放宽时间合同。原packet、请求/SQL测量、Bundle和runtime记录保留，own JVM26504已停止。
+
+最小修复将探针的公告期限在生成时对齐秒，保留24小时安全余量；同Plan1/live0.4新identity从fresh native producer复跑。实际跨天治理仍为native受控Clock证明，安装探针只观察正常Clock下陈述/提前收回拒绝/DISMISS，不冒充一天已流逝。
