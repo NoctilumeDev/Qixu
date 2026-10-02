@@ -16,7 +16,7 @@ public class VenueRequests {
     public VenueRequests(Business b,SpaceRights rights) { this.b=b; this.rights=rights; }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> create(AuthService.Session session,String key,Create body,String requestId) {
-        var initial=rights.space(body.spaceId()); long floor=Business.number(initial,"floor_id"); b.floors(List.of(floor)); b.users(List.of(session.actor().id())); var actor=b.current(session);
+        var initial=rights.space(body.spaceId()); long floor=Business.number(initial,"floor_id"); rights.lockFloors(List.of(floor)); b.users(List.of(session.actor().id())); var actor=b.current(session);
         if(actor.role().equals("STUDENT")) Business.student(actor);
         if(actor.role().equals("ADMIN")) b.admin(actor,floor);
         return b.once(actor,key,"venue.create",body,()->{
@@ -41,7 +41,7 @@ public class VenueRequests {
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> decide(AuthService.Session session,long id,String key,Decision body,String requestId) {
         // Event-bound cancellation uses Events.cancel, which acquires event before floor.
-        var initial=b.row("venue_request",id); b.floors(List.of(Business.number(initial,"floor_id"))); b.users(List.of(session.actor().id(),Business.number(initial,"user_id"))); var actor=b.current(session);
+        var initial=b.row("venue_request",id);var batches=rights.venueLimitBatches(id);rights.lockLimitBatches(batches);rights.lockFloors(List.of(Business.number(initial,"floor_id")));rights.checkVenueLimitBatches(id,batches);var people=new ArrayList<Long>(List.of(session.actor().id(),Business.number(initial,"user_id")));people.addAll(rights.venueLimitUsers(id));b.users(people); var actor=b.current(session);
         String action=body.action()==null?"":body.action();
         if(action.equals("CANCEL")) { if(Business.number(initial,"user_id")!=actor.id()) b.admin(actor,Business.number(initial,"floor_id")); }
         else b.admin(actor,Business.number(initial,"floor_id"));
@@ -63,7 +63,7 @@ public class VenueRequests {
                 else throw DomainException.invalid("审批操作不正确。");
             }
             b.jdbc.update("UPDATE venue_request SET status=?,decision_note=?,version=version+1 WHERE id=?",next,body.reason(),id);
-            if(next.equals("CANCELED")) b.jdbc.update("UPDATE venue_entitlement SET status='CLOSED' WHERE request_id=?",id);
+            if(next.equals("CANCELED")) {b.jdbc.update("UPDATE venue_entitlement SET status='CLOSED' WHERE request_id=?",id);rights.closeVenueBlock(id,actor.id(),body.reason());}
             b.audit(actor.id(),"VENUE_"+next,"VENUE",id,requestId);
             b.notify(Business.number(row,"user_id"),"venue:"+id+":"+(body.version()+1),"场地申请结果","状态："+next+"；"+body.reason(),"VENUE",id);
             return detail(actor,id);

@@ -12,7 +12,7 @@ public class BatchFreezer {
     public BatchFreezer(PreparationBatches p) {this.p=p;}
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> freeze(AuthService.Session session,long id,String key,PreparationBatches.Action body) {
-        var batch=p.batch(id,true);var applications=applications(id);p.business().floors(p.floors(id));
+        var batch=p.batch(id,true);var applications=applications(id);p.rights().lockFloors(p.floors(id));
         var users=new ArrayList<>(applications.stream().map(a->Business.number(a,"user_id")).toList());users.add(session.actor().id());p.business().users(users);
         var actor=p.business().current(session);p.scope(actor,id);
         return p.business().once(actor,key,"preparation.freeze:"+id,body,()->{
@@ -27,7 +27,7 @@ public class BatchFreezer {
     public void freezeDue(long id) {
         var batch=p.batch(id,true);
         if(!"OPEN".equals(batch.get("status")) || p.business().now().isBefore(Business.date(batch,"closes_at")))return;
-        var applications=applications(id);p.business().floors(p.floors(id));p.business().users(applications.stream().map(a->Business.number(a,"user_id")).toList());
+        var applications=applications(id);p.rights().lockFloors(p.floors(id));p.business().users(applications.stream().map(a->Business.number(a,"user_id")).toList());
         freezeLocked(batch,applications,null);
     }
     private List<Map<String,Object>> applications(long id) {
@@ -49,8 +49,7 @@ public class BatchFreezer {
         var seatIds=new HashSet<>(pool.stream().map(s->Business.number(s,"space_id")).toList());
         for(var application:applications) {
             long user=Business.number(application,"user_id"),applicationId=Business.number(application,"id");String reason=null;
-            var identity=p.business().jdbc.queryForMap("SELECT active,student_verified FROM identity_user WHERE id=?",user);
-            if(!Boolean.TRUE.equals(identity.get("active")) || !Boolean.TRUE.equals(identity.get("student_verified")))reason="ELIGIBILITY_INVALID_AT_FREEZE";
+            if(p.eligibility().reason(user)!=null)reason="ELIGIBILITY_INVALID_AT_FREEZE";
             else try{p.checkOtherParticipation(user,id,Business.date(batch,"cycle_starts_at"),Business.date(batch,"cycle_ends_at"));}catch(DomainException e){reason=e.code();}
             if(reason!=null) {
                 p.business().jdbc.update("UPDATE preparation_application SET status='EXCLUDED',reason=? WHERE id=?",reason,applicationId);

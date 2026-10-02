@@ -1,6 +1,6 @@
 # HTTP API合同 0.1
 
-状态：M1基础已验收；M2后端端点已实现并进入真实MySQL候选验收；M3–M4仍是规划，不能假装可调用。
+状态：M1基础、M2及M3 API/MySQL取得限定资格，见对应acceptance记录；M4反馈和空间限制是已实施施工候选，治理仍待实现。页面及整个M4资格尚未成立。
 
 ## 统一语义
 
@@ -72,3 +72,38 @@ API实现不能接受客户端actor/role/scope授权值。请求正文、响应�
 - `GET /api/public/batches/{publicUUID}/verification`：唯一新增匿名GET，只给原始输入字节/摘要及已正式发布的证明/输出字节；不含姓名、学号、内部user/application映射。
 
 所有写仍需当前会话、范围、同正文请求键和锁后时限。Clock用UTC，界面按Asia/Shanghai展示。查不到收据不能证明在途请求没有提交。
+
+## M4a 反馈接口（已实现施工候选，非M4资格）
+
+均在/api/v1下，写入需要Idempotency-Key；未声明的治理动作仍待M4后续实现。
+
+| 路径 | 内容及权限 |
+| --- | --- |
+| GET/POST /feedback；GET /feedback/{id} | 本人列表/原始报告与处理历史；Create={spaceId,category,description}，有效学生提交 |
+| POST /feedback/{id}/supplements | 本人{version,action:SUPPLEMENT/REOPEN,message}；追加不改原文 |
+| POST /feedback/{id}/attachments | 本人multipart file；PNG/JPEG实际内容≤1MiB且≤400万像素，最多3张 |
+| GET /feedback/{report}/attachments/{id} | 本人或该空间管理员；private no-store二进制，无公开直链 |
+| GET /spaces/{id}/facts | 仅核实后的key/value/verifiedAt；无报告、提交人或照片 |
+| GET /admin/feedback；POST /admin/feedback/{id}/actions | 当前管理范围；{version,action:ACKNOWLEDGE/VERIFY/NOT_REPRODUCED/REJECT,reason,facts?} |
+| GET/POST /admin/repairs；GET /admin/repairs/{id} | 范围内维修；Create={reports:[{id,version}],description}，同空间/同类已核实反馈 |
+| POST /admin/repairs/{id}/actions | {version,action:ASSIGN/WORK_DONE/VERIFY/LINK_REPORTS,reason,assignee?,verified?,facts?,reports?}；只有WORK_DONE且复验true可关闭 |
+
+分类为OUTLET/LIGHT/DESK/ENVIRONMENT/INFORMATION/OTHER；facts只接受window/outlet/quiet/accessible明确boolean，及outletCondition/lightCondition/deskCondition/environmentCondition枚举UNKNOWN/WORKING/BROKEN/REPAIRING。未核实不发布；复验失败不改为已修复事实。列表显式分页50项及total。
+
+## M4b 空间限制接口（已实现施工候选，非M4资格）
+
+| 接口 | 当前语义 |
+| --- | --- |
+| POST /admin/space-blocks/preview | Plan={spaceId,kind,startsAt,endsAt,reason,venueRequestId?,venueVersion?,resolutions?}。完整授权影响、服务器impactKey、摘要、通知人数；观察不授权 |
+| POST /admin/space-blocks | 同一Plan加impactHash。Resolution={impactKey,action,targetSpaceId?,replacementVenueId?}；每个非POOL影响必须明确处置。改完选项须重新preview，旧摘要409 |
+| GET /admin/space-blocks/{id} | 范围内私有影响、来源、临时记录和历史；不对学生公开权主 |
+| POST /admin/space-blocks/{id}/revoke | {version,reason}。一般限制只撤此来源；EVENT_BOUND要求由其场地/活动变更或取消 |
+| GET /spaces/{id}/limits?startsAt=...&endsAt=... | 公开当前有效限制类型、窗口和理由，不返回原权主和原始私有报告 |
+| GET /long-offers/{id}/impact | 仅本人；原归属、每段实际位置/临时不可用、impactHash、知情确认要求 |
+| POST /long-offers/{id}/actions | ACCEPT在当前存在影响时增加impactHash；旧摘要409，原期限不变；无影响兼容M3旧body与幂等指纹 |
+
+来源MAINTENANCE/SAFETY允许明确UNAVAILABLE；COURSE/EVENT不能用无替代覆盖长期权。EVENT计划精确绑定SUBMITTED场地申请、版本和窗口，完整处置与场地批准同事务。学生报名继续使用既有活动端点，活动取消只关闭自己的来源。短约MOVE关闭原记录并生成新记录/typed来源链，不延长到场期限；长期TEMPORARY留原归属，不改正式分配结果。
+
+关联层协调、最大资源/片段/通知数、循环和新坐标停止边界见[实施细则](contracts/space-impact.md)。V5已在隔离库迁移，原始施工失败和恢复见[错题记录](failure-notebook.md)。治理、维修来源限制解除及整个M4的Core资格尚待后续闭合。
+
+V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象，追加关联批次当前申请人；第二条站内outbox写失败整笔回滚，外部推送延迟另行重试。COURSE/EVENT在最终写入仍须早于开始时刻。相同key/body恢复历史回执，不因为临时目标后来停用而重做迁移。当前不含维修来源联动或治理资格。

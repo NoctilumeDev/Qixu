@@ -11,19 +11,20 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class PreparationBatches {
-    private final Business b; private final SpaceRights rights; private final JsonMapper json; private final FrozenJson frozenJson;
+    private final Business b; private final SpaceRights rights; private final JsonMapper json; private final FrozenJson frozenJson;private final LongEligibility eligibility;
     public record Create(String title,String purpose,OffsetDateTime startsAt,OffsetDateTime endsAt,
         OffsetDateTime opensAt,OffsetDateTime closesAt,OffsetDateTime freezeDeadline,OffsetDateTime randomAt,
         OffsetDateTime resultDeadline,OffsetDateTime confirmationDeadline,OffsetDateTime promotionUntil,int promotionSeconds,List<Long> seatIds) {}
     public record Preference(long seatId,int rank) {}
     public record Submit(int version,List<Preference> preferences,boolean keepWaitlist) {}
     public record Action(long version,String action) {}
-    public PreparationBatches(Business b,SpaceRights rights,JsonMapper json) {this.b=b;this.rights=rights;this.json=json;this.frozenJson=new FrozenJson(json);}
+    public PreparationBatches(Business b,SpaceRights rights,JsonMapper json,LongEligibility eligibility) {this.b=b;this.rights=rights;this.json=json;this.frozenJson=new FrozenJson(json);this.eligibility=eligibility;}
     // Access methods dispatch to the actual Spring target; reading fields of a transaction proxy does not.
     public Business business() {return b;}
     public SpaceRights rights() {return rights;}
     public JsonMapper json() {return json;}
     public FrozenJson frozenJson() {return frozenJson;}
+    public LongEligibility eligibility() {return eligibility;}
     Map<String,Object> batch(long id,boolean lock) {
         var rows=b.jdbc.queryForList("SELECT * FROM preparation_batch WHERE id=?"+(lock?" FOR UPDATE":""),id);
         if(rows.isEmpty())throw DomainException.missing();return rows.get(0);
@@ -40,7 +41,7 @@ public class PreparationBatches {
         if(body.seatIds()==null || body.seatIds().isEmpty() || body.seatIds().size()>400 || body.seatIds().stream().anyMatch(Objects::isNull) || new HashSet<>(body.seatIds()).size()!=body.seatIds().size())throw DomainException.invalid("资源池须包含1–400个不同席位。");
         var selected=body.seatIds().stream().map(rights::space).toList();
         var floorIds=selected.stream().map(r->Business.number(r,"floor_id")).distinct().sorted().toList();
-        b.floors(floorIds);b.users(List.of(session.actor().id()));var actor=b.current(session);floorIds.forEach(f->b.admin(actor,f));
+        rights.lockFloors(floorIds);b.users(List.of(session.actor().id()));var actor=b.current(session);floorIds.forEach(f->b.admin(actor,f));
         return b.once(actor,key,"preparation.create",body,()->{
             Business.text(body.title(),100,true);
             if(!Set.of("POSTGRADUATE","CIVIL_SERVICE","OTHER").contains(body.purpose()==null?"":body.purpose()))throw DomainException.invalid("请选择明确的备考批次用途。");
@@ -96,12 +97,14 @@ public class PreparationBatches {
         var outcomes=b.jdbc.queryForList("SELECT * FROM allocation_outcome WHERE batch_id=? AND application_id=?",id,result.get("id"));
         result.put("outcome",outcomes.isEmpty()?Map.of():b.view(outcomes.get(0)));
         result.put("nextSteps",List.of("查看具体要约与确认期限","保留或退出稳定候补","选择真实可用的普通短约/其他空间","明确退出本轮"));
+        String qualification=eligibility.reason(user);result.put("currentEligibility",Map.of("eligible",qualification==null,"reason",qualification==null?"":qualification));
         result.put("applied",true);result.put("batch",detail(id));return result;
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> submit(AuthService.Session session,long id,String key,Submit body,String requestId) {
         var batch=batch(id,true);b.users(List.of(session.actor().id()));var actor=b.current(session);Business.student(actor);
         return b.once(actor,key,"preparation.submit:"+id,body,()->{
+            eligibility.require(actor.id());
             state(batch,"OPEN");var now=b.now();
             if(now.isBefore(Business.date(batch,"opens_at")) || !now.isBefore(Business.date(batch,"closes_at")))throw Business.conflict("APPLICATION_WINDOW_CLOSED","当前不在申请窗口，原已提交版本仍可查看。");
             checkOtherParticipation(actor.id(),id,Business.date(batch,"cycle_starts_at"),Business.date(batch,"cycle_ends_at"));

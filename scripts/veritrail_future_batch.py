@@ -23,12 +23,17 @@ if git('status','--porcelain'):raise RuntimeError('Refuse dirty source')
 source=git('rev-parse','HEAD');jar=ROOT/'backend/target/qixu-api-0.1.0-SNAPSHOT.jar'
 import argparse,urllib.parse
 parser=argparse.ArgumentParser(description='Real future-round observation on a dedicated test schema. Never resets or kills shared services.')
+parser.add_argument('--stage',choices=('m3','m4'),default='m3')
 parser.add_argument('--java',default=str(Path(os.environ.get('JAVA_HOME',''))/'bin'/('java.exe' if os.name=='nt' else 'java')) if os.environ.get('JAVA_HOME') else 'java')
 parser.add_argument('--node',default=os.environ.get('QIXU_NODE','node'))
 parser.add_argument('--mysql',default='mysql')
 parser.add_argument('--proxy',default=os.environ.get('QIXU_RANDOM_PROXY',''))
-parser.add_argument('--producer-bundle',type=Path,required=True,help='Original native0.8 PASS Bundle for the exact clean SHA and this newly built jar')
+parser.add_argument('--producer-bundle',type=Path,required=True,help='Original native PASS Bundle: M3 Plan8/native0.8 or explicit M4 Plan2/native0.10, exact SHA and freshly built jar')
 args=parser.parse_args()
+producer_version=8 if args.stage=='m3' else 2
+producer_collector='qixu-native/0.8' if args.stage=='m3' else 'qixu-native/0.10'
+live_version='0.3' if args.stage=='m3' else '0.4'
+live_collector='qixu-live-observation/'+live_version
 url=os.environ.get('QIXU_TEST_DB_URL','');parsed=urllib.parse.urlparse(url.removeprefix('jdbc:'))
 if parsed.scheme!='mysql' or parsed.path not in ('/qixu_test','/qixu_ci') or not parsed.hostname or parsed.username or parsed.password or not os.environ.get('QIXU_TEST_DB_PASSWORD'):
     raise RuntimeError('Only explicitly supplied dedicated qixu_test/qixu_ci credentials are accepted')
@@ -45,25 +50,29 @@ actual={p.relative_to(producer).as_posix() for p in producer.rglob('*') if p.is_
 if actual!=seen:raise RuntimeError('Missing or unmanifested producer files')
 report=json.loads((producer/'acceptance-report.json').read_text(encoding='utf-8'))
 producer_plan=json.loads((producer/'sealed-acceptance-plan.json').read_text(encoding='utf-8'));verify_sealed_acceptance_plan(producer_plan)
-if report['verdict']!='PASS' or report['execution_status']!='COMPLETED' or report['subject']['id']!='qixu-m3' or report['subject']['version']!=source or report['plan']['version']!=8 or report['plan']['sha256']!=producer_plan['seal']['digest'] or producer_plan['subject']!=report['subject']:raise RuntimeError('Native producer does not qualify this source')
+if report['verdict']!='PASS' or report['execution_status']!='COMPLETED' or report['subject']['id']!='qixu-'+args.stage or report['subject']['version']!=source or report['plan']['version']!=producer_version or report['plan']['sha256']!=producer_plan['seal']['digest'] or producer_plan['subject']!=report['subject']:raise RuntimeError('Native producer does not qualify this source')
 entries=[e for e in report['evidence'] if e['evidence_type']=='qixu.native.observation']
 if len(entries)!=1 or entries[0]['path'] not in seen:raise RuntimeError('Ambiguous native producer')
 entry=entries[0];evidence_path=producer/entry['path'];producer_evidence=json.loads(evidence_path.read_text(encoding='utf-8'));producer_facts=producer_evidence['facts'];package=producer_facts.get('package',{})
-if producer_evidence['source']!='qixu-native/0.8' or entry['sha256']!=sha(evidence_path) or entry['facts_digest']!=sha256_json(producer_facts) or producer_evidence['metadata']['veritrail_observation']['plan_digest']!=producer_plan['seal']['digest']:raise RuntimeError('Producer report does not bind original evidence')
+if producer_evidence['source']!=producer_collector or entry['sha256']!=sha(evidence_path) or entry['facts_digest']!=sha256_json(producer_facts) or producer_evidence['metadata']['veritrail_observation']['plan_digest']!=producer_plan['seal']['digest']:raise RuntimeError('Producer report does not bind original evidence')
 if producer_facts.get('source_sha')!=source or producer_facts.get('source_clean') is not True or producer_facts.get('command_exit')!=0 or package.get('current_build') is not True or package.get('source_sha')!=source or package.get('sha256')!=sha(jar) or package.get('size')!=jar.stat().st_size:raise RuntimeError('Current jar lacks exact fresh producer binding')
 
 with socket.socket() as probe:probe.bind(('127.0.0.1',6967))
-identity='m3-live-'+uuid.uuid4().hex;out=ROOT/'artifacts/local'/identity;out.mkdir(parents=True)
-coordinate={'collector_sha256':sha(Path(__file__)),'producer_manifest_sha256':sha(manifest),'producer_acceptance_id':report['acceptance_id'], 'source_sha':source,'jar_sha256':sha(jar),'stage':'m3-fixed-future-batch','collector':'qixu-live-observation/0.3'}
-spec={'id':'live-batch','contract':{'id':'qixu-live-batch','version':'0.3'},'evidence_type':'qixu.live.batch','coordinates':coordinate,'projections':['source_sha','source_clean','jar_sha256','producer','requests','batch','packet','database','reproduction','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
+identity=args.stage+'-live-'+uuid.uuid4().hex;out=ROOT/'artifacts/local'/identity;out.mkdir(parents=True)
+coordinate={'collector_sha256':sha(Path(__file__)),'producer_manifest_sha256':sha(manifest),'producer_acceptance_id':report['acceptance_id'], 'source_sha':source,'jar_sha256':sha(jar),'stage':args.stage+'-fixed-future-batch','collector':live_collector}
+spec={'id':'live-batch','contract':{'id':'qixu-live-batch','version':live_version},'evidence_type':'qixu.live.batch','coordinates':coordinate,'projections':['source_sha','source_clean','jar_sha256','producer','requests','batch','packet','database','reproduction','cleanup','installed'],'canonicalization_profile':'veritrail-json-c14n/1'}
 def assertion(name,path,value):return {'id':name,'severity':'HARD','left':{'requirement_id':'live','path':path},'operator':'eq','right':value}
 assertions=[assertion('producer-bytes','/facts/producer/bytes_checked',True),assertion('producer-manifest','/facts/producer/manifest_sha256',coordinate['producer_manifest_sha256']),assertion('exact-source','/facts/source_sha',source),assertion('clean-source','/facts/source_clean',True),assertion('installed-jar','/facts/jar_sha256',coordinate['jar_sha256']),assertion('full-result','/facts/database/formal_results',1),assertion('all-outcomes','/facts/database/outcomes',2),assertion('offers','/facts/database/offers',2),assertion('all-notifications','/facts/database/result_notices',2),assertion('independent-reproduction','/facts/reproduction/independent_bytes_equal',True),assertion('actual-bls','/facts/reproduction/signature_verified',True),assertion('maximum','/facts/reproduction/maximum',2),assertion('owned-runtime-stopped','/facts/cleanup/stopped',True)]
-plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m3-live','version':3,'subject':{'id':'qixu-m3-live','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this exact installed candidate freeze before a fixed future beacon, publish one full batch and permit independent public-byte reproduction with real BLS?','governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:live-adapter','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'live','observation_spec_id':spec['id'],'cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'live','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':420},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu live batch','consumers':['m3-native-stage']},'reproduction_steps':['Use the exact clean source and jar with a schema-scoped qixu demo DB and fixed official verifier dependencies.','Publish explicit future close/freeze/round/result deadlines before submitting two hard-constrained applicants.','Freeze before the fixed round; fetch that exact round, publish, download the public packet and independently verify all bytes/BLS.'],'cleanup_steps':['Stop only the java child created and retained by this probe; preserve other ports and shared MySQL.','Retain demonstration batch/history and the immutable packet and Bundle.']})
+if args.stage=='m4':
+    installed_expected={'private_report_status':404,'work_done_report':'IN_REPAIR','work_done_condition':'BROKEN','missing_repair_status':409,'missing_repair_receipts':0,'repair_status':'VERIFIED_CLOSED','report_status':'RESOLVED','condition':'WORKING','private_case_status':404,'premature_revoke_status':409,'premature_revoke_receipts':0,'notice_right_status':'ACTIVE','notice_penalties':0,'case_status':'DISMISSED','final_right_status':'ACTIVE','formal_hash_unchanged':True,'public_private_marker':False}
+    assertions.extend(assertion('installed-'+name,'/facts/installed/'+name,value) for name,value in installed_expected.items())
+plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-'+args.stage+'-live','version':3 if args.stage=='m3' else 1,'subject':{'id':'qixu-'+args.stage+'-live','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this exact installed candidate freeze before a fixed future beacon, publish one full batch and permit independent public-byte reproduction with real BLS?'+(' Do installed repair and private governance notice preserve the declared real-clock facts?' if args.stage=='m4' else ''),'governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:live-adapter','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'live','observation_spec_id':spec['id'],'cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'live','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':420},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu live batch','consumers':[args.stage+'-native-stage']},'reproduction_steps':['Use the exact clean source and jar with a schema-scoped qixu demo DB and fixed official verifier dependencies.','Publish explicit future close/freeze/round/result deadlines before submitting two hard-constrained applicants.','Freeze before the fixed round; fetch that exact round, publish, download the public packet and independently verify all bytes/BLS.'],'cleanup_steps':['Stop only the java child created and retained by this probe; preserve other ports and shared MySQL.','Retain demonstration batch/history and the immutable packet and Bundle.']})
 write(out/'sealed-plan.json',plan);write(out/'coordinate.json',coordinate)
 facts={'source_sha':source,'source_clean':True,'jar_sha256':coordinate['jar_sha256'],'producer':{'acceptance_id':report['acceptance_id'],'manifest_sha256':sha(manifest),'bytes_checked':True},'requests':[],'boundary':'ONE_ACTUAL_FUTURE_BATCH_NOT_FAULT_RECOVERY_CAPACITY_OR_UI'}
+if args.stage=='m4':facts['boundary']='M4_INSTALLED_FUTURE_BATCH_REPAIR_AND_REAL_CLOCK_NOTICE_NOT_DAY_LONG_GOVERNANCE_PHYSICAL_REPAIR_OR_UI'
 env=dict(os.environ,SPRING_PROFILES_ACTIVE='demo',QIXU_DB_URL=db['url'],QIXU_DB_USERNAME=db['username'],QIXU_DB_PASSWORD=db['password'],QIXU_PORT='6967',QIXU_COOKIE_SECURE='false',QIXU_TASKS_ENABLED='false',QIXU_NODE=args.node,QIXU_RANDOM_VERIFIER=str(ROOT/'randomness/verify.mjs'),QIXU_RANDOM_PROXY=args.proxy)
 execution='COMPLETED';child=None;owner={};base='http://127.0.0.1:6967';opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
-def request(method,path,body=None,token=None,key=None):
+def request(method,path,body=None,token=None,key=None,expected=200,code=None):
     headers={}
     if body is not None:headers['Content-Type']='application/json'
     if token:headers['Authorization']='Bearer '+token
@@ -73,9 +82,48 @@ def request(method,path,body=None,token=None,key=None):
         with opener.open(req,timeout=20) as response:status=response.status;value=json.load(response)
     except urllib.error.HTTPError as e:status=e.code;value=json.load(e)
     facts['requests'].append({'method':method,'path':path,'status':status})
-    if status!=200:raise RuntimeError('HTTP '+str(status)+' '+str(value.get('error',{}).get('code','')))
+    if status!=expected or (code is not None and value.get('error',{}).get('code')!=code):raise RuntimeError('HTTP '+str(status)+' '+str(value.get('error',{}).get('code','')))
+    if status!=200:return value
     return value['data']
 def login(name):return request('POST','/api/v1/auth/login',{'username':name,'password':'qixu-demo','mode':'BEARER'})['token']
+def sql(query):
+    mysql_env=dict(os.environ,MYSQL_PWD=db['password'])
+    return subprocess.check_output([args.mysql,'--host='+parsed.hostname,'--port='+str(parsed.port or 3306),'--user='+db['username'],'--database='+parsed.path.removeprefix('/'),'--batch','--skip-column-names','-e',query],env=mysql_env,text=True,timeout=10).strip()
+
+def installed_m4(admin,one,two,bid,packet):
+    observed={};facts['installed']=observed
+    mine=request('GET',f'/api/v1/preparation-batches/{bid}/application',token=one)
+    offer=next(item for item in mine['offers'] if item['status']=='OPEN')
+    accepted=request('POST',f"/api/v1/long-offers/{offer['id']}/actions",{'version':offer['version'],'action':'ACCEPT'},one,'installed-long-accept')
+    # Read the authoritative receipt-independent original entitlement after confirmation.
+    mine=request('GET',f'/api/v1/preparation-batches/{bid}/application',token=one)
+    entitlement=next(item for item in mine['entitlements'] if item['status']=='ACTIVE');sid=entitlement['space_id']
+    report=request('POST','/api/v1/feedback',{'spaceId':sid,'category':'OUTLET','description':'DEMO_PRIVATE_M4_REPORT: installed synthetic outlet issue'},one,'installed-feedback')
+    rid=report['id'];request('GET',f'/api/v1/feedback/{rid}',token=two,expected=404,code='RESOURCE_NOT_FOUND');observed['private_report_status']=facts['requests'][-1]['status']
+    verified=request('POST',f'/api/v1/admin/feedback/{rid}/actions',{'version':report['version'],'action':'VERIFY','reason':'Installed synthetic verification','facts':[{'key':'outlet','value':False},{'key':'outletCondition','value':'BROKEN'}]},admin,'installed-verify')
+    repair=request('POST','/api/v1/admin/repairs',{'reports':[{'id':rid,'version':verified['version']}],'description':'Installed synthetic repair, not physical work'},admin,'installed-repair')
+    tid=repair['id']
+    assigned=request('POST',f'/api/v1/admin/repairs/{tid}/actions',{'version':repair['version'],'action':'ASSIGN','reason':'Synthetic assignment','assignee':'DEMO'},admin,'installed-assign')
+    done=request('POST',f'/api/v1/admin/repairs/{tid}/actions',{'version':assigned['version'],'action':'WORK_DONE','reason':'Synthetic completion'},admin,'installed-work-done')
+    observed['work_done_report']=sql(f'SELECT status FROM feedback_report WHERE id={rid}')
+    observed['work_done_condition']=request('GET',f'/api/v1/spaces/{sid}',token=one)['profile']['conditions']['outletCondition']
+    request('POST',f'/api/v1/admin/repairs/{tid}/actions',{'version':done['version'],'action':'VERIFY','reason':'Missing fact control','verified':True},admin,'installed-missing-repair-fact',expected=409,code='REPAIR_FACT_REQUIRED')
+    observed['missing_repair_status']=facts['requests'][-1]['status'];observed['missing_repair_receipts']=int(sql("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='installed-missing-repair-fact'"))
+    request('POST',f'/api/v1/admin/repairs/{tid}/actions',{'version':done['version'],'action':'VERIFY','reason':'Explicit synthetic restored facts','verified':True,'facts':[{'key':'outlet','value':True},{'key':'outletCondition','value':'WORKING'}]},admin,'installed-repair-restored')
+    observed['repair_status']=sql(f'SELECT status FROM repair_ticket WHERE id={tid}');observed['report_status']=sql(f'SELECT status FROM feedback_report WHERE id={rid}')
+    observed['condition']=request('GET',f'/api/v1/spaces/{sid}',token=one)['profile']['conditions']['outletCondition']
+    # Actual clock, generous announced notice interval, no synthetic day passage.
+    notice=request('POST','/api/v1/admin/governance-cases',{'entitlementId':entitlement['id'],'entitlementVersion':entitlement['version'],'reasonCode':'EXPLICIT_RULE_VIOLATION','evidence':'DEMO_PRIVATE_M4_CASE: synthetic notice only','statementUntil':iso(datetime.now(timezone.utc).replace(microsecond=0)+timedelta(hours=24,minutes=5))},admin,'installed-notice')
+    cid=notice['id'];request('GET',f'/api/v1/governance-cases/{cid}',token=two,expected=404,code='RESOURCE_NOT_FOUND');observed['private_case_status']=facts['requests'][-1]['status']
+    statement=request('POST',f'/api/v1/governance-cases/{cid}/statements',{'version':notice['version'],'message':'Synthetic student statement, retain notice rights'},one,'installed-statement')
+    request('POST',f'/api/v1/admin/governance-cases/{cid}/decisions',{'version':statement['version'],'action':'REVOKE','reason':'Premature real clock control'},admin,'installed-premature-revoke',expected=409,code='STATEMENT_WINDOW_OPEN')
+    observed['premature_revoke_status']=facts['requests'][-1]['status'];observed['premature_revoke_receipts']=int(sql("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='installed-premature-revoke'"))
+    observed['notice_right_status']=sql(f"SELECT status FROM seat_entitlement WHERE id={entitlement['id']}");observed['notice_penalties']=int(sql(f'SELECT COUNT(*) FROM long_application_penalty WHERE case_id={cid}'))
+    request('POST',f'/api/v1/admin/governance-cases/{cid}/decisions',{'version':statement['version'],'action':'DISMISS','reason':'Close synthetic notice without revocation'},admin,'installed-dismiss')
+    observed['case_status']=sql(f'SELECT status FROM governance_case WHERE id={cid}');observed['final_right_status']=sql(f"SELECT status FROM seat_entitlement WHERE id={entitlement['id']}")
+    observed['formal_hash_unchanged']=sql(f'SELECT output_hash FROM allocation_result WHERE batch_id={bid}')==packet['result']['output_hash']
+    public=request('GET',f'/api/v1/spaces/{sid}',token=two);public_facts=request('GET',f'/api/v1/spaces/{sid}/facts',token=two)
+    observed['public_private_marker']='DEMO_PRIVATE_M4' in json.dumps([public,public_facts])
 def wait_until(instant):
     while datetime.now(timezone.utc)<instant:
         if child.poll() is not None:raise RuntimeError('Owned JVM stopped early')
@@ -114,6 +162,7 @@ try:
     query=f"SELECT (SELECT COUNT(*) FROM allocation_result WHERE batch_id={bid}),(SELECT COUNT(*) FROM allocation_outcome WHERE batch_id={bid}),(SELECT COUNT(*) FROM long_offer WHERE batch_id={bid}),(SELECT COUNT(*) FROM notification_outbox WHERE event_key='batch:{bid}:result')"
     mysql_env=dict(os.environ,MYSQL_PWD=db['password']);raw=subprocess.check_output([args.mysql,'--host='+parsed.hostname,'--port='+str(parsed.port or 3306),'--user='+db['username'],'--database='+parsed.path.removeprefix('/'),'--batch','--skip-column-names','-e',query],env=mysql_env,text=True,timeout=10)
     facts['database']=dict(zip(['formal_results','outcomes','offers','result_notices'],map(int,raw.strip().split('\t'))))
+    if args.stage=='m4':installed_m4(admin,one,two,bid,packet)
 except Exception as e:
     execution='ERROR';facts['failure']={'type':type(e).__name__,'message':str(e)};write(out/'failure.json',facts['failure'])
 finally:
@@ -125,7 +174,7 @@ finally:
         facts['cleanup']={'processId':child.pid,'stopped':child.poll() is not None,'stoppedUtc':utc()};log.close()
         write(out/'runtime-cleanup.json',facts['cleanup'])
     facts['source_clean']=not bool(git('status','--porcelain'));facts['source_sha']=git('rev-parse','HEAD')
-    evidence={'schema_version':'0.1','evidence_type':spec['evidence_type'],'source':'qixu-live-observation/0.3','captured_at':utc(),'facts':facts,'metadata':{'veritrail_observation':{'schema_version':'0.1','canonicalization_profile':'veritrail-json-c14n/1','plan_digest':plan['seal']['digest'],'observation_spec_digest':observation_spec_digest(spec),'request_seal_digest':sha256_json(coordinate),'collection_session_id':identity,'collector_role':'qixu-live-collector','coverage':'COMPLETE' if execution=='COMPLETED' else 'ERROR','normalization_semantics_version':'qixu-live-observation/0.3','facts_digest':sha256_json(facts)}}}
+    evidence={'schema_version':'0.1','evidence_type':spec['evidence_type'],'source':live_collector,'captured_at':utc(),'facts':facts,'metadata':{'veritrail_observation':{'schema_version':'0.1','canonicalization_profile':'veritrail-json-c14n/1','plan_digest':plan['seal']['digest'],'observation_spec_digest':observation_spec_digest(spec),'request_seal_digest':sha256_json(coordinate),'collection_session_id':identity,'collector_role':'qixu-live-collector','coverage':'COMPLETE' if execution=='COMPLETED' else 'ERROR','normalization_semantics_version':live_collector,'facts_digest':sha256_json(facts)}}}
     write(out/'evidence.json',evidence);report=create_acceptance_bundle(plan=plan,evidence_paths=[out/'evidence.json'],output=out/'bundle',acceptance_id=identity,execution_status=execution)
     print(json.dumps({'identity':identity,'source_sha':source,'verdict':report['verdict'],'execution_status':execution,'boundary':facts['boundary']}),flush=True)
 sys.exit(0 if report['verdict']=='PASS' else 1)

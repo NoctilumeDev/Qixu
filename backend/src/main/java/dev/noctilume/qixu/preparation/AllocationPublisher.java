@@ -43,7 +43,7 @@ public class AllocationPublisher {
     }
     private List<Map<String,Object>> people(long id) {return p.business().jdbc.queryForList("SELECT * FROM frozen_person WHERE batch_id=? ORDER BY anonymous_id",id);}
     private void guards(long id,List<Map<String,Object>> people,AuthService.Session session) {
-        p.business().floors(p.floors(id));var ids=new ArrayList<>(people.stream().map(row->Business.number(row,"user_id")).toList());
+        p.rights().lockFloors(p.floors(id));var ids=new ArrayList<>(people.stream().map(row->Business.number(row,"user_id")).toList());
         if(session!=null)ids.add(session.actor().id());p.business().users(ids);
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
@@ -82,8 +82,8 @@ public class AllocationPublisher {
         }
         var mapping=new HashMap<String,Map<String,Object>>();people.forEach(person->mapping.put(person.get("anonymous_id").toString(),person));
         for(var person:people) {
-            long user=Business.number(person,"user_id");var identity=p.business().jdbc.queryForMap("SELECT active,student_verified FROM identity_user WHERE id=?",user);
-            if(!Boolean.TRUE.equals(identity.get("active")) || !Boolean.TRUE.equals(identity.get("student_verified"))) {p.failLocked(batch,"INPUT_INVALIDATED_ELIGIBILITY",actor);return;}
+            long user=Business.number(person,"user_id");
+            if(p.eligibility().reason(user)!=null) {p.failLocked(batch,"INPUT_INVALIDATED_ELIGIBILITY",actor);return;}
             try{p.checkOtherParticipation(user,id,Business.date(batch,"cycle_starts_at"),Business.date(batch,"cycle_ends_at"));}catch(DomainException e){p.failLocked(batch,"INPUT_INVALIDATED_PERSONAL_CYCLE",actor);return;}
         }
         var seenCandidates=new HashSet<String>();var seenSeats=new HashSet<String>();
