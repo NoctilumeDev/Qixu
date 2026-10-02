@@ -52,7 +52,7 @@ class FeedbackIT {
         jdbc.update("INSERT IGNORE INTO space(id,floor_id,code,name,kind,use_mode,capacity,map_x,map_y,map_w,map_h,profile_json) VALUES(4990,101,'FEEDBACK-TEST','反馈验收专用位置','SEAT','BOOKABLE',1,10,700,30,30,JSON_OBJECT())");
         jdbc.update("UPDATE space SET floor_id=101,version=1,active=TRUE,profile_json=JSON_OBJECT('source','TEST_FIXTURE','features',JSON_OBJECT('window',TRUE,'outlet',TRUE,'quiet',TRUE,'accessible',FALSE)) WHERE id=4990");
     }
-    @AfterEach void retain() {OBSERVATIONS.put(name,Map.of("requests",requests,"database",facts));}
+    @AfterEach void retain() {M4Measurements.collect(jdbc,facts);OBSERVATIONS.put(name,Map.of("requests",requests,"database",facts));}
     @AfterAll static void write() throws Exception {var p=Path.of("target/failsafe-reports/qixu-m4-feedback-observation.json");Files.createDirectories(p.getParent());Files.writeString(p,JsonMapper.builder().build().writeValueAsString(OBSERVATIONS));}
     Reply request(String method,String path,Object body,String token,String key) throws Exception {
         var builder=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/api/v1"+path)).timeout(Duration.ofSeconds(15));if(token!=null)builder.header("Authorization","Bearer "+token);if(key!=null)builder.header("Idempotency-Key",key);
@@ -81,7 +81,7 @@ class FeedbackIT {
     @Test void duplicateRepairCreationReturnsOriginalReceiptAfterReportVersionsAdvance() throws Exception {
         var student=token("student1");var admin=token("admin1");var r=verify(admin,report(student,"report-duplicate").id());var body=repairBody(List.of(r));var created=repair(admin,List.of(r),"create-repair-duplicate");
         var again=request("POST","/admin/repairs",body,admin,"create-repair-duplicate");assertEquals(200,again.status(),again.body().toString());assertEquals(created.data(),again.data());
-        assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket",Integer.class));assertEquals("IN_REPAIR",request("GET","/feedback/"+r.id(),null,student,null).data().path("status").asString());facts.put("repairs",1);
+        assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket",Integer.class));assertEquals("IN_REPAIR",request("GET","/feedback/"+r.id(),null,student,null).data().path("status").asString());facts.put("repairs",jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket",Integer.class));
     }
     @Test void workDoneIsNotResolvedAndFailedVerificationCanContinue() throws Exception {
         var student=token("student1");var admin=token("admin1");var r=verify(admin,report(student,"report-workflow").id());var repair=repair(admin,List.of(r),"create-repair-workflow");
@@ -102,7 +102,7 @@ class FeedbackIT {
         try {error(repairAction(admin,repair.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value","WORKING")),"verify-fault-repair"),503,"DATABASE_UNAVAILABLE");}finally {org.mockito.Mockito.reset(business);}
         assertEquals("WORK_DONE",jdbc.queryForObject("SELECT status FROM repair_ticket WHERE id=?",String.class,repair.id()));assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'",Integer.class));assertEquals(initialFacts,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));
         assertEquals(200,repairAction(admin,repair.id(),3,"VERIFY",true,List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value","WORKING")),"verify-fault-repair").status());assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'",Integer.class));
-        facts.put("resolutionsAfterRecovery",2);facts.put("formalRepairClosures",jdbc.queryForObject("SELECT COUNT(*) FROM repair_history WHERE action='VERIFIED_CLOSED'",Integer.class));
+        facts.put("resolutionsAfterRecovery",jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'",Integer.class));facts.put("formalRepairClosures",jdbc.queryForObject("SELECT COUNT(*) FROM repair_history WHERE action='VERIFIED_CLOSED'",Integer.class));
     }
     @Test void verificationCannotCloseTheSameFacilityWhileItsKnownBrokenFactRemains() throws Exception {
         var student=token("student1");var admin=token("admin1");var r=verify(admin,report(student,"report-known-broken").id());var ticket=repair(admin,List.of(r),"repair-known-broken");
@@ -131,12 +131,12 @@ class FeedbackIT {
     @Test void attachmentsAreBoundedPrivateAndContentVerifiedWithIdempotentReplay() throws Exception {
         var one=token("student1");var two=token("student2");var admin=token("admin1");var outside=token("admin2");var report=report(one,"report-image");var bytes=image(0xff1122);
         var uploaded=upload(one,report.id(),bytes,"attach-original");assertEquals(200,uploaded.status(),uploaded.body().toString());assertEquals(uploaded.data(),upload(one,report.id(),bytes,"attach-original").data());
-        assertEquals(200,download(one,report.id(),uploaded.id()));assertEquals(200,download(admin,report.id(),uploaded.id()));assertEquals(404,download(two,report.id(),uploaded.id()));assertEquals(403,download(outside,report.id(),uploaded.id()));
+        assertEquals(200,download(one,report.id(),uploaded.id()));assertEquals(200,download(admin,report.id(),uploaded.id()));int peerStatus=download(two,report.id(),uploaded.id());assertEquals(404,peerStatus);assertEquals(403,download(outside,report.id(),uploaded.id()));
         error(upload(one,report.id(),"<svg onload='alert(1)'/>".getBytes(StandardCharsets.UTF_8),"attach-svg-control"),422,"INVALID_INPUT");error(upload(one,report.id(),Arrays.copyOf(bytes,12),"attach-corrupt-control"),422,"INVALID_INPUT");
         byte[] huge=bytes.clone();java.nio.ByteBuffer.wrap(huge).putInt(16,100_000).putInt(20,100_000);var crc=new java.util.zip.CRC32();crc.update(huge,12,17);java.nio.ByteBuffer.wrap(huge).putInt(29,(int)crc.getValue());error(upload(one,report.id(),huge,"attach-pixel-bomb-control"),422,"INVALID_INPUT");
         error(upload(one,report.id(),new byte[1_048_577],"attach-large-control"),413,"PAYLOAD_TOO_LARGE");
         assertEquals(200,upload(one,report.id(),image(0x445566),"attach-second").status());assertEquals(200,upload(one,report.id(),image(0x778899),"attach-third").status());error(upload(one,report.id(),image(0x998877),"attach-fourth"),409,"ATTACHMENT_LIMIT");
-        assertEquals(3,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_attachment",Integer.class));facts.put("attachments",3);facts.put("privatePeerStatus",404);
+        assertEquals(3,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_attachment",Integer.class));facts.put("attachments",jdbc.queryForObject("SELECT COUNT(*) FROM feedback_attachment",Integer.class));facts.put("privatePeerStatus",peerStatus);
     }
     @Test void competingReportDecisionsRejectStaleVersionAndKeepOriginal() throws Exception {
         var student=token("student1");var admin=token("admin1");var report=report(student,"report-race");var original=report.data().path("description").asString();
@@ -145,7 +145,7 @@ class FeedbackIT {
             var a=executor.submit(()->{go.await();return request("POST","/admin/feedback/"+report.id()+"/actions",Map.of("version",1,"action","ACKNOWLEDGE","reason","第一位处理者"),admin,"competing-report-a");});
             var c=executor.submit(()->{go.await();return request("POST","/admin/feedback/"+report.id()+"/actions",Map.of("version",1,"action","NOT_REPRODUCED","reason","第二位处理者"),admin,"competing-report-b");});go.countDown();var outcomes=List.of(a.get(20,TimeUnit.SECONDS),c.get(20,TimeUnit.SECONDS));assertEquals(1,outcomes.stream().filter(r->r.status()==200).count());assertEquals(1,outcomes.stream().filter(r->r.status()==409).count());
         } finally {executor.shutdownNow();}
-        assertEquals(original,jdbc.queryForObject("SELECT description FROM feedback_report WHERE id=?",String.class,report.id()));assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_history WHERE report_id=?",Integer.class,report.id()));facts.put("history",2);
+        assertEquals(original,jdbc.queryForObject("SELECT description FROM feedback_report WHERE id=?",String.class,report.id()));assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM feedback_history WHERE report_id=?",Integer.class,report.id()));facts.put("history",jdbc.queryForObject("SELECT COUNT(*) FROM feedback_history",Integer.class));
     }
     @Test void queuedVerificationLosesAuthorityWhenScopeIsRevokedBeforeFloorRelease() throws Exception {
         var student=token("student1");var admin=token("admin1");var report=report(student,"report-revoke-scope");var barrier=new CountDownLatch(1);var executor=Executors.newSingleThreadExecutor();
@@ -155,12 +155,12 @@ class FeedbackIT {
                 jdbc.queryForList("SELECT id FROM floor WHERE id=101 FOR UPDATE");pending[0]=executor.submit(()->request("POST","/admin/feedback/"+report.id()+"/actions",Map.of("version",1,"action","VERIFY","reason","等待期间撤权","facts",List.of(Map.of("key","outlet","value",false))),admin,"verify-scope-revoked"));
                 try {assertTrue(barrier.await(5,TimeUnit.SECONDS));}catch(InterruptedException e){throw new RuntimeException(e);}jdbc.update("DELETE FROM admin_scope WHERE user_id=4 AND floor_id=101");return null;
             });
-            error(pending[0].get(15,TimeUnit.SECONDS),403,"SCOPE_FORBIDDEN");assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));assertEquals("REPORTED",jdbc.queryForObject("SELECT status FROM feedback_report WHERE id=?",String.class,report.id()));facts.put("factsAfterRevoke",0);
+            error(pending[0].get(15,TimeUnit.SECONDS),403,"SCOPE_FORBIDDEN");assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));assertEquals("REPORTED",jdbc.queryForObject("SELECT status FROM feedback_report WHERE id=?",String.class,report.id()));facts.put("factsAfterRevoke",jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));
         } finally {org.mockito.Mockito.reset(business);executor.shutdownNow();jdbc.update("INSERT IGNORE INTO admin_scope(user_id,floor_id) VALUES(4,101)");}
     }
     @Test void malformedSecondFactCannotPartiallyPublishTheFirstFactOrDecision() throws Exception {
         var student=token("student1");var admin=token("admin1");var report=report(student,"report-invalid-fact");
         error(request("POST","/admin/feedback/"+report.id()+"/actions",Map.of("version",1,"action","VERIFY","reason","验证混合事实回滚","facts",List.of(Map.of("key","outlet","value",false),Map.of("key","quiet","value","true"))),admin,"verify-invalid-fact"),422,"INVALID_INPUT");
-        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));assertEquals(1L,jdbc.queryForObject("SELECT version FROM space WHERE id=4990",Long.class));assertEquals("REPORTED",jdbc.queryForObject("SELECT status FROM feedback_report WHERE id=?",String.class,report.id()));assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='verify-invalid-fact'",Integer.class));facts.put("partialFacts",0);
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));assertEquals(1L,jdbc.queryForObject("SELECT version FROM space WHERE id=4990",Long.class));assertEquals("REPORTED",jdbc.queryForObject("SELECT status FROM feedback_report WHERE id=?",String.class,report.id()));assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM idempotency_receipt WHERE request_key='verify-invalid-fact'",Integer.class));facts.put("partialFacts",jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));
     }
 }
