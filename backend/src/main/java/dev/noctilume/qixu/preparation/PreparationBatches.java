@@ -11,7 +11,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class PreparationBatches {
-    final Business b; final SpaceRights rights; final JsonMapper json; final FrozenJson frozenJson;
+    private final Business b; private final SpaceRights rights; private final JsonMapper json; private final FrozenJson frozenJson;
     public record Create(String title,String purpose,OffsetDateTime startsAt,OffsetDateTime endsAt,
         OffsetDateTime opensAt,OffsetDateTime closesAt,OffsetDateTime freezeDeadline,OffsetDateTime randomAt,
         OffsetDateTime resultDeadline,OffsetDateTime confirmationDeadline,OffsetDateTime promotionUntil,int promotionSeconds,List<Long> seatIds) {}
@@ -19,6 +19,11 @@ public class PreparationBatches {
     public record Submit(int version,List<Preference> preferences,boolean keepWaitlist) {}
     public record Action(long version,String action) {}
     public PreparationBatches(Business b,SpaceRights rights,JsonMapper json) {this.b=b;this.rights=rights;this.json=json;this.frozenJson=new FrozenJson(json);}
+    // Access methods dispatch to the actual Spring target; reading fields of a transaction proxy does not.
+    public Business business() {return b;}
+    public SpaceRights rights() {return rights;}
+    public JsonMapper json() {return json;}
+    public FrozenJson frozenJson() {return frozenJson;}
     Map<String,Object> batch(long id,boolean lock) {
         var rows=b.jdbc.queryForList("SELECT * FROM preparation_batch WHERE id=?"+(lock?" FOR UPDATE":""),id);
         if(rows.isEmpty())throw DomainException.missing();return rows.get(0);
