@@ -14,6 +14,10 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 @RestControllerAdvice
 public class ApiErrors {
     private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(ApiErrors.class);
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    ResponseEntity<Object> oversized(Exception e,HttpServletRequest r) {
+        return ResponseEntity.status(413).body(Api.error("PAYLOAD_TOO_LARGE","照片须不超过1MiB，整个上传请求不超过2MiB。",r));
+    }
     @ExceptionHandler(DomainException.class)
     ResponseEntity<Object> domain(DomainException e, HttpServletRequest r) {
         return ResponseEntity.status(e.status()).body(Api.error(e.code(),e.getMessage(),r));

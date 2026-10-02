@@ -72,3 +72,20 @@ API实现不能接受客户端actor/role/scope授权值。请求正文、响应�
 - `GET /api/public/batches/{publicUUID}/verification`：唯一新增匿名GET，只给原始输入字节/摘要及已正式发布的证明/输出字节；不含姓名、学号、内部user/application映射。
 
 所有写仍需当前会话、范围、同正文请求键和锁后时限。Clock用UTC，界面按Asia/Shanghai展示。查不到收据不能证明在途请求没有提交。
+
+## M4a 反馈接口（已实现施工候选，非M4资格）
+
+均在/api/v1下，写入需要Idempotency-Key；未声明的Block/治理动作仍待M4后续实现。
+
+| 路径 | 内容及权限 |
+| --- | --- |
+| GET/POST /feedback；GET /feedback/{id} | 本人列表/原始报告与处理历史；Create={spaceId,category,description}，有效学生提交 |
+| POST /feedback/{id}/supplements | 本人{version,action:SUPPLEMENT/REOPEN,message}；追加不改原文 |
+| POST /feedback/{id}/attachments | 本人multipart file；PNG/JPEG实际内容≤1MiB且≤400万像素，最多3张 |
+| GET /feedback/{report}/attachments/{id} | 本人或该空间管理员；private no-store二进制，无公开直链 |
+| GET /spaces/{id}/facts | 仅核实后的key/value/verifiedAt；无报告、提交人或照片 |
+| GET /admin/feedback；POST /admin/feedback/{id}/actions | 当前管理范围；{version,action:ACKNOWLEDGE/VERIFY/NOT_REPRODUCED/REJECT,reason,facts?} |
+| GET/POST /admin/repairs；GET /admin/repairs/{id} | 范围内维修；Create={reports:[{id,version}],description}，同空间/同类已核实反馈 |
+| POST /admin/repairs/{id}/actions | {version,action:ASSIGN/WORK_DONE/VERIFY/LINK_REPORTS,reason,assignee?,verified?,facts?,reports?}；只有WORK_DONE且复验true可关闭 |
+
+分类为OUTLET/LIGHT/DESK/ENVIRONMENT/INFORMATION/OTHER；facts只接受window/outlet/quiet/accessible明确boolean，及outletCondition/lightCondition/deskCondition/environmentCondition枚举UNKNOWN/WORKING/BROKEN/REPAIRING。未核实不发布；复验失败不改为已修复事实。列表显式分页50项及total。

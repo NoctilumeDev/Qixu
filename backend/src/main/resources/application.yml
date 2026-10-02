@@ -26,8 +26,8 @@ spring:
     clean-disabled: true
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 6MB
+      max-file-size: 1MB
+      max-request-size: 2MB
 qixu:
   demo-enabled: false
   cookie-secure: ${QIXU_COOKIE_SECURE:true}
