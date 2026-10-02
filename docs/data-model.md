@@ -17,7 +17,7 @@
 
 ## 后续独立事实表
 
-M2 V2已实现独立short_reservation、venue_request/venue_entitlement、campus_event/event_participation、favorite_space、idempotency_receipt、notification_outbox和inbox。confirmed_count在event协调行内更新且有CHECK防超额；参与event+user唯一和数据库序号，短约区间仍依floor/user guard，不误称SQL唯一索引能排除时段重叠。M3 V3已迁移并取得限定主线资格；M4 V4反馈及V5空间限制在隔离库施工验证，治理表尚未实施。下面未带实际迁移号的项仍为规划。
+M2 V2已实现独立short_reservation、venue_request/venue_entitlement、campus_event/event_participation、favorite_space、idempotency_receipt、notification_outbox和inbox。confirmed_count在event协调行内更新且有CHECK防超额；参与event+user唯一和数据库序号，短约区间仍依floor/user guard，不误称SQL唯一索引能排除时段重叠。M3 V3已迁移并取得限定主线资格；M4 V4–V8已在隔离库实施，限定资格见acceptance/m4.md。下面未带实际迁移号的项仍为规划。
 
 | 阶段 | 表族 | 硬边界 |
 | --- | --- | --- |
@@ -41,8 +41,16 @@ V4已实际迁移到qixu_test，后续不改旧SQL；新Block/治理结构追加
 
 space_block记录独立来源、半开窗口、创建/撤销和场地绑定；block_impact逐服务器摘要项保存明确处置。long_temporary_arrangement绑定原offer、受限实际位置及每个Block窗口，目标可为明确不可用；不改变seat_entitlement.space_id。short_relocation连接关闭的原短约与新短约，原期限保留。block_history追加来源动作及创建摘要。
 
-实际足迹由当前原权、OPEN要约期限、有效Block及安排实时推导，限制结束/退出/原子升级不靠AVAILABLE字段或延迟任务。历史跨层映射形成协调连通分量，新增映射前锁全关联层并复查；权事实仍各自存表。V5已经真实迁移到qixu_test，后续追加，不改其SQL校验和。完整M4仍在施工，治理、通知对象保留/恢复及维修与限制联动尚待闭合。
+实际足迹由当前原权、OPEN要约期限、有效Block及安排实时推导，限制结束/退出/原子升级不靠AVAILABLE字段或延迟任务。历史跨层映射形成协调连通分量，新增映射前锁全关联层并复查；权事实仍各自存表。V5已经真实迁移到qixu_test，后续追加，不改其SQL校验和。后续V6–V8补齐通知、事实/维修与治理，限定资格见acceptance/m4.md；本段V5原始观察不升级。
 
 ## M4 V6 · 原通知对象与解除协调
 
 block_recipient与block_batch在创建事务中保留原对象和影响批次，复合主键/实体FK；解除对象是原对象与批次当前有效申请人并集，不以消息是否已清理为依据。批次先于event/floor/user锁，活动换场地导致未知坐标则409不补逆序锁；解除历史保存动作前真实摘要。V6已真实升级qixu_test；21项空间施工例见原身份，不等同整个M4资格。旧V5数据的回填只取实际创建outbox、POOL来源批次及原offer批次，含已有历史数据的干净升级另留M6专项控制，不冒充本次空表升级已经证明。
+
+## M4 V7/V8 · 创建要求和治理历史
+
+V7 long_temporary_arrangement.required_features_json保留创建时硬设施要求；旧NULL是未知，不回填当前画像。repair_limit以复合FK绑定同精确空间/层的原维修和限制，一对一来源关系不随历史状态暗换。
+
+V8 governance_case固定entitlement/batch/user/space/floor及原权版本，保留通知、期限、裁决、申诉和独立复核；governance_history追加私有历史。long_application_penalty以case_id为主键，仅影响规定时间内长期申请；到期投影实时失效。唯一开放案件不允许同原权并存两个NOTICE/APPEALED。取消批次保留全部原提交/正式结果，无持权历史条件不能退化为只检查当前ACTIVE。
+
+V1–V8均已在专用qixu_test执行，后续只追加迁移；历史数据升级、外部副作用对账和生产规模不因当前空表/演示迁移默认成立。

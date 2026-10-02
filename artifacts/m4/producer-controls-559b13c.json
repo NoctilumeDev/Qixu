@@ -1,0 +1,31 @@
+{
+  "source": "559b13ca79782ad44fc6c63185ddf0b734e59763",
+  "original_jar_sha256": "97e4fb49e9fabe3e27e02397c380d918a68d6990f6275996a8c468edbf0e450d",
+  "restored_jar_sha256": "97e4fb49e9fabe3e27e02397c380d918a68d6990f6275996a8c468edbf0e450d",
+  "controls": [
+    {
+      "stage": "m4",
+      "producer": "artifacts/m3/m3-bbb2c5370fea40b495006376991cd7f8",
+      "exit": 1,
+      "reason": "RuntimeError: Native producer does not qualify this source",
+      "new_live_identities": 0,
+      "port6967_bindable": true
+    },
+    {
+      "stage": "m3",
+      "producer": "artifacts/local/m4-e1ee258d6cb4458f87aed6a5fd89c8c0/bundle",
+      "exit": 1,
+      "reason": "RuntimeError: Native producer does not qualify this source",
+      "new_live_identities": 0,
+      "port6967_bindable": true
+    },
+    {
+      "stage": "m4",
+      "producer": "artifacts/local/m4-e1ee258d6cb4458f87aed6a5fd89c8c0/bundle",
+      "exit": 1,
+      "reason": "RuntimeError: Current jar lacks exact fresh producer binding",
+      "new_live_identities": 0,
+      "port6967_bindable": true
+    }
+  ]
+}

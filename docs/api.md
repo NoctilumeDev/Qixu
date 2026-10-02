@@ -1,6 +1,6 @@
 # HTTP API合同 0.1
 
-状态：M1基础、M2及M3 API/MySQL取得限定资格，见对应acceptance记录；M4反馈和空间限制是已实施施工候选，治理仍待实现。页面及整个M4资格尚未成立。
+状态：M1–M4已取得各自限定API/MySQL及安装资格，见acceptance记录；两端页面、外部接入与全工程交付仍待后续阶段。
 
 ## 统一语义
 
@@ -73,9 +73,9 @@ API实现不能接受客户端actor/role/scope授权值。请求正文、响应�
 
 所有写仍需当前会话、范围、同正文请求键和锁后时限。Clock用UTC，界面按Asia/Shanghai展示。查不到收据不能证明在途请求没有提交。
 
-## M4a 反馈接口（已实现施工候选，非M4资格）
+## M4a 反馈接口（已实现，资格见acceptance/m4.md）
 
-均在/api/v1下，写入需要Idempotency-Key；未声明的治理动作仍待M4后续实现。
+均在/api/v1下，写入需要Idempotency-Key；本节及后续治理均为当前实现，阶段资格单独记录。
 
 | 路径 | 内容及权限 |
 | --- | --- |
@@ -90,7 +90,7 @@ API实现不能接受客户端actor/role/scope授权值。请求正文、响应�
 
 分类为OUTLET/LIGHT/DESK/ENVIRONMENT/INFORMATION/OTHER；facts只接受window/outlet/quiet/accessible明确boolean，及outletCondition/lightCondition/deskCondition/environmentCondition枚举UNKNOWN/WORKING/BROKEN/REPAIRING。未核实不发布；复验失败不改为已修复事实。列表显式分页50项及total。
 
-## M4b 空间限制接口（已实现施工候选，非M4资格）
+## M4b 空间限制接口（已实现，资格见acceptance/m4.md）
 
 | 接口 | 当前语义 |
 | --- | --- |
@@ -104,6 +104,20 @@ API实现不能接受客户端actor/role/scope授权值。请求正文、响应�
 
 来源MAINTENANCE/SAFETY允许明确UNAVAILABLE；COURSE/EVENT不能用无替代覆盖长期权。EVENT计划精确绑定SUBMITTED场地申请、版本和窗口，完整处置与场地批准同事务。学生报名继续使用既有活动端点，活动取消只关闭自己的来源。短约MOVE关闭原记录并生成新记录/typed来源链，不延长到场期限；长期TEMPORARY留原归属，不改正式分配结果。
 
-关联层协调、最大资源/片段/通知数、循环和新坐标停止边界见[实施细则](contracts/space-impact.md)。V5已在隔离库迁移，原始施工失败和恢复见[错题记录](failure-notebook.md)。治理、维修来源限制解除及整个M4的Core资格尚待后续闭合。
+关联层协调、最大资源/片段/通知数、循环和新坐标停止边界见[实施细则](contracts/space-impact.md)。V5已在隔离库迁移，原始施工失败和恢复见[错题记录](failure-notebook.md)。治理及维修来源联动已追加实现，完整阶段资格仍依exact候选/主线门禁与观察。
 
-V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象，追加关联批次当前申请人；第二条站内outbox写失败整笔回滚，外部推送延迟另行重试。COURSE/EVENT在最终写入仍须早于开始时刻。相同key/body恢复历史回执，不因为临时目标后来停用而重做迁移。当前不含维修来源联动或治理资格。
+V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象，追加关联批次当前申请人；第二条站内outbox写失败整笔回滚，外部推送延迟另行重试。COURSE/EVENT在最终写入仍须早于开始时刻。相同key/body恢复历史回执，不因为临时目标后来停用而重做迁移。V6本身不证明后续维修来源联动或治理；后续V7/V8见下文。
+
+## M4 V7/V8 · 维修来源与明确治理
+
+- `POST /admin/repairs/{id}/limits`：{version,blockId,blockVersion,reason}；只关联同精确空间/层的未结束MAINTENANCE/SAFETY，绑定后不能暗换。复验成功只撤自己来源；同事务处理事实、报告、通知和回执。
+- 复验既有BROKEN/REPAIRING必须明确WORKING；插座修复还须outlet=true。不能用UNKNOWN擦除已知损坏，也不能缺事实即宣称闭环。
+- `GET /governance-cases`、`GET /admin/governance-cases`、`GET /governance-cases/{id}`：本人私有或当前原空间管理范围；分页50，其他学生404。私有依据/陈述不进入公共档案或复算包。
+- `POST /admin/governance-cases`：{entitlementId,entitlementVersion,reasonCode,evidence,statementUntil}。四种明确理由见实施合同；至少24小时、最多7天陈述窗口，原权保持。
+- `POST /governance-cases/{id}/statements`：本人{version,message}，仅严格截止前NOTICE，追加历史。
+- `POST /admin/governance-cases/{id}/decisions`：{version,action:DISMISS/REVOKE,reason,penaltyUntil?}。收回须过陈述期、原权仍有效/版本一致；可附至多30天LONG_APPLICATION处罚，不禁用账号/普通预约。
+- `POST /governance-cases/{id}/appeals`：本人{version,message}，原裁决后严格7天内一次。
+- `POST /admin/governance-cases/{id}/reviews`：{version,action:UPHOLD/OVERTURN,reason}。不同裁决人的当前范围管理员；原空闲权恢复或CORRECTED_UNAVAILABLE，不抢别人合法递补、不改正式结果。
+- `POST /preparation-batches/{id}/cancel`：{version,action:CANCEL/CANCEL_UNUSED,reason}。前者仅OPEN/FROZEN；后者已发布且无任何持权历史、无当前有效OPEN要约。保留冻结/正式结果/回执；不是批量收回旁路。
+
+当前资格在提交/冻结/发布/确认/递补校验，`GET .../{id}/application`的已申请视图含currentEligibility。处罚自然到期不靠任务；原提交回执可按原actor/key恢复。所有时间输入含offset且精确到秒，响应秒以下精度属于真实Clock读值，客户端不能直接复制成业务输入。

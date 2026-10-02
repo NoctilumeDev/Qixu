@@ -1,6 +1,6 @@
 # 本地运行与验收
 
-当前后端包含 M1/M2与M3长期席位施工候选，具体资格见各阶段acceptance。两个前端按里程碑继续施工，不能从启动说明推定已完成。
+当前后端包含M1–M4限定范围，具体资格见各阶段acceptance。两个前端按里程碑继续施工，不能从启动说明推定已完成。
 
 ## 工具与隔离
 
@@ -31,3 +31,5 @@ M3用`--stage m3`，另读Surefire离线与Failsafe真实HTTP/MySQL证据。运�
 调度线程池2：短约与通知、长期批次各有定时扫描。每轮最多2个冻结、2个精确轮次计算、10个期限失败/周期维护；旧任务始终在事务内读当前阶段和时点，任务延迟不延长期限。所有权利读由主库事务/当前时间投影，不靠某轮任务恰好运行。第一版无MQ依赖，MySQL outbox产生可恢复站内消息。
 
 已构建的干净提交可运行`python scripts/veritrail_future_batch.py --producer-bundle <本提交native0.8原Bundle目录> --java <java> --node <node> --mysql <mysql>`。使用明确提供的QIXU_TEST_DB三项环境，只接受qixu_test/qixu_ci；会在6967启动并持有自己的demo JVM handle，现有端口占用直接停止，不杀占用者。默认不删任何业务数据；保留本次批次原文、正式结果、数据库计数与独立复算，停止自己的JVM。应先执行native清理验收，再执行live，避免上一轮池保护和申请仍参与下一轮；要用新候选重建事实时用新的原生验收身份，不能改旧批次/种子。
+
+M4先运行`veritrail_native.py --stage m4`生成native0.10/M4Plan2原producer Bundle，再运行`veritrail_future_batch.py --stage m4 --producer-bundle <同exact源码原Bundle>`。保留所有环境隔离/端口归属约束；M3默认仍只接受native0.8/Plan8，不跨stage复用。M4实际安装额外检查报告/维修与正常Clock NOTICE，不冒称24小时真实流逝。
