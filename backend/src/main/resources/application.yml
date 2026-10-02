@@ -29,6 +29,10 @@ qixu:
   cookie-secure: ${QIXU_COOKIE_SECURE:true}
   allowed-origins: ${QIXU_ALLOWED_ORIGINS:http://localhost:6968,http://127.0.0.1:6968,http://localhost:6969,http://127.0.0.1:6969}
   session-hours: 12
+  randomness:
+    node: ${QIXU_NODE:node}
+    helper: ${QIXU_RANDOM_VERIFIER:randomness/verify.mjs}
+    proxy: ${QIXU_RANDOM_PROXY:}
 logging:
   level:
     root: INFO
