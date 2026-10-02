@@ -10,5 +10,9 @@ final class TestData {
         for(String table:java.util.List.of("block_history","short_relocation","long_temporary_arrangement","block_impact","space_block"))jdbc.update("DELETE FROM "+table);
         for(String table:java.util.List.of("space_fact","repair_history","repair_report","repair_ticket","feedback_attachment","feedback_history","feedback_report"))jdbc.update("DELETE FROM "+table);
         for(String table:java.util.List.of("allocation_event","waitlist_entry","seat_entitlement","long_offer","allocation_outcome","allocation_result","allocation_run","frozen_person","frozen_input","application_version","preparation_application","preparation_pool","preparation_batch","inbox","notification_outbox","idempotency_receipt","favorite_space","event_participation","campus_event","venue_entitlement","venue_request","short_reservation")) jdbc.update("DELETE FROM "+table);
+        // All referencing business rows are gone. Remove only explicit, known test coordinates;
+        // keeping these seats across suites changes the public-profile baseline.
+        jdbc.update("UPDATE space SET parent_id=NULL WHERE id IN (3900,4990,5801,5802,5803,9990)");
+        jdbc.update("DELETE FROM space WHERE id IN (3900,4990,5801,5802,5803,9990)");
     }
 }
