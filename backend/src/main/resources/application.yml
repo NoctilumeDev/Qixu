@@ -1,0 +1,35 @@
+server:
+  port: ${QIXU_PORT:6967}
+  address: ${QIXU_BIND:127.0.0.1}
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  application:
+    name: qixu
+  datasource:
+    url: ${QIXU_DB_URL:jdbc:mysql://127.0.0.1:3306/qixu?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8}
+    username: ${QIXU_DB_USERNAME:qixu_app}
+    password: ${QIXU_DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 1
+      connection-timeout: 3000
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  flyway:
+    enabled: true
+    validate-on-migrate: true
+    clean-disabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+qixu:
+  demo-enabled: false
+  cookie-secure: ${QIXU_COOKIE_SECURE:true}
+  allowed-origins: ${QIXU_ALLOWED_ORIGINS:http://localhost:6968,http://127.0.0.1:6968,http://localhost:6969,http://127.0.0.1:6969}
+  session-hours: 12
+logging:
+  level:
+    root: INFO
+    org.springframework.web: WARN

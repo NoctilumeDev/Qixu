@@ -15,3 +15,39 @@ jobs:
         with:
           python-version: '3.10'
       - run: python scripts/verify_docs.py
+  backend:
+    name: Backend · MySQL
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.44
+        env:
+          MYSQL_ROOT_PASSWORD: qixu-ci-root-only
+          MYSQL_DATABASE: qixu_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pqixu-ci-root-only"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Provision schema-scoped ephemeral test identity
+        env:
+          MYSQL_PWD: qixu-ci-root-only
+        run: |
+          mysql --protocol=TCP -h 127.0.0.1 -u root <<'SQL'
+          CREATE USER 'qixu_ci_app'@'%' IDENTIFIED BY 'qixu-ci-app-only';
+          GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX,REFERENCES ON qixu_ci.* TO 'qixu_ci_app'@'%';
+          SQL
+      - name: Build and real MySQL HTTP acceptance
+        working-directory: backend
+        env:
+          QIXU_TEST_DB_URL: jdbc:mysql://127.0.0.1:3306/qixu_ci?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8
+          QIXU_TEST_DB_USER: qixu_ci_app
+          QIXU_TEST_DB_PASSWORD: qixu-ci-app-only
+        run: mvn -B -ntp -Pmysql-it clean verify
