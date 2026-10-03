@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+本轮自动施工与收尾止于 **M9 工程交付**。M10 前端精修由用户参与，待以后明确重新开启；工程交付资格、视觉精修与微信真机边界分别记录，不以M10延期提前授予M8/M9通过。
+
 2026-10-03：**M0–M7限定范围已验收；M8–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。M7的原失败、修复及有限退出见[主线证据](docs/acceptance/m7.md)。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
