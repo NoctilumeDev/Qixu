@@ -15,7 +15,7 @@ from veritrail.canonical import sha256_json
 from m7_producer_binding import bind,digest
 
 ROOT=Path(__file__).resolve().parents[1]
-COLLECTOR='qixu-m7-database/0.1'
+COLLECTOR='qixu-m7-database/0.2'
 MYSQL_PORT=6976;APP_PORT=6975;RELAY_PORT=6977;SCHEMA='qixu_fault'
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT,text=True).strip()
@@ -25,7 +25,7 @@ def write(path,value):
 class Relay:
     """Opaque TCP relay. Drop only server replies; never inspect secrets/TLS."""
     def __init__(self):
-        self.lock=threading.Lock();self.armed=False;self.closed=False;self.rows=[];self.sockets=[];self.threads=[]
+        self.lock=threading.Lock();self.armed=False;self.target=None;self.closed=False;self.rows=[];self.sockets=[];self.threads=[]
         self.server=socket.socket();self.server.bind(('127.0.0.1',RELAY_PORT));self.server.listen();self.server.settimeout(.2)
         self.acceptor=threading.Thread(target=self.accept,daemon=True);self.acceptor.start()
     def accept(self):
@@ -37,17 +37,28 @@ class Relay:
             except OSError:client.close();continue
             client.settimeout(.2);upstream.settimeout(.2)
             with self.lock:
-                row={'id':len(self.rows),'client_bytes':0,'server_bytes':0,'dropped_bytes':0,'closed':False};self.rows.append(row);self.sockets.extend([client,upstream])
+                row={'id':len(self.rows),'client_bytes':0,'server_bytes':0,'dropped_bytes':0,'target_query_hit':False,'closed':False};self.rows.append(row);self.sockets.extend([client,upstream])
             for src,dst,direction in [(client,upstream,'client'),(upstream,client,'server')]:
                 t=threading.Thread(target=self.pump,args=(src,dst,row,direction),daemon=True);self.threads.append(t);t.start()
     def pump(self,src,dst,row,direction):
+        frames=bytearray()
         try:
             while not self.closed:
                 try:packet=src.recv(65536)
                 except socket.timeout:continue
                 if not packet:return
                 with self.lock:
-                    row[direction+'_bytes']+=len(packet);drop=direction=='server' and self.armed
+                    row[direction+'_bytes']+=len(packet)
+                    if direction=='client':
+                        frames.extend(packet)
+                        while len(frames)>=4:
+                            size=int.from_bytes(frames[:3],'little')
+                            if size>1048576:raise OSError('Probe packet budget exhausted')
+                            if len(frames)<size+4:break
+                            payload=bytes(frames[4:size+4]);del frames[:size+4]
+                            if self.armed and self.target is None and payload[:1]==b'\x03' and b'FROM auth_session s JOIN identity_user' in payload[1:]:
+                                self.target=row['id'];row['target_query_hit']=True
+                    drop=direction=='server' and self.armed and self.target==row['id']
                     if drop:row['dropped_bytes']+=len(packet)
                 if not drop:dst.sendall(packet)
         except OSError:pass
@@ -60,7 +71,7 @@ class Relay:
     def snapshot(self):
         with self.lock:return [dict(row) for row in self.rows]
     def arm(self,value):
-        with self.lock:self.armed=value
+        with self.lock:self.armed=value;self.target=None
     def close(self):
         self.closed=True;self.server.close()
         for s in self.sockets:
@@ -92,10 +103,10 @@ def main():
         dependencies=[name.split('/')[-1] for name in z.namelist() if re.fullmatch(r'BOOT-INF/lib/(mysql-connector-j|HikariCP)-[^/]+\.jar',name)]
     if sorted(dependencies)!=['HikariCP-7.0.2.jar','mysql-connector-j-9.7.0.jar']:raise RuntimeError('Pinned driver/pool changed; contract must be reviewed')
     coord['dependencies']=dependencies
-    spec={'id':'database','contract':{'id':'qixu-m7-database','version':'0.1'},'evidence_type':'qixu.m7.database','coordinates':coord,'projections':['source_sha','producer','normal','lock','io','configuration','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
-    expected={'/source_sha':source,'/source_clean':True,'/producer/bytes_checked':True,'/normal/create_status':200,'/normal/receipt_equal':True,'/normal/unique_sql':True,'/lock/wait_observed':True,'/lock/response_within_15s':True,'/lock/status':503,'/lock/code':'DATABASE_UNAVAILABLE','/lock/no_business_while_guard_held':True,'/lock/no_marker_while_guard_held':True,'/lock/retry_status':200,'/lock/retry_receipt_equal':True,'/lock/unique_effect':True,'/io/borrowed_flow_hit':True,'/io/response_within_35s':True,'/io/status':503,'/io/code':'DATABASE_UNAVAILABLE','/io/no_mutation':True,'/io/recovery_read_status':200,'/io/recovery_receipt_equal':True,'/configuration/app_lock_wait_values':[10],'/cleanup/all_owned_stopped':True}
+    spec={'id':'database','contract':{'id':'qixu-m7-database','version':'0.2'},'evidence_type':'qixu.m7.database','coordinates':coord,'projections':['source_sha','producer','normal','lock','io','configuration','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
+    expected={'/source_sha':source,'/source_clean':True,'/producer/bytes_checked':True,'/normal/create_status':200,'/normal/receipt_equal':True,'/normal/unique_sql':True,'/lock/wait_observed':True,'/lock/response_within_15s':True,'/lock/status':503,'/lock/code':'DATABASE_UNAVAILABLE','/lock/no_business_while_guard_held':True,'/lock/no_marker_while_guard_held':True,'/lock/retry_status':200,'/lock/retry_receipt_equal':True,'/lock/unique_effect':True,'/io/borrowed_flow_hit':True,'/io/target_query_hit':True,'/io/response_within_35s':True,'/io/status':503,'/io/code':'DATABASE_UNAVAILABLE','/io/no_mutation':True,'/io/recovery_read_status':200,'/io/recovery_receipt_equal':True,'/configuration/app_lock_wait_values':[10],'/cleanup/all_owned_stopped':True}
     assertions=[{'id':'database-'+str(i),'severity':'HARD','left':{'requirement_id':'database','path':'/facts'+path},'operator':'eq','right':value} for i,(path,value) in enumerate(expected.items())]
-    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m7-database','version':1,'subject':{'id':'qixu-m7-database','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Do owned resource waits and borrowed network reads end within frozen observation budgets without duplicate business authority?','governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:m7-database-collector','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'database','observation_spec_id':'database','cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'database','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':600},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu F15 owned database stalls','consumers':['M7-database']},'reproduction_steps':['Fresh exact native0.17/Plan5 producer. Seal before own MySQL and opaque loopback relay. Normal booking; real floor lock wait with15s observation then release/same-key replay; drop only replies on existing borrowed connection with35s observation, then remove fault and verify authoritative reads.'],'cleanup_steps':['Only verified Popen child handles, exe and data-directory/jar coordinates may be stopped.','Retain all dump, private packets, world witness and immutable Bundle; no host database or other service is touched.']})
+    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m7-database','version':2,'subject':{'id':'qixu-m7-database','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Do owned resource waits and borrowed network reads end within frozen observation budgets without duplicate business authority?','governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:m7-database-collector','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'database','observation_spec_id':'database','cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'database','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':600},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu F15 owned database stalls','consumers':['M7-database']},'reproduction_steps':['Fresh exact native0.17/Plan5 producer. Seal before own MySQL and opaque loopback relay. Normal booking; real floor lock wait with15s observation then release/same-key replay; drop only replies on existing borrowed connection with35s observation, then remove fault and verify authoritative reads.'],'cleanup_steps':['Only verified Popen child handles, exe and data-directory/jar coordinates may be stopped.','Retain all dump, private packets, world witness and immutable Bundle; no host database or other service is touched.']})
     write(out/'sealed-plan.json',plan);write(out/'coordinate.json',coord)
     facts={'source_sha':source,'producer':producer,'normal':{},'lock':{},'io':{},'configuration':{},'requests':[],'boundary':'OWN_RESOURCE_WAIT_AND_READ_RESPONSE_DROP_NOT_COMMIT_DROP_MULTI_NODE_OR_PRODUCTION_SLA'}
     children=[];logs=[];db=None;app=None;guard=None;relay=None;executor=None;execution='COMPLETED';completed=False;root_password='';app_password=secrets.token_hex(24);sequence=0;counter=threading.Lock()
@@ -153,7 +164,7 @@ def main():
     def app_start():
         nonlocal app
         env={k:v for k,v in os.environ.items() if not k.startswith(('QIXU_','MYSQL_','DEEPSEEK_'))}
-        env.update({'QIXU_DB_URL':f'jdbc:mysql://127.0.0.1:{RELAY_PORT}/{SCHEMA}?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8','QIXU_DB_USERNAME':'qixu_fault_app','QIXU_DB_PASSWORD':app_password,'QIXU_PORT':str(APP_PORT),'QIXU_BIND':'127.0.0.1','SPRING_PROFILES_ACTIVE':'demo','QIXU_TASKS_ENABLED':'false','QIXU_COOKIE_SECURE':'false','QIXU_RECOVERY_JOURNAL':str(journal)})
+        env.update({'QIXU_DB_URL':f'jdbc:mysql://127.0.0.1:{RELAY_PORT}/{SCHEMA}?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8&sslMode=DISABLED&useServerPrepStmts=false','QIXU_DB_USERNAME':'qixu_fault_app','QIXU_DB_PASSWORD':app_password,'QIXU_PORT':str(APP_PORT),'QIXU_BIND':'127.0.0.1','SPRING_PROFILES_ACTIVE':'demo','QIXU_TASKS_ENABLED':'false','QIXU_COOKIE_SECURE':'false','QIXU_RECOVERY_JOURNAL':str(journal)})
         app=launch([str(a.java.resolve()),'-jar',str(installed)],'qixu',str(installed),env);limit=time.monotonic()+55
         while time.monotonic()<limit:
             if app.poll() is not None:raise RuntimeError('Owned app exited before health observation')
@@ -205,7 +216,8 @@ def main():
         facts['lock'].update({'response_within_15s':future.done() and value.get('_observer_elapsed',999)<=15,'status':status,'code':value.get('error',{}).get('code'),'observed_elapsed':value.get('_observer_elapsed'),'window_elapsed':time.monotonic()-begin})
         facts['lock']['no_business_while_guard_held']=sql("SELECT (SELECT COUNT(*) FROM qixu_fault.short_reservation WHERE space_id=2001),(SELECT COUNT(*) FROM qixu_fault.idempotency_receipt WHERE request_key='m7_database_queued');")=='0\t0'
         facts['lock']['no_marker_while_guard_held']=int(sql('SELECT COUNT(*) FROM qixu_fault.recovery_marker;'))==marker_before
-        verify_child(guard);guard.stdin.write(b"ROLLBACK;SELECT 'GUARD_RELEASED';quit\n");guard.stdin.flush();guard.stdin.close();guard.wait(8)
+        verify_child(guard);guard.stdin.write(b"ROLLBACK;SELECT 'GUARD_RELEASED';\n");guard.stdin.flush();guard.stdin.close();guard.wait(8)
+        if guard.returncode!=0:raise RuntimeError('Guard did not exit cleanly after release')
         status,value=future.result(timeout=40);write(out/'lock-after-release.private.json',{'status':status,'body':value})
         status,value=request('POST','/api/v1/reservations',queued,tokens[1],queued_key);facts['lock']['retry_status']=status;retry=value.get('data')
         status,value=request('POST','/api/v1/reservations',queued,tokens[1],queued_key)
@@ -223,7 +235,7 @@ def main():
         while time.monotonic()-begin<35 and not future.done():time.sleep(.1)
         status,value=future.result() if future.done() else (-1,{})
         after=relay.snapshot();hit=any(row['id'] in old and row['client_bytes']>old[row['id']]['client_bytes'] and row['dropped_bytes']>old[row['id']]['dropped_bytes'] for row in after)
-        facts['io'].update({'borrowed_flow_hit':hit,'response_within_35s':future.done() and value.get('_observer_elapsed',999)<=35,'status':status,'code':value.get('error',{}).get('code'),'observed_elapsed':value.get('_observer_elapsed'),'window_elapsed':time.monotonic()-begin,'relay_before':before,'relay_after':after})
+        facts['io'].update({'borrowed_flow_hit':hit,'target_query_hit':any(row['target_query_hit'] and row['id'] in old for row in after),'response_within_35s':future.done() and value.get('_observer_elapsed',999)<=35,'status':status,'code':value.get('error',{}).get('code'),'observed_elapsed':value.get('_observer_elapsed'),'window_elapsed':time.monotonic()-begin,'relay_before':before,'relay_after':after})
         if not hit:raise RuntimeError('Fault did not hit an established connection')
         facts['io']['no_mutation']=sql('SELECT (SELECT COUNT(*) FROM qixu_fault.short_reservation),(SELECT COUNT(*) FROM qixu_fault.idempotency_receipt),(SELECT COUNT(*) FROM qixu_fault.recovery_marker);')==counts_before
         relay.arm(False);facts['io']['recovery_required_owned_restart']=not future.done()
@@ -235,7 +247,7 @@ def main():
         execution='ERROR';facts['collection_error']={'kind':type(error).__name__,'message':str(error)[:200]}
     finally:
         if guard is not None and guard.poll() is None:
-            try:guard.stdin.write(b'ROLLBACK;quit\n');guard.stdin.flush();guard.stdin.close();guard.wait(5)
+            try:guard.stdin.write(b'ROLLBACK;\n');guard.stdin.flush();guard.stdin.close();guard.wait(5)
             except (OSError,ValueError,subprocess.TimeoutExpired):pass
         cleanup=[]
         for child,owner in reversed(children):
