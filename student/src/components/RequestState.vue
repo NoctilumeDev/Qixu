@@ -10,7 +10,7 @@ async function stop(key:string){if(busy.value)return;busy.value=true;message.val
   <view v-if="auth.error" class="error-note"><text>{{auth.error}}</text><button role="button" class="text-button" @click="go('profile')">查看连接设置</button></view>
   <view v-for="p in auth.pending" :key="p.key" class="pending-card">
     <text class="card-title">{{p.state==='SENDING'?'正在提交，请稍候':'提交结果待确认'}}</text>
-    <text class="muted">{{formatTime(p.createdAt)}} · 原请求 {{p.key.slice(-8)}}</text>
+    <text class="muted">{{p.recoveryOnly?'原请求信息不完整，仅可查询或安全停止':formatTime(p.createdAt)}} · 原请求 {{p.key.slice(-8)}}</text>
     <view class="actions"><button role="button" :disabled="busy||p.state==='SENDING'" @click="recover(p.key)">查询回执</button><button role="button" :disabled="busy||p.state==='SENDING'||!p.replayable" @click="recover(p.key,true)">同键重试</button><button role="button" :disabled="busy||p.state==='SENDING'" @click="stop(p.key)">确认或停止原意图</button></view>
   </view>
   <view v-if="message" class="info-note">{{message}}</view>
