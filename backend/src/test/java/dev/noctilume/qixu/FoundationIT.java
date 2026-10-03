@@ -40,6 +40,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 /** Real HTTP and real MySQL. Never silently falls back to an embedded database. */
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@org.springframework.test.annotation.DirtiesContext(classMode=org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("demo")
 class FoundationIT {
     @LocalServerPort int port;

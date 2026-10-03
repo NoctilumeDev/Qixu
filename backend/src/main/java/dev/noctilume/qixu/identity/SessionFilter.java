@@ -27,8 +27,9 @@ public class SessionFilter extends OncePerRequestFilter {
     private final JsonMapper json;
     private final Set<String> origins;
     private final ApplicationAvailability availability;
-    public SessionFilter(AuthService auth,JsonMapper json,ApplicationAvailability availability,@Value("${qixu.allowed-origins}") String origins) {
-        this.auth=auth; this.json=json; this.availability=availability; this.origins=Arrays.stream(origins.split(",")).map(String::trim).collect(Collectors.toUnmodifiableSet());
+    private final dev.noctilume.qixu.recovery.RecoveryFence recovery;
+    public SessionFilter(AuthService auth,JsonMapper json,ApplicationAvailability availability,dev.noctilume.qixu.recovery.RecoveryFence recovery,@Value("${qixu.allowed-origins}") String origins) {
+        this.auth=auth; this.json=json; this.availability=availability; this.recovery=recovery; this.origins=Arrays.stream(origins.split(",")).map(String::trim).collect(Collectors.toUnmodifiableSet());
     }
     public static AuthService.Session session(HttpServletRequest r) {
         var value=r.getAttribute("qixu.session");
@@ -55,6 +56,7 @@ public class SessionFilter extends OncePerRequestFilter {
             String path=request.getRequestURI();
             if (path.startsWith("/api/") && availability.getReadinessState()!=ReadinessState.ACCEPTING_TRAFFIC)
                 throw new DomainException(503,"APPLICATION_NOT_READY","服务正在准备，请稍后重试。");
+            if(path.startsWith("/api/"))recovery.requireReady();
             boolean anonymous=(path.equals("/api/health") && request.getMethod().equals("GET"))
                 || (path.equals("/api/v1/auth/login") && request.getMethod().equals("POST"))
                 || (path.equals("/api/v1/auth/external/dark-room") && request.getMethod().equals("POST"))

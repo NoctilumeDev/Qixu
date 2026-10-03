@@ -26,6 +26,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 /** Real HTTP/MySQL; controlled Clock and provider witness transactions, not public beacon qualification. */
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@org.springframework.test.annotation.DirtiesContext(classMode=org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("demo")
 @Import(PreparationIT.FaultConfig.class)
 class PreparationIT {

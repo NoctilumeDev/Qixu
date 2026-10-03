@@ -5,6 +5,7 @@ it does not acquire DB lifecycle authority or prove production capacity.
 """
 from __future__ import annotations
 import argparse
+import os
 import hashlib
 import time
 from datetime import datetime, timezone
@@ -124,7 +125,7 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.15"}.get(args.stage, "qixu-native/0.6")
+    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.16"}.get(args.stage, "qixu-native/0.6")
     request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
     if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7"):
@@ -140,6 +141,7 @@ def main() -> int:
         required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M6_CASES.items() for name in names]
     if args.stage == "m7":
         required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M7_CASES.items() for name in names]
+        request["recovery_fixture"]={"journal":"persistent-dedicated-test-db-ledger","baseline_adoption":"ADOPT_PRE_V10_ONCE","contexts":"AFTER_CLASS","recovery_bypass":False}
         request["migration_sha256"]={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/"backend/src/main/resources/db/migration").glob("*.sql"))}
         request["contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-execution-entry.md").read_bytes()).hexdigest()
         request["metadata_oracle_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-metadata-oracle.md").read_bytes()).hexdigest()
@@ -175,7 +177,7 @@ def main() -> int:
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 3}.get(args.stage, 6),
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 4}.get(args.stage, 6),
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -191,10 +193,16 @@ def main() -> int:
     write_new(output / "request.json", request)
     exit_code = -1
     execution = "COMPLETED"
+    environment=dict(os.environ)
+    if args.stage=="m7":
+        database=environment.get("QIXU_TEST_DB_URL","").split("/")[-1].split("?")[0]
+        if database not in {"qixu_test","qixu_ci"}:raise RuntimeError("Dedicated recovery fixture database required")
+        directory=ROOT/".tools/runtime"/("native-"+database);directory.mkdir(parents=True,exist_ok=True)
+        environment.update(QIXU_RECOVERY_JOURNAL=str(directory/"transactions.journal"),QIXU_RECOVERY_BASELINE="ADOPT_PRE_V10_ONCE")
     command_started = time.time()
     try:
         # Fresh reports prevent a failed command from replaying stale green XML.
-        completed = subprocess.run([args.maven, "-B", "-ntp", "-Pmysql-it", "clean", "verify"], cwd=ROOT / "backend", capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900)
+        completed = subprocess.run([args.maven, "-B", "-ntp", "-Pmysql-it", "clean", "verify"], cwd=ROOT / "backend", capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900, env=environment)
         exit_code = completed.returncode
         (output / "stdout.txt").write_text(completed.stdout, encoding="utf-8")
         (output / "stderr.txt").write_text(completed.stderr, encoding="utf-8")

@@ -29,6 +29,9 @@ spring:
       max-file-size: 1MB
       max-request-size: 2MB
 qixu:
+  recovery:
+    journal: ${QIXU_RECOVERY_JOURNAL:.qixu/transactions.journal}
+    baseline: ${QIXU_RECOVERY_BASELINE:}
   demo-enabled: false
   cookie-secure: ${QIXU_COOKIE_SECURE:true}
   allowed-origins: ${QIXU_ALLOWED_ORIGINS:http://localhost:6968,http://127.0.0.1:6968,http://localhost:6969,http://127.0.0.1:6969}

@@ -9,7 +9,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import dev.noctilume.qixu.recovery.RecoveryFence;
 import tools.jackson.databind.json.JsonMapper;
 
 @Component
@@ -18,11 +20,20 @@ public class DemoInitializer implements ApplicationRunner {
     private final JsonMapper json;
     private final Environment environment;
     private final boolean enabled;
-    public DemoInitializer(JdbcTemplate jdbc,JsonMapper json,Environment environment,@Value("${qixu.demo-enabled:false}") boolean enabled) { this.jdbc=jdbc; this.json=json; this.environment=environment; this.enabled=enabled; }
-    @Override @Transactional public void run(ApplicationArguments args) {
+    private final RecoveryFence recovery;
+    private final TransactionTemplate transaction;
+    public DemoInitializer(JdbcTemplate jdbc,JsonMapper json,Environment environment,boolean enabled) {this(jdbc,json,environment,enabled,null,null);}
+    @org.springframework.beans.factory.annotation.Autowired
+    public DemoInitializer(JdbcTemplate jdbc,JsonMapper json,Environment environment,@Value("${qixu.demo-enabled:false}") boolean enabled,RecoveryFence recovery,PlatformTransactionManager manager) { this.jdbc=jdbc; this.json=json; this.environment=environment; this.enabled=enabled;this.recovery=recovery;transaction=manager==null?null:new TransactionTemplate(manager); }
+    @Override public void run(ApplicationArguments args) {
         if (!enabled) return;
         Set<String> profiles=Set.of(environment.getActiveProfiles());
         if (!profiles.contains("demo") || profiles.contains("prod") || profiles.contains("production")) throw new IllegalStateException("Demo identities require demo profile and cannot run in production");
+        if(recovery==null || transaction==null)throw new IllegalStateException("Managed demo initialization requires recovery authority");
+        if(!recovery.ready())return;
+        transaction.executeWithoutResult(status->seed());
+    }
+    private void seed() {
         var encoder=new BCryptPasswordEncoder(12);
         String[][] users={{"student1","林同学","STUDENT"},{"student2","陈同学","STUDENT"},{"teacher1","周老师","TEACHER"},{"admin1","空间管理员","ADMIN"},{"admin2","三楼管理员","ADMIN"}};
         for(int i=0;i<users.length;i++) {

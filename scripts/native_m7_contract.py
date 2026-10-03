@@ -12,3 +12,21 @@ M7_MEASURES={
     M7_CASES["ProtocolProjectionIT"][1]:{"favoritesAfterInvalid":0,"receiptsAfterInvalid":0,"rejected":3,"favoritesAfterValid":1,"receiptsAfterValid":1},
     M7_CASES["ProtocolProjectionIT"][2]:{"firstPageSize":20,"reportedTotal":151,"sqlTotal":151,"observedUnique":151,"oracleEqual":True,"unreadAfter":150},
 }
+
+M7_CASES.update({"recovery.RecoveryJournalTest":[
+ "committedAndRolledBackHistorySurvivesExactFileReopen",
+ "secondOwnerCannotAcquireSameIndependentJournal",
+ "illegalTerminalsAndDuplicatePreparesCannotRewriteBytes",
+ "truncatedOrAlteredHistoryIsNeverSilentlyRepaired",
+ "externalAppendWhileOpenInvalidatesFurtherDurableAuthority",
+ "oversizedJournalIsRejectedWithoutTruncation",
+],"recovery.RecoveryFenceTest":[
+ "oldDatabaseMissingKnownCommitMarkerQuarantinesAllAdmission",
+ "incompletePrepareWithRealMarkerRecoversSameCommitWithoutNewGeneration",
+ "unknownPrepareWithoutMarkerIsNotInventedRollback",
+ "knownRollbackWithoutMarkerCanReopenNormally",
+ "missingJournalCannotBeBypassedByBaselineAdoption",
+ "databaseMarkerWithoutPrepareCannotObtainAuthority",
+ "markerWriteFailureKnownRollbackRetainsPreparedCoordinateAndCanReconcile",
+ "unknownCommitOrTerminalIoFailureNeverRewritesCommitAsRollback",
+]})
