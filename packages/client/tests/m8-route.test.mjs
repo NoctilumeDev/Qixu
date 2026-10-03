@@ -19,13 +19,13 @@ const feedback={id:1,space_id:2000,status:'VERIFIED',version:3,attachments:[],re
 const repair={id:1,space_id:2000,status:'OPEN',version:1};
 const venues=[{id:7,space_id:2000,floor_id:100,status:'SUBMITTED',version:1}];
 const events=[{id:9,venue_request_id:7,status:'PUBLISHED',version:1}];
-const floors=[{id:100,name:'fixture floor',building:'fixture building',level:1,mapWidth:560,mapHeight:360,version:1,openingRules:{}}];
-const spaces={items:[{id:2000,floorId:100,parentId:null,code:'fixture-seat',name:'fixture seat',kind:'SEAT',useMode:'BOOKABLE',capacity:1,version:1,x:0,y:0,width:20,height:20,imageKey:null,profile:{source:'fixture',description:'offline fixture'},availability:'NOT_QUERIED'}],total:1};
+const floors=[{id:100,name:'fixture floor',building:'fixture building',levelNumber:1,version:1,sourceKind:'DEMO'}];
+const spaces={items:[{id:2000,floorId:100,parentId:null,code:'fixture-seat',name:'fixture seat',kind:'SEAT',useMode:'BOOKABLE',capacity:1,version:1,x:0,y:0,width:20,height:20,imageKey:null,profile:{source:'fixture',description:'offline fixture'},availability:'NOT_QUERIED'}],total:1,page:1,size:50};
 function responseFor(request) {
   const p=request.path;
   if(p==='/api/v1/feedback/1')return feedback;
   if(p==='/api/v1/admin/repairs/1')return repair;
-  if(p==='/api/v1/admin/feedback')return {items:[feedback],total:1};
+  if(p==='/api/v1/admin/feedback')return {items:[feedback],total:1,page:1,size:50};
   if(p==='/api/v1/admin/venue-requests'||p==='/api/v1/venue-requests')return venues;
   if(p==='/api/v1/organizer/events')return events;
   if(p==='/api/v1/floors')return floors;
