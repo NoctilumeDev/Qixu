@@ -44,3 +44,10 @@ M7_MEASURES.update({
  M7_CASES["RecoveryTransactionsIT"][2]:{"observedRows":0,"committedMarkerDelta":0,"outsideBusinessRows":0},
  M7_CASES["RecoveryTransactionsIT"][3]:{"nestedRows":0,"normalRows":1,"committedMarkerDelta":1},
 })
+
+M7_CASES.update({"config.DatabaseBudgetsTest":[
+ "genericUrlCannotDisableConfiguredDriverBudgets",
+ "hostSpecificOverrideCannotBypassGlobalSocketBudget",
+ "zeroNegativeOrExtendedDriverBudgetsFailBeforeConnections",
+ "multipleHostsOrMissingLockInitializationCannotInventFiniteBudget",
+]})
