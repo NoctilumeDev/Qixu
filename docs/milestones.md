@@ -11,7 +11,7 @@
 | M4 冲突、反馈与治理 | VERIFIED_API_MYSQL_INSTALLED | 层级阻断、影响处置、临时替代、反馈核实/维修复验、通知与审计 | PR#9/main@02c3665两项CI、fresh native110及producer-bound installed PASS；见M4记录，非现实维修/UI |
 | M5 两端真实链路 | VERIFIED_LIMITED_API_BUILD_BROWSER | uni-app 小程序及 H5 验证入口、响应式管理 Web、主流程、素材与合理结构 | PR#11/main@c411cfe7三项CI、fresh native126/build31/installed browser17及真实SQL闭合；视觉留M10，真机NOT_PROVEN |
 | M6 回归与外部接入 | VERIFIED_LIMITED_API_MYSQL_REAL_IDENTITY_RESTART | [M6主线证据](acceptance/m6.md)：真实暗室当前身份适配、同库重启和固定round干净复算 | PR#14/main@5ca0b5e三项CI及fresh native142/build31/installed PASS；原候选PENDING保留，不含SSO/备份回滚/真机 |
-| M7 外部错题复核与修复 | PLANNED | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | 新反例有证据分类；阻断修复且原条件复验；未证明边界公开，测试数量不替代资格 |
+| M7 外部错题复核与修复 | IN_PROGRESS | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | 新反例有证据分类；阻断修复且原条件复验；未证明边界公开，测试数量不替代资格 |
 | M8 独立测试及产品复验 | PLANNED | 两个子代理：测试验收者、产品经理；固定提交独立审阅 | 有依据的反馈完成处置；关键链路重新验收；未验能力明确列出 |
 | M9 公开工程候选与冻结 | PLANNED | CI、README/截图、SQL入口、部署/恢复、工程候选与公开事实对齐 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
 | M10 前端精修与验收 | PLANNED | 按[精修合同](contracts/frontend-refinement.md)统一两端视觉、素材、排版与响应式细节，最终截图及版本 | 参考图与真实页面规范化比较；桌面/手机/键盘/状态验收；精修后业务回归、exact main公开读回及最终Release资格对齐 |
