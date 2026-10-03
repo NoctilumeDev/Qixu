@@ -21,7 +21,8 @@ public class RecoveryFence implements TransactionExecutionListener,AutoCloseable
     private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(RecoveryFence.class);
     private final JdbcTemplate jdbc;
     private final DataSource source;
-    private final Map<TransactionExecution,String> pending=Collections.synchronizedMap(new IdentityHashMap<>());
+    private record Prepared(String id,boolean commitAdmitted) {}
+    private final Map<TransactionExecution,Prepared> pending=Collections.synchronizedMap(new IdentityHashMap<>());
     private volatile boolean ready;
     private volatile String reason="INITIALIZING";
     private RecoveryJournal journal;
@@ -100,15 +101,22 @@ public class RecoveryFence implements TransactionExecutionListener,AutoCloseable
         requireReady();
         if(!transaction.isNewTransaction() || transaction.isReadOnly())return;
         String id=UUID.randomUUID().toString();
-        try {journal.event("PREPARE",id);pending.put(transaction,id);}
+        try {journal.event("PREPARE",id);pending.put(transaction,new Prepared(id,false));}
         catch(IOException error){quarantine("PREPARE_DURABILITY_FAILED",error);throw unavailable();}
-        try {jdbc.update("INSERT INTO recovery_marker(transaction_id,generation) VALUES(?,?)",id,journal.generation());}
+        try {
+            if(jdbc.update("INSERT INTO recovery_marker(transaction_id,generation) VALUES(?,?)",id,journal.generation())!=1)
+                throw new IllegalStateException("Recovery marker was not inserted");
+            pending.put(transaction,new Prepared(id,true));
+        }
         catch(RuntimeException error){quarantine("MARKER_WRITE_FAILED",error);throw error;}
     }
     @Override public void afterCommit(TransactionExecution transaction,Throwable failure){finish(transaction,failure==null?"COMMIT":null);}
-    @Override public void afterRollback(TransactionExecution transaction,Throwable failure){finish(transaction,failure==null?"ROLLBACK":null);}
+    @Override public void afterRollback(TransactionExecution transaction,Throwable failure){
+        var prepared=pending.get(transaction);
+        finish(transaction,failure==null && prepared!=null && !prepared.commitAdmitted()?"ROLLBACK":null);
+    }
     private void finish(TransactionExecution transaction,String terminal) {
-        String id=pending.remove(transaction);if(id==null)return;
+        var prepared=pending.remove(transaction);if(prepared==null)return;String id=prepared.id();
         if(terminal==null){quarantine("TRANSACTION_OUTCOME_UNKNOWN",new IOException("Outcome unknown"));return;}
         try {journal.event(terminal,id);}
         catch(IOException error){quarantine("TERMINAL_DURABILITY_FAILED",error);}

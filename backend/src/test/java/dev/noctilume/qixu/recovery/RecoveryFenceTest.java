@@ -23,7 +23,8 @@ class RecoveryFenceTest {
     private JdbcTemplate database(List<String> markers) {
         JdbcTemplate jdbc=mock(JdbcTemplate.class);
         when(jdbc.queryForList("SELECT generation,baseline_hash FROM recovery_generation WHERE id=1")).thenReturn(List.of(Map.of("generation",generation,"baseline_hash","a".repeat(64))));
-        doReturn(markers).when(jdbc).query(startsWith("SELECT transaction_id FROM recovery_marker"),any(RowMapper.class),eq(generation));return jdbc;
+        doReturn(markers).when(jdbc).query(startsWith("SELECT transaction_id FROM recovery_marker"),any(RowMapper.class),eq(generation));
+        when(jdbc.update(startsWith("INSERT INTO recovery_marker"),any(Object[].class))).thenReturn(1);return jdbc;
     }
     private RecoveryFence open(JdbcTemplate jdbc){return new RecoveryFence(jdbc,null,path().toString(),"ADOPT_PRE_V10_ONCE");}
     private TransactionExecution transaction(){return new TransactionExecution(){@Override public boolean isNewTransaction(){return true;}};}
