@@ -31,7 +31,7 @@ def main():
     ini=installation/'my.ini';ini.write_bytes(('[mysqld]\nbasedir='+base.as_posix()+'\ndatadir='+data.as_posix()+'\nport=6980\nbind-address=127.0.0.1\nmysqlx=0\ninnodb_buffer_pool_size=64M\nmax_connections=16\nskip-log-bin\nlog-error='+str(installation/'mysql.private.log').replace('\\','/')+'\n').encode())
     root_password='';app_password=secrets.token_hex(24);children=[];logs=[];servers=[];threads=[];lock=threading.Lock();fault={'armed':False,'records':[]};requests=[];cleanup=[]
     def launch(command,label,env=None):
-        log=(installation/(label+'.private.log')).open('xb');logs.append(log)
+        log=(installation/(label+'.stdout.private.log')).open('xb');logs.append(log)
         child=subprocess.Popen(command,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,creationflags=subprocess.CREATE_NO_WINDOW);children.append((child,command,label))
         return child
     def sql(statement):
