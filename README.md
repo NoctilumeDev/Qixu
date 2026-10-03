@@ -12,7 +12,7 @@
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 
-M7单实例[数据库等待预算](docs/acceptance/m7-database.md)已在受保护main@ffa01ffe取得新原生170、恢复22、真实锁/查询回应故障25及公开CI读回。随后在受保护main@c876d1a取得[同一源码的M7有限退出资格](docs/acceptance/m7.md)：新native173、frontend45、恢复22、数据库预算25、COMMIT29及真实页面14均通过，原失败保留；两名独立角色按[M8合同](docs/contracts/independent-review.md)继续挑战，精修留M10。M8已发现并保留新反例，修复候选的新API/MySQL181与客户端模型/构建54通过，当前实页复验和整体M8仍在施工；十六条与外部经验的范围见[覆盖复核](docs/coverage-review.md)。[机制账册](docs/m7-coverage-ledger.md)与[未知重入](docs/m7-unknowns.md)区分已验证和未证明。
+M7单实例[数据库等待预算](docs/acceptance/m7-database.md)已在受保护main@ffa01ffe取得新原生170、恢复22、真实锁/查询回应故障25及公开CI读回。随后在受保护main@c876d1a取得[同一源码的M7有限退出资格](docs/acceptance/m7.md)：新native173、frontend45、恢复22、数据库预算25、COMMIT29及真实页面14均通过，原失败保留；两名独立角色按[M8合同](docs/contracts/independent-review.md)继续挑战，精修留M10。M8已发现并保留新反例；固定4fb候选的新API/MySQL181、客户端模型/构建59及真实页面18命名捕获通过，两个独立角色已交付有限复核报告；[候选记录](docs/acceptance/m8.md)保留P3内容建议和未证明范围，公开主线资格与整体M8仍在施工；十六条与外部经验的范围见[覆盖复核](docs/coverage-review.md)。[机制账册](docs/m7-coverage-ledger.md)与[未知重入](docs/m7-unknowns.md)区分已验证和未证明。
 
 ![学生空间档案](artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/student-space.png)
 

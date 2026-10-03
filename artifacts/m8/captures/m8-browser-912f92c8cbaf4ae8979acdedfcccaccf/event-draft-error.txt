@@ -1,0 +1,64 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "我的场地申请":
+      - /url: "#/venues"
+      - generic: 我的场地申请
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "活动组织" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 周老师
+  - generic: 老师
+  - button "退出当前账号":
+- main:
+  - alert [active]:
+    - text: 请填写处理说明后再发布活动。
+    - button "刷新事实（保留输入）"
+  - link "返回原列表":
+    - /url: "#/events?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "M8 原条件读书会复验 草稿" [level=2]:
+    - text: M8 原条件读书会复验
+    - generic: 草稿
+  - term: 空间
+  - definition: R-A 研讨室 A
+  - term: 当前版本
+  - definition: "1"
+  - term: 开始
+  - definition: 10/03 20:15
+  - term: 结束
+  - definition: 10/03 21:15
+  - term: 申请截止
+  - definition: 10/03 20:10
+  - paragraph: M8 演示活动：检查地点、预约窗口、短约重叠提示和候补；非真实活动。
+  - text: 处理说明（必填）
+  - textbox "处理说明（必填）":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+  - paragraph: 发布、换地或取消前，请填写真实处理说明，最多500字。
+  - paragraph: 主讲人：M8 演示老师 · 预约截止 10/03 20:10 · 递补停止 10/03 20:12
+  - paragraph: 剩余1/1；预约关系随合法换地保持。
+  - text: 换用本人已批准场地
+  - combobox "换用本人已批准场地":
+    - option "请选择"
+    - option "R-A · M8 演示读书会 · 10/03 20:15" [selected]
+  - button "场地核验后发布"
+  - button "提交合法换地"
+  - button "取消活动并通知"

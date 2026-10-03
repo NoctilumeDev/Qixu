@@ -12,13 +12,15 @@
 | M5 两端真实链路 | VERIFIED_LIMITED_API_BUILD_BROWSER | uni-app 小程序及 H5 验证入口、响应式管理 Web、主流程、素材与合理结构 | PR#11/main@c411cfe7三项CI、fresh native126/build31/installed browser17及真实SQL闭合；视觉留M10，真机NOT_PROVEN |
 | M6 回归与外部接入 | VERIFIED_LIMITED_API_MYSQL_REAL_IDENTITY_RESTART | [M6主线证据](acceptance/m6.md)：真实暗室当前身份适配、同库重启和固定round干净复算 | PR#14/main@5ca0b5e三项CI及fresh native142/build31/installed PASS；原候选PENDING保留，不含SSO/备份回滚/真机 |
 | M7 外部错题复核与修复 | VERIFIED_LIMITED_FAILURE_MECHANISMS | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | [M7](acceptance/m7.md)：PR#21/main@c876d1a三组CI及fresh native173/frontend45/restore22/database25/COMMIT29/browser14；119原包保留、F01–F15及U01–U08有坐标，不宣称零缺陷 |
-| M8 独立测试及产品复验 | IN_PROGRESS_REPAIR_RETEST | 按[独立复核合同](contracts/independent-review.md)运行两个子代理：测试验收者、产品经理；固定提交独立审阅 | 有依据的反馈完成处置；关键链路重新验收；未验能力明确列出 |
+| M8 独立测试及产品复验 | IN_PROGRESS_REPAIR_RETEST | [候选事实](acceptance/m8.md)：两名独立角色报告、反馈处置及4fb新181/59/实际页面18命名捕获 | 候选限定证据已齐；受保护PR、exact-main CI及新主线安装/页面/远端读回尚待闭合 |
 | M9 公开工程候选与冻结 | PLANNED | CI、README/截图、SQL入口、部署/恢复、工程候选与公开事实对齐 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
 | M10 前端精修与验收 | PLANNED | 按[精修合同](contracts/frontend-refinement.md)统一两端视觉、素材、排版与响应式细节，最终截图及版本 | 参考图与真实页面规范化比较；桌面/手机/键盘/状态验收；精修后业务回归、exact main公开读回及最终Release资格对齐 |
 
 ## 每阶段的施工要求
 
 正式开始前在施工记录写范围、保护行为、不做内容、验收与停止条件；当前阶段的架构/API细节进入相应文档。每个有独立问题的修改使用单一目的提交/分支，重要阶段有稳定引用。
+
+M7按主要失败机制有限收束：覆盖核心不变量、典型单故障及有新增价值的高风险组合，不要求全排列枚举。同类低收益反例停止扩展，已知核心缺陷按原条件修复，未验部分保留复验入口；后续新机制只重开对应项。详见[M7范围补充](m7-adversarial-contract.md#主要机制与有限停止条件)。
 
 每个正常业务链至少观察：前端请求 → 权限 → 后端事务 → MySQL最终事实 → 返回结果 → 页面状态。页面正常不替代权限/并发证据；自动测试正常不替代真实页面和微信设备行为。
 

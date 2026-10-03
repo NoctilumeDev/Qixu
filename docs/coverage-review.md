@@ -4,7 +4,7 @@
 
 历史M7主线 `c876d1a35b11dfdf4fda74b67be9451aef8b3a49` 的原native173中，以下35处引用对应的34个不同具名键均在保留Evidence中为true；另有物理COMMIT、旧库恢复、数据库预算、实际浏览器及真实暗室来源的独立证据。不能把这些历史记录直接升级成M8通过。见[M7原资格](acceptance/m7.md)、[未知重入](m7-unknowns.md)。
 
-修复候选 `ca1aeb567bd2bb87e1dde140caa9cb13109a6dc3` 的新native181、frontend54经各自预封Plan执行并由Core裁决PASS：`m8-8d2b160fb3cb4f98aa5b35f41b89a9d4`、`m8-frontend-92e4d3fbb7364542950176f684e58aff`。范围是API/MySQL/受控Clock及实际Client/Vue源码模型/构建，**当前实页复验和M8整体资格尚未完成**。见[M8修复合同](contracts/m8-repairs.md)。
+最近固定修复候选 `4fb184ba2a77daecb0cc33436d6e29ef326e52be` 的native181、frontend59及真实页面18命名捕获各有预封Plan和原Core PASS；两名独立角色报告及产品反馈处置已交付。范围是API/MySQL/受控Clock、实际Client/Vue源码模型/构建及指定实页/SQL，**受保护主线新资格与M8整体退出尚未闭合**。见[M8候选事实](acceptance/m8.md)及[修复合同](contracts/m8-repairs.md)；不将历史或候选资格升级成新main通过。
 
 ## 用户十六条
 
