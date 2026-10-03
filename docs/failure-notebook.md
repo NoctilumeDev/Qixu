@@ -199,3 +199,9 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 `ffbb6a2`的14条文件/受控DB视图单元首跑9通过、1失败4错误，原XML/stdout保留`.tools/m7-recovery-unit-first-ffbb6a2/`，未产生Core资格。Windows排他FileLock为强制锁，测试用Files第二句柄读取/追加被系统拒绝；另一个Mockito桩选中了JdbcTemplate的数组+类型重载，而产品调用Object-varargs，所以预设SQL失败没注入。分类测试夹具，并未观察到恢复规则失效。首次错误工作目录无POM的命令输出也保留，没有测试执行。
 
 修正测试从owned descriptor读取原字节，并仅通过该句柄显式注入长度变化/句柄关闭的IO故障；不移除产品文件锁、不把该注入说成外部攻击或真实磁盘掉电。SQL桩固定Object[]重载。原T0恢复业务断言与首FAIL不变，后续真实MySQL另验。
+
+## M7恢复修复 · commit尝试后rollback成功仍可能UNKNOWN
+
+候选`23d9d2b`新增反例执行真实Spring7.0.9 JdbcTransactionManager的processCommit，连接/DB视图受控：PREPARE与marker步骤后，doCommit抛数据运行时异常，框架随后调用rollback且返回成功，再afterRollback(null)。原XML/stdout留`.tools/m7-recovery-commit-ambiguity-first-23d9d2b/`；1例首FAIL，产品fence仍ready=true并追加ROLLBACK。此观察不冒充MySQL真实丢commit响应。
+
+分类新修复中的结果判定缺陷；afterRollback成功只说明那次rollback调用成功，不足以消除已尝试commit的不确定。Spring源码的运行时异常路径提供该回调顺序，不能用方法名替代事实。最小修复增加每事务“已准许commit尝试”坐标：只有尚未进入commit的marker准备失败且rollback确定成功可记录ROLLBACK；commit已获准后出现失败/rollback则保留PREPARE，隔离UNKNOWN，启动只通过真实marker再判定。原T0首FAIL及所有正常控制保留。
