@@ -14,3 +14,5 @@
 ## 0.2夹具未就绪，保留原PENDING
 
 固定dbdb83b的[native166 PASS](../../artifacts/m7/m7-c77b660b7d2e48628e4befd3f6abb89e/acceptance-report.md)后，[database0.2/Plan2](../../artifacts/m7/m7-database-0997e88828a54be9aef3d749cc7f66f5/acceptance-report.md)为PENDING/ERROR：owned实例的sslMode=DISABLED不再满足caching_sha2_password初始RSA交换；Connector/J默认拒绝未信任的public-key retrieval，app在health前退出，未执行故障请求。此为观察夹具前提错误，不是产品借出查询结果。所有owned停止/三端口无监听。0.3先约定从本轮owned MySQL数据目录绑定自动生成的public_key.pem，记录公钥摘要；不启用任意取key，不改产品TLS或共享库。
+
+0.3入口f9fc054先发生Python3.10 f-string语法错误；命令未正确检查退出码，随后原生166仍PASS（[原Bundle](../../artifacts/m7/m7-eb5225adaaf84fabba4f8d29e5e302f1/acceptance-report.md)），该PASS不验证观察器语法。故障采集未启动，无database0.3 Bundle。修正语法并新增CI scripts compileall，后续用check=True顺序执行，编译失败禁止提交/启动。原错误私有坐标保留，业务预算仍未修。

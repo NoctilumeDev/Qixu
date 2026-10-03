@@ -170,6 +170,13 @@
       "verdict": "PENDING",
       "path": "artifacts/m7/m7-database-0997e88828a54be9aef3d749cc7f66f5",
       "manifest_sha256": "84f101091019b775cbf75e9b4fade845b794968ba3c0d8d86e90adb143ecdcb6"
+    },
+    {
+      "identity": "m7-eb5225adaaf84fabba4f8d29e5e302f1",
+      "source_sha": "f9fc0548f25aef9f9f6bc8738d481eb997c9eefc",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-eb5225adaaf84fabba4f8d29e5e302f1",
+      "manifest_sha256": "556d61b2235d52a12149f1c9d783f7c30525f1043e0adb8a7dafbaac6a0d9ac7"
     }
   ],
   "not_proven": [

@@ -164,7 +164,7 @@ def main():
     def app_start():
         nonlocal app
         env={k:v for k,v in os.environ.items() if not k.startswith(('QIXU_','MYSQL_','DEEPSEEK_'))}
-        env.update({'QIXU_DB_URL':f'jdbc:mysql://127.0.0.1:{RELAY_PORT}/{SCHEMA}?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8&sslMode=DISABLED&useServerPrepStmts=false&serverRSAPublicKeyFile={urllib.parse.quote((data/'public_key.pem').as_posix())}','QIXU_DB_USERNAME':'qixu_fault_app','QIXU_DB_PASSWORD':app_password,'QIXU_PORT':str(APP_PORT),'QIXU_BIND':'127.0.0.1','SPRING_PROFILES_ACTIVE':'demo','QIXU_TASKS_ENABLED':'false','QIXU_COOKIE_SECURE':'false','QIXU_RECOVERY_JOURNAL':str(journal)})
+        env.update({'QIXU_DB_URL':f'jdbc:mysql://127.0.0.1:{RELAY_PORT}/{SCHEMA}?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8&sslMode=DISABLED&useServerPrepStmts=false&serverRSAPublicKeyFile={urllib.parse.quote((data/"public_key.pem").as_posix())}','QIXU_DB_USERNAME':'qixu_fault_app','QIXU_DB_PASSWORD':app_password,'QIXU_PORT':str(APP_PORT),'QIXU_BIND':'127.0.0.1','SPRING_PROFILES_ACTIVE':'demo','QIXU_TASKS_ENABLED':'false','QIXU_COOKIE_SECURE':'false','QIXU_RECOVERY_JOURNAL':str(journal)})
         app=launch([str(a.java.resolve()),'-jar',str(installed)],'qixu',str(installed),env);limit=time.monotonic()+55
         while time.monotonic()<limit:
             if app.poll() is not None:raise RuntimeError('Owned app exited before health observation')
