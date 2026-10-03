@@ -652,6 +652,141 @@
       "path": "captures/m8-browser-bbe95e5f11c54f64a9fbf9b284212dd1/capture-preconditions/viewport-001/student-feedback-list.txt",
       "size": 946,
       "sha256": "3395973c2cfd3d4b3d82de7c4064980e27164198a9ae32604bcbb2a2d5be4fbc"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/cold-initial-error.jpg",
+      "size": 17070,
+      "sha256": "909c45773eb260696e4d86461a1fc8fb8641a5f48ef355f5842d851dc73dfd35"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/cold-initial-error.json",
+      "size": 165,
+      "sha256": "5eb63e75e59fdf8a9272a772e819a5371d1bd00e31160f634dad85ff04f00979"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/cold-initial-error.txt",
+      "size": 422,
+      "sha256": "361c49535ef1a003b78b2af2d14d07944a6fb6d3c180bcf9fa6a4da6220f22d9"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/cold-student2-before-login.jpg",
+      "size": 17070,
+      "sha256": "909c45773eb260696e4d86461a1fc8fb8641a5f48ef355f5842d851dc73dfd35"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/cold-student2-before-login.json",
+      "size": 165,
+      "sha256": "608eb2256296687e44942a9a341b4d22bff24c486be74e08ce48273f6034b2d6"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/cold-student2-before-login.txt",
+      "size": 422,
+      "sha256": "361c49535ef1a003b78b2af2d14d07944a6fb6d3c180bcf9fa6a4da6220f22d9"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/event-venue-profile.jpg",
+      "size": 39217,
+      "sha256": "b6807d9dbd85b5c4456be565481f6b5b8e3cf382a6f7a7879853e6ddcefb9a1a"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/event-venue-profile.json",
+      "size": 190,
+      "sha256": "15bafa122295418b9f92a5b8e88d8a061b88b04923e6af7041527f1c51c01097"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/event-venue-profile.txt",
+      "size": 1383,
+      "sha256": "dab31e1c382e64cadbd75ae31f16f77ca20697d4937f9c26f25494410c66af73"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/event-waitlisted.jpg",
+      "size": 31527,
+      "sha256": "df2ba066de3c29a77b61310fdfa26548de84426d0804dd39f5513588dff8f1a2"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/event-waitlisted.json",
+      "size": 187,
+      "sha256": "8f4b14fa23c83a8eca509c75a626f36a48ed187b930c8a809f9703d1a0cc0cf1"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/event-waitlisted.txt",
+      "size": 918,
+      "sha256": "739b51a8a3df9ff5cb7407f57cb3fb25bb8e5fcbd53e53972385a8b21c2bd869"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/first-student-confirmed.jpg",
+      "size": 31686,
+      "sha256": "86563ab6a066aa1854d64c2e7d15fecf1bca98ea62466269a71ee9e1e171ea02"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/first-student-confirmed.json",
+      "size": 187,
+      "sha256": "1227bf5d233a422470d0dfedcf5ddb7abdbc96b15d4661d1e17d22f4b5e19e83"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/first-student-confirmed.txt",
+      "size": 921,
+      "sha256": "15d266628a81d2c355a5d7d15497009938d59930c1466b5a6cac8f03d4286dc3"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/first-valid-student.jpg",
+      "size": 38007,
+      "sha256": "539a30da28a61191436f3793b5ea9ee919bf59ecca21af773b18333cf3584cd2"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/first-valid-student.json",
+      "size": 165,
+      "sha256": "c119a1e14a9cd32edd6a37fba24b338aa99415a2072c15d71ed897cfc3e1e74f"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/first-valid-student.txt",
+      "size": 3765,
+      "sha256": "2020434c1c4976d8fa45ff7fb59afd32c1c5d2d4c3b9ad5c49e82e495336f697"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/own-arrangements.jpg",
+      "size": 20861,
+      "sha256": "0cfad02fb29691422186bd5f3f2dbf2834c961fe986e5c7ee35e961d08b95981"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/own-arrangements.json",
+      "size": 181,
+      "sha256": "b880e3fd24f3a9219c23bdd56c4f4f060bbd2f99017e3b34087dec4e3f8f9ec2"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/own-arrangements.txt",
+      "size": 658,
+      "sha256": "29b08a0570e6bead28ca850ea67976e1adc0bcad6af75ac5ad815cc200ff04c5"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/student-current-identity.jpg",
+      "size": 22574,
+      "sha256": "4c466105b08178d2384df0e4b0771faf67fc0c844b1b107e0e68e49bfdabb538"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/student-current-identity.json",
+      "size": 184,
+      "sha256": "10b1eb7774a49610ab4eae9e7813a50ebb523f45eeb0d8efec71c8ba20c772eb"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/student-current-identity.txt",
+      "size": 560,
+      "sha256": "36f47d4d6ca2b9d10056f4d946d12235aca5eb5420f0313efa1d68c8949f3571"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/fixture-cleanup.json",
+      "size": 257,
+      "sha256": "bf405b9a6d1336ac9dd19d9bbc2ffbb324cd51476bd8f3aeed7c7329f6963110"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/start-error.json",
+      "size": 376,
+      "sha256": "21bf97116506966513ced92271d3ddf216205c45dc61ad661f5d67fd4f95a4ef"
+    },
+    {
+      "path": "captures/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9/stop-error.json",
+      "size": 528,
+      "sha256": "0f037cc4e7749a107dfc92edc6bca03535981a63057d2eaaf519086603fd1658"
     }
   ],
   "additional_observations": [
@@ -663,6 +798,15 @@
       "precondition_files": 4,
       "disposition": "CORE_DECLARED_INFORMATION_PASS_PM11_PRODUCT_BLOCKER_RETAINED",
       "precondition": "viewport-001 preserved original triplet; corrected same state before Core finish"
+    },
+    {
+      "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+      "identity": "m8-identity-browser-23ae656c03df4867bedfd986503c3ea9",
+      "named_states": 5,
+      "extra_controls": 3,
+      "disposition": "PAGE_PROJECTION_OBSERVED_CORE_FAIL_MISSING_SQL_FACTS_NOT_M8_EXIT",
+      "execution_error": "Controller sent STOP instead of stop; finally cleanup retained; SQL facts missing",
+      "unmet_precondition": "22:00 daily close passed before another actor short reservation was established"
     }
   ]
 }

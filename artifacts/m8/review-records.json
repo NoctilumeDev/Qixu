@@ -42,6 +42,30 @@
       "source_sha": "4fb184ba2a77daecb0cc33436d6e29ef326e52be",
       "original_report_sha256": "34b2c1f718448a6dbfe55c584ebffbd8a843a228964d51da15b861dfb589a06e",
       "original_report_size": 15821
+    },
+    {
+      "role_record": "m8-main-test-reconciliation-v1",
+      "source_sha": "dbdbbe02465228c6d545628251c12acb5a8935cb",
+      "original_report_sha256": "1d5c03cf7c38f38412fdcfca196c561b9bf0dc19c05efbe5be887c22b11efc7c",
+      "original_report_size": 13032
+    },
+    {
+      "role_record": "m8-main-product-reconciliation-v1",
+      "source_sha": "dbdbbe02465228c6d545628251c12acb5a8935cb",
+      "original_report_sha256": "7004cb75d51ccbaedd89c658d879ac4855c4d48851729faed728bdc3695fca25",
+      "original_report_size": 12030
+    },
+    {
+      "role_record": "m8-pm11-test-reconciliation-v1",
+      "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+      "original_report_sha256": "b1d4a10f8678d4535cdc4a876dccad12db9f886914e638ae538ebdb62ceea895",
+      "original_report_size": 12954
+    },
+    {
+      "role_record": "m8-pm11-product-reconciliation-v1",
+      "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+      "original_report_sha256": "6467d0d03c97178334cbd21b8ea18d6f59fe407a192c41cea445b0bc2e67c16b",
+      "original_report_size": 10234
     }
   ]
 }

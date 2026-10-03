@@ -234,3 +234,10 @@ F01–F15按机制有限收束，U01–U08逐项触发/影响/缺证据/环境/�
 方法文档PR#24受保护合入dbdbbe，exact-main CI37122829527三项及步骤成功，文档入口远端全字节一致。该主线fresh native181/frontend59/browser18限定检查通过，原三包及21状态捕获追加保留；七项实际SQL效果及owned清理成立。最初手机采样沿用新标签默认1280，原triplet和reason保留，390纠正后重采发生在Core finish前，未修改原Plan或Verdict。
 
 独立两角色仍指出PM11/P2：合法学生已获候补回执，但初始化身份错误跨页残留。Core存在性PASS不授予未检查的错误消失。停止M8退出，先冻结m8-repairs0.5和frontend0.8/Plan4两个有限runtime控制；在未修源记录有效首败，再最小修复学生错误归属。Client.adopt与后端事实不改，不重开M7、不追加故障/页面排列，不将问题藏进M10视觉。M9/M10继续待施工。
+
+
+## 2026-10-03 · PM11 有限修复与采集失败分类
+
+原ef1d未修frontend0.8/Plan4保留60PASS/1FAIL；ec3最小学生runtime修复及文字纠正后的1ffe固定源各取得fresh native181/frontend61 PASS，不放宽Client或后端规则。1ffe实页原5必需/3附加状态支持旧身份错误在合法新身份后消失，正常双方活动参与沿审批/发布链创建。
+
+该实页原Core仍FAIL、执行ERROR：默认Python缺Core在启动前失败，纠正后安装；控制者结束时误发STOP而非stop，finally停完owned实例但SQL文件未保存。另因墙钟过22:00，没有建立另一学生短约前提。首败、原图、清理与未知分别保留，不能从截图补造SQL、改Clock或删除Plan要求。只在有效窗口重入相同有限契约，M8未退出；不扩张M7/M8攻击，也不把方法文档完成误作项目完成。

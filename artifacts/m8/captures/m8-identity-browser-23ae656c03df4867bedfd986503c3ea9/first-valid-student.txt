@@ -1,0 +1,113 @@
+- generic: 期序
+- generic: 有所期，亦有序。
+- generic: 林同学，找一处合适的空间。
+- generic: 从一处空间开始
+- generic: 随用随约，长期席位按公开批次分配。
+- button "找空间":
+  - text: 找空间
+- button "空间地图":
+  - generic: 空间地图
+- button "备考专区":
+  - generic: 备考专区
+- button "我的申请":
+  - generic: 我的申请
+- button "空间反馈":
+  - generic: 空间反馈
+- text: 先了解位置，再表达心愿。
+- generic: 分配不评价谁更努力。
+- generic: 空间地图
+- button "查看楼层":
+  - text: 查看楼层
+- generic: 图书馆 · 三楼 · 学习与研讨
+- button "缩小" [disabled]
+- generic: 100%
+- button "放大"
+- button "复位"
+- generic "演示数据坐标图，下面提供列表入口":
+  - generic: 东区 · 备考座位
+  - generic: 西区 · 普通自习
+  - button "A001 短期预约": "01"
+  - button "A002 短期预约": "02"
+  - button "A003 短期预约": "03"
+  - button "A004 短期预约": "04"
+  - button "A005 短期预约": "05"
+  - button "A006 短期预约": "06"
+  - button "A007 短期预约": "07"
+  - button "A008 短期预约": "08"
+  - button "A009 短期预约": "09"
+  - button "A010 短期预约": "10"
+  - button "A011 短期预约": "11"
+  - button "A012 短期预约": "12"
+  - button "A013 短期预约": "13"
+  - button "A014 短期预约": "14"
+  - button "A015 短期预约": "15"
+  - button "A016 短期预约": "16"
+  - button "A017 短期预约": "17"
+  - button "A018 短期预约": "18"
+  - button "A019 短期预约": "19"
+  - button "A020 短期预约": "20"
+  - button "A021 短期预约": "21"
+  - button "A022 短期预约": "22"
+  - button "A023 短期预约": "23"
+  - button "A024 短期预约": "24"
+  - button "B001 长期批次": "01"
+  - button "B002 长期批次": "02"
+  - button "B003 长期批次": "03"
+  - button "B004 长期批次": "04"
+  - button "B005 长期批次": "05"
+  - button "B006 长期批次": "06"
+  - button "B007 长期批次": "07"
+  - button "B008 长期批次": "08"
+  - button "B009 长期批次": "09"
+  - button "B010 长期批次": "10"
+  - button "B011 长期批次": "11"
+  - button "B012 长期批次": "12"
+  - button "B013 长期批次": "13"
+  - button "B014 长期批次": "14"
+  - button "B015 长期批次": "15"
+  - button "B016 长期批次": "16"
+  - button "B017 长期批次": "17"
+  - button "B018 长期批次": "18"
+  - button "B019 长期批次": "19"
+  - button "B020 长期批次": "20"
+  - button "B021 长期批次": "21"
+  - button "B022 长期批次": "22"
+  - button "B023 长期批次": "23"
+  - button "B024 长期批次": "24"
+  - button "H-A 场地申请": 报告厅 A
+  - button "R-A 场地申请": 研讨室 A
+  - button "R-B 场地申请": 研讨室 B
+- generic: 绿：短约
+- generic: 灰蓝：长期批次
+- generic: 米色：场地
+- generic: 位置为演示数据坐标；颜色表示使用规则，未查询时段可用性。
+- generic: 了解这些位置
+- button "收藏与对比"
+- button "A001 西区单人位 1 靠窗 插座":
+  - generic: A001
+  - generic: 西区单人位 1
+  - generic: 靠窗
+  - generic: 插座
+- button "A002 西区单人位 2 插座 无障碍":
+  - generic: A002
+  - generic: 西区单人位 2
+  - generic: 插座
+  - generic: 无障碍
+- button "A003 西区单人位 3 插座 无障碍":
+  - generic: A003
+  - generic: 西区单人位 3
+  - generic: 插座
+  - generic: 无障碍
+- generic: 近期活动
+- button "查看全部"
+- generic: 暂无已发布活动。开放后会在这里展示。
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

@@ -1,0 +1,11 @@
+{
+  "kind": "CONTROLLER_COMMAND_CASE_ERROR",
+  "ports_6980_6983_free": true,
+  "actual_command": "STOP",
+  "accepted_command": "stop",
+  "expected_facts_file_missing": true,
+  "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+  "identity": "m8-identity-browser-23ae656c03df4867bedfd986503c3ea9",
+  "actual_owned_cleanup_file": "fixture-cleanup.json",
+  "disposition": "Preserve raw captures and ERROR bundle; do not reconstruct missing SQL facts as original collection; rerun in valid short-booking window"
+}

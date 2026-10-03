@@ -171,6 +171,48 @@
       "verdict": "PASS",
       "path": "artifacts/m8/m8-frontend-1d18c14ce1c04387aedadb876cb962fb",
       "manifest_sha256": "fe2c0cf45c4e5b03e2111a030c3bb6293b3f93885f1b86371227c253a36b9c52"
+    },
+    {
+      "identity": "m8-26c17160d75b4f778bf39b40b900f1ad",
+      "source_sha": "ec3ea7d5b292fe168f9c0f1c6c48f2592b82e376",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-26c17160d75b4f778bf39b40b900f1ad",
+      "manifest_sha256": "f44ae5a26559522cd99dcd074f2512803781300d2a1f7f235763a01cf507be12"
+    },
+    {
+      "identity": "m8-f5b56f0f08224ef9a7f33a2516712b25",
+      "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-f5b56f0f08224ef9a7f33a2516712b25",
+      "manifest_sha256": "721282ccf7e92da72f9f1e59309be378b159053536e4c5817b236ebc139b55ca"
+    },
+    {
+      "identity": "m8-frontend-56da3c0e4c674ca498212c327bdfdd01",
+      "source_sha": "ec3ea7d5b292fe168f9c0f1c6c48f2592b82e376",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-frontend-56da3c0e4c674ca498212c327bdfdd01",
+      "manifest_sha256": "b56b564ef7dff91791bbb5a2a0d5f8364fa7fabfbd3afd4a3177bdbd62e84549"
+    },
+    {
+      "identity": "m8-frontend-93d3b8f55d25485b82cca26542d2ded3",
+      "source_sha": "ef1d15edb6778bae42eb2bfe61cafdfc7549141d",
+      "verdict": "FAIL",
+      "path": "artifacts/m8/m8-frontend-93d3b8f55d25485b82cca26542d2ded3",
+      "manifest_sha256": "dda6a2ed2ef5e4409f06f6504de876ffd890c2add30678578ded145be343815d"
+    },
+    {
+      "identity": "m8-frontend-d002c09b053f43a3806d9fc563349137",
+      "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-frontend-d002c09b053f43a3806d9fc563349137",
+      "manifest_sha256": "4607d4172f5fe2a6f134a03530bb7787cbe40a6f31d423fcfe0ab3729d661cba"
+    },
+    {
+      "identity": "m8-identity-browser-23ae656c03df4867bedfd986503c3ea9",
+      "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
+      "verdict": "FAIL",
+      "path": "artifacts/m8/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9",
+      "manifest_sha256": "25d9108992ad4947ae45794e6d0d6b223ab737516b36ee8d59e83d9977870c96"
     }
   ]
 }
