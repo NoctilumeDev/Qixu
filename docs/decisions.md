@@ -169,3 +169,9 @@ PR#17按严格三项门禁合入main@a918a2a，exact-main CI37097881018三项及
 PR#18三项及步骤success后按线性历史保护压缩合入main@3b445b9；exact-main CI37101177576三项/步骤success，fresh native166/restore22均PASS，远端main与README字节一致。F12资格绑定该运行主线，不由后续文档提交或绿色CI扩展；完整证据见[M7恢复](acceptance/m7-restore.md)。
 
 当前M7仍IN_PROGRESS；F15借出数据库连接停滞/锁预算，以及真实页面和其他组合继续施工。M8双角色只在M7退出后，M10精修不取消，不宣布全工程完成。
+
+## 2026-10-03 · D024 · 数据库等待预算与观察前提
+
+F15固定原15/35秒窗口后取得真实锁等待及借出COM_QUERY首FAIL，最小修复单host有效驱动属性、Hikari/session预算并补4个配置边界；原25断言不变。观察夹具RSA前提、Python语法/退出码及启动APPLICATION_NOT_READY分别分类保留，不用native PASS抹掉采集器错误。e704b10的fresh native170、restore22及database25均PASS，96个历史原Bundle字节保持。候选范围见[M7数据库事实](acceptance/m7-database.md)，尚待公开保护合入和主线新事实。
+
+下一步单独攻击真实COMMIT回包丢失及客户端页面组合；预算只读故障不授权宣布提交歧义已物理验证。M7有限攻击按机制闭合，M8双角色在其后，M10精修仍保留。
