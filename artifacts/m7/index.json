@@ -268,6 +268,20 @@
       "verdict": "FAIL",
       "path": "artifacts/m7/m7-commit-35238faf86214af08fc9df4f516ca4d2",
       "manifest_sha256": "7f80f12308625fff9bc845d897dbccc6fa2fd7687f84bce32842b544b2e6a2a4"
+    },
+    {
+      "identity": "m7-83e22394d2764d9786b216d893cf702e",
+      "source_sha": "18cba8543f1ed7abfec49d4833a37f4251615f9a",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-83e22394d2764d9786b216d893cf702e",
+      "manifest_sha256": "e0f7e3415abdb39b20f4fbca0a6aee5689a76e95959e5402e562905106b0a8ef"
+    },
+    {
+      "identity": "m7-commit-ea058a4436a2487ea7dfb27ce76ef7c5",
+      "source_sha": "18cba8543f1ed7abfec49d4833a37f4251615f9a",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-commit-ea058a4436a2487ea7dfb27ce76ef7c5",
+      "manifest_sha256": "3c76878bd837d84a3bf96d2c77b2bcc2e43492b9d67826e61210b5f96f031aba"
     }
   ],
   "not_proven": [
