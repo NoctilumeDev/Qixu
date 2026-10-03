@@ -1,6 +1,8 @@
 # M7 F12 · 独立账册与旧库恢复事实
 
-状态：M7 IN_PROGRESS。本段限定单实例、独占MySQL物理停止/重启与逻辑SQL恢复，不是全工程、灾备或微信送达资格。基线PR#17按保护规则合入main@a918a2a877895e10eba871303e6d963f2f0e06b5，其[exact-main CI37097881018](https://github.com/NoctilumeDev/Qixu/actions/runs/37097881018)三项及步骤success，运行资格另按候选证据判定。
+当时状态：M7 IN_PROGRESS。本段限定单实例、独占MySQL物理停止/重启与逻辑SQL恢复，不是全工程、灾备或微信送达资格。基线PR#17按保护规则合入main@a918a2a877895e10eba871303e6d963f2f0e06b5，其[exact-main CI37097881018](https://github.com/NoctilumeDev/Qixu/actions/runs/37097881018)三项及步骤success，运行资格另按候选证据判定。
+
+以下按执行顺序保留原失败和限定复验；后续[M7主线有限退出](m7.md)及[当前里程碑](../milestones.md)另行记录，不将本段历史状态当作当前施工状态。
 
 ## 原失败及修复
 

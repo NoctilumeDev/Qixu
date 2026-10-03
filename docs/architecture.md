@@ -1,6 +1,6 @@
 # M1 架构与基础链路合同 0.1
 
-状态：实施前合同候选。前置文档事实为 `main@45241acbb71f4861c925468a56a69dcfd73e0530`；未声称本合同实现完成。
+本文件开头保留M1实施前冻结合同，前置文档事实为 `main@45241acbb71f4861c925468a56a69dcfd73e0530`；该坐标不是当前施工状态。M1基础资格见[M1记录](acceptance/m1.md)，后续扩展按下文对应阶段和[里程碑](milestones.md)区分；当前M0–M7限定资格已闭合，M8/M9未完成，M10等待用户参与。
 
 ## 范围、保护与退出条件
 
@@ -18,7 +18,7 @@
 
 Java17，Maven3.9；后端选官方当前稳定 Spring Boot4.1.1、Spring JDBC、Flyway、Jackson3、Validation 与 BCrypt。并非复制暗室3.5代码。官方[系统要求](https://docs.spring.io/spring-boot/system-requirements.html)确认Java17可用；3.5.16已结束OSS支持，故新项目采用4.1稳定线。实际依赖树和构建锁入证据。
 
-管理端 Vue3.5.43、Vite8.3.2、TypeScript5.9.3。学生端采用官方uni-app Vue3/Vite CLI结构，固定同一DCloud发布组 `3.0.0-5020620260917001`、其peer Vite5.2.8及types3.4.31；两前端独立lockfile，避免强行统一不兼容peer。版本观察来自官方npm包元数据，构建事实后补。
+M1初始选型曾拟用DCloud发布组 `3.0.0-5020620260917001` 和两端独立lockfile，该方案保留为历史计划。M5实际实现锁定学生端DCloud `3.0.0-5020420260813003`、Vue3.4.21、Vite5.2.8、types3.4.31；管理端Vue3.5.43、Vite8.3.2，两端TypeScript5.9.3。当前根目录的单一workspace [package-lock.json](../package-lock.json)管理共享客户端与两个前端，各workspace仍使用自己的依赖版本；随机验签器使用[randomness独立锁文件](../randomness/package-lock.json)。实际安装/构建见[M5记录](acceptance/m5.md)和后续frontend证据，入口见[运行说明](running.md)。
 
 M1初始拟用 backend6967/admin6968/student-H5 6969；M5实际部署确定为 backend6967/student-H5 6968/admin6969，与运行指南一致。前一方案是历史计划，不是当前入口；启动前复核归属和占用。生产HTTPS、微信AppID与合法域名是部署参数；不复用青野AppID，不宣称小程序已经上线。时间输入含偏移，数据库统一UTC，界面Asia/Shanghai。
 
@@ -61,7 +61,7 @@ MySQL InnoDB，业务事务显式 `READ_COMMITTED`。不复制暗室的RR选择�
 
 ## 随机与公开可复核边界
 
-固定quicknet chain `52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971`，官方查询得到period3秒、genesis1692803367、公钥和scheme `bls-unchained-g1-rfc9380`。这是技术选型观察，尚未证明期序分配。
+固定quicknet chain `52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971`，官方查询得到period3秒、genesis1692803367、公钥和scheme `bls-unchained-g1-rfc9380`。这段是M1技术选型观察，本身不证明分配；后续实际未来round、验签与复算的限定资格见[M3](acceptance/m3.md)、[M6](acceptance/m6.md)。
 
 M3必须在冻结前绑定未来round，固定canonical inputs/algorithm/来源坐标；验证BLS签名、公钥/chain/round及randomness=SHA256(signature)后才能生成正式结果。普通TLS返回和hash相等不足以代替签名。禁止客户端提交任意seed，禁止latest代替future坐标，源不可用等待同一round。
 
