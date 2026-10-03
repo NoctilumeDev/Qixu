@@ -1,6 +1,6 @@
-# M6 实际身份与恢复观察合同 0.2
+# M6 实际身份与恢复观察合同 0.3
 
-采集器 `qixu-m6-installed/0.2` / Plan2 只用真实隔离 MySQL、固定源暗室进程与 producer 绑定期序 JAR，不把受控 HTTP 源当暗室。M6 native0.12 / Plan1原PASS包、包内摘要、exact clean source 和新JAR必须逐字节一致，否则启动前停止。0.1原执行因SQL字面量与上游列collation冲突停在夹具查询；原PENDING保留。0.2仅固定测试文本比较的显式utf8mb4_bin和SQL失败坐标/私有诊断留存，所有业务断言与边界不变；不修改上游schema或源码。
+采集器 `qixu-m6-installed/0.3` / Plan3 只用真实隔离 MySQL、固定源暗室进程与 producer 绑定期序 JAR，不把受控 HTTP 源当暗室。M6 native0.12 / Plan1原PASS包、包内摘要、exact clean source 和新JAR必须逐字节一致，否则启动前停止。0.1原执行因SQL字面量与上游列collation冲突停在夹具查询；原PENDING保留。0.2仅固定测试文本比较的显式utf8mb4_bin和SQL失败坐标/私有诊断留存，不修改上游schema或源码。0.2执行已观察真实身份及提交/outbox重启事实，但将公布前空result对象误当正式结果，原PENDING保留。0.3仅纠正采样时点：空对象继续等待，非空结果必须完整再复算，且仍受原固定round/结果期限/180秒观察预算约束；业务断言不变。
 
 上游固定d6e42a8，从本任务专属`.tools/references`检出按原Maven构建；不修改源码。`qixu_darkroom_test`专属SQL只替换backticked schema名称，原SQL/转换摘要记录。应用无其他schema权限、不用Redis/MQ、不加载大模型密钥。期序使用qixu_test/qixu_ci，启动端口6971；上游6970。先检查占用，不停止原6967或其他服务。
 

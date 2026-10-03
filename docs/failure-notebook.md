@@ -159,3 +159,9 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 原采集器只保留泛化SQL错误，未保存数据库错误细节，这是诊断证据缺口。按原SELECT在同专属库重放得到MySQL1267/HY000：CONVERT utf8mb4字面量与上游general_ci列隐式collation冲突。期序夹具INSERT在事务内重放成功并回滚。分类为观察器/夹具，不是已证明的产品缺陷。
 
 0.2 / Plan2仅显式utf8mb4_bin文本比较，保留SQL编号与私有stderr；不改上游schema、不降业务断言、不覆写原包。恢复须新exact source、fresh native producer、新installed identity；本记录不预填恢复PASS。
+
+## M6真实恢复采样首败：公布前空result
+
+候选32a5bb5、采集器0.2 / Plan2，identity `m6-installed-fa1d847cab1d45dd83a40b755cf9d3a5` Core PENDING、execution ERROR。实际暗室admin→期序STUDENT、管理403、外部专用密码401、已提交200经代理丢弃、重启回执/同键重放、异体409、旁人404及业务/回执/审计/outbox/inbox各一条均有事实。批次1724已冻结并在新PID恢复；采集器以result非null为完成，实际result={}尚未公布，读取proof抛KeyError。不是已观察的分配故障。
+
+保留冻结包、过早采样包、Core原包及五个owned PID/CIM清理；不将已有恢复事实升级为整M6 PASS。0.3 / Plan3仅改采样判定并加空对象/不完整对象控制；正式proof与SQL结果断言、随机round、期限、独立复算仍不变。恢复待新exact source和新identity。

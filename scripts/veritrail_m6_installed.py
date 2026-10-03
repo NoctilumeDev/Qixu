@@ -15,7 +15,7 @@ from m6_producer_binding import bind,digest
 
 ROOT=Path(__file__).resolve().parents[1]
 PIN='d6e42a81d3eb83ed483553b7319bbe55dceb8c7f'
-COLLECTOR='qixu-m6-installed/0.2'
+COLLECTOR='qixu-m6-installed/0.3'
 AUTH='/api/dark-room-library/v1/user/auth'
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
@@ -25,6 +25,12 @@ def iso(value):return value.astimezone(timezone.utc).isoformat().replace('+00:00
 def write(path,value):
     with Path(path).open('x',encoding='utf-8',newline='\n') as f:json.dump(value,f,ensure_ascii=False,sort_keys=True,indent=2);f.write('\n')
 def quote(value):return 'CONVERT(0x'+value.encode('utf-8').hex()+' USING utf8mb4) COLLATE utf8mb4_bin'
+def published_result(packet):
+    result=packet.get('result')
+    if not isinstance(result,dict):raise ValueError('Public result must be an object')
+    if not result:return False
+    if not isinstance(result.get('proof'),dict) or type(result['proof'].get('round')) is not int or not all(k in result for k in ('input_hash','output_hash','outputBytes','maximum_count','candidate_count','published_at')):raise ValueError('Nonempty public result is incomplete')
+    return True
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--producer-bundle',type=Path,required=True);p.add_argument('--darkroom-source',type=Path,required=True)
@@ -46,13 +52,13 @@ def main():
         with socket.socket() as s:s.bind(('127.0.0.1',port))
     identity='m6-installed-'+uuid.uuid4().hex;out=ROOT/'artifacts/local'/identity;out.mkdir(parents=True,exist_ok=False)
     coord={'source_sha':source,'jar_sha256':producer['jar_sha256'],'producer_manifest_sha256':producer['manifest_sha256'],'upstream_source_sha':PIN,'collector':COLLECTOR,'collector_sha256':digest(Path(__file__))}
-    spec={'id':'installed','contract':{'id':'qixu-m6-installed','version':'0.2'},'evidence_type':'qixu.m6.installed','coordinates':coord,'projections':['source_sha','source_clean','producer','upstream','requests','identity','recovery','allocation','reproduction','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
+    spec={'id':'installed','contract':{'id':'qixu-m6-installed','version':'0.3'},'evidence_type':'qixu.m6.installed','coordinates':coord,'projections':['source_sha','source_clean','producer','upstream','requests','identity','recovery','allocation','reproduction','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
     expected={'/source_sha':source,'/source_clean':True,'/producer/bytes_checked':True,'/producer/jar_sha256':coord['jar_sha256'],'/upstream/source_sha':PIN,'/upstream/source_clean':True,'/upstream/build_exit':0,
         '/identity/local_role':'STUDENT','/identity/management_status':403,'/identity/local_password_status':401,'/identity/outage_status':503,'/identity/local_independent_status':200,'/identity/restored_status':200,'/identity/revoked_status':401,'/identity/new_ticket_receipt_equal':True,
         '/recovery/response_discarded_status':200,'/recovery/client_unknown':True,'/recovery/distinct_restart_pid':True,'/recovery/receipt_equal':True,'/recovery/replay_equal':True,'/recovery/changed_body_status':409,'/recovery/foreign_receipt_status':404,'/recovery/reservations':1,'/recovery/receipts':1,'/recovery/audit_events':1,'/recovery/outbox_events':1,'/recovery/pending_before_restart':1,'/recovery/inbox_after_restart':1,'/recovery/inbox_after_repeat':1,'/recovery/unread_after_restart':1,
         '/allocation/frozen_hash_unchanged':True,'/allocation/frozen_round_unchanged':True,'/allocation/formal_results':1,'/allocation/outcomes':2,'/allocation/result_notices':2,'/reproduction/independent_bytes_equal':True,'/reproduction/signature_verified':True,'/reproduction/maximum':2,'/cleanup/all_owned_stopped':True}
     assertions=[{'id':'installed-'+str(i),'severity':'HARD','left':{'requirement_id':'installed','path':'/facts'+path},'operator':'eq','right':value} for i,(path,value) in enumerate(expected.items())]
-    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m6-installed','version':2,'subject':{'id':'qixu-m6-installed','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this fixed candidate preserve local authority, committed receipts, notification identity and frozen allocation through real isolated upstream and owned process faults?',
+    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m6-installed','version':3,'subject':{'id':'qixu-m6-installed','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this fixed candidate preserve local authority, committed receipts, notification identity and frozen allocation through real isolated upstream and owned process faults?',
         'governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:m6-installed-collector','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'installed','observation_spec_id':'installed','cardinality':'EXACTLY_ONE'}],
         'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'installed','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':900},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu M6 installed','consumers':['M6-stage']},
         'reproduction_steps':['Use exact clean source, original qualified M6 native bundle, fresh bound jar and pinned DarkRoom checkout.','Supply only dedicated schema-scoped credentials and separate private ticket/JWT keys.','Run the collector; it seals before upstream build, starts owned processes, discards a real committed response and performs bounded recovery.'],
@@ -189,7 +195,7 @@ def main():
         packet_path=f"/api/public/batches/{batch['public_id']}/verification";packet={}
         def result_ready():
             nonlocal packet
-            packet=request('GET',packet_path,record=False);return packet.get('result') is not None
+            packet=request('GET',packet_path,record=False);return published_result(packet)
         poll(result_ready,180);write(out/'public-packet.json',packet)
         facts['allocation']['frozen_hash_unchanged']=frozen['input_hash']==packet['input_hash'];facts['allocation']['frozen_round_unchanged']=json.loads(frozen['input_bytes'])['source']['round']==packet['result']['proof']['round']
         counts=map(int,sql(f"SELECT (SELECT COUNT(*) FROM allocation_result WHERE batch_id={bid}),(SELECT COUNT(*) FROM allocation_outcome WHERE batch_id={bid}),(SELECT COUNT(*) FROM notification_outbox WHERE event_key='batch:{bid}:result');").split('\t'));facts['allocation'].update(dict(zip(['formal_results','outcomes','result_notices'],counts)))
