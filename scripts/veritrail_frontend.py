@@ -138,7 +138,7 @@ def main() -> int:
              "source_zip_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
              "node": subprocess.check_output([args.node, "--version"], text=True).strip(), "npm": subprocess.check_output([args.npm, "--version"], text=True).strip(),
              "commands": steps, "tests": tests, "required_cases": cases, "artifacts": artifacts,
-             "boundary": "M5_FRONTEND_BUILD_AND_CONTROLLED_TRANSPORT_NOT_INSTALLED_BROWSER_NATIVE_DEVICE_OR_FINAL_VISUAL"}
+             "boundary": "M7_ENTRY_CLIENT_STORAGE_ACTOR_BUILD_NOT_WHOLE_M7_BROWSER_BACKUP_DEVICE_OR_FINAL_VISUAL" if args.stage=="m7" else "M5_FRONTEND_BUILD_AND_CONTROLLED_TRANSPORT_NOT_INSTALLED_BROWSER_NATIVE_DEVICE_OR_FINAL_VISUAL"}
     evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": collector, "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
                 "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-frontend-collector", "coverage": "COMPLETE" if len(steps) == 5 and tests and artifacts else "ERROR", "normalization_semantics_version": collector, "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)
