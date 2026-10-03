@@ -65,6 +65,13 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-cac4bccadb8b46a3bf5b1dd2bf34b33b",
       "manifest_sha256": "675f90be73aacc4ccf370b82a078240c9932aa4753e30779d57704cfbe4c8f58"
+    },
+    {
+      "identity": "m7-restore-53bac83347604e8e881a9b6b524e02e5",
+      "source_sha": "70f49ed2cef3f4f43870c68be8748b255f172973",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-restore-53bac83347604e8e881a9b6b524e02e5",
+      "manifest_sha256": "282af37251d2d95999d87a77ce9f154d1f774cfaf15621b736f3763db15fda5a"
     }
   ],
   "not_proven": [

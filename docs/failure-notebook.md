@@ -177,3 +177,11 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 先冻结[恢复/独立判定合同](contracts/m7-metadata-oracle.md)，4c76123/frontend0.4/Plan3取得[原FAIL](../artifacts/m7/m7-frontend-f5921b7d4d4745428bba7b56ffeb2093/acceptance-report.md)：45例实际观察，新增8例中7例失败，迁移中断恢复控制正确通过。合法坐标的截断/结构不合法/主体不一致被忽略，已有内存正文损坏后也失去原键；非法坐标和坏旧数组容许新POST而非阻止；保存后抛错有持久原键却没有立即可见的恢复项；已确认回执后删除实际成功但抛错仍被误报为存储失败。原始字节、失败XML和Core包保留，分类客户端恢复投影/迁移/部分效果判定，尚未修复。
 
 相同候选的native0.14/Plan2取得[147例PASS](../artifacts/m7/m7-ad2ce37f31a848c7b2db89363fc6bda4/acceptance-report.md)，其中全部65,536个4×4可接受图及2,048个非对称rank/容器重排样本，用不调用产品匹配函数的完整分配枚举判定。目标包含冻结的并列rank排序；不能改成首选总数最优再误报产品失败。此控制没有观察到算法缺陷，不证明完整M7、生产容量、备份或真实浏览器。
+
+## M7 F12 · Windows MySQL观察器首败
+
+`70f49ed`的恢复观察0.1/Plan1取得[原PENDING](../artifacts/m7/m7-restore-53bac83347604e8e881a9b6b524e02e5/acceptance-report.md)，execution ERROR：owned MySQL readiness budget exhausted，没有业务请求。MySQL8.0.44默认启动监控父进程38928，实际监听子进程26780；采集器只接受Popen父PID，所以拒绝了端口。分类观察器生命周期接线，不是产品恢复缺陷。
+
+原包cleanup=true只证明父句柄停止，后续CIM发现同exe/同my.ini、ParentProcessId38928、CreationDate2026-10-03T12:58:36.7879370+08:00的子进程仍监听6976。这是清理证据缺口，不能把原字段升级成无残留。独立核对以上四个坐标后仅停止该子进程，6976读回无监听；原包不改。宿主3306/6947/7897保持原PID和启动时间，6364原无监听。
+
+[MySQL官方选项文档](https://dev.mysql.com/doc/refman/8.0/en/server-options.html#option_mysqld_no-monitor)明确`--no-monitor`抑制Windows监控fork；[原报告#92683](https://bugs.mysql.com/bug.php?id=92683)已关闭并说明两进程是RESTART的默认机制，不借此宣称MySQL漏洞。最小修订仅改owned实例启动方式与清理读回，保留恢复业务断言。原首次包与后续新的观察身份分别保存。
