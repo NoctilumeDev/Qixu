@@ -1,0 +1,37 @@
+- generic: 批次与我的申请
+- generic: 真实未来随机源整批验收 · 3be57bf4
+- generic: 结果已公布
+- generic: 使用周期 10/03 04:53 — 10/05 04:53
+- generic: 申请截止
+- generic: 10/03 04:08
+- generic: 结果最迟公布
+- generic: 10/03 04:13
+- generic: 首次确认截止
+- generic: 10/03 04:43
+- generic: 递补停止
+- generic: 10/05 04:53
+- generic: 固定输入、未来公开随机源、最大可满足人数优先。不以提交手速或学习时长决定中签。
+- generic: 我的申请
+- text: 编号1 · 已接收版本1
+- generic: · 冻结版本1
+- generic: 接收时间 10/03 04:07
+- generic: 本轮结果：已提供第2志愿要约。按你的预授权提供兜底要约。请继续查看有效要约/使用权和候补。
+- generic: 候补沿用本轮固定顺序1，并受可接受条件约束。候补不保证有席位。
+- generic: B001 · 已到期
+- generic: 第1志愿 · 确认截至10/03 07:23
+- generic: A001 · 已到期
+- generic: 第2志愿 · 确认截至10/03 04:43
+- button "普通空间与其他选择"
+- button "只退出候补"
+- generic: 确认退出本轮：使用权、要约和候补一并退出
+- button "明确退出本轮" [disabled]
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

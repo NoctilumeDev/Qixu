@@ -1,0 +1,71 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "我的场地申请" [active]:
+      - /url: "#/venues"
+      - generic: 我的场地申请
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "我的场地申请" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 周老师
+  - generic: 老师
+  - button "退出当前账号":
+- main:
+  - generic: 1项 · 当前身份 周老师
+  - button "刷新当前事实":
+  - heading "场地申请" [level=2]
+  - table:
+    - rowgroup:
+      - row "编号/名称 状态/动作 关联空间/实体 时间/期限 操作":
+        - columnheader "编号/名称"
+        - columnheader "状态/动作"
+        - columnheader "关联空间/实体"
+        - columnheader "时间/期限"
+        - columnheader "操作"
+    - rowgroup:
+      - row "M5老师读书会页面验收 已批准 R-B 10/03 10:00 查看详情":
+        - cell "M5老师读书会页面验收"
+        - cell "已批准":
+          - generic: 已批准
+        - cell "R-B"
+        - cell "10/03 10:00"
+        - cell "查看详情":
+          - link "查看详情":
+            - /url: "#/venues/2?page=1"
+  - heading "申请使用场地" [level=2]
+  - text: 选择空间
+  - combobox "选择空间":
+    - option "请选择实际空间" [disabled] [selected]
+    - option "H-A · 报告厅 A · 容量180人"
+    - option "R-A · 研讨室 A · 容量8人"
+    - option "R-B · 研讨室 B · 容量24人"
+  - text: 预计人数
+  - spinbutton "预计人数": "1"
+  - text: 使用开始
+  - textbox "使用开始"
+  - text: 使用结束
+  - textbox "使用结束"
+  - text: 用途
+  - textbox "用途"
+  - text: 申请说明
+  - textbox "申请说明"
+  - text: 联系方式
+  - textbox "联系方式"
+  - button "保存场地申请"

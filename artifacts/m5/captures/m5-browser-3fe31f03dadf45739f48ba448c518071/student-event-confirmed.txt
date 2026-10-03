@@ -1,0 +1,21 @@
+- generic: 活动详情
+- generic: 已确认回执 czqg0ufb。
+- generic: 窗边共读 · M5真实页面读书会
+- generic: 预约开放
+- generic: 演示周老师 · 10/03 10:00—10/03 11:00
+- generic: 演示读书会，讨论空间、阅读与安静的学习时光。
+- generic: 演示验收数据；活动使用已批准的研讨室B。
+- button "查看场地档案与位置"
+- generic: 当前剩余11/12名额；满额进入按预约顺序候补。
+- generic: 我的状态：已确认 · 顺序2
+- button "取消本次活动预约"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

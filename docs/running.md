@@ -41,3 +41,7 @@ M3用`--stage m3`，另读Surefire离线与Failsafe真实HTTP/MySQL证据。运�
 已构建的干净提交可运行`python scripts/veritrail_future_batch.py --producer-bundle <本提交native0.8原Bundle目录> --java <java> --node <node> --mysql <mysql>`。使用明确提供的QIXU_TEST_DB三项环境，只接受qixu_test/qixu_ci；会在6967启动并持有自己的demo JVM handle，现有端口占用直接停止，不杀占用者。默认不删任何业务数据；保留本次批次原文、正式结果、数据库计数与独立复算，停止自己的JVM。应先执行native清理验收，再执行live，避免上一轮池保护和申请仍参与下一轮；要用新候选重建事实时用新的原生验收身份，不能改旧批次/种子。
 
 M4先运行`veritrail_native.py --stage m4`生成native0.10/M4Plan2原producer Bundle，再运行`veritrail_future_batch.py --stage m4 --producer-bundle <同exact源码原Bundle>`。保留所有环境隔离/端口归属约束；M3默认仍只接受native0.8/Plan8，不跨stage复用。M4实际安装额外检查报告/维修与正常Clock NOTICE，不冒称24小时真实流逝。
+
+M5运行 `python scripts/veritrail_native.py --stage m5 --maven <mvn>`，随后串行运行 `python scripts/veritrail_frontend.py --node <node> --npm <npm>`。两者必须来自当前同一干净提交并保留原Bundle。构建采集器在独立git archive目录执行，不能把本机旧dist当成此次产物。
+
+安装页面采样先运行 `python scripts/veritrail_browser.py seal <native采集目录> <frontend采集目录>`；绑定producer/JAR/静态清单后，在自有端口启动准确字节。`python scripts/serve_bound_frontend.py <frontend采集目录>`为H5/admin产物提供同源本地API代理，6968/6969占用时停止，后端须自行按上述环境在6967启动。辅助器不管理或终止其他进程，不用于公网。按新目录capture-contract采集真实DOM、PNG和URL/视口/UTC时间；维修拒绝额外保存DOM测量的错误可见性与焦点。全部采样后运行 `python scripts/veritrail_browser.py collect <browser采集目录>`，保留所有原始失败。实际资格还需真实动作及SQL读回、公开CI和新主线，不能只凑文案。

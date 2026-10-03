@@ -1,0 +1,26 @@
+- generic: 收藏与对比
+- generic: 最多收藏6个空间。公开条件帮助选择，时段可用性仍需查询。
+- button "A018 西区单人位 18 插座 无障碍":
+  - generic: A018
+  - generic: 西区单人位 18
+  - generic: 插座
+  - generic: 无障碍
+- generic: 靠窗
+- generic: 无
+- generic: 插座
+- generic: 有
+- generic: 安静
+- generic: 无
+- generic: 无障碍
+- generic: 有
+- button "移除收藏"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

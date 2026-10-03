@@ -1,0 +1,62 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "我的场地申请":
+      - /url: "#/venues"
+      - generic: 我的场地申请
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "活动组织" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 周老师
+  - generic: 老师
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 6be4fd69。
+  - link "返回原列表":
+    - /url: "#/events?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "窗边共读 · 固定M5候选 已发布" [level=2]:
+    - text: 窗边共读 · 固定M5候选
+    - generic: 已发布
+  - term: 空间
+  - definition: R-A
+  - term: 当前版本
+  - definition: "2"
+  - term: 开始
+  - definition: 10/03 10:15
+  - term: 结束
+  - definition: 10/03 11:15
+  - term: 申请截止
+  - definition: 10/03 10:10
+  - paragraph: 固定构建页面验收用读书会，空间先经批准，名额不超过容量。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: M5固定候选：使用本人已批准场地，发布容量六人的演示读书会。
+  - paragraph: 主讲人：演示周老师 · 预约截止 10/03 10:10 · 递补停止 10/03 10:14
+  - paragraph: 剩余6/6；预约关系随合法换地保持。
+  - text: 换用本人已批准场地
+  - combobox "换用本人已批准场地":
+    - option "请选择"
+    - option "R-A · M5固定候选 · 窗边共读 · 10/03 10:15" [selected]
+    - option "R-B · M5老师读书会页面验收 · 10/03 10:00"
+  - button "提交合法换地"
+  - button "取消活动并通知"

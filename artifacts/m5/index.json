@@ -1,0 +1,113 @@
+{
+  "boundary": "M5_CANDIDATE_API_BUILD_INSTALLED_DOM_NOT_MAIN_DEVICE_M10_OR_WHOLE_ENGINEERING",
+  "entries": [
+    {
+      "identity": "m5-324c4441fef446cfb046a0c7ba1cd6d4",
+      "subject": {
+        "id": "qixu-m5",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "44f1a43cd545f5bab8d3dc243b45730fc6151ce7"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "28b15b8a774f325b03c30f0a78dd7eb266fa4a721cfc6814a88d7f9705dc9e58",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-a4998661d43e41c880c08c57b0f95ade",
+      "subject": {
+        "id": "qixu-m5",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "07ece2f2b936ac9ee1649bc11dd73eff7e4d005b"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "7ba12623dc3bab9439dbaf066caedff327dab2d2143bce10f5ab46f96d42044d",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-aa30df9c49bb4e56aebf832eaa73a524",
+      "subject": {
+        "id": "qixu-m5",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "ec56a4c0808c145957f53f494436c99250431134"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "16876fb2922f8ac1af7b6812c82076a9c79c79f03de2e81da0c1d1694d295e1b",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-browser-3fe31f03dadf45739f48ba448c518071",
+      "subject": {
+        "id": "qixu-m5-installed-browser",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "07ece2f2b936ac9ee1649bc11dd73eff7e4d005b"
+      },
+      "verdict": "FAIL",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "9378a82bef1604623bf8c8cc1729409239e05f3d7a4f00590b6a14653402ec50",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-browser-565e2ad8a1de43cba34a717c5bdeeb49",
+      "subject": {
+        "id": "qixu-m5-installed-browser",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "44f1a43cd545f5bab8d3dc243b45730fc6151ce7"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "9e291c0b591287fd5bd4c57dcb1bbbaa56c88a148ca9c13540f4ac7c9d8e2943",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-browser-remeasure-a55953076fd24982b9f90f3756521a1b",
+      "subject": {
+        "id": "qixu-m5-fixed-browser-captures",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "07ece2f2b936ac9ee1649bc11dd73eff7e4d005b"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "70b3ffd9531d651b32311017aa4588f7c65f08814f57bcb476f46764702662d1",
+      "kind": "UNCHANGED_CAPTURE_REMEASUREMENT"
+    },
+    {
+      "identity": "m5-frontend-94482269eeaa4e40911b64395b5aa6b7",
+      "subject": {
+        "id": "qixu-m5-frontend",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "44f1a43cd545f5bab8d3dc243b45730fc6151ce7"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "f34d4a8e8ad44eba6790e48427b84ed5ef505ab815973daac271ca3751e084c3",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-frontend-a1f439a381504e238d9421a3fe0a32bc",
+      "subject": {
+        "id": "qixu-m5-frontend",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "07ece2f2b936ac9ee1649bc11dd73eff7e4d005b"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "4c94fae62673866ca1b952aa7c43f3f822b11fdc5504fdd8dfcdda0afea998cb",
+      "kind": "ORIGINAL_EXECUTION"
+    },
+    {
+      "identity": "m5-frontend-aa3820513ee64492a6a7313a87633004",
+      "subject": {
+        "id": "qixu-m5-frontend",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "ec56a4c0808c145957f53f494436c99250431134"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "4484055321d6292e63232f6c4b83d8a6422e60871d54fc7be282bb559423a3f8",
+      "kind": "ORIGINAL_EXECUTION"
+    }
+  ]
+}

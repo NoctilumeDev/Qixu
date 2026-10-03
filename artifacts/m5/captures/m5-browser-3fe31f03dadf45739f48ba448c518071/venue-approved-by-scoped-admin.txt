@@ -1,0 +1,73 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "申请审批":
+      - /url: "#/venues"
+      - generic: 申请审批
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "长期席位批次":
+      - /url: "#/batches"
+      - generic: 长期席位批次
+    - link "占用与冲突":
+      - /url: "#/blocks"
+      - generic: 占用与冲突
+    - link "反馈与维修":
+      - /url: "#/feedback"
+      - generic: 反馈与维修
+    - link "使用权处置":
+      - /url: "#/governance"
+      - generic: 使用权处置
+    - link "运行投影":
+      - /url: "#/operations"
+      - generic: 运行投影
+    - link "审计记录":
+      - /url: "#/audit"
+      - generic: 审计记录
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "申请审批" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 三楼管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 bfb4892e。
+  - link "返回原列表":
+    - /url: "#/venues?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "M5固定候选 · 窗边共读 已批准" [level=2]:
+    - text: M5固定候选 · 窗边共读
+    - generic: 已批准
+  - term: 空间
+  - definition: R-A
+  - term: 申请主体
+  - definition: "3"
+  - term: 当前版本
+  - definition: "2"
+  - term: 开始
+  - definition: 10/03 10:15
+  - term: 结束
+  - definition: 10/03 11:15
+  - paragraph: 固定产物真实UI流程验收；演示读书交流，不是实际活动。
+  - paragraph: 范围管理员核对研讨室A、六人容量与10:15–11:15时段，批准演示使用权。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: 范围管理员核对研讨室A、六人容量与10:15–11:15时段，批准演示使用权。
+  - button "明确取消"

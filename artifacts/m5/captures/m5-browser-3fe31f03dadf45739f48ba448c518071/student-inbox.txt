@@ -1,0 +1,139 @@
+- generic: 消息
+- generic: 站内消息 · 21条未读
+- generic: 结果页面是权威入口；投递不等于已读。
+- text: 座位预约状态已更新
+- generic: 未读
+- generic: 当前状态：CANCELED
+- generic: 10/03 09:35
+- button "查看相关安排"
+- button "标为已读"
+- text: 座位预约已建立
+- generic: 未读
+- generic: 请在开始后10分钟内到场确认；未到会释放本次短约。
+- generic: 10/03 09:35
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间反馈处理进展
+- generic: 未读
+- generic: 维修进展：VERIFIED_CLOSED；模拟复验：明确记录插座恢复正常，验证报告关闭与设施事实原子提交；非真实维修结论。
+- generic: 10/03 09:08
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间设施事实已更新
+- generic: 未读
+- generic: 与你的申请或使用安排有关的空间设施经管理员核实发生变化。请查看最新档案、限制及临时位置；原归属和冻结结果未改写。
+- generic: 10/03 09:08
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间反馈处理进展
+- generic: 未读
+- generic: 维修进展：WORK_DONE；模拟验收：维修执行方声明工作完成，尚未复验，不宣称设施恢复。
+- generic: 10/03 09:06
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间反馈处理进展
+- generic: 未读
+- generic: 维修进展：ASSIGNED；模拟验收：安排演示维修人员处理，不宣称维修已完成。
+- generic: 10/03 09:06
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间反馈处理进展
+- generic: 未读
+- generic: 已关联维修事项，安排维修不代表问题已修复。
+- generic: 10/03 08:56
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间反馈处理进展
+- generic: 未读
+- generic: 处理状态：VERIFIED；模拟验收：核对演示报告和图片，记录模拟插座损坏事实；不代表真实现场核实。
+- generic: 10/03 08:56
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间设施事实已更新
+- generic: 未读
+- generic: 与你的申请或使用安排有关的空间设施经管理员核实发生变化。请查看最新档案、限制及临时位置；原归属和冻结结果未改写。
+- generic: 10/03 08:56
+- button "查看相关安排"
+- button "标为已读"
+- text: 空间反馈处理进展
+- generic: 未读
+- generic: 反馈已保存，等待核实；报告不会自动改变公开空间状态。
+- generic: 10/03 08:42
+- button "查看相关安排"
+- button "标为已读"
+- text: 活动预约已取消
+- generic: 未读
+- generic: 已释放本次参与名额，不影响其他空间使用权。
+- generic: 10/03 08:34
+- button "查看相关安排"
+- button "标为已读"
+- text: 活动预约成功
+- generic: 未读
+- generic: 请在我的活动查看当前结果；候补按既定顺序递补。
+- generic: 10/03 08:34
+- button "查看相关安排"
+- button "标为已读"
+- text: 场地申请结果
+- generic: 未读
+- generic: 状态：APPROVED；演示验收：核对容量与时段无冲突，批准四人阅读交流。
+- generic: 10/03 08:12
+- button "查看相关安排"
+- button "标为已读"
+- text: 场地申请已提交
+- generic: 未读
+- generic: 待审批不产生使用权，请等待明确审批结果。
+- generic: 10/03 08:12
+- button "查看相关安排"
+- button "标为已读"
+- text: 座位预约状态已更新
+- generic: 未读
+- generic: 当前状态：CANCELED
+- generic: 10/03 07:59
+- button "查看相关安排"
+- button "标为已读"
+- text: 座位预约已建立
+- generic: 未读
+- generic: 请在开始后10分钟内到场确认；未到会释放本次短约。
+- generic: 10/03 07:53
+- button "查看相关安排"
+- button "标为已读"
+- text: 长期席位要约已结束
+- generic: 未读
+- generic: 本次要约因到期或资格变化结束；升级前的旧席位保持，不因通知延迟延长期限。
+- generic: 10/03 07:24
+- button "查看相关安排"
+- button "标为已读"
+- text: 长期席位候补已轮到你
+- generic: 未读
+- generic: 请在我的申请中查看具体席位和确认期限。若已有兜底位，只有确认成功才会原子换位。
+- generic: 10/03 07:13
+- button "查看相关安排"
+- button "标为已读"
+- text: 长期席位要约已结束
+- generic: 未读
+- generic: 本次要约因到期或资格变化结束；升级前的旧席位保持，不因通知延迟延长期限。
+- generic: 10/03 07:13
+- button "查看相关安排"
+- button "标为已读"
+- text: 长期席位分配结果已公布
+- generic: 未读
+- generic: 首选未获得，已按预授权提供其他席位要约；请在期限前确认。较高志愿候补仍按原顺序保留。
+- generic: 10/03 04:09
+- button "查看相关安排"
+- button "标为已读"
+- text: 志愿已提交
+- generic: 未读
+- generic: 本次已提交版本进入待冻结集合；以我的申请中的回执和版本为准。
+- generic: 10/03 04:07
+- button "查看相关安排"
+- button "标为已读"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的
