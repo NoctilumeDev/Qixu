@@ -1,6 +1,6 @@
 # 里程碑与完成条件
 
-当前：M0文档、M1–M7限定范围已闭合，M8–M10尚未完成。用户于2026-10-03新增M10，视觉精修后置；M5保证可用性、素材展示与结构，不授予真机或最终视觉资格。`PLANNED` 是计划；`IN_PROGRESS` 是施工；`VERIFIED` 需要可定位的执行事实；`BOUNDARY` 表示能力有明确待验边界。
+当前：M0文档、M1–M7限定范围已闭合，M8/M9尚未完成，M10等待用户参与。本轮任务止于M9工程交付；M10以后由用户明确重新开启。M5保证可用性、素材展示与结构，不授予真机或最终视觉资格。`PLANNED` 是计划；`IN_PROGRESS` 是施工；`VERIFIED` 需要可定位的执行事实；`BOUNDARY` 表示能力有明确待验边界；`DEFERRED_HUMAN_PARTICIPATION` 表示用户主动后置，不是验收通过。
 
 | 阶段 | 当前状态 | 本阶段交付 | 退出条件 |
 | --- | --- | --- | --- |
@@ -14,9 +14,11 @@
 | M7 外部错题复核与修复 | VERIFIED_LIMITED_FAILURE_MECHANISMS | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | [M7](acceptance/m7.md)：PR#21/main@c876d1a三组CI及fresh native173/frontend45/restore22/database25/COMMIT29/browser14；119原包保留、F01–F15及U01–U08有坐标，不宣称零缺陷 |
 | M8 独立测试及产品复验 | IN_PROGRESS_REPAIR_RETEST | [候选事实](acceptance/m8.md)：两名独立角色报告、反馈处置及4fb新181/59/实际页面18命名捕获 | 候选限定证据已齐；受保护PR、exact-main CI及新主线安装/页面/远端读回尚待闭合 |
 | M9 公开工程候选与冻结 | PLANNED | CI、README/截图、SQL入口、部署/恢复、工程候选与公开事实对齐 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
-| M10 前端精修与验收 | PLANNED | 按[精修合同](contracts/frontend-refinement.md)统一两端视觉、素材、排版与响应式细节，最终截图及版本 | 参考图与真实页面规范化比较；桌面/手机/键盘/状态验收；精修后业务回归、exact main公开读回及最终Release资格对齐 |
+| M10 前端精修与验收 | DEFERRED_HUMAN_PARTICIPATION | 按[精修合同](contracts/frontend-refinement.md)待用户参与后统一两端视觉、素材、排版与响应式细节 | 用户明确重新开启后执行原精修条件；不作为本轮M9工程交付阻断，也不授予最终视觉或微信真机资格 |
 
 ## 每阶段的施工要求
+
+本轮退出条件为M8反馈处置和M9工程候选的原定资格全部闭合，并完成公开对齐及本项目owned资源清理；届时可以完成本轮工程任务。M10延期不改变M8/M9证据标准，工程候选或Release仍须明确视觉待精修和未观察设备边界。
 
 正式开始前在施工记录写范围、保护行为、不做内容、验收与停止条件；当前阶段的架构/API细节进入相应文档。每个有独立问题的修改使用单一目的提交/分支，重要阶段有稳定引用。
 
