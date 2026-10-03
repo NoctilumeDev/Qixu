@@ -49,6 +49,7 @@ M7单实例[数据库等待预算](docs/acceptance/m7-database.md)已在受保�
 | [占用冲突合同](docs/contracts/conflicts.md) | 空间层级、冲突、替代安排与恢复 |
 | [图书馆活动合同](docs/contracts/events.md) | 一等活动、场地绑定、参与名额及候补/变更 |
 | [错题本](docs/failure-notebook.md) | 参考案例、待验证风险和真实失败记录 |
+| [测试方法参考](docs/testing-methodology.md) | M7机制攻击、M8独立复验与有限停止线；按业务适配，含期序完成后的三仓待办 |
 | [施工记录](docs/decisions.md) | 选择、实际结果、证据与下一步范围 |
 | [验迹接入合同](docs/verification.md) | 本工程的封存、真实证据、外部裁决与能力边界 |
 | [M1架构](docs/architecture.md) | 身份、权限、事务、模块与工具链 |
