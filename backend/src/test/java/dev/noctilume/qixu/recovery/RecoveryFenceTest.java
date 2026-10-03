@@ -73,4 +73,22 @@ class RecoveryFenceTest {
             }
         }
     }
+    @Test void commitAttemptFailureFollowedBySuccessfulRollbackRemainsUnknown() throws Exception {
+        try(var j=new RecoveryJournal(path(),true)){j.initialize(generation,"a".repeat(64));}
+        var jdbc=database(List.of());var dataSource=mock(javax.sql.DataSource.class);var connection=mock(java.sql.Connection.class);
+        when(dataSource.getConnection()).thenReturn(connection);when(connection.getAutoCommit()).thenReturn(true);
+        try(var fence=open(jdbc)) {
+            // Executes pinned Spring processCommit, including rollback-on-runtime-exception callback.
+            var manager=new org.springframework.jdbc.support.JdbcTransactionManager(dataSource) {
+                @Override protected void doCommit(org.springframework.transaction.support.DefaultTransactionStatus status) {
+                    throw new org.springframework.dao.DataAccessResourceFailureException("controlled commit acknowledgement loss");
+                }
+            };
+            manager.addListener(fence);
+            assertThrows(org.springframework.dao.DataAccessException.class,()->new org.springframework.transaction.support.TransactionTemplate(manager).executeWithoutResult(status->{}));
+            verify(connection).rollback();assertFalse(fence.ready());
+        }
+        assertFalse(Files.readString(path()).contains("|ROLLBACK|"));
+        try(var j=new RecoveryJournal(path(),false)){assertEquals(List.of("PREPARE"),new ArrayList<>(j.transactions().values()));}
+    }
 }

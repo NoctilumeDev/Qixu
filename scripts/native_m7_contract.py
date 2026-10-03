@@ -29,4 +29,5 @@ M7_CASES.update({"recovery.RecoveryJournalTest":[
  "databaseMarkerWithoutPrepareCannotObtainAuthority",
  "markerWriteFailureKnownRollbackRetainsPreparedCoordinateAndCanReconcile",
  "unknownCommitOrTerminalIoFailureNeverRewritesCommitAsRollback",
+ "commitAttemptFailureFollowedBySuccessfulRollbackRemainsUnknown",
 ]})
