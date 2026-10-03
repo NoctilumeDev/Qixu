@@ -185,3 +185,11 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 原包cleanup=true只证明父句柄停止，后续CIM发现同exe/同my.ini、ParentProcessId38928、CreationDate2026-10-03T12:58:36.7879370+08:00的子进程仍监听6976。这是清理证据缺口，不能把原字段升级成无残留。独立核对以上四个坐标后仅停止该子进程，6976读回无监听；原包不改。宿主3306/6947/7897保持原PID和启动时间，6364原无监听。
 
 [MySQL官方选项文档](https://dev.mysql.com/doc/refman/8.0/en/server-options.html#option_mysqld_no-monitor)明确`--no-monitor`抑制Windows监控fork；[原报告#92683](https://bugs.mysql.com/bug.php?id=92683)已关闭并说明两进程是RESTART的默认机制，不借此宣称MySQL漏洞。最小修订仅改owned实例启动方式与清理读回，保留恢复业务断言。原首次包与后续新的观察身份分别保存。
+
+## M7 F12 · 真实T0恢复制造外部世界冲突
+
+候选`97a1d141b027d37255458bc9d4ed7636af54901e`的native0.15/Plan3 [PASS147](../artifacts/m7/m7-4fbf36804b4b4a739cfcae47eb62bedd/acceptance-report.md)不能覆盖恢复。相同source的restore0.2/Plan2取得[原FAIL](../artifacts/m7/m7-restore-1a767fd49106407d96d639211f9219eb/acceptance-report.md)，execution COMPLETED：A提交200并实际读到站内通知，独立world保存完整回执及inbox；正常同库新PID取得相同回执。owned MySQL物理停止/重启后逻辑恢复T0，world摘要不变；服务仍健康200，B同座位/同时间申请200，A原回执404、原键重放409，SQL新预约1/新inbox1。库内当下没有超卖，但库外已交付A的正式凭据未被撤销，系统又承诺给B，击穿恢复后使用权与外部世界一致性。
+
+一致T1库的第二trace中，产品从未创建独立journal，缺账册仍健康200并返回旧回执200。分类产品缺失恢复代/独立事务对账与隔离机制；不能用网络故障或“数据库恢复成功”解释为安全。原dump/完整world/HTTP/SQL/CIM留私有运行目录；公共包原字节不改，不发布票据。6个owned进程停止且6975/6976无监听。
+
+修复按已冻结F12合同：提交前持久PREPARE与同事务marker、启动generation/全账册核对、无法对账时503 NOT_RECONCILED并阻止身份/业务/任务。保留正确正常重启控制与原Plan2断言复验，不靠清库、删除旧见证或改变原请求键修绿。尚未修复；M7整体不闭合。

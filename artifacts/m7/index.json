@@ -72,6 +72,20 @@
       "verdict": "PENDING",
       "path": "artifacts/m7/m7-restore-53bac83347604e8e881a9b6b524e02e5",
       "manifest_sha256": "282af37251d2d95999d87a77ce9f154d1f774cfaf15621b736f3763db15fda5a"
+    },
+    {
+      "identity": "m7-4fbf36804b4b4a739cfcae47eb62bedd",
+      "source_sha": "97a1d141b027d37255458bc9d4ed7636af54901e",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-4fbf36804b4b4a739cfcae47eb62bedd",
+      "manifest_sha256": "7827f68065988c99859110eaffcf2d217f2b968b60ab3bcd144d7d1b2049bf15"
+    },
+    {
+      "identity": "m7-restore-1a767fd49106407d96d639211f9219eb",
+      "source_sha": "97a1d141b027d37255458bc9d4ed7636af54901e",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-restore-1a767fd49106407d96d639211f9219eb",
+      "manifest_sha256": "552f7ffc104db7b45f10324fe0899e4ee14873de43145fb5516524b8d0401368"
     }
   ],
   "not_proven": [
