@@ -233,6 +233,27 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-database-b615ce5733ff4d38a6ce222157f9c5b3",
       "manifest_sha256": "d4c1815930a96b804f29afd39d1f6dca6efb0d62a005042952f68f3c3394c895"
+    },
+    {
+      "identity": "m7-805001f3b21349b19ef4cf524113423f",
+      "source_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-805001f3b21349b19ef4cf524113423f",
+      "manifest_sha256": "89f845437d932e72f97d0b79b4a7b5950eb8a72fa009736262168f6cf776b7a6"
+    },
+    {
+      "identity": "m7-restore-9e75cadba74749da8f8837933ce6d696",
+      "source_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-9e75cadba74749da8f8837933ce6d696",
+      "manifest_sha256": "f3fb50ce7e1d0f884e448e9d50bfa7d5b43a6c3e2c4accb727c912f2b751f745"
+    },
+    {
+      "identity": "m7-database-f95a73c66a4b4edcab194455a2ea3ea7",
+      "source_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-database-f95a73c66a4b4edcab194455a2ea3ea7",
+      "manifest_sha256": "c3b97185657009c527a6e3217b0e6c305722e7f432c3bd58820846175972d5fe"
     }
   ],
   "not_proven": [
@@ -249,8 +270,10 @@
   "restore_repair_source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
   "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010",
   "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
-  "restore_qualified_main_sha": "3b445b9fd73b88aeaa4d5bab6e6264cd72485766",
-  "restore_exact_main_ci": "37101177576",
+  "restore_qualified_main_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+  "restore_exact_main_ci": "37104669176",
   "database_budget_contract": "docs/contracts/m7-database-budgets.md",
-  "database_budget_candidate_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46"
+  "database_budget_candidate_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46",
+  "database_budget_qualified_main_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+  "database_budget_exact_main_ci": "37104669176"
 }

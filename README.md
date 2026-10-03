@@ -12,6 +12,8 @@
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 
+M7单实例[数据库等待预算](docs/acceptance/m7-database.md)已在受保护main@ffa01ffe取得新原生170、恢复22、真实锁/查询回应故障25及公开CI读回。COMMIT回包丢失、实际页面组合和整体M7仍待验。
+
 ![学生空间档案](artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/student-space.png)
 
 | 部分 | 设计方向 |

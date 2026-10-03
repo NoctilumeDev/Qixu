@@ -36,6 +36,8 @@ F12受保护main@3b445b9取得新native166/restore22、exact-main CI与远端读
 
 F15数据库预算先采真实首FAIL，再修固定driver/pool/session配置；e704b10同source的新native170/restore22/database25均PASS，见[原包与分类](acceptance/m7-database.md)。锁等待10.109秒及已有业务COM_QUERY回应丢失30.047秒是实际观察。仅候选限定复验；COMMIT回包丢失仍是独立待攻击trace，不用只读故障替代。
 
+PR#20受保护main@ffa01ffe取得三项CI/远端读回及fresh native170/restore22/database25，限定资格见[主线记录](acceptance/m7-database.md)。F15锁/socket预算子项闭合，不代表整个F15。F12/F15真实COMMIT丢回应先冻结[独立合同](contracts/m7-commit-reply.md)，当前尚未执行；页面、组合和未知账册继续按范围处置。
+
 每个未知项必须补齐：触发条件、可能受影响不变量、当前证据缺口、支持该实验需要的环境、重新进入的具体合同/命令/trace入口、归属与重开条件。初始待评估项为长时间网络分区、真实主从切换、多节点裁决、第三方身份长期不可用、生产容量、微信真机；目前均PLANNED，不能预填PASS，也不能把尚未攻击自动当成接受边界。
 
 M7结束前将上述待评估项正式分类，保存固定候选下的已验证/已击穿修复/正确拒绝/未知清单；给M8独立测试与产品经理从原证据重新检验。最终页面视觉问题按M10合同处理，可用性和事实缺陷不延后。

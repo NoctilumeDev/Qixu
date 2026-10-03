@@ -175,3 +175,9 @@ PR#18三项及步骤success后按线性历史保护压缩合入main@3b445b9；ex
 F15固定原15/35秒窗口后取得真实锁等待及借出COM_QUERY首FAIL，最小修复单host有效驱动属性、Hikari/session预算并补4个配置边界；原25断言不变。观察夹具RSA前提、Python语法/退出码及启动APPLICATION_NOT_READY分别分类保留，不用native PASS抹掉采集器错误。e704b10的fresh native170、restore22及database25均PASS，96个历史原Bundle字节保持。候选范围见[M7数据库事实](acceptance/m7-database.md)，尚待公开保护合入和主线新事实。
 
 下一步单独攻击真实COMMIT回包丢失及客户端页面组合；预算只读故障不授权宣布提交歧义已物理验证。M7有限攻击按机制闭合，M8双角色在其后，M10精修仍保留。
+
+## 2026-10-03 · D025 · 预算主线资格与COMMIT新入口
+
+PR#20按三项及步骤success保护合入main@ffa01ffe，exact-main CI37104669176和远端全字节读回闭合。新native170/restore22/database25均PASS且owned清理成立；99个原Bundle不改。预算与恢复资格绑定该主线，文档投影不升级后续源码。
+
+先冻结[COMMIT回应丢失合同v1](contracts/m7-commit-reply.md)，独立精确帧触发、SQL真实提交、实时隔离、完整未知PREPARE和同generation恢复。此决策当时只有合同与私有草稿，尚未启动新攻击/修改产品；原database25/restore22不重写。范围内首败保留再修，不能把真实COMMIT歧义直接藏进NOT_PROVEN。
