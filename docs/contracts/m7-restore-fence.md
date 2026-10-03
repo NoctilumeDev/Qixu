@@ -1,4 +1,4 @@
-# M7恢复库与外部世界 · 版本1.4
+# M7恢复库与外部世界 · 版本1.5
 
 基线为受保护主线 `a918a2a877895e10eba871303e6d963f2f0e06b5`。PR#17门禁通过不等于M7闭合；本合同在F12新演练与修复前固定。第一段和元数据/独立oracle原包不覆盖。V1–V9保持字节，必要的新迁移只追加。
 
@@ -55,3 +55,7 @@
 ## 版本1.4 · 缺账册单故障的前提控制
 
 原0.3/Plan3 PASS保留且不扩大资格：T1早于正常重启的demo事务，有marker5/journal6混杂。restore0.4/Plan4保留18个原断言，新增4个控制：恢复当前T1后健康200、原回执相同、DB完整marker/generation与独立严格链一致、移走前journal存在。控制先真实成立，再仅移走journal（不再次回退DB），才观察缺账册503。新T1在正常重启控制后owned应用已停止时采集，旧T1保留。独立链判定不调用产品代码，不猜测读取失败等于空集合。native0.16/Plan4仍162项，只重新绑定合同/新source，不扩展产品范围。
+
+## 版本1.5 · 真实事务坐标控制
+
+按[m7-transaction-coordinates](m7-transaction-coordinates.md)在原162例上增加4个真实MySQL事务见证。native0.17/Plan5为新的fresh producer；restore0.5/Plan5仅接入新producer，保留0.4原22断言及其中18原负向/正常断言，不改产品恢复语义。当前未执行新例，不预填通过。
