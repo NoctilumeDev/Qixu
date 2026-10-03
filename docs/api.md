@@ -1,6 +1,6 @@
 # HTTP API合同 0.1
 
-状态：M1–M4已取得各自限定API/MySQL及安装资格，见acceptance记录；两端页面、外部接入与全工程交付仍待后续阶段。
+状态：M1–M6已取得各自限定资格，API/MySQL、两端浏览器和外部接入的具体证明边界见acceptance记录；M7–M10、真机及全工程交付尚未完成。
 
 ## 统一语义
 
@@ -136,7 +136,7 @@ V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象
 
 前端回执404仍为未确认。只有原事实或原子停止屏障才能结束原意图；本地清除、GET成功和单次4xx均不代替该裁决。端点保护与两端真实页面资格分别记录。
 
-## M6 外部身份适配（候选范围）
+## M6 外部身份适配（限定范围）
 
 POST `/auth/external/dark-room`：{ticket,mode:COOKIE/BEARER}，默认COOKIE；只消费当前固定上游身份，不接受URL/subject/userId/role/scope。不存上游密码。有效身份还必须有当前启用的本地绑定、issuer/version及外部专用本地主体；未登记403、无效401、依赖未知503、入口预算429。成功响应与本地登录同形，仅BEARER含期序opaque token。
 

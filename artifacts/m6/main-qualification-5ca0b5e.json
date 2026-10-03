@@ -1,0 +1,146 @@
+{
+  "observed_at": "2026-10-03T04:02:29.014259+00:00",
+  "runtime_source_sha": "5ca0b5ee6c52e14bdc12585f90d849b238992787",
+  "pr": 14,
+  "ci_run": 37094823030,
+  "ci_jobs": [
+    {
+      "name": "Frontend 路 H5 / WeChat / Admin",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Document integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Backend 路 MySQL",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "remote_main_readback": "5ca0b5ee6c52e14bdc12585f90d849b238992787",
+  "protection": {
+    "strict": true,
+    "enforce_admins": true,
+    "required_contexts": [
+      "Document integrity",
+      "Backend 路 MySQL",
+      "Frontend 路 H5 / WeChat / Admin"
+    ]
+  },
+  "fresh_bundles": [
+    {
+      "identity": "m5-frontend-45e53e50325b40e29038d5bc51e743ac",
+      "subject": {
+        "id": "qixu-m5-frontend",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "0dfd05fb9d877c759b36b360914cdaeb9b16c23604112b07e1cd6691aef80a41",
+      "kind": "FRESH_EXACT_MAIN_EXECUTION"
+    },
+    {
+      "identity": "m6-48c7e3f66545411f97e219e9f7202f01",
+      "subject": {
+        "id": "qixu-m6",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "71a6c57b414e434ee3cb8c9714380cc4c7a71cfe2713fe592c337619a2772de3",
+      "kind": "FRESH_EXACT_MAIN_EXECUTION"
+    },
+    {
+      "identity": "m6-installed-95fcabede37d4929b198d73581d0ad12",
+      "subject": {
+        "id": "qixu-m6-installed",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "c0e6fe6539e4e3eb3043dd84f1ccaa2f2f3e67e79484f9a7971bb9cb5e9fcce4",
+      "kind": "FRESH_EXACT_MAIN_EXECUTION"
+    }
+  ],
+  "jar": {
+    "current_build": true,
+    "sha256": "60ec2d57f26a56c0ded9ae15bb1f45ef16bc1b45a73d5c55955a6cfbe3b3a179",
+    "size": 26719594,
+    "source_sha": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+  },
+  "installed_boundary": "ISOLATED_REAL_DARKROOM_AND_OWNED_RESTART_NOT_SSO_PRODUCTION_BACKUP_MULTI_NODE_OR_DEVICE",
+  "allocation": {
+    "formal_results": 1,
+    "frozen_hash_unchanged": true,
+    "frozen_round_unchanged": true,
+    "outcomes": 2,
+    "result_notices": 2
+  },
+  "reproduction": {
+    "batch": "dd9dcef2-650f-4bc2-9789-1d9de98bd690",
+    "boundary": "ONE_PUBLIC_FROZEN_BATCH_NOT_PRODUCTION_OR_ALL_FAULTS",
+    "candidates": 2,
+    "fresh_dependency_exit": 0,
+    "independent_bytes_equal": true,
+    "input_hash": "03d2a47bbc7d898e63af62cee8ef3da49fb157693e12be3ce5ed4e012aa9b5ff",
+    "maximum": 2,
+    "output_hash": "a7786a3d8d836f13ed70551348ab0004027955b3b82df67bb46f78828e1fdaa9",
+    "round": 32732235,
+    "signature_verified": true,
+    "source_archive_sha256": "34a90b00a0d0cc271eba2e0045a7b2beaa830d857ab1624962eabdbccc749363"
+  },
+  "cleanup": {
+    "all_owned_stopped": true,
+    "processes": [
+      {
+        "label": "darkroom-restored",
+        "pid": 17640,
+        "stopped": true
+      },
+      {
+        "label": "qixu-frozen-recovery",
+        "pid": 22288,
+        "stopped": true
+      },
+      {
+        "label": "qixu-freeze",
+        "pid": 25644,
+        "stopped": true
+      },
+      {
+        "label": "qixu-recovery",
+        "pid": 38724,
+        "stopped": true
+      },
+      {
+        "label": "qixu-initial",
+        "pid": 37460,
+        "stopped": true
+      },
+      {
+        "label": "darkroom",
+        "pid": 27988,
+        "stopped": true
+      }
+    ]
+  },
+  "packet_hashes": {
+    "frozen-packet.json": "1f228ee172cf27dbd1b55971ac8ed36d0128903e860b28d41c11ecefcac6c15e",
+    "public-packet.json": "825512480508cb10baa69a477fe65545767eb06e6c80ea98ff0c6ff4203a564a"
+  },
+  "qualification": "M6_VERIFIED_LIMITED",
+  "not_proven": [
+    "SSO",
+    "production",
+    "backup rollback reconciliation",
+    "multi-node",
+    "WeChat devices",
+    "whole M0-M10 project"
+  ]
+}

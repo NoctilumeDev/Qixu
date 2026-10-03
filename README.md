@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-2026-10-03：**M0–M5限定范围已验收；M6候选已有真实身份与恢复证据，主线资格待闭合**。M5在受保护main@c411cfe7取得三项公开CI、fresh原生126、构建31及固定产物真实浏览器17项证据；学生短约、活动预约/取消和私有反馈→维修复验已通过页面与MySQL读回。M6候选da0570c有native142、干净构建31及真实暗室/重启/固定round独立复算证据，见[M6范围和首败](docs/acceptance/m6.md)。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
+2026-10-03：**M0–M6限定范围已验收；M7–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 
@@ -20,7 +20,7 @@
 | 管理端 | Vue 3 + TypeScript；桌面优先，同时支持手机审批和现场处置 |
 | 后端 | Java 17 + Spring Boot；统一权限、事务与业务状态 |
 | 业务事实 | MySQL；预约、分配、使用权、冲突处置分别建模 |
-| 集成边界 | 暗室当前身份适配候选已隔离实测；不是SSO，不继承上游角色；青野与教务为后续能力 |
+| 集成边界 | 暗室当前身份适配已在固定主线隔离实测；不是SSO，不继承上游角色；青野与教务为后续能力 |
 
 ## 产品范围
 

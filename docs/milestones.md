@@ -1,6 +1,6 @@
 # 里程碑与完成条件
 
-当前：M0文档、M1–M5限定范围已闭合，M6候选的接入与恢复证据已取得，公开主线资格待闭合。用户于2026-10-03新增M10，视觉精修后置；M5保证可用性、素材展示与结构，不授予真机或最终视觉资格。`PLANNED` 是计划；`IN_PROGRESS` 是施工；`VERIFIED` 需要可定位的执行事实；`BOUNDARY` 表示能力有明确待验边界。
+当前：M0文档、M1–M6限定范围已闭合，M7–M10尚未完成。用户于2026-10-03新增M10，视觉精修后置；M5保证可用性、素材展示与结构，不授予真机或最终视觉资格。`PLANNED` 是计划；`IN_PROGRESS` 是施工；`VERIFIED` 需要可定位的执行事实；`BOUNDARY` 表示能力有明确待验边界。
 
 | 阶段 | 当前状态 | 本阶段交付 | 退出条件 |
 | --- | --- | --- | --- |
@@ -10,7 +10,7 @@
 | M3 长期分配与候补 | VERIFIED_API_MYSQL_PROOF | 批次、资格、志愿、冻结、固定来源、结果、确认、候补与解释 | PR#8 / main@ca09396：两项CI、fresh Core52例、producer-bound未来round及独立全字节复算；非UI/生产容量 |
 | M4 冲突、反馈与治理 | VERIFIED_API_MYSQL_INSTALLED | 层级阻断、影响处置、临时替代、反馈核实/维修复验、通知与审计 | PR#9/main@02c3665两项CI、fresh native110及producer-bound installed PASS；见M4记录，非现实维修/UI |
 | M5 两端真实链路 | VERIFIED_LIMITED_API_BUILD_BROWSER | uni-app 小程序及 H5 验证入口、响应式管理 Web、主流程、素材与合理结构 | PR#11/main@c411cfe7三项CI、fresh native126/build31/installed browser17及真实SQL闭合；视觉留M10，真机NOT_PROVEN |
-| M6 回归与外部接入 | IN_PROGRESS_CANDIDATE_VERIFIED | [M6候选证据](acceptance/m6.md)：真实暗室当前身份适配、同库重启和固定round干净复算 | da0570c的native142/build31/installed PASS与原PENDING分开保留；待受保护main与fresh读回闭合 |
+| M6 回归与外部接入 | VERIFIED_LIMITED_API_MYSQL_REAL_IDENTITY_RESTART | [M6主线证据](acceptance/m6.md)：真实暗室当前身份适配、同库重启和固定round干净复算 | PR#14/main@5ca0b5e三项CI及fresh native142/build31/installed PASS；原候选PENDING保留，不含SSO/备份回滚/真机 |
 | M7 外部错题复核与修复 | PLANNED | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | 新反例有证据分类；阻断修复且原条件复验；未证明边界公开，测试数量不替代资格 |
 | M8 独立测试及产品复验 | PLANNED | 两个子代理：测试验收者、产品经理；固定提交独立审阅 | 有依据的反馈完成处置；关键链路重新验收；未验能力明确列出 |
 | M9 公开工程候选与冻结 | PLANNED | CI、README/截图、SQL入口、部署/恢复、工程候选与公开事实对齐 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
@@ -48,4 +48,4 @@
 
 真实微信手机行为依赖用户设备和微信平台。可以先完成开发工具及 H5 的真实链路，但未经手机观察的键盘/扫码行为必须保留待验状态。公开随机源和暗室服务可用性分别记录，不能以本地模拟覆盖真实供应商失败。
 
-M0文档、M1基础、M2 API/MySQL各有资格，见 [M0](acceptance/m0.md)、[M1](acceptance/m1.md)、[M2](acceptance/m2.md)。M3闭合见[M3事实](acceptance/m3.md)。M4限定范围见[M4事实](acceptance/m4.md)，M5限定构建和页面资格见[M5事实](acceptance/m5.md)。外部接入、M7–M10和最终交付尚未完成。
+M0文档、M1基础、M2 API/MySQL各有资格，见 [M0](acceptance/m0.md)、[M1](acceptance/m1.md)、[M2](acceptance/m2.md)。M3闭合见[M3事实](acceptance/m3.md)。M4限定范围见[M4事实](acceptance/m4.md)，M5限定构建和页面资格见[M5事实](acceptance/m5.md)，M6接入与恢复限定资格见[M6事实](acceptance/m6.md)。M7–M10和最终交付尚未完成。
