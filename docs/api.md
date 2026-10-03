@@ -40,7 +40,7 @@ M2的行式响应保留snake_case数据库字段，追加展示字段为camelCas
 | POST /organizer/events/{id}/actions | {version,action:PUBLISH/REBIND/CANCEL,venueRequestId?,reason}；换地保留参与，已开始不得重绑定 |
 | POST /events/{id}/participation；GET /participations | {action:JOIN/CANCEL}；固定队列，本人参与/候补 |
 | GET/POST /favorites | 本人最多6项；{spaceId,selected}，对比读取真实公开档案 |
-| GET /inbox；POST /inbox/{id}/read | 站内持久消息/未读量，本人已读；没有微信发送声明 |
+| GET /inbox；POST /inbox/{id}/read | 本人站内持久消息；page1–10000/size1–100（默认1/100），items/total/unread/page/size；已读幂等；没有微信发送声明 |
 | GET /receipts/{key} | 本人已提交收据，404不是在途请求未发生的证明 |
 
 ## 后续端点与权限（M3–M4）
@@ -141,3 +141,7 @@ V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象
 POST `/auth/external/dark-room`：{ticket,mode:COOKIE/BEARER}，默认COOKIE；只消费当前固定上游身份，不接受URL/subject/userId/role/scope。不存上游密码。有效身份还必须有当前启用的本地绑定、issuer/version及外部专用本地主体；未登记403、无效401、依赖未知503、入口预算429。成功响应与本地登录同形，仅BEARER含期序opaque token。
 
 每次外部认证在事务外有界核验，写入取锁后复核当前本地会话/绑定与短证明；503不授权也不改变原请求键。Cookie仍受Origin/CSRF/文档所有权约束，Bearer拒绝不退回Cookie。GET/auth/options不列外部专用或停用账号；生产无demo时该接口404。详细协议、当前边界及实际观察见[外部合同](contracts/external-identity-and-recovery.md)和[M6证据](acceptance/m6.md)。
+
+## M7第一段协议修复候选（尚待固定候选验收）
+
+JSON正文严格拒绝重复对象键（包括转义后同名）和尾随JSON，422且无业务/回执效果；合法空白允许。站内消息不再只暴露最近100条，学生每页20条；单HTTP分页读取使用REPEATABLE_READ快照，跨页新增通知需刷新，不承诺跨HTTP冻结集合。恢复记录命名空间为账号＋请求键，删除/查询/重放不跨账号；存储故障明确拒绝新写并保留恢复元数据，注销清敏感内存后仍尝试服务器撤销。原首败在错题本，M7整体仍未完成。

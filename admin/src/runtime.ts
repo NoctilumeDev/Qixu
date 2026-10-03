@@ -4,7 +4,7 @@ const storage={get:(key:string)=>localStorage.getItem('admin.'+key),set:(key:str
 const sessionChannel=typeof BroadcastChannel==='undefined'?null:new BroadcastChannel('qixu-cookie-controls');
 export const client=new Client(async r=>{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);try{const res=await fetch(r.path,{method:r.method,headers:r.headers,credentials:'same-origin',cache:'no-store',signal:controller.signal,body:r.body===undefined?undefined:JSON.stringify(r.body)});if(r.responseType==='FILE'&&res.ok){const tempFilePath=URL.createObjectURL(await res.blob());return {status:res.status,body:{data:{tempFilePath}},discard:()=>URL.revokeObjectURL(tempFilePath)};}return {status:res.status,body:await res.json()};}finally{clearTimeout(timeout);}},storage,'COOKIE',()=>crypto.randomUUID(),()=>sessionChannel?.postMessage('SESSION_CHANGED'));
 if(sessionChannel)sessionChannel.onmessage=e=>{if(e.data==='SESSION_CHANGED')client.externalCookieChanged();};
-const storageChanged=(e:StorageEvent)=>{if(e.key?.startsWith('admin.qixu.intent.v1.'))client.refreshPending();};
+const storageChanged=(e:StorageEvent)=>{if(e.key?.startsWith('admin.qixu.intent.v1.')){try{client.refreshPending();}catch(error){auth.error=errorMessage(error);}}};
 window.addEventListener('storage',storageChanged);
 if(import.meta.hot)import.meta.hot.dispose(()=>{sessionChannel?.close();window.removeEventListener('storage',storageChanged);});
 export const auth=reactive<{session:Session|null;pending:Pending[];generation:number;loading:boolean;error:string;needsReload:boolean}>({session:null,pending:[],generation:0,loading:true,error:'',needsReload:false});

@@ -20,9 +20,14 @@ public class Notifications {
         return pending.size();
     }
     public Map<String,Object> mine(long user) {
-        var items=b.jdbc.queryForList("SELECT * FROM inbox WHERE recipient_id=? ORDER BY id DESC LIMIT 100",user).stream().map(b::view).toList();
-        long unread=b.jdbc.queryForObject("SELECT COUNT(*) FROM inbox WHERE recipient_id=? AND read_at IS NULL",Long.class,user);
-        return Map.of("items",items,"unread",unread,"channel","PERSISTENT_INBOX");
+        return mine(user,1,100);
+    }
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
+    public Map<String,Object> mine(long user,int page,int size) {
+        if(page<1||page>10000||size<1||size>100)throw DomainException.invalid("分页参数超出范围。");
+        var counts=b.jdbc.queryForMap("SELECT COUNT(*) AS total,COALESCE(SUM(read_at IS NULL),0) AS unread FROM inbox WHERE recipient_id=?",user);
+        var items=b.jdbc.queryForList("SELECT * FROM inbox WHERE recipient_id=? ORDER BY id DESC LIMIT ? OFFSET ?",user,size,(page-1)*size).stream().map(b::view).toList();
+        return Map.of("items",items,"total",((Number)counts.get("total")).longValue(),"unread",((Number)counts.get("unread")).longValue(),"page",page,"size",size,"channel","PERSISTENT_INBOX");
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> read(AuthService.Session session,String key,long id) {

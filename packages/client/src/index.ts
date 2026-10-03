@@ -24,16 +24,23 @@ function unwrap<T>(response:HttpResponse):T {
 export class Client {
   session:Session|null=null; generation=0; pending:Pending[]=[];
   private transport:Transport; private storage:Storage; private mode:'BEARER'|'COOKIE'; private key:()=>string;private cookieControls?:()=>void;
-  private token=''; private control:Promise<unknown>=Promise.resolve(); private reads=new Map<string,number>(); private listeners=new Set<()=>void>(); private expired=false; private cookieUnknown=false;
+  private token=''; private control:Promise<unknown>=Promise.resolve(); private reads=new Map<string,number>(); private listeners=new Set<()=>void>(); private expired=false; private cookieUnknown=false; private storageInitialized=false;
   constructor(transport:Transport,storage:Storage,mode:'BEARER'|'COOKIE',key:()=>string,cookieControls?:()=>void){
     this.transport=transport;this.storage=storage;this.mode=mode;this.key=key;this.cookieControls=cookieControls;
-    this.token=mode==='BEARER'?(storage.get('qixu.token')||''):'';
+    try{this.token=mode==='BEARER'?(storage.get('qixu.token')||''):'';}catch{/* No readable credential means no adopted identity. */}
+    try{this.refreshPending();}catch{/* The document can render; mutations must retry the same storage checks. */}
+  }
+  private storageError(){return new ApiError(503,'LOCAL_STORAGE_UNAVAILABLE','本地恢复凭据暂不可读写，请检查存储后再确认原请求；不要重新创建提交。');}
+  private initializeStorage(){
+    const storage=this.storage;
     // One immutable record per intent. State is intentionally UNKNOWN after reload.
     if(storage.get('qixu.pending-format')!=='per-intent-v1'){
-      try{const rows:unknown=JSON.parse(storage.get('qixu.pending')||'[]');if(Array.isArray(rows))for(const raw of rows){const p=this.decode(raw);if(p&&!storage.get(this.intentKey(p)))storage.set(this.intentKey(p),this.intentBytes(p));}}catch{/* Invalid legacy bytes never authorize a request. */}
+      const bytes=storage.get('qixu.pending')||'[]';let rows:unknown;
+      try{rows=JSON.parse(bytes);}catch{rows=[];}
+      if(Array.isArray(rows))for(const raw of rows){const p=this.decode(raw);if(p&&!storage.get(this.intentKey(p)))storage.set(this.intentKey(p),this.intentBytes(p));}
       storage.set('qixu.pending-format','per-intent-v1');storage.remove('qixu.pending');
     }
-    this.refreshPending();
+    this.storageInitialized=true;
   }
   private intentKey(p:Pick<Pending,'actorId'|'key'>){return 'qixu.intent.v1.'+p.actorId+'.'+p.key;}
   private decode(raw:unknown):Pending|null{
@@ -42,11 +49,16 @@ export class Client {
   }
   private intentBytes(p:Pending){return JSON.stringify(p.sensitive?{key:p.key,actorId:p.actorId,path:p.path,createdAt:p.createdAt,sensitive:true,replayable:false,state:'UNKNOWN'}:{...p,state:'UNKNOWN'});}
   refreshPending(){
-    const previous=new Map(this.pending.map(p=>[this.intentKey(p),p])),rows:Pending[]=[];
-    for(const name of this.storage.keys().filter(k=>k.startsWith('qixu.intent.v1.'))){
-      try{const raw=this.decode(JSON.parse(this.storage.get(name)||'null'));if(raw&&this.intentKey(raw)===name)rows.push(previous.get(name)||raw);}catch{/* A corrupt local entry is not a receipt. */}
-    }
-    this.pending=rows;this.changed();
+    try{
+      if(!this.storageInitialized)this.initializeStorage();
+      const previous=new Map(this.pending.map(p=>[this.intentKey(p),p])),rows:Pending[]=[];
+      for(const name of this.storage.keys().filter(k=>k.startsWith('qixu.intent.v1.'))){
+        const bytes=this.storage.get(name)||'null';
+        try{const raw=this.decode(JSON.parse(bytes));if(raw&&this.intentKey(raw)===name)rows.push(previous.get(name)||raw);}catch{/* Corrupt bytes never act as a receipt or request. */}
+      }
+      this.pending=rows;
+    }catch{throw this.storageError();}
+    this.changed();
   }
   subscribe(callback:()=>void){this.listeners.add(callback);return()=>this.listeners.delete(callback);}
   private changed(){for(const callback of this.listeners)callback();}
@@ -55,9 +67,9 @@ export class Client {
   private headers(key?:string){const h:Record<string,string>={'Content-Type':'application/json'};if(this.mode==='BEARER'&&this.token)h.Authorization='Bearer '+this.token;if(this.mode==='COOKIE'&&this.session)h['X-CSRF-Token']=this.session.csrfToken;if(key)h['Idempotency-Key']=key;return h;}
   private owned(generation:number,actor?:number){return this.generation===generation&&(actor===undefined||this.session?.actor.id===actor);}
   private unauthorize(generation:number){if(this.generation!==generation)return;this.expired=true;this.transition();}
-  private transition(){this.generation++;this.session=null;this.token='';this.storage.remove('qixu.token');this.clearSensitive();this.reads.clear();this.changed();}
+  private transition(){this.generation++;this.session=null;this.token='';this.clearSensitive();this.reads.clear();try{this.storage.remove('qixu.token');}catch{/* Local storage must not stop identity clearing or remote revocation. */}this.changed();}
   private exclusive<T>(action:()=>Promise<T>):Promise<T>{const next=this.control.then(action,action);this.control=next.catch(()=>undefined);return next;}
-  private adopt(session:Session){if(!isRecord(session)||!isRecord(session.actor)||!Number.isSafeInteger(session.actor.id)||!['STUDENT','TEACHER','ADMIN'].includes(String(session.actor.role))||typeof session.csrfToken!=='string'||(this.mode==='BEARER'&&!session.token&&!this.token))throw new ApiError(200,'INVALID_RESPONSE','无法确认登录身份。');this.session=session;this.expired=false;this.token=session.token||this.token;if(this.mode==='BEARER'&&this.token)this.storage.set('qixu.token',this.token);this.changed();}
+  private adopt(session:Session){if(!isRecord(session)||!isRecord(session.actor)||!Number.isSafeInteger(session.actor.id)||!['STUDENT','TEACHER','ADMIN'].includes(String(session.actor.role))||typeof session.csrfToken!=='string'||(this.mode==='BEARER'&&!session.token&&!this.token))throw new ApiError(200,'INVALID_RESPONSE','无法确认登录身份。');const token=session.token||this.token;try{if(this.mode==='BEARER'&&token)this.storage.set('qixu.token',token);}catch{this.transition();throw this.storageError();}this.session=session;this.expired=false;this.token=token;this.changed();}
   get needsReload(){return this.cookieUnknown;}
   externalCookieChanged(){if(this.mode==='COOKIE'&&!this.cookieUnknown){this.cookieUnknown=true;this.transition();}}
   private cookieOwnerError(e:unknown,generation:number){if(this.mode==='COOKIE'&&this.generation===generation&&e instanceof ApiError&&['SESSION_OWNER_CHANGED','CSRF_REQUIRED'].includes(e.code))this.externalCookieChanged();}
@@ -99,13 +111,14 @@ export class Client {
     this.refreshPending();
     if(this.visiblePending.length)throw new ApiError(409,'LOCAL_UNKNOWN_PENDING','有提交尚未确认，请先恢复原请求。');
     if(this.pending.length>=16)throw new ApiError(409,'LOCAL_PENDING_LIMIT','待确认记录已满，请先处理原账号的请求。');
-    const key=this.key();if(!/^[A-Za-z0-9_-]{8,80}$/.test(key)||this.pending.some(p=>p.key===key))throw new ApiError(422,'LOCAL_KEY_INVALID','无法创建唯一有效请求标识，请重新加载。');
+    const key=this.key();if(!/^[A-Za-z0-9_-]{8,80}$/.test(key)||this.pending.some(p=>p.actorId===this.session?.actor.id&&p.key===key))throw new ApiError(422,'LOCAL_KEY_INVALID','无法创建唯一有效请求标识，请重新加载。');
     if(!/^\/api\/v1\/[A-Za-z0-9/_-]+$/.test(path))throw new ApiError(422,'LOCAL_PATH_INVALID','请求目标不正确。');
     const pending:Pending={key,actorId:this.session.actor.id,path,body:safeClone(body),createdAt:new Date().toISOString(),sensitive:options.sensitive||false,replayable:true,state:'SENDING'};
     try{this.storage.set(this.intentKey(pending),this.intentBytes(pending));}catch{throw new ApiError(503,'LOCAL_STORAGE_UNAVAILABLE','未能保存恢复凭据，请检查本地存储后再提交；本次尚未发送。');}
     this.pending.push(pending);this.changed();return this.send<T>(pending);
   }
-  private remove(key:string){for(const p of this.pending.filter(p=>p.key===key))this.storage.remove(this.intentKey(p));this.pending=this.pending.filter(p=>p.key!==key);this.changed();}
+  private sameIntent(a:Pending,b:Pick<Pending,'actorId'|'key'>){return a.actorId===b.actorId&&a.key===b.key;}
+  private remove(pending:Pending){try{this.storage.remove(this.intentKey(pending));}catch{throw this.storageError();}this.pending=this.pending.filter(p=>!this.sameIntent(p,pending));this.changed();}
   private async send<T>(pending:Pending):Promise<T>{
     const generation=this.generation;
     const previouslyUnknown=pending.state==='UNKNOWN';
@@ -115,11 +128,13 @@ export class Client {
       const response=await this.transport({method:'POST',path:pending.path,headers:this.headers(pending.key),body:safeClone(pending.body)});
       const result=unwrap<T>(response);
       if(!isRecord(result)||!isRecord(result.receipt)||result.receipt.key!==pending.key||result.receipt.status!=='COMMITTED')throw new ApiError(200,'MISSING_RECEIPT','响应缺少原请求回执。');
-      this.remove(pending.key);if(!this.owned(generation,pending.actorId))throw new StaleResponse();return result;
+      this.remove(pending);if(!this.owned(generation,pending.actorId))throw new StaleResponse();return result;
     }catch(e){
       if(e instanceof StaleResponse)throw e;
-      if(!this.storage.get(this.intentKey(pending))){this.pending=this.pending.filter(p=>p.key!==pending.key);this.changed();throw new StaleResponse();}
-      if(!this.pending.some(p=>p.key===pending.key))throw new StaleResponse();
+      if(e instanceof ApiError&&e.code==='LOCAL_STORAGE_UNAVAILABLE'){pending.state='UNKNOWN';this.changed();if(!this.owned(generation,pending.actorId))throw new StaleResponse();throw e;}
+      let stored:string|null;try{stored=this.storage.get(this.intentKey(pending));}catch{pending.state='UNKNOWN';this.changed();if(!this.owned(generation,pending.actorId))throw new StaleResponse();throw this.storageError();}
+      if(!stored){this.pending=this.pending.filter(p=>!this.sameIntent(p,pending));this.changed();throw new StaleResponse();}
+      if(!this.pending.some(p=>this.sameIntent(p,pending)))throw new StaleResponse();
       // A rejection describes this attempt, not every retry sharing its key.
       if(e instanceof ApiError&&[400,401,403,404,409,413,422,429].includes(e.status)&&e.code!=='INVALID_RESPONSE'){
         pending.state='UNKNOWN';this.changed();
@@ -142,34 +157,34 @@ export class Client {
       }
       // Another response/receipt may already have proved COMMITTED, or a sensitive
       // intent may have been deliberately cleared by leaving its owner session.
-      if(this.pending.some(p=>p.key===pending.key)){pending.state='UNKNOWN';this.changed();}
+      if(this.pending.some(p=>this.sameIntent(p,pending))){pending.state='UNKNOWN';this.changed();}
       if(!this.owned(generation,pending.actorId))throw new StaleResponse();throw new UnknownSubmission(pending.key);
     }
   }
-  private receiptResult<T>(key:string,receipt:unknown):T {
-    if(!isRecord(receipt)||receipt.status!=='COMMITTED'||!isRecord(receipt.result)||!isRecord(receipt.result.receipt)||receipt.result.receipt.key!==key||receipt.result.receipt.status!=='COMMITTED')throw new UnknownSubmission(key);
-    this.remove(key);return receipt.result as T;
+  private receiptResult<T>(pending:Pending,receipt:unknown):T {
+    if(!isRecord(receipt)||receipt.status!=='COMMITTED'||!isRecord(receipt.result)||!isRecord(receipt.result.receipt)||receipt.result.receipt.key!==pending.key||receipt.result.receipt.status!=='COMMITTED')throw new UnknownSubmission(pending.key);
+    this.remove(pending);return receipt.result as T;
   }
   async stop<T=Record<string,unknown>>(key:string):Promise<T>{
     this.guardCookie();
     this.refreshPending();
-    const pending=this.pending.find(p=>p.key===key);
+    const pending=this.pending.find(p=>p.key===key&&p.actorId===this.session?.actor.id);
     if(!pending||this.session?.actor.id!==pending.actorId)throw new ApiError(403,'ACTOR_CHANGED','只能以提交时的同一账号确认原意图。');
     const generation=this.generation;
     try{
       const response=await this.transport({method:'POST',path:'/api/v1/receipts/'+encodeURIComponent(key)+'/stop',headers:this.headers()});
       if(!this.owned(generation,pending.actorId))throw new StaleResponse();
-      return this.receiptResult<T>(key,unwrap(response));
+      return this.receiptResult<T>(pending,unwrap(response));
     }catch(e){if(!this.owned(generation,pending.actorId))throw new StaleResponse();this.cookieOwnerError(e,generation);if(e instanceof ApiError&&e.status===401)this.unauthorize(generation);throw e;}
   }
   async recover<T=Record<string,unknown>>(key:string,replay=false):Promise<T|null>{
     this.refreshPending();
-    const pending=this.pending.find(p=>p.key===key);
+    const pending=this.pending.find(p=>p.key===key&&p.actorId===this.session?.actor.id);
     if(!pending||this.session?.actor.id!==pending.actorId)throw new ApiError(403,'ACTOR_CHANGED','只能用提交时的同一账号恢复。');
     if(replay)return this.send<T>(pending);
     try{
       const receipt=await this.get<{status:string;result:T}>('/api/v1/receipts/'+encodeURIComponent(key));
-      return this.receiptResult<T>(key,receipt);
+      return this.receiptResult<T>(pending,receipt);
     }catch(e){if(e instanceof ApiError&&e.status===404)return null;throw e;}
   }
 }
