@@ -1,8 +1,11 @@
-"""M7 entry v1; not whole-stage coverage or installed/device proof."""
+"""M7 entry and independent oracle; not whole-stage or installed/device proof."""
 M7_CASES={"ProtocolProjectionIT":[
     "duplicateAndEscapedObjectKeysNeverChooseAnImplicitWinner",
     "trailingDocumentsRejectWithoutEffectsAndWhitespaceRemainsValid",
     "inboxPagingFindsOldUnreadResultsWithoutForeignRowsOrFalseCompleteness",
+],"preparation.AllocationOracleTest":[
+    "allFourByFourGraphsAgreeWithIndependentFullPreferenceOracle",
+    "asymmetricRanksAndReorderedContainersAgreeWithIndependentOracle",
 ]}
 M7_MEASURES={
     M7_CASES["ProtocolProjectionIT"][0]:{"favorites":0,"receipts":0,"rejected":3},

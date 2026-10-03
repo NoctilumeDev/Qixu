@@ -153,3 +153,7 @@ M6证据在PR#15受保护合入main@4832eb3，运行资格仍绑定5ca0b5e，文
 ## 2026-10-03 · D020 · M7第一段原败与限定复验
 
 4832eb3 exact-main公开CI37095588341三项success，M6文档投影已读回。M7新入口原FAIL击中重复JSON、消息截断、主体同名key和存储异常；采集遗漏单独保留PENDING并版本化修订。修复4dbf364的新native145与frontend37各获新Core PASS，原标准和原Bundle不改。范围见[M7入口事实](acceptance/m7-entry.md)，实际页面与组合/恢复仍待验，M7未退出，不启动M8。
+
+## 2026-10-03 · D021 · M7损坏恢复记录与独立分配判定
+
+PR#16按严格三项门禁合入main@52c520c，exact-main CI37096786155三项success；M7运行资格不由CI自动升级。第二段先冻结合同，再采4c76123首败：45例中新增8例有7败，独立65,536图/2,048 rank样本算法控制通过。原FAIL/PASS完整保留，最小修复a3245e1按同一Plan复验frontend45/native147均PASS。事实见[第二段记录](acceptance/m7-metadata-oracle.md)；尚待受保护合入和新坐标证据，真实浏览器、物理恢复、其他组合仍未完成，M8/M10顺序不变。

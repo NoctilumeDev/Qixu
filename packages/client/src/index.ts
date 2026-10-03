@@ -4,7 +4,7 @@ export interface HttpRequest { method:string; path:string; headers:Record<string
 export interface HttpResponse { status:number; body:unknown; discard?:()=>void }
 export type Transport = (request:HttpRequest)=>Promise<HttpResponse>;
 export interface Storage { get(key:string):string|null; set(key:string,value:string):void; remove(key:string):void; keys():string[] }
-export interface Pending { key:string; actorId:number; path:string; body:unknown; createdAt:string; sensitive:boolean; replayable:boolean; state:'SENDING'|'UNKNOWN' }
+export interface Pending { key:string; actorId:number; path:string; body:unknown; createdAt:string; sensitive:boolean; replayable:boolean; recoveryOnly?:boolean; state:'SENDING'|'UNKNOWN' }
 export class ApiError extends Error {
   status:number; code:string; requestId:string;
   constructor(status:number,code:string,message:string,requestId='') {super(message);this.name='ApiError';this.status=status;this.code=code;this.requestId=requestId;}
@@ -31,18 +31,30 @@ export class Client {
     try{this.refreshPending();}catch{/* The document can render; mutations must retry the same storage checks. */}
   }
   private storageError(){return new ApiError(503,'LOCAL_STORAGE_UNAVAILABLE','本地恢复凭据暂不可读写，请检查存储后再确认原请求；不要重新创建提交。');}
+  private metadataError(){return new ApiError(503,'LOCAL_RECOVERY_METADATA_INVALID','本地恢复记录不完整且无法确认原坐标；已停止新提交，请保留记录并检查恢复存储。');}
   private initializeStorage(){
     const storage=this.storage;
     // One immutable record per intent. State is intentionally UNKNOWN after reload.
     if(storage.get('qixu.pending-format')!=='per-intent-v1'){
-      const bytes=storage.get('qixu.pending')||'[]';let rows:unknown;
-      try{rows=JSON.parse(bytes);}catch{rows=[];}
-      if(Array.isArray(rows))for(const raw of rows){const p=this.decode(raw);if(p&&!storage.get(this.intentKey(p)))storage.set(this.intentKey(p),this.intentBytes(p));}
+      const bytes=storage.get('qixu.pending')??'[]';let rows:unknown;
+      try{rows=JSON.parse(bytes);}catch{throw this.metadataError();}
+      if(!Array.isArray(rows))throw this.metadataError();
+      const records=new Map<string,string>();
+      // Validate the whole legacy collection before changing marker or bytes.
+      for(const raw of rows){const p=this.decode(raw);if(!p)throw this.metadataError();const name=this.intentKey(p),value=this.intentBytes(p);if(records.has(name)&&records.get(name)!==value)throw this.metadataError();records.set(name,value);}
+      for(const [name,value] of records){const existing=storage.get(name);if(existing!==null&&existing!==value)throw this.metadataError();}
+      for(const [name,value] of records)if(storage.get(name)===null)storage.set(name,value);
       storage.set('qixu.pending-format','per-intent-v1');storage.remove('qixu.pending');
     }
     this.storageInitialized=true;
   }
   private intentKey(p:Pick<Pending,'actorId'|'key'>){return 'qixu.intent.v1.'+p.actorId+'.'+p.key;}
+  private coordinate(name:string):Pick<Pending,'actorId'|'key'>|null{
+    const match=/^qixu\.intent\.v1\.([1-9][0-9]*)\.([A-Za-z0-9_-]{8,80})$/.exec(name);
+    if(!match||!Number.isSafeInteger(Number(match[1])))return null;
+    return {actorId:Number(match[1]),key:match[2]};
+  }
+  private recoveryRecord(coordinate:Pick<Pending,'actorId'|'key'>):Pending{return {...coordinate,path:'',body:undefined,createdAt:'',sensitive:true,replayable:false,recoveryOnly:true,state:'UNKNOWN'};}
   private decode(raw:unknown):Pending|null{
     if(!isRecord(raw)||typeof raw.key!=='string'||!/^[A-Za-z0-9_-]{8,80}$/.test(raw.key)||!Number.isSafeInteger(raw.actorId)||Number(raw.actorId)<=0||typeof raw.path!=='string'||!/^\/api\/v1\/[A-Za-z0-9/_-]+$/.test(raw.path)||typeof raw.createdAt!=='string'||!Number.isFinite(Date.parse(raw.createdAt))||typeof raw.sensitive!=='boolean'||(!raw.sensitive&&!Object.prototype.hasOwnProperty.call(raw,'body')))return null;
     return {key:raw.key,actorId:Number(raw.actorId),path:raw.path,createdAt:raw.createdAt,sensitive:raw.sensitive,body:raw.sensitive?undefined:raw.body,replayable:!raw.sensitive,state:'UNKNOWN'};
@@ -53,11 +65,13 @@ export class Client {
       if(!this.storageInitialized)this.initializeStorage();
       const previous=new Map(this.pending.map(p=>[this.intentKey(p),p])),rows:Pending[]=[];
       for(const name of this.storage.keys().filter(k=>k.startsWith('qixu.intent.v1.'))){
-        const bytes=this.storage.get(name)||'null';
-        try{const raw=this.decode(JSON.parse(bytes));if(raw&&this.intentKey(raw)===name)rows.push(previous.get(name)||raw);}catch{/* Corrupt bytes never act as a receipt or request. */}
+        const coordinate=this.coordinate(name);if(!coordinate)throw this.metadataError();
+        const bytes=this.storage.get(name);let raw:Pending|null=null;
+        try{raw=this.decode(JSON.parse(bytes??'null'));}catch{/* Retain the address; never replay corrupt bytes. */}
+        rows.push(raw&&this.intentKey(raw)===name?(previous.get(name)||raw):this.recoveryRecord(coordinate));
       }
       this.pending=rows;
-    }catch{throw this.storageError();}
+    }catch(e){if(e instanceof ApiError&&e.code==='LOCAL_RECOVERY_METADATA_INVALID')throw e;throw this.storageError();}
     this.changed();
   }
   subscribe(callback:()=>void){this.listeners.add(callback);return()=>this.listeners.delete(callback);}
@@ -114,11 +128,24 @@ export class Client {
     const key=this.key();if(!/^[A-Za-z0-9_-]{8,80}$/.test(key)||this.pending.some(p=>p.actorId===this.session?.actor.id&&p.key===key))throw new ApiError(422,'LOCAL_KEY_INVALID','无法创建唯一有效请求标识，请重新加载。');
     if(!/^\/api\/v1\/[A-Za-z0-9/_-]+$/.test(path))throw new ApiError(422,'LOCAL_PATH_INVALID','请求目标不正确。');
     const pending:Pending={key,actorId:this.session.actor.id,path,body:safeClone(body),createdAt:new Date().toISOString(),sensitive:options.sensitive||false,replayable:true,state:'SENDING'};
-    try{this.storage.set(this.intentKey(pending),this.intentBytes(pending));}catch{throw new ApiError(503,'LOCAL_STORAGE_UNAVAILABLE','未能保存恢复凭据，请检查本地存储后再提交；本次尚未发送。');}
+    try{this.storage.set(this.intentKey(pending),this.intentBytes(pending));}catch{
+      // A throwing adapter may already have persisted the record. Never send,
+      // but expose its original address immediately instead of minting a new key.
+      try{this.refreshPending();}catch{if(!this.pending.some(p=>this.sameIntent(p,pending)))this.pending.push(this.recoveryRecord(pending));this.changed();}
+      throw new ApiError(503,'LOCAL_STORAGE_UNAVAILABLE','保存恢复凭据时发生异常，本次尚未发送；请先查询或安全停止原请求，不要创建新提交。');
+    }
     this.pending.push(pending);this.changed();return this.send<T>(pending);
   }
   private sameIntent(a:Pending,b:Pick<Pending,'actorId'|'key'>){return a.actorId===b.actorId&&a.key===b.key;}
-  private remove(pending:Pending){try{this.storage.remove(this.intentKey(pending));}catch{throw this.storageError();}this.pending=this.pending.filter(p=>!this.sameIntent(p,pending));this.changed();}
+  private remove(pending:Pending){
+    // Only reached after a matching server receipt. Local absence is cleanup
+    // evidence, never proof that the business mutation did not happen.
+    try{this.storage.remove(this.intentKey(pending));}catch{
+      let remains:boolean;try{remains=this.storage.get(this.intentKey(pending))!==null;}catch{throw this.storageError();}
+      if(remains)throw this.storageError();
+    }
+    this.pending=this.pending.filter(p=>!this.sameIntent(p,pending));this.changed();
+  }
   private async send<T>(pending:Pending):Promise<T>{
     const generation=this.generation;
     const previouslyUnknown=pending.state==='UNKNOWN';
