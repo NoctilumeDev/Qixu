@@ -156,6 +156,20 @@
       "verdict": "FAIL",
       "path": "artifacts/m7/m7-database-54e73228d8e14232860b3d1290f43463",
       "manifest_sha256": "f7c248314ed952e265350b6004c7ff14fd107c0217e145982e96488e7c3a7322"
+    },
+    {
+      "identity": "m7-c77b660b7d2e48628e4befd3f6abb89e",
+      "source_sha": "dbdb83b399a89d091441609099077271f5e2fea4",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-c77b660b7d2e48628e4befd3f6abb89e",
+      "manifest_sha256": "772ce7331e5a6f047dca76ae2987e12334522adb47496aba8312be1616b8a452"
+    },
+    {
+      "identity": "m7-database-0997e88828a54be9aef3d749cc7f66f5",
+      "source_sha": "dbdb83b399a89d091441609099077271f5e2fea4",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-database-0997e88828a54be9aef3d749cc7f66f5",
+      "manifest_sha256": "84f101091019b775cbf75e9b4fade845b794968ba3c0d8d86e90adb143ecdcb6"
     }
   ],
   "not_proven": [

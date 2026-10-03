@@ -229,4 +229,4 @@ ec31a60的fresh native162与restore0.4/Plan4 [PASS22](../artifacts/m7/m7-restore
 [Hikari Rapid Recovery](https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery)提示取连接超时不约束已借出的连接。当前只看到pool connection-timeout=3000，尚未实际验证长SQL/借出连接故障预算。登记F15相邻trace：固定驱动/池版本、独占数据库或loopback故障代理，先观察当前默认预算，再验证明确网络/锁预算及UNKNOWN/隔离；不对共享3306注入故障。触发为借出连接后TCP/SQL停滞，影响锁持有/任务截止与服务恢复；缺实际故障证据，归属期序维护者，M7范围内继续验证。
 # M7 F15 · 首个实际锁预算反例与网络前提缺口
 
-正常前提：固定f46cf77 fresh native166及新owned MySQL/relay；原合同15/35秒。最小反例：持floor100 guard，HTTP短约真实等待，15秒后仍无结果；实际app lock_wait=50，guard期无副作用，释放/同键最终唯一。违反锁预算；原database0.1 FAIL23保留，尚未修。网络5.282秒503只支持相邻连接存活检查，借出业务查询NOT_PROVEN；按合同v2/观察器0.2增加packet级目标前提，不放宽原断言。guard后置quit命令错误独立归类并仅修夹具。完整坐标见[数据库事实](acceptance/m7-database.md)。
+正常前提：固定f46cf77 fresh native166及新owned MySQL/relay；原合同15/35秒。最小反例：持floor100 guard，HTTP短约真实等待，15秒后仍无结果；实际app lock_wait=50，guard期无副作用，释放/同键最终唯一。违反锁预算；原database0.1 FAIL24保留，尚未修。网络5.282秒503只支持相邻连接存活检查，借出业务查询NOT_PROVEN；按合同v2/观察器0.2增加packet级目标前提，不放宽原断言。guard后置quit命令错误独立归类并仅修夹具。完整坐标见[数据库事实](acceptance/m7-database.md)。

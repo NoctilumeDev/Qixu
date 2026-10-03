@@ -30,4 +30,6 @@
 
 ## 观察前提修订，先于0.2执行
 
-0.1原FAIL不改：真实锁预算被击穿，但网络5秒响应尚未证明借出SQL。0.2/Plan2保留原23条/15与35秒标准，增加`target_query_hit`前提。仅owned中继URL设置sslMode=DISABLED/useServerPrepStmts=false便于识别MySQL packet边界；不改产品默认TLS策略。建立连接、ping、其他语句正常转发；在已存在连接上识别COM_QUERY的auth_session只读查询，先标记该连接，再丢其server回应。不保存查询文本/凭据到公开事实。明确target hit与请求/被丢字节；无命中ERROR而非PASS。guard事务释放后EOF正常退出；非零退出是夹具错误。当前阶段只修观察前提，不修业务预算。
+0.1原FAIL不改：真实锁预算被击穿，但网络5秒响应尚未证明借出SQL。0.2/Plan2保留原24条/15与35秒标准，增加`target_query_hit`前提。仅owned中继URL设置sslMode=DISABLED/useServerPrepStmts=false便于识别MySQL packet边界；不改产品默认TLS策略。建立连接、ping、其他语句正常转发；在已存在连接上识别COM_QUERY的auth_session只读查询，先标记该连接，再丢其server回应。不保存查询文本/凭据到公开事实。明确target hit与请求/被丢字节；无命中ERROR而非PASS。guard事务释放后EOF正常退出；非零退出是夹具错误。当前阶段只修观察前提，不修业务预算。
+
+0.2未达health的RSA交换前提错误保留PENDING/ERROR。0.3/Plan3仅绑定本轮MySQL自动生成public_key.pem（私有绝对路径、公开公钥hash/owned坐标），仍拒绝任意PublicKeyRetrieval。25条断言不变，先正常就绪再注入。本段还未改变产品代码。
