@@ -1,41 +1,35 @@
 # M7 · 失败机制覆盖账册
 
-当前状态：IN_PROGRESS，执行入口为[版本1合同](contracts/m7-execution-entry.md)。下表为攻击入口，不是执行结果；M5施工见证不得自动迁移为M7固定候选资格。各次采集逐项绑定候选SHA、迁移摘要、合同版本、环境、调度、独立oracle与证据路径。
+当前为**IN_PROGRESS，固定候选限定复验**。各项按失败机制收束；下表的LIMITED不是整个机制、生产环境或全工程PASS。新源运行坐标在[M7页面](acceptance/m7-browser.md)及原[索引](../artifacts/m7/index.json)，首次失败不可覆盖。M8只在M7退出后开始，M10精修保留。
 
-| 机制ID | 声明与代表性trace | 当前状态 | 判定入口 |
-| --- | --- | --- | --- |
-| F01 人工稀缺 | Q/N最小反例、不对称硬条件、并列偏好与容器重排；独立穷举匹配人数K | IN_PROGRESS：小图/完整个人偏好已判定，整批组合待验 | 分配合同、公开包独立复算与真实正式行 |
-| F02 截止与版本漂移 | 两次修改锁等待×截止×响应丢失×冻结；唯一冻结版本与接收时间 | PLANNED | 时间合同、受控Clock/真实MySQL锁与申请版本 |
-| F03 来源/冻结现实变化 | 资源冻结后安全封闭×随机源失败×公布期限；禁止暗换池或种子 | PLANNED | 冻结摘要、来源原文、异常终态与通知 |
-| F04 部分正式世界 | 计算中断/候选持久/原子发布前后停止×任务重复；正式结果整体可见 | PLANNED | 独占故障实例、恢复坐标、SQL正式行/权足迹 |
-| F05 合法状态机组合双权 | 普通兜底×长期递补×第三人短约×层级封闭；确认原子切换 | PLANNED | 原始SQL半开区间与祖先独立归约 |
-| F06 跨批次/来源重叠 | 两个合法重叠批次、替代结束×另一个维护、相邻时间边界 | PLANNED | 用户/空间时间不变量与各来源足迹 |
-| F07 观察冒充授权 | 两老师预览×范围撤销×影响变化×活动改场地；提交时裁决 | PLANNED | 当时身份/范围、数据库锁、拒绝无副作用 |
-| F08 未知意图丢失/复活 | commit后丢响应×查询早于commit×原拒绝/并发重试×多文档存储 | IN_PROGRESS：模型元数据首败已修，真实组合待验 | 原请求键、原子停止屏障、真实回执与客户端所有者 |
-| F09 旧主体/执行者迟到 | A写/读后切B×晚成功/401/旧Cookie×私有原图；不漂移主体 | IN_PROGRESS：同名key模型复验，浏览器待验 | 实际页面当前主体、服务器权限、本地意图元数据 |
-| F10 通知与事实混淆 | 分配/未分配全员结果×通知暂停/失败×恢复；投递不冒充已读 | PLANNED | 逐人结果集合与持久站内通知独立比对 |
-| F11 报告/核实/修复混淆 | 工作完成×补充/重开×其他限制×原图；只解除自己的来源 | PLANNED | 报告历史、设施事实、维修复验、限制与隐私权限 |
-| F12 恢复库与外部世界矛盾 | 已交付通知后恢复旧库×旧键重放×任务启动；未对账不得重发/重分 | IN_PROGRESS：原首FAIL已修；T0及纯缺账册22项复验，主线166/恢复22，真实事务4项已验证；物理IO边界待验 | generation、独立交付账册、NOT_RECONCILED入口 |
-| F13 接入不可用/标识碰撞 | provider同名ID×租约过期×身份服务不可用；写不能继承旧授权 | PLANNED | 集成合同、真实适配器故障、身份命名空间 |
-| F14 截断/陈旧投影伪完整 | 旧读覆盖新写×筛选分页×本人历史申请×公开包；不漏/不泄露 | IN_PROGRESS：151消息HTTP集合已判定，实际页待验 | 主库事实、分页集合、页面状态与匿名包 |
-| F15 协议/数据库/运维边界 | 时间类型/重复字段/大小×重试预算；fresh迁移、demo关闭、清理精确归属 | IN_PROGRESS：重复JSON/部分存储已修，相邻协议待验 | 固定协议、约束、实际运行与owned资源账册 |
+## 当前固定候选的代表性见证
 
-## 每项执行记录模板
+修复候选`6ae43a4ff112b6984fa17f68d1fab6133580e9d6`的新native0.19/Plan7包含136项真实HTTP/MySQL集成、37项单元见证。分配/时钟/外部故障用受控依赖，不假称全部外部真实故障；65,536个小图与2,048个rank样本由独立穷举oracle比较完整个人偏好。每个原Bundle保存exact SHA、迁移/合同摘要、请求和原始SQL不变量，不能将历史别的源升级为当前资格。
 
-机制ID、候选SHA、合同版本、迁移摘要、依赖/时钟/隔离与账号范围；前提；最小trace及调度；独立oracle；首次原文及证据摘要；分类；修复坐标；原trace和邻近组合复验；最终已验证/正确拒绝/FAIL/环境阻断/NOT_PROVEN。同机制多个排列列子ID，不用重复项堆测试数。
+| 机制 | 代表性trace与独立判定入口 | 分类及保留边界 |
+| --- | --- | --- |
+| F01 人工稀缺 | AllocationOracleTest完整小图/rank枚举；PreparationIT residualPromotionsCannotRecreateArtificialScarcity；最大匹配与正式行 | LIMITED_ALGORITHM/REAL_BATCH；不是大规模真实100/110批次或福利最优，U05 |
+| F02 截止与版本漂移 | PreparationIT immutableVersionsFreezeExactWinnerAndRejectOfflineOverwrite、queuedFreezeRechecksDeadlineAndDoesNotExposeLateInput、publicationCrossingDeadlineHasNoPartialRights；BookingIT锁等待/确认丢回应 | LIMITED_CONTROLLED_CLOCK_MYSQL；NTP跳变及全部物理调度未证明，U07 |
+| F03 来源/冻结现实变化 | sourceUnavailableAndResultDeadlineCannotSwitchEntropy、resourceChangeInvalidatesEntireFrozenInput；摘要/结果状态/逐人通知原SQL | VERIFIED_DECLARED_REFUSALS；受控源故障不迁移成公共源所有故障策略 |
+| F04 部分正式世界 | publicationFaultRetainsCandidateButRollsBackWholeResult、publicationCrossingDeadlineHasNoPartialRights；真实事务中异常与COMMIT后回应丢失隔离/恢复 | LIMITED_TRANSACTION_PHYSICAL_COMMIT；发布每个指令点kill不穷举，U07 |
+| F05 合法状态机组合双权 | fallbackUpgradeIsAtomicAndDuplicateConfirmationReturnsReceipt、upgradeWriteFaultAndDeadlineNeverReleaseOldRight；SpaceBlocksIT三方临时位竞争/复合来源/失败通知 | LIMITED_REAL_MYSQL；独立原始半开区间与祖先归约，不含多节点，U03 |
+| F06 跨批次/来源重叠 | crossBatchConcurrentApplicationsHaveOneIntervalFact、concurrentExitAndConfirmCannotResurrectAndCycleCloses；维修只解除自己的来源与相邻时间控制 | VERIFIED_DECLARED_COMPETITIONS；不声称任何未来业务状态机组合都成立 |
+| F07 观察冒充授权 | queued权限范围撤销、旧预览影响变更、两教师并发审批、活动换地/取消与层级封闭；拒绝时SQL/回执/通知无新效果 | VERIFIED_DECLARED_REFUSALS；管理员界面不是绕过事务的资格 |
+| F08 未知意图丢失/复活 | IntentRecoveryIT原子停止/在途404/同键重放；45客户端恢复模型；实际收藏commit→浏览器回应丢失→重载原键→查询恢复、SQL唯一 | LIMITED_MODEL_REAL_BROWSER；首败修复留存；真实存储策略/晚Cookie未证明，U02 |
+| F09 旧主体/执行者迟到 | actor+key碰撞与迟到模型；两管理文档换号旧页停止/重载新主体；学生新账号仅自己的5条 | LIMITED_MODEL_REAL_BROWSER；不将正常Cookie换号升级为所有晚Set-Cookie调度，U02 |
+| F10 通知与事实混淆 | allLosingApplicantsReceivePersistentResultsAndStableWaitlist；多次第二通知故障全事务回滚、outbox去重；151条投影/已读SQL；COMMIT恢复独立world不改 | LIMITED_PERSISTENT_INBOX；已投递不等于已读，微信/现场可达未证明，U08 |
+| F11 报告/核实/修复混淆 | FeedbackIT核实权限撤销/第二事实失败/私有原图；SpaceBlocksIT WORK_DONE→复验失败→重做、另一来源保留、第二恢复通知失败回滚 | VERIFIED_DECLARED_SOFTWARE_FACTS；保留原报告历史，不证明现实修好，U08 |
+| F12 恢复库与外部世界矛盾 | 独立restore22原T0/完整T1/只缺账册；RecoveryTransactionsIT四个真实事务与journal/Fence15模型；物理COMMIT29真实唯一效果、实时NOT_RECONCILED、同库恢复原回执 | LIMITED_SINGLE_INSTANCE_LEDGER；旧主线与新候选资格分别注明，不含全机回滚/真掉电，U03/U04 |
+| F13 接入不可用/标识碰撞 | ExternalIdentityIT12：issuer同名、租约锁等待过期、撤绑、不可用、已提交回执；M6真实暗室当前身份为历史独立资格 | VERIFIED_DECLARED_ADAPTER_BOUNDARY；不是校园SSO或所有提供方长期故障，U06 |
+| F14 截断/陈旧投影伪完整 | ProtocolProjectionIT151本人/5他人HTTP集合；AdminProjectionIT8范围/个人历史；真实两端第8页/已读留页、地图筛选返回；管理端首FAIL原包 | VERIFIED_DECLARED_REAL_PAGE；原FAIL保留、原14trace复验PASS；微信设备U01 |
+| F15 协议/数据库/运维边界 | 三种重复/转义JSON、尾随/空白控制；DatabaseBudgetsTest4有效属性；真实lock/socket25预算原负向与恢复；COMMIT29错误信封原FAIL/修复；fresh迁移与owned清理 | LIMITED_DECLARED_PROTOCOL_SINGLE_HOST；保留源坐标，不含生产总SLO/多实例/所有格式，U03/U05 |
 
-## 未知与重新进入
+## 首败与最小修复
 
-第一段执行见[M7入口事实](acceptance/m7-entry.md)：协议重复字段/消息截断/跨主体同名key/存储异常有首败及4dbf364限定复验；F08/F09/F14/F15仍IN_PROGRESS，不能把局部用例扩成整个机制已通过。实际页面翻页和浏览器存储尚待安装观察。F10的151消息枚举仅补投影见证，不代替通知失败与恢复组合。
+协议重复字段、151消息截断、同主体key清理错误、存储故障与损坏元数据，见[入口](acceptance/m7-entry.md)、[元数据](acceptance/m7-metadata-oracle.md)。备份T0与commit语义、budget负向、观察器前提，见[恢复](acceptance/m7-restore.md)、[数据库](acceptance/m7-database.md)。真实COMMIT首500与管理消息无分页分别保存原FAIL；修复先版本化最小边界，旧断言不改。纯采集遗漏/启动/日志问题保存PENDING/ERROR，不能算作产品修复。
 
-第二段执行见[恢复元数据/独立算法事实](acceptance/m7-metadata-oracle.md)：损坏/主体名不匹配、存储部分效果已有原FAIL与a3245e1同标准复验；65,536个小图及2,048个rank样本的独立完整分配枚举通过。模型范围不代替实际页面或物理恢复，M7仍未退出。
+## 有限收束与未知
 
-F12受保护main@3b445b9取得新native166/restore22、exact-main CI与远端读回，限定资格见[恢复记录](acceptance/m7-restore.md)。原候选过程：ec31a60的新native162与restore0.4/Plan4的22项PASS支持原T0负向与缺账册单故障对照；8337fe4进一步取得原生166/恢复22与真实事务4项对照；物理IO及多节点等仍列重入。
+未知见[M7未知账册](m7-unknowns.md)：每项有触发、不变量/影响、缺证据、环境、具体重入和维护者/重开条件。没有PLANNED被自动改成PASS；没有把已观察核心失败藏进未知。现有同机制排列按代表性调度收束，新机制或独立角色反例可以最小重开。
 
-相邻待攻击trace：嵌套重复字段与非法UTF8；旧通知在页面第8页可见且已读后保留页码；独立外部账册与已发通知后的恢复库；真实整批及组合权利。它们尚未执行，跟进归属期序维护者，不能预填已修或接受边界。
-
-F15数据库预算先采真实首FAIL，再修固定driver/pool/session配置；e704b10同source的新native170/restore22/database25均PASS，见[原包与分类](acceptance/m7-database.md)。锁等待10.109秒及已有业务COM_QUERY回应丢失30.047秒是实际观察。仅候选限定复验；COMMIT回包丢失仍是独立待攻击trace，不用只读故障替代。
-
-每个未知项必须补齐：触发条件、可能受影响不变量、当前证据缺口、支持该实验需要的环境、重新进入的具体合同/命令/trace入口、归属与重开条件。初始待评估项为长时间网络分区、真实主从切换、多节点裁决、第三方身份长期不可用、生产容量、微信真机；目前均PLANNED，不能预填PASS，也不能把尚未攻击自动当成接受边界。
-
-M7结束前将上述待评估项正式分类，保存固定候选下的已验证/已击穿修复/正确拒绝/未知清单；给M8独立测试与产品经理从原证据重新检验。最终页面视觉问题按M10合同处理，可用性和事实缺陷不延后。
+最终退出还需当前修复的原真实页面通过、固定候选/公开保护/源资格对齐、没有范围内未处置核心错误。M7结束只回答攻击、击穿、修复、未知，不宣布零Bug；将坐标交M8两名独立角色重新挑战。

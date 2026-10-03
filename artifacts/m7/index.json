@@ -233,6 +233,125 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-database-b615ce5733ff4d38a6ce222157f9c5b3",
       "manifest_sha256": "d4c1815930a96b804f29afd39d1f6dca6efb0d62a005042952f68f3c3394c895"
+    },
+    {
+      "identity": "m7-805001f3b21349b19ef4cf524113423f",
+      "source_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-805001f3b21349b19ef4cf524113423f",
+      "manifest_sha256": "89f845437d932e72f97d0b79b4a7b5950eb8a72fa009736262168f6cf776b7a6"
+    },
+    {
+      "identity": "m7-restore-9e75cadba74749da8f8837933ce6d696",
+      "source_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-9e75cadba74749da8f8837933ce6d696",
+      "manifest_sha256": "f3fb50ce7e1d0f884e448e9d50bfa7d5b43a6c3e2c4accb727c912f2b751f745"
+    },
+    {
+      "identity": "m7-database-f95a73c66a4b4edcab194455a2ea3ea7",
+      "source_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-database-f95a73c66a4b4edcab194455a2ea3ea7",
+      "manifest_sha256": "c3b97185657009c527a6e3217b0e6c305722e7f432c3bd58820846175972d5fe"
+    },
+    {
+      "identity": "m7-b425173a96704ea28c7c9e4c98188484",
+      "source_sha": "978983a079c0f638d90a645d28d5f909210f21e8",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-b425173a96704ea28c7c9e4c98188484",
+      "manifest_sha256": "fb260bf54a159573732cd0a3e6283a099fd59cd2609277531e6af248886f8f7d"
+    },
+    {
+      "identity": "m7-commit-35238faf86214af08fc9df4f516ca4d2",
+      "source_sha": "978983a079c0f638d90a645d28d5f909210f21e8",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-commit-35238faf86214af08fc9df4f516ca4d2",
+      "manifest_sha256": "7f80f12308625fff9bc845d897dbccc6fa2fd7687f84bce32842b544b2e6a2a4"
+    },
+    {
+      "identity": "m7-83e22394d2764d9786b216d893cf702e",
+      "source_sha": "18cba8543f1ed7abfec49d4833a37f4251615f9a",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-83e22394d2764d9786b216d893cf702e",
+      "manifest_sha256": "e0f7e3415abdb39b20f4fbca0a6aee5689a76e95959e5402e562905106b0a8ef"
+    },
+    {
+      "identity": "m7-commit-ea058a4436a2487ea7dfb27ce76ef7c5",
+      "source_sha": "18cba8543f1ed7abfec49d4833a37f4251615f9a",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-commit-ea058a4436a2487ea7dfb27ce76ef7c5",
+      "manifest_sha256": "3c76878bd837d84a3bf96d2c77b2bcc2e43492b9d67826e61210b5f96f031aba"
+    },
+    {
+      "identity": "m7-ef239fee08b84a95871192a34ffd3666",
+      "source_sha": "3dae690f0cf4baea3f3a5b2fc647c71012c67c6d",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-ef239fee08b84a95871192a34ffd3666",
+      "manifest_sha256": "27ddacc95017f9d9e0b130f2067a430200849157aad7bd8cf76fdce369b04bbc"
+    },
+    {
+      "identity": "m7-frontend-b07725a265764dbc97ff294aed78f7d5",
+      "source_sha": "3dae690f0cf4baea3f3a5b2fc647c71012c67c6d",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-b07725a265764dbc97ff294aed78f7d5",
+      "manifest_sha256": "225318709b7681d9b8085f839f45898594fac3ddf26c0410c6ae2210fdf6ada2"
+    },
+    {
+      "identity": "m7-browser-238ae91b8fc040b8b6f57ecc6a50ba01",
+      "source_sha": "3dae690f0cf4baea3f3a5b2fc647c71012c67c6d",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-browser-238ae91b8fc040b8b6f57ecc6a50ba01",
+      "manifest_sha256": "fcb05c596cff661ecd59f6b7ac5a3ac592971114cab1ed2c2bee6480b9d06e1e"
+    },
+    {
+      "identity": "m7-22ca9863e03a45f49fb95bd9ec95e337",
+      "source_sha": "7619d8f3fc001950b0909a1b2f806913fd034365",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-22ca9863e03a45f49fb95bd9ec95e337",
+      "manifest_sha256": "bb41cca81cddfd7043be0b43fb59c7e3593a322c1cbf76ac9c21bb5190949fa3"
+    },
+    {
+      "identity": "m7-frontend-10b8e5fe0da34648a437affb7ad6d4a7",
+      "source_sha": "7619d8f3fc001950b0909a1b2f806913fd034365",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-10b8e5fe0da34648a437affb7ad6d4a7",
+      "manifest_sha256": "99481b4e749b4ec5d0b7eac15ae5da727408a771cbbe5bb21cf304c6be1a522a"
+    },
+    {
+      "identity": "m7-browser-a30741a1f205491f937528762a22f102",
+      "source_sha": "7619d8f3fc001950b0909a1b2f806913fd034365",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-browser-a30741a1f205491f937528762a22f102",
+      "manifest_sha256": "9872fd2a231b457717887409c83bb9f29b276c4295e30cbe6cc09328535ebf98"
+    },
+    {
+      "identity": "m7-a3a62b4fc3224eb8b68b60212802353e",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-a3a62b4fc3224eb8b68b60212802353e",
+      "manifest_sha256": "e8f42f8426c331227809d19f233211bd591fc286e350227feb7799e76e18e5a8"
+    },
+    {
+      "identity": "m7-frontend-166c3c0255244fa7a19f8dd48990f570",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-166c3c0255244fa7a19f8dd48990f570",
+      "manifest_sha256": "0a87593b0879ec3be55990ef83fa0b92a7239238d0c9c9f3fbb8b5ebb11d6385"
+    },
+    {
+      "identity": "m7-commit-35fa2caf31154f0591afe2ae75b637f0",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-commit-35fa2caf31154f0591afe2ae75b637f0",
+      "manifest_sha256": "844731c0b5ba961ff03cd218f0312059c5d63686d4bfd1a08fb77dc39d4533cb"
+    },
+    {
+      "identity": "m7-browser-7559f46d192f47cf8f34ebbc0c26feda",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-browser-7559f46d192f47cf8f34ebbc0c26feda",
+      "manifest_sha256": "225ede18bb21f1cbe91cb102d5f3ff5b51b361f431741326cec85d5d0ad2506b"
     }
   ],
   "not_proven": [
@@ -249,8 +368,10 @@
   "restore_repair_source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
   "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010",
   "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
-  "restore_qualified_main_sha": "3b445b9fd73b88aeaa4d5bab6e6264cd72485766",
-  "restore_exact_main_ci": "37101177576",
+  "restore_qualified_main_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+  "restore_exact_main_ci": "37104669176",
   "database_budget_contract": "docs/contracts/m7-database-budgets.md",
-  "database_budget_candidate_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46"
+  "database_budget_candidate_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46",
+  "database_budget_qualified_main_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
+  "database_budget_exact_main_ci": "37104669176"
 }

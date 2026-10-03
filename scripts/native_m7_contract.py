@@ -51,3 +51,9 @@ M7_CASES.update({"config.DatabaseBudgetsTest":[
  "zeroNegativeOrExtendedDriverBudgetsFailBeforeConnections",
  "multipleHostsOrMissingLockInitializationCannotInventFiniteBudget",
 ]})
+
+M7_CASES.update({"common.ApiErrorsTest":[
+ "databaseRollbackWrapperKeepsUnknownReceiptSemanticsWithoutCauseLeak",
+ "retainedOriginalDatabaseExceptionIsNotLostToTransactionWrapper",
+ "nonDatabaseTransactionProgrammingFailureRemainsInternalError",
+]})

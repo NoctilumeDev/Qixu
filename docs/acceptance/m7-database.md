@@ -36,3 +36,11 @@
 真实锁等待10.109秒返回503 DATABASE_UNAVAILABLE；guard期无预约/回执/marker，同键恢复唯一。实际已借出的auth_session COM_QUERY丢server回应30.047秒返回同码；解除故障后同PID读取及原回执恢复。恢复对照保持T0隔离、完整T1正常、仅缺账册隔离，外部world不变。所有owned及relay停止，6975/6976/6977无监听。三个原包按字节发布，96个历史包校验保持，失败未删。
 
 仅为候选限定复验，尚待受保护合入、exact-main CI及新的原生/安装事实。它不证明COMMIT回应丢失、多节点、生产总API时限或微信设备；M7仍IN_PROGRESS。
+
+## 受保护主线限定资格
+
+PR#20候选c6ef1195e028152af2e4cd75bc488301c175d976的CI37104452916三项及所有步骤success，普通受保护squash合入main@ffa01ffe4e97728352cbbafc5349172d7a2ffbc3。exact-main CI37104669176三项及所有步骤success；远端main一致，README全字节读回与本地相同。
+
+该主线全新[native170](../../artifacts/m7/m7-805001f3b21349b19ef4cf524113423f/acceptance-report.md)、[restore22](../../artifacts/m7/m7-restore-9e75cadba74749da8f8837933ce6d696/acceptance-report.md)、[database25](../../artifacts/m7/m7-database-f95a73c66a4b4edcab194455a2ea3ea7/acceptance-report.md)各有新身份且COMPLETED/PASS。锁响应10.094秒、目标业务COM_QUERY丢回应30.031秒，零故障期新增效果、同key恢复唯一、同PID恢复原回执；T0及单缺账册保持隔离。owned及relay全部停止，三端口无监听。共享3306/6947/7897的PID及启动时间与初始记录相同。
+
+99个历史Bundle字节保持。此资格仅主线单实例数据库预算与既定恢复范围，未升级整个M7。COMMIT丢回应另按[新合同](../contracts/m7-commit-reply.md)攻击，不能由本段只读故障代替。
