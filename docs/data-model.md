@@ -54,3 +54,7 @@ V7 long_temporary_arrangement.required_features_json保留创建时硬设施要�
 V8 governance_case固定entitlement/batch/user/space/floor及原权版本，保留通知、期限、裁决、申诉和独立复核；governance_history追加私有历史。long_application_penalty以case_id为主键，仅影响规定时间内长期申请；到期投影实时失效。唯一开放案件不允许同原权并存两个NOTICE/APPEALED。取消批次保留全部原提交/正式结果，无持权历史条件不能退化为只检查当前ACTIVE。
 
 V1–V8均已在专用qixu_test执行，后续只追加迁移；历史数据升级、外部副作用对账和生产规模不因当前空表/演示迁移默认成立。
+
+## M6 V9 · 显式绑定与加密外部会话
+
+identity_user.local_login_enabled区分本地密码与外部专用登录。external_identity新增active/version/issuer_hash，历史默认不启用。auth_session绑定external_binding_id/version/issuer/subject及AES-GCM密文，FK与全有/全无check避免半个外部会话。授权仍取本地当前角色/范围/学生资格，上游角色不入权利表。修改绑定或登录模式提升相应版本并留审计；旧会话不能迁移主体。V9在qixu_test真实迁移，旧迁移字节不改；独立历史V5/V6升级边界仍待M7 F15复核。

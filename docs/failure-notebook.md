@@ -145,3 +145,23 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 `m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5`在main@c411cfe7先seal后安装，新浏览器动作正常；REPL变量赋值未改变旧辅助函数闭包，10份新捕获写入上一轮本地目录。公共原Bundle/原捕获未变。按capturedAt≥新seal筛出并把30个文件原字节迁入本轮身份，旧同名本地捕获从不可变公共副本恢复；[逐文件摘要账册](../artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/observer-output-recovery.json)保留。新的辅助函数把目录直接绑定为常量，并使用排他创建，避免再覆盖。分类观察接线缺陷，不能归因于产品，也不能修改捕获时间。
 
 第一次维修关闭采样发生在提交尚未返回时，原始PNG/DOM/元数据以first-repair-closed-pending保留；观察到回执及版本4/复验关闭后才取得新的指定采样。安装重启初期网络提示以extra-startup-network-retry保留，页面刷新恢复。17项最终Core PASS仅声明封存的已观察状态，不升级成全故障或M10资格。
+
+## M6 身份施工 · 测试路由首败
+
+`m6-identity-first-98a8d3e93a0e4ab58309dbcc283e3856`首次真实V9迁移，身份11项中8通过3失败，另网关3项通过。新夹具猜测`/short-reservations`和start/end字段，而既有接口是`/reservations`及startsAt/endsAt，造成404与两项协调屏障未到达。分类测试接线错误，原stdout/XML/匿名请求观察留存；不改产品路由或放宽拒绝。原未提交源的完整ZIP未留存，不补造摘要，保留这一证据缺口和原错误路径作为重入坐标。
+
+修正夹具后`m6-identity-replay-b7cfcabd3c7e485186952871e5c620ba`11项及网关3项通过。仍是施工观察，尚无M6全量/真实暗室/重启资格。V9已生效，不改其迁移字节。后续正式采集绑定可寻址提交及fresh clean源码，原路由反例不删除。
+
+## M6真实接入首败：隔离夹具collation
+
+候选c2b8151、采集器0.1 / Plan1，identity `m6-installed-ddee3c99b17546dd9a0d06e3e075fbc0` 为Core PENDING、execution ERROR。暗室固定源构建及两个owned启动发生；首个上游测试账号已插入，随后按账号文本查询失败，业务请求尚未发生。两应用PID 36612/35712均经CIM/JAR核对停止；未动共享服务。
+
+原采集器只保留泛化SQL错误，未保存数据库错误细节，这是诊断证据缺口。按原SELECT在同专属库重放得到MySQL1267/HY000：CONVERT utf8mb4字面量与上游general_ci列隐式collation冲突。期序夹具INSERT在事务内重放成功并回滚。分类为观察器/夹具，不是已证明的产品缺陷。
+
+0.2 / Plan2仅显式utf8mb4_bin文本比较，保留SQL编号与私有stderr；不改上游schema、不降业务断言、不覆写原包。恢复须新exact source、fresh native producer、新installed identity；本记录不预填恢复PASS。
+
+## M6真实恢复采样首败：公布前空result
+
+候选32a5bb5、采集器0.2 / Plan2，identity `m6-installed-fa1d847cab1d45dd83a40b755cf9d3a5` Core PENDING、execution ERROR。实际暗室admin→期序STUDENT、管理403、外部专用密码401、已提交200经代理丢弃、重启回执/同键重放、异体409、旁人404及业务/回执/审计/outbox/inbox各一条均有事实。批次1724已冻结并在新PID恢复；采集器以result非null为完成，实际result={}尚未公布，读取proof抛KeyError。不是已观察的分配故障。
+
+保留冻结包、过早采样包、Core原包及五个owned PID/CIM清理；不将已有恢复事实升级为整M6 PASS。0.3 / Plan3仅改采样判定并加空对象/不完整对象控制；正式proof与SQL结果断言、随机round、期限、独立复算仍不变。恢复待新exact source和新identity。

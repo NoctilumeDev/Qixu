@@ -37,9 +37,7 @@ public class Business {
         for(long id:new TreeSet<>(users)) if(jdbc.query("SELECT id FROM identity_user WHERE id=? FOR UPDATE",(rs,n)->rs.getLong(1),id).isEmpty()) throw DomainException.missing();
     }
     public Actor current(AuthService.Session session) {
-        var result=jdbc.query("SELECT u.* FROM auth_session s JOIN identity_user u ON u.id=s.user_id WHERE s.token_hash=? AND u.id=? AND s.expires_at>? AND s.auth_version=u.auth_version AND u.active=TRUE",(rs,n)->new Actor(rs.getLong("id"),rs.getString("username"),rs.getString("display_name"),rs.getString("role"),rs.getBoolean("student_verified"),rs.getLong("auth_version")),session.tokenHash(),session.actor().id(),now());
-        if(result.isEmpty()) throw DomainException.unauthorized();
-        return result.get(0);
+        return dev.noctilume.qixu.identity.SessionValidity.current(jdbc,clock,session);
     }
     public void admin(Actor actor,long floor) {
         if(!actor.role().equals("ADMIN") || jdbc.queryForObject("SELECT COUNT(*) FROM admin_scope WHERE user_id=? AND floor_id=?",Integer.class,actor.id(),floor)!=1) throw DomainException.forbidden();

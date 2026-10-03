@@ -122,7 +122,7 @@ V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象
 
 当前资格在提交/冻结/发布/确认/递补校验，`GET .../{id}/application`的已申请视图含currentEligibility。处罚自然到期不靠任务；原提交回执可按原actor/key恢复。所有时间输入含offset且精确到秒，响应秒以下精度属于真实Clock读值，客户端不能直接复制成业务输入。
 
-## M5 两端读取与未知意图恢复（施工中，未取得阶段资格）
+## M5 两端读取与未知意图恢复（限定资格见acceptance/m5）
 
 | 接口 / 字段 | 当前语义 |
 | --- | --- |
@@ -135,3 +135,9 @@ V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象
 | POST /admin/repairs/{id}/actions 的 reports | 仅LINK_REPORTS消费非空引用。其他动作允许缺省/空列表，非空明确422，不静默关联；安排、工作完成不等于复验关闭 |
 
 前端回执404仍为未确认。只有原事实或原子停止屏障才能结束原意图；本地清除、GET成功和单次4xx均不代替该裁决。端点保护与两端真实页面资格分别记录。
+
+## M6 外部身份适配（候选范围）
+
+POST `/auth/external/dark-room`：{ticket,mode:COOKIE/BEARER}，默认COOKIE；只消费当前固定上游身份，不接受URL/subject/userId/role/scope。不存上游密码。有效身份还必须有当前启用的本地绑定、issuer/version及外部专用本地主体；未登记403、无效401、依赖未知503、入口预算429。成功响应与本地登录同形，仅BEARER含期序opaque token。
+
+每次外部认证在事务外有界核验，写入取锁后复核当前本地会话/绑定与短证明；503不授权也不改变原请求键。Cookie仍受Origin/CSRF/文档所有权约束，Bearer拒绝不退回Cookie。GET/auth/options不列外部专用或停用账号；生产无demo时该接口404。详细协议、当前边界及实际观察见[外部合同](contracts/external-identity-and-recovery.md)和[M6证据](acceptance/m6.md)。
