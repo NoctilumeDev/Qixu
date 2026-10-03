@@ -22,3 +22,9 @@
 固定c4f572440d0ad444096384541dee2bd430a78dd5的[native166 PASS](../../artifacts/m7/m7-afb489561d914ea5957f3d8cd2f99ac6/acceptance-report.md)后，真实[database0.3/Plan3 FAIL25](../../artifacts/m7/m7-database-fa6ca6208c294463a695ca6fa68fb936/acceptance-report.md)为COMPLETED。本轮公钥绑定、正常就绪与短约控制成立；guard释放正常退出。锁等待15秒仍无响应，保持guard期间业务/回执/marker零；释放后同键效果唯一。已存在连接上的auth_session COM_QUERY实际命中并丢server回应，35秒仍无响应；独立SQL无业务/marker变化。解除故障后需停止/重启本轮app才能结束原未知读，正常读取与原回执恢复。全部owned/中继停止，三端口无监听。
 
 分类：实际锁预算与已借出网络读预算违反合同。未知读不被宣布数据库回滚；本例只读不证明commit丢响应。按合同版本3实施最小配置/启动校验，保留25条原标准，不修改原包。
+
+## bfd37f0预算修复限定复验
+
+固定bfd37f03c8eaa69e69d1429f0eed82e60e1df340的新[native0.18/Plan6 PASS170](../../artifacts/m7/m7-c9aaf7a6f0694c57a26c1528693bbba5/acceptance-report.md)保留166并加入4个实际驱动解析用例。新[database0.4/Plan4 PASS25](../../artifacts/m7/m7-database-fb76310ae3554b08b80a7713506ac894/acceptance-report.md)保留原25断言：实际app session锁预算10秒；持锁请求10.094秒结构化503、无业务/marker；恢复同key唯一。已建立连接业务COM_QUERY被阻断后30.047秒503；无业务/marker变化，解除故障无需重启同PID恢复读取与原回执。全部owned/线程停止、三端口无监听。
+
+该坐标的[restore0.6/Plan6](../../artifacts/m7/m7-restore-0525fb9a74c84b82a28c2e989dad4c41/acceptance-report.md)却PENDING/ERROR：第一次health响应是APPLICATION_NOT_READY 503，观察器误当已稳定状态，未发任何业务/恢复请求。它不支持恢复失败或恢复通过。最小修正startup状态等待，原55秒预算与22断言不变；原Bundle保留，后续新source复验。

@@ -191,6 +191,27 @@
       "verdict": "FAIL",
       "path": "artifacts/m7/m7-database-fa6ca6208c294463a695ca6fa68fb936",
       "manifest_sha256": "e08ceb3c9e14c0304fe71e5e444421eccd52a44acc6cda8be877266739739f7c"
+    },
+    {
+      "identity": "m7-c9aaf7a6f0694c57a26c1528693bbba5",
+      "source_sha": "bfd37f03c8eaa69e69d1429f0eed82e60e1df340",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-c9aaf7a6f0694c57a26c1528693bbba5",
+      "manifest_sha256": "091f9213019ed0b3c3f749fecb32c44e7a4b7858aba90297e61c84a34d37dd7c"
+    },
+    {
+      "identity": "m7-database-fb76310ae3554b08b80a7713506ac894",
+      "source_sha": "bfd37f03c8eaa69e69d1429f0eed82e60e1df340",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-database-fb76310ae3554b08b80a7713506ac894",
+      "manifest_sha256": "6090827c2ddde7c1e75bdbdf44218bcb6567a13024febeab464506e1c81b1f0c"
+    },
+    {
+      "identity": "m7-restore-0525fb9a74c84b82a28c2e989dad4c41",
+      "source_sha": "bfd37f03c8eaa69e69d1429f0eed82e60e1df340",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-restore-0525fb9a74c84b82a28c2e989dad4c41",
+      "manifest_sha256": "6aef537d43dc1313dc217e2ee5df9fd017d9812e5cbe923e66297c2743989759"
     }
   ],
   "not_proven": [
