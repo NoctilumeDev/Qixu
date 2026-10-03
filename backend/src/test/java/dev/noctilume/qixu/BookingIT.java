@@ -174,6 +174,26 @@ class BookingIT {
         error(decision(admin,v.id(),2,"CANCEL","bound-venue-cancel"),409,"EVENT_BOUND");
         facts.put("publishedEvents",jdbc.queryForObject("SELECT COUNT(*) FROM campus_event WHERE status='PUBLISHED'",Integer.class));
     }
+    @Test void venueDecisionDetailsContainScopedCapacityAndContact()throws Exception {
+        String teacher=token("teacher1"),admin=token("admin1");var application=venue(teacher,seat("R-A",100),"m8-decision-info");
+        var view=request("GET","/venue-requests/"+application.id(),null,admin,null);assertEquals(200,view.status());
+        error(request("GET","/venue-requests/"+application.id(),null,token("student1"),null),403,"SCOPE_FORBIDDEN");
+        facts.put("people",view.data().path("people").asInt());facts.put("spaceCapacity",view.data().path("spaceCapacity").asInt());facts.put("contactPresent",!view.data().path("contact").asString().isBlank());facts.put("applicantPresent",!view.data().path("applicantName").asString().isBlank());
+        assertEquals(1,view.data().path("people").asInt());assertEquals(8,view.data().path("spaceCapacity").asInt());assertEquals("组织者",view.data().path("contact").asString());assertEquals("teacher1",view.data().path("applicantUsername").asString());assertFalse(view.body().toString().contains("password_hash"));
+    }
+    @Test void eventDetailsExplainWindowsAndOnlyOwnShortOverlap()throws Exception {
+        String teacher=token("teacher1"),admin=token("admin1"),student=token("student1"),other=token("student2");long id=published(teacher,admin);
+        var initial=request("GET","/events/"+id,null,student,null);assertEquals(200,initial.status());
+        var adjacent=request("POST","/reservations",shortBody(seat("A001",100),"2026-10-10T02:00:00Z","2026-10-10T03:00:00Z"),student,"m8-event-adjacent");assertEquals(200,adjacent.status());
+        var before=request("GET","/events/"+id,null,student,null);facts.put("adjacentConflicts",before.data().path("personalConflictCount").asInt());assertEquals(0,before.data().path("personalConflictCount").asInt());
+        var overlap=request("POST","/reservations",shortBody(seat("A001",100),"2026-10-10T03:30:00Z","2026-10-10T04:30:00Z"),student,"m8-event-overlap");assertEquals(200,overlap.status());
+        assertEquals(200,request("POST","/reservations",shortBody(seat("A002",100),"2026-10-10T03:30:00Z","2026-10-10T04:30:00Z"),other,"m8-event-other").status());
+        var view=request("GET","/events/"+id,null,student,null);assertEquals(200,view.status());
+        facts.put("ownConflicts",view.data().path("personalConflictCount").asInt());facts.put("publicSpaceCode",view.data().path("code").asString());facts.put("windowsPresent",List.of("registration_opens_at","registration_closes_at","promotion_until").stream().allMatch(k->!view.data().path(k).asString().isBlank()));
+        assertEquals(1,view.data().path("personalConflictCount").asInt());assertEquals(1,view.data().path("personalConflicts").size());assertEquals(overlap.id(),view.data().path("personalConflicts").get(0).path("id").asLong());assertEquals("R-A",view.data().path("code").asString());assertFalse(view.data().path("floorName").asString().isBlank());assertTrue((boolean)facts.get("windowsPresent"));
+        assertEquals(200,request("POST","/events/"+id+"/participation",Map.of("action","JOIN"),student,"m8-event-join").status());
+        facts.put("keptShorts",jdbc.queryForObject("SELECT COUNT(*) FROM short_reservation WHERE user_id=1 AND status='PENDING'",Integer.class));assertEquals(2,facts.get("keptShorts"));assertFalse(view.body().toString().contains("contact"));
+    }
     @Test void finalEventSlotAndCancellationPreserveFixedQueue() throws Exception {
         String teacher=token("teacher1"),admin=token("admin1"),a=token("student1"),c=token("student2"); long id=published(teacher,admin);
         var joined=race(()->request("POST","/events/"+id+"/participation",Map.of("action","JOIN"),a,"event-join-a"),()->request("POST","/events/"+id+"/participation",Map.of("action","JOIN"),c,"event-join-c")); assertTrue(joined.stream().allMatch(r->r.status()==200));

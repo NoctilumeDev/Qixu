@@ -43,7 +43,7 @@ def main() -> int:
     if version("veritrail") != "0.13.0" or git("status", "--porcelain"):
         raise RuntimeError("Core0.13.0 and exact clean committed source required")
     sha = git("rev-parse", "HEAD")
-    collector={"m7":"qixu-frontend/0.4","m8":"qixu-frontend/0.5"}.get(args.stage,COLLECTOR)
+    collector={"m7":"qixu-frontend/0.4","m8":"qixu-frontend/0.6"}.get(args.stage,COLLECTOR)
     cases=CLIENT_CASES+CLIENT_M7_CASES+CLIENT_M7_METADATA_CASES if args.stage in ("m7","m8") else CLIENT_CASES
     if args.stage=="m8": cases+=CLIENT_M8_CASES
     identity = args.stage+"-frontend-" + uuid.uuid4().hex
@@ -68,7 +68,7 @@ def main() -> int:
     assertions += [assertion("case-" + str(i), "/facts/tests/case-" + str(i), True) for i in range(len(cases))]
     assertions += [assertion("artifact-" + name, "/facts/artifacts/" + name + "/current_build", True) for name in ("h5", "wechat", "admin")]
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-"+args.stage+"-frontend", "version": 3 if args.stage=="m7" else 1,
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-"+args.stage+"-frontend", "version": 3 if args.stage=="m7" else 2 if args.stage=="m8" else 1,
         "subject": {"id": "qixu-"+args.stage+"-frontend", "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do exact locked clean-source frontend builds and the declared request mechanism witnesses hold?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:frontend-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},

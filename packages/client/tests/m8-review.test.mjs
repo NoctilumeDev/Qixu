@@ -63,3 +63,25 @@ test('M8 boolean facts reject unknown rather than manufacturing absence',async()
     for(const key of ['window','outlet','quiet','accessible']){ui.form.factKey=key;await vue.nextTick();ui.form.factValue='UNKNOWN';ui.form.facts=[];ui.addFact();assert.equal(ui.form.facts.length,0,'unknown must not become false');assert.ok(ui.error.value);ui.form.factValue='true';ui.addFact();assert.equal(ui.form.facts[0].value,true);ui.form.factValue='false';ui.addFact();assert.equal(ui.form.facts[0].value,false);}
   }finally{scope.stop();}
 });
+for(const surface of ['admin','student'])test(`M8 ${surface} recovery message belongs to its current actor`,async()=>{
+  const d=deferred(),auth=vue.reactive({session:session(1),generation:0,pending:[]}),scope=vue.effectScope();
+  let result=Promise.resolve({receipt:{key:'owned-key',status:'COMMITTED'}});
+  const c={recover:()=>result,stop:()=>result};
+  try{
+    const ui=scope.run(()=>setup(`${surface}/src/components/RequestState.vue`,{auth,client:c,pendingAction:()=>result,errorMessage:e=>e.message,go:()=>{},onBeforeUnmount:()=>{}},'recover,stop,message,busy'));
+    await ui.recover('owned-key');assert.match(ui.message.value,/已确认/);assert.equal(ui.busy.value,false);
+    auth.generation++;auth.session=session(2);assert.equal(ui.message.value,'');
+    result=d.promise;const pending=ui.stop('old-key');assert.equal(ui.busy.value,true);
+    d.resolve({intentOutcome:'STOPPED_WITHOUT_EFFECT'});auth.generation++;auth.session=session(3);
+    await pending;assert.equal(ui.message.value,'');assert.equal(ui.busy.value,false);
+    await ui.recover('current-key');assert.match(ui.message.value,/安全停止/);
+  }finally{scope.stop();}
+});
+test('M8 management result message is cleared before entering another module',async()=>{
+  const props=vue.reactive({section:'repairs',id:1}),auth=vue.reactive({session:{actor:{id:4,role:'ADMIN'},adminFloors:[100]},generation:0}),scope=vue.effectScope();
+  try{
+    const ui=scope.run(()=>setup('admin/src/components/ManagementFlows.vue',{defineProps:()=>props,useRoute:()=>({query:{}}),useRouter:()=>({replace:()=>{}}),onBeforeUnmount:()=>{},auth,client:{clearSensitive:()=>{},mutate:async()=>({receipt:{key:'m8-legitimate-result'}})},api:async()=>({}),errorMessage:e=>e.message},'write,message'));
+    await tick();await ui.write('/admin/repairs/1/actions',{});assert.match(ui.message.value,/已确认回执/);
+    props.section='batches';assert.equal(ui.message.value,'');await tick();assert.equal(ui.message.value,'');
+  }finally{scope.stop();}
+});

@@ -134,6 +134,38 @@ class PreparationIT {
         assertEquals(2,mine(s,batch).data().path("frozen_version").asInt());facts.put("versions",count("application_version"));facts.put("frozenRevision",jdbc.queryForObject("SELECT revision FROM frozen_person WHERE batch_id=?",Integer.class,batch));
         allocate(a,batch);assertEquals(1,count("long_offer"));
     }
+    @Test void failedFrozenBatchReleasesParticipationBeforeTaskCleanup()throws Exception {failedBatchWithoutTasks(true);}
+    @Test void missedFreezeBatchReleasesParticipationBeforeTaskCleanup()throws Exception {failedBatchWithoutTasks(false);}
+    void failedBatchWithoutTasks(boolean frozen)throws Exception {
+        String admin=login("admin1"),student=login("student1"),other=login("student2");long old=create(admin,List.of(2000L),"m8-old-round");
+        var nextBody=new LinkedHashMap<>(createBody(List.of(2200L)));
+        nextBody.put("opensAt","2026-10-10T01:21:00Z");nextBody.put("closesAt","2026-10-10T01:25:00Z");nextBody.put("freezeDeadline","2026-10-10T01:26:00Z");nextBody.put("randomAt","2026-10-10T01:27:00Z");nextBody.put("resultDeadline","2026-10-10T01:40:00Z");
+        var next=api("POST","/preparation-batches",nextBody,admin,"m8-next-round");ok(next);
+        ok(submit(student,old,0,prefs(2000),"m8-old-application"));ok(submit(other,old,0,prefs(2000),"m8-old-other"));if(frozen)freeze(admin,old);
+        String input=frozen?jdbc.queryForObject("SELECT input_hash FROM frozen_input WHERE batch_id=?",String.class,old):"";
+        clock.value=Instant.parse("2026-10-10T01:21:00Z");
+        var observation=mine(student,old);ok(observation);assertEquals("FAILED_NO_RESULT",observation.data().at("/batch/effectivePhase").asString());
+        assertEquals(frozen?"FROZEN":"OPEN",jdbc.queryForObject("SELECT status FROM preparation_batch WHERE id=?",String.class,old));
+        var newApplication=submit(student,next.id(),0,prefs(2200),"m8-next-application");
+        var availability=api("GET","/spaces/2000/availability?start=2026-10-10T02:11:00Z&end=2026-10-10T03:00:00Z",null,student,null);
+        var withdrawal=exit(student,old,"m8-expired-exit");
+        facts.put("newApplicationStatus",newApplication.status());facts.put("oldExitStatus",withdrawal.status());facts.put("expiredPoolAvailable",availability.data().path("available").asBoolean());
+        if(frozen)publisher.failDue(old);else freezer.freezeDue(old);notifications.dispatch();
+        facts.put("formalResults",count("allocation_result"));facts.put("oldFailureRecorded","FAILED_NO_RESULT".equals(jdbc.queryForObject("SELECT status FROM preparation_batch WHERE id=?",String.class,old)));
+        facts.put("failureNotices",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox WHERE event_key=?",Integer.class,"batch:"+old+":failed"));
+        ok(newApplication);ok(withdrawal);ok(availability);assertTrue(availability.data().path("available").asBoolean());
+        assertEquals(0,count("allocation_result"));if(frozen)assertEquals(input,jdbc.queryForObject("SELECT input_hash FROM frozen_input WHERE batch_id=?",String.class,old));
+    }
+    @Test void waitlistOwnVersionExitKeepsConfirmedFallback()throws Exception {
+        String a=login("admin1"),s=login("student1"),t=login("student2");long batch=create(a,List.of(2000L,2100L),"m8-wait-create");
+        ok(submit(s,batch,0,prefs(2100,2000),"m8-wait-v1"));ok(submit(s,batch,1,prefs(2100,2000),"m8-wait-v2"));ok(submit(t,batch,0,prefs(2100),"m8-wait-other"));freeze(a,batch);allocate(a,batch);
+        ok(respond(s,offer(batch,1),"ACCEPT","m8-wait-fallback"));ok(respond(t,offer(batch,2),"ACCEPT","m8-wait-target"));
+        var initial=mine(s,batch);assertEquals(2,initial.data().path("current_version").asInt());assertEquals(1,initial.data().at("/waitlist/version").asInt());
+        var wrong=api("POST","/preparation-batches/"+batch+"/waitlist-exit",Map.of("version",2,"action","EXIT_WAITLIST"),s,"m8-wait-wrong");error(wrong,409,"STALE_VERSION");
+        ok(api("POST","/preparation-batches/"+batch+"/waitlist-exit",Map.of("version",1,"action","EXIT_WAITLIST"),s,"m8-wait-own"));
+        facts.put("wrongVersionStatus",wrong.status());facts.put("activeFallback",jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE batch_id=? AND user_id=1 AND space_id=2000 AND status='ACTIVE'",Integer.class,batch));
+        facts.put("waitlistStatus",mine(s,batch).data().at("/waitlist/status").asString());assertEquals(1,facts.get("activeFallback"));assertEquals("EXITED",facts.get("waitlistStatus"));
+    }
     @Test void crossBatchConcurrentApplicationsHaveOneIntervalFact()throws Exception {
         String a=login("admin1"),s=login("student1");long one=create(a,List.of(2000L),"create-one"),two=create(a,List.of(2200L),"create-two");
         var result=race(()->submit(s,one,0,prefs(2000),"apply-one"),()->submit(s,two,0,prefs(2200),"apply-two"));assertEquals(List.of(200,409),result.stream().map(Reply::status).sorted().toList());facts.put("applications",count("preparation_application"));

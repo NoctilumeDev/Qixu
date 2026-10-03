@@ -6,4 +6,7 @@ CLIENT_M8_CASES = [
     'M8 Screen generation change cannot repopulate favorites',
     'M8 waitlist exit uses its own version',
     'M8 boolean facts reject unknown rather than manufacturing absence',
+    'M8 admin recovery message belongs to its current actor',
+    'M8 student recovery message belongs to its current actor',
+    'M8 management result message is cleared before entering another module',
 ]
