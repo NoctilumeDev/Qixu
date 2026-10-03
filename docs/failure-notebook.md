@@ -205,3 +205,11 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 候选`23d9d2b`新增反例执行真实Spring7.0.9 JdbcTransactionManager的processCommit，连接/DB视图受控：PREPARE与marker步骤后，doCommit抛数据运行时异常，框架随后调用rollback且返回成功，再afterRollback(null)。原XML/stdout留`.tools/m7-recovery-commit-ambiguity-first-23d9d2b/`；1例首FAIL，产品fence仍ready=true并追加ROLLBACK。此观察不冒充MySQL真实丢commit响应。
 
 分类新修复中的结果判定缺陷；afterRollback成功只说明那次rollback调用成功，不足以消除已尝试commit的不确定。Spring源码的运行时异常路径提供该回调顺序，不能用方法名替代事实。最小修复增加每事务“已准许commit尝试”坐标：只有尚未进入commit的marker准备失败且rollback确定成功可记录ROLLBACK；commit已获准后出现失败/rollback则保留PREPARE，隔离UNKNOWN，启动只通过真实marker再判定。原T0首FAIL及所有正常控制保留。
+
+## M7 F12 · 原恢复反例复验与缺账册前提混杂
+
+`88df403d9df6bac79d8943f063dc48d81f7fc93e`的native0.16/Plan4 [PASS162](../artifacts/m7/m7-5bfb66e0329e4d4bbf8cc7dcbe242dfe/acceptance-report.md)，含原147与15文件/受控DB视图/真实框架回调机制；不是162条真实MySQL。restore0.3/Plan3取得[PASS](../artifacts/m7/m7-restore-96c40b10e55547159489bacc8a73d930/acceptance-report.md)，原18断言逐条核对未降标准：正常同库回执相同，T0恢复后健康/竞争者/原回执/重放全503 NOT_RECONCILED，SQL预约0/inbox0，独立world不变，owned停止及6975/6976无监听。原首FAIL保持。
+
+独立复核发现第二trace不能宣称“只缺账册”：T1 dump在正常重启前已有5个marker，正常重启中的demo seed新提交使外部journal已有6个COMMIT；随后恢复T1再移走journal时，另有回退事务的混杂。原Core PASS只证明封存的18项已观察投影，不能扩展为未封存的前提已成立。分类采集前提缺口，保留原包，未把PASS改写为FAIL，独立纯缺账册资格仍NOT_PROVEN。
+
+版本化观察入口补一致性控制：正常重启后停止owned应用并新采T1；T0负向后恢复该T1，先实际读到健康/原回执，再停止应用核对独立journal链与DB全部marker/generation一致，仅移走journal后重启。原18断言保留，额外要求此控制成立与原账册真实存在。产品源码不因该夹具问题改变。
