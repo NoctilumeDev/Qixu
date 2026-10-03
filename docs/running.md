@@ -1,6 +1,6 @@
 # 本地运行与验收
 
-当前后端包含M1–M4限定范围，具体资格见各阶段acceptance。两个前端M5主流程正在真实页面验收，尚无阶段资格；M10再做最终精修。启动说明不等于完成证明。
+M1–M5限定资格见各阶段acceptance。M6候选的身份适配及重启恢复已有隔离证据，公开主线资格仍待闭合；M10再做最终精修。启动说明不等于完成证明。
 
 ## 工具与隔离
 
@@ -45,3 +45,15 @@ M4先运行`veritrail_native.py --stage m4`生成native0.10/M4Plan2原producer B
 M5运行 `python scripts/veritrail_native.py --stage m5 --maven <mvn>`，随后串行运行 `python scripts/veritrail_frontend.py --node <node> --npm <npm>`。两者必须来自当前同一干净提交并保留原Bundle。构建采集器在独立git archive目录执行，不能把本机旧dist当成此次产物。
 
 安装页面采样先运行 `python scripts/veritrail_browser.py seal <native采集目录> <frontend采集目录>`；绑定producer/JAR/静态清单后，在自有端口启动准确字节。`python scripts/serve_bound_frontend.py <frontend采集目录>`为H5/admin产物提供同源本地API代理，6968/6969占用时停止，后端须自行按上述环境在6967启动。辅助器不管理或终止其他进程，不用于公网。按新目录capture-contract采集真实DOM、PNG和URL/视口/UTC时间；维修拒绝额外保存DOM测量的错误可见性与焦点。全部采样后运行 `python scripts/veritrail_browser.py collect <browser采集目录>`，保留所有原始失败。实际资格还需真实动作及SQL读回、公开CI和新主线，不能只凑文案。
+
+## M6 外部身份与隔离恢复
+
+默认关闭适配。本地身份独立可用。启用需提供QIXU_DARK_ROOM_ENABLED=true、固定HTTPS的QIXU_DARK_ROOM_AUTH_URI及独立base64编码32字节QIXU_EXTERNAL_TICKET_KEY；端点必须是/api/dark-room-library/v1/user/auth。生产不允许明文，即便配置了loopback例外。显式本地集成才设QIXU_DARK_ROOM_LOOPBACK=true；不复用其他项目密钥，不提交环境文件。
+
+由数据库操作员运行 `python scripts/enroll_external_identity.py --help`，显式指定provider主体、本地user-id、当前expected-auth-version、issuer-uri、action和原因。enable必须选择external-only，关闭该本地主体密码登录并提升authVersion；不自动建用户、不授予角色/楼层/学生资格。凭据只从QIXU_DB_USERNAME/PASSWORD读取。解除绑定不会重新开放密码；错误当前版本或已有他人归属拒绝。Web老师/管理员没有此CLI的数据库操作员授权。
+
+外部调用方POST/auth/external/dark-room消费有效上游票据，mode为COOKIE或BEARER，取得期序opaque session。当前没有SSO交接，也不提供学生粘贴票据/上游密码的页面。外部会话每请求校验上游；停用401、依赖未知503，本地业务回执不改；正确登出不需要上游。票据只在加密会话字段保留，独立密钥丢失意味着外部会话不能再核验，部署方需保护密钥且让用户重新登录。
+
+隔离恢复先运行 `veritrail_native.py --stage m6` 取得native0.12 / Plan1原Bundle，再运行 `veritrail_m6_installed.py --help`。要求同exact clean source的新JAR、原native清单、专属qixu_test/qixu_ci和qixu_darkroom_test、固定暗室d6e42a8专属检出及私有环境。QIXU_DARK_ROOM_TEST_URL/USER/PASSWORD/JWT_SECRET与QIXU_TEST_DB_*只用于隔离执行；SQL原文及schema-only字节转换摘要分别由QIXU_DARK_ROOM_SQL_SOURCE_SHA256/TRANSFORM_SHA256核对。预先建库权限归部署操作员，不授予采集器共享schema权限。
+
+采集器0.3 / Plan3先seal，使用6970/6971，端口占用拒绝而不清其他进程；真实丢响应、同库重启、pending outbox重投、固定未来round恢复和干净独立复算。PENDING/失败保留在新identity，不覆盖历史。具体证据/未证明边界见[M6](acceptance/m6.md)，不是校园SSO、生产灾备或微信真机证明。

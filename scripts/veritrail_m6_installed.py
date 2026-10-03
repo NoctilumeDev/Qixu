@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse,hashlib,http.client,http.server,json,os,re,socket,subprocess,sys,threading,time,urllib.error,urllib.parse,urllib.request,uuid,zipfile
 from datetime import datetime,timedelta,timezone
 from pathlib import Path
+from importlib.metadata import version
 from veritrail.acceptance_plan import observation_spec_digest,seal_acceptance_plan
 from veritrail.acceptance_reporting import create_acceptance_bundle
 from veritrail.canonical import sha256_json
@@ -36,7 +37,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--producer-bundle',type=Path,required=True);p.add_argument('--darkroom-source',type=Path,required=True)
     p.add_argument('--java',required=True);p.add_argument('--maven',required=True);p.add_argument('--mysql',required=True);p.add_argument('--node',required=True);p.add_argument('--npm',required=True)
     a=p.parse_args();source=git('rev-parse','HEAD')
-    if git('status','--porcelain'):raise RuntimeError('Exact clean source required')
+    if version('veritrail')!='0.13.0' or git('status','--porcelain'):raise RuntimeError('Core0.13.0 and exact clean source required')
     dark=a.darkroom_source.resolve()
     if not dark.is_relative_to((ROOT/'.tools/references').resolve()) or git('rev-parse','HEAD',cwd=dark)!=PIN or git('status','--porcelain',cwd=dark):raise RuntimeError('Requires unmodified owned pinned DarkRoom reference checkout')
     jar=ROOT/'backend/target/qixu-api-0.1.0-SNAPSHOT.jar';producer=bind(a.producer_bundle,source,jar)
