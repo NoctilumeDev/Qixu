@@ -151,3 +151,11 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 `m6-identity-first-98a8d3e93a0e4ab58309dbcc283e3856`首次真实V9迁移，身份11项中8通过3失败，另网关3项通过。新夹具猜测`/short-reservations`和start/end字段，而既有接口是`/reservations`及startsAt/endsAt，造成404与两项协调屏障未到达。分类测试接线错误，原stdout/XML/匿名请求观察留存；不改产品路由或放宽拒绝。原未提交源的完整ZIP未留存，不补造摘要，保留这一证据缺口和原错误路径作为重入坐标。
 
 修正夹具后`m6-identity-replay-b7cfcabd3c7e485186952871e5c620ba`11项及网关3项通过。仍是施工观察，尚无M6全量/真实暗室/重启资格。V9已生效，不改其迁移字节。后续正式采集绑定可寻址提交及fresh clean源码，原路由反例不删除。
+
+## M6真实接入首败：隔离夹具collation
+
+候选c2b8151、采集器0.1 / Plan1，identity `m6-installed-ddee3c99b17546dd9a0d06e3e075fbc0` 为Core PENDING、execution ERROR。暗室固定源构建及两个owned启动发生；首个上游测试账号已插入，随后按账号文本查询失败，业务请求尚未发生。两应用PID 36612/35712均经CIM/JAR核对停止；未动共享服务。
+
+原采集器只保留泛化SQL错误，未保存数据库错误细节，这是诊断证据缺口。按原SELECT在同专属库重放得到MySQL1267/HY000：CONVERT utf8mb4字面量与上游general_ci列隐式collation冲突。期序夹具INSERT在事务内重放成功并回滚。分类为观察器/夹具，不是已证明的产品缺陷。
+
+0.2 / Plan2仅显式utf8mb4_bin文本比较，保留SQL编号与私有stderr；不改上游schema、不降业务断言、不覆写原包。恢复须新exact source、fresh native producer、新installed identity；本记录不预填恢复PASS。

@@ -15,7 +15,7 @@ from m6_producer_binding import bind,digest
 
 ROOT=Path(__file__).resolve().parents[1]
 PIN='d6e42a81d3eb83ed483553b7319bbe55dceb8c7f'
-COLLECTOR='qixu-m6-installed/0.1'
+COLLECTOR='qixu-m6-installed/0.2'
 AUTH='/api/dark-room-library/v1/user/auth'
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
@@ -24,7 +24,7 @@ def utc():return datetime.now(timezone.utc)
 def iso(value):return value.astimezone(timezone.utc).isoformat().replace('+00:00','Z')
 def write(path,value):
     with Path(path).open('x',encoding='utf-8',newline='\n') as f:json.dump(value,f,ensure_ascii=False,sort_keys=True,indent=2);f.write('\n')
-def quote(value):return 'CONVERT(0x'+value.encode('utf-8').hex()+' USING utf8mb4)'
+def quote(value):return 'CONVERT(0x'+value.encode('utf-8').hex()+' USING utf8mb4) COLLATE utf8mb4_bin'
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--producer-bundle',type=Path,required=True);p.add_argument('--darkroom-source',type=Path,required=True)
@@ -46,24 +46,29 @@ def main():
         with socket.socket() as s:s.bind(('127.0.0.1',port))
     identity='m6-installed-'+uuid.uuid4().hex;out=ROOT/'artifacts/local'/identity;out.mkdir(parents=True,exist_ok=False)
     coord={'source_sha':source,'jar_sha256':producer['jar_sha256'],'producer_manifest_sha256':producer['manifest_sha256'],'upstream_source_sha':PIN,'collector':COLLECTOR,'collector_sha256':digest(Path(__file__))}
-    spec={'id':'installed','contract':{'id':'qixu-m6-installed','version':'0.1'},'evidence_type':'qixu.m6.installed','coordinates':coord,'projections':['source_sha','source_clean','producer','upstream','requests','identity','recovery','allocation','reproduction','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
+    spec={'id':'installed','contract':{'id':'qixu-m6-installed','version':'0.2'},'evidence_type':'qixu.m6.installed','coordinates':coord,'projections':['source_sha','source_clean','producer','upstream','requests','identity','recovery','allocation','reproduction','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
     expected={'/source_sha':source,'/source_clean':True,'/producer/bytes_checked':True,'/producer/jar_sha256':coord['jar_sha256'],'/upstream/source_sha':PIN,'/upstream/source_clean':True,'/upstream/build_exit':0,
         '/identity/local_role':'STUDENT','/identity/management_status':403,'/identity/local_password_status':401,'/identity/outage_status':503,'/identity/local_independent_status':200,'/identity/restored_status':200,'/identity/revoked_status':401,'/identity/new_ticket_receipt_equal':True,
         '/recovery/response_discarded_status':200,'/recovery/client_unknown':True,'/recovery/distinct_restart_pid':True,'/recovery/receipt_equal':True,'/recovery/replay_equal':True,'/recovery/changed_body_status':409,'/recovery/foreign_receipt_status':404,'/recovery/reservations':1,'/recovery/receipts':1,'/recovery/audit_events':1,'/recovery/outbox_events':1,'/recovery/pending_before_restart':1,'/recovery/inbox_after_restart':1,'/recovery/inbox_after_repeat':1,'/recovery/unread_after_restart':1,
         '/allocation/frozen_hash_unchanged':True,'/allocation/frozen_round_unchanged':True,'/allocation/formal_results':1,'/allocation/outcomes':2,'/allocation/result_notices':2,'/reproduction/independent_bytes_equal':True,'/reproduction/signature_verified':True,'/reproduction/maximum':2,'/cleanup/all_owned_stopped':True}
     assertions=[{'id':'installed-'+str(i),'severity':'HARD','left':{'requirement_id':'installed','path':'/facts'+path},'operator':'eq','right':value} for i,(path,value) in enumerate(expected.items())]
-    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m6-installed','version':1,'subject':{'id':'qixu-m6-installed','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this fixed candidate preserve local authority, committed receipts, notification identity and frozen allocation through real isolated upstream and owned process faults?',
+    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m6-installed','version':2,'subject':{'id':'qixu-m6-installed','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this fixed candidate preserve local authority, committed receipts, notification identity and frozen allocation through real isolated upstream and owned process faults?',
         'governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:m6-installed-collector','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'installed','observation_spec_id':'installed','cardinality':'EXACTLY_ONE'}],
         'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'installed','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':900},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu M6 installed','consumers':['M6-stage']},
         'reproduction_steps':['Use exact clean source, original qualified M6 native bundle, fresh bound jar and pinned DarkRoom checkout.','Supply only dedicated schema-scoped credentials and separate private ticket/JWT keys.','Run the collector; it seals before upstream build, starts owned processes, discards a real committed response and performs bounded recovery.'],
         'cleanup_steps':['Stop only the captured child handles after executable/jar/CIM readback.','Retain test fixtures, first failure, packets and immutable bundle; shared services remain running.']})
     write(out/'sealed-plan.json',plan);write(out/'coordinate.json',coord)
     facts={'source_sha':source,'source_clean':True,'producer':producer,'upstream':{'source_sha':PIN,'bootstrap':{'source_sql_sha256':bootstrap_source,'schema_only_sql_sha256':bootstrap_transformed,'schema':'qixu_darkroom_test','provisioning':'PREEXISTING_DEDICATED_SCHEMA_OPERATOR_PROVENANCE_NOT_COLLECTOR_EXECUTED'}},'requests':[],'identity':{},'recovery':{},'allocation':{},'boundary':'ISOLATED_REAL_DARKROOM_AND_OWNED_RESTART_NOT_SSO_PRODUCTION_BACKUP_MULTI_NODE_OR_DEVICE'}
-    children=[];logs=[];execution='COMPLETED';qchild=None;dchild=None;sequence=0;base='http://127.0.0.1:6971';dbase='http://127.0.0.1:6970/api/dark-room-library/v1'
+    children=[];logs=[];execution='COMPLETED';qchild=None;dchild=None;sequence=0;sql_sequence=0;base='http://127.0.0.1:6971';dbase='http://127.0.0.1:6970/api/dark-room-library/v1'
     def sql(statement,darkroom=False):
+        nonlocal sql_sequence
+        sql_sequence+=1
         env=dict(os.environ,MYSQL_PWD=os.environ['QIXU_DARK_ROOM_TEST_PASSWORD' if darkroom else 'QIXU_TEST_DB_PASSWORD']);parsed=dp if darkroom else qp;user=os.environ['QIXU_DARK_ROOM_TEST_USER' if darkroom else 'QIXU_TEST_DB_USER']
         r=subprocess.run([a.mysql,'--protocol=TCP','-h',parsed.hostname,'-P',str(parsed.port or 3306),'-u',user,'--batch','--skip-column-names','--default-character-set=utf8mb4',parsed.path[1:]],input=statement,text=True,encoding='utf-8',capture_output=True,env=env,timeout=15)
-        if r.returncode:raise RuntimeError('Dedicated SQL operation failed; raw SQL/errors withheld')
+        if r.returncode:
+            (out/('sql-'+str(sql_sequence)+'.private.stderr')).write_text(r.stderr,encoding='utf-8')
+            code=re.search(r'ERROR (\d+) \(([^)]+)\)',r.stderr)
+            raise RuntimeError('Dedicated SQL operation '+str(sql_sequence)+' failed'+(' ['+code[1]+'/'+code[2]+']' if code else '')+'; raw SQL/errors retained privately')
         return r.stdout.strip()
     def request(method,path,body=None,token=None,key=None,expected_status=200,darkroom=False,url_override=None,record=True):
         headers={};url=url_override or ((dbase if darkroom else base)+path)
