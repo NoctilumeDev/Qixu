@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:6968/#/pages/map/index",
+  "errorAlert": {
+    "focused": false,
+    "visible": true
+  },
+  "viewport": {
+    "documentWidth": 375,
+    "height": 844,
+    "width": 390
+  },
+  "capturedAt": "2026-10-03T02:34:32.297Z"
+}

@@ -8,7 +8,11 @@
 
 ## 当前状态
 
-2026-10-03：**M0文档与M1–M4限定API/MySQL范围已验收，M5两端真实页面施工与验收中，尚未取得阶段资格**。长期分配有真实未来来源和独立复算；冲突、私有反馈、维修复验与明确治理有受保护主线及fresh原生/安装证据。两端已实现主流程并进行真实浏览器核对，参考图仍不是产品运行截图。当前先保证可用性、素材展示与合理结构，最终视觉精修新增为[M10](docs/contracts/frontend-refinement.md)。首次失败、修复和门禁见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)；阶段PASS不代表整个工程完成。
+2026-10-03：**M0–M5限定范围已验收，M6接入与恢复待施工**。M5在受保护main@c411cfe7取得三项公开CI、fresh原生126、构建31及固定产物真实浏览器17项证据；学生短约、活动预约/取消和私有反馈→维修复验已通过页面与MySQL读回。当前资格不含微信真机、最终视觉或整个工程。首次失败与证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
+
+以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
+
+![学生空间档案](artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/student-space.png)
 
 | 部分 | 设计方向 |
 | --- | --- |

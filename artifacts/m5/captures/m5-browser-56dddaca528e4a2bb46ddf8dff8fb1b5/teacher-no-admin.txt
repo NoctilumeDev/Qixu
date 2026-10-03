@@ -1,0 +1,34 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "我的场地申请":
+      - /url: "#/venues"
+      - generic: 我的场地申请
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "工作详情" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 周老师
+  - generic: 老师
+  - button "退出当前账号":
+- main:
+  - alert [active]:
+    - text: 此入口只向有范围的空间管理员开放。 身份或当前管理范围不允许。
+    - button "刷新事实（保留输入）"
+  - generic: 已确认回执 5bd8cb2d。
