@@ -39,6 +39,6 @@ public class BookingController {
     @PostMapping("/favorites") Object favoriteChange(@RequestHeader(value="Idempotency-Key",required=false) String key,@RequestBody Favorites.Change body,HttpServletRequest r) { return Api.ok(favorites.change(session(r),key,body),r); }
     @GetMapping("/receipts/{key}") Object receipt(@PathVariable String key,HttpServletRequest r) { return Api.ok(b.receipt(session(r).actor().id(),key),r); }
     @PostMapping("/receipts/{key}/stop") Object stop(@PathVariable String key,HttpServletRequest r) { return Api.ok(recovery.stop(session(r),key),r); }
-    @GetMapping("/inbox") Object inbox(HttpServletRequest r) { return Api.ok(notifications.mine(session(r).actor().id()),r); }
+    @GetMapping("/inbox") Object inbox(@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="100") int size,HttpServletRequest r) { return Api.ok(notifications.mine(session(r).actor().id(),page,size),r); }
     @PostMapping("/inbox/{id}/read") Object read(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false) String key,HttpServletRequest r) { return Api.ok(notifications.read(session(r),key,id),r); }
 }

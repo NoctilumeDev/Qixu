@@ -17,6 +17,7 @@ from veritrail.acceptance_plan import observation_spec_digest, seal_acceptance_p
 from veritrail.acceptance_reporting import create_acceptance_bundle
 from veritrail.canonical import sha256_json
 from frontend_m5_contract import CLIENT_CASES
+from frontend_m7_contract import CLIENT_M7_CASES
 
 ROOT = Path(__file__).resolve().parents[1]
 COLLECTOR = "qixu-frontend/0.1"
@@ -34,17 +35,21 @@ def write_new(path: Path, value: dict) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--stage", choices=["m5","m7"], default="m5")
     parser.add_argument("--node", default="node")
     parser.add_argument("--npm", default="npm")
     args = parser.parse_args()
     if version("veritrail") != "0.13.0" or git("status", "--porcelain"):
         raise RuntimeError("Core0.13.0 and exact clean committed source required")
     sha = git("rev-parse", "HEAD")
-    identity = "m5-frontend-" + uuid.uuid4().hex
+    collector="qixu-frontend/0.3" if args.stage=="m7" else COLLECTOR
+    cases=CLIENT_CASES+CLIENT_M7_CASES if args.stage=="m7" else CLIENT_CASES
+    identity = args.stage+"-frontend-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    request = {"source_sha": sha, "collector": COLLECTOR}
-    spec = {"id": "frontend-build", "contract": {"id": "qixu-frontend", "version": "0.1"},
+    request = {"source_sha": sha, "collector": collector}
+    if args.stage=="m7": request["contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-execution-entry.md").read_bytes()).hexdigest()
+    spec = {"id": "frontend-build", "contract": {"id": "qixu-frontend", "version": collector.split("/")[1]},
             "evidence_type": "qixu.frontend.build", "coordinates": request,
             "projections": ["source_sha", "source_clean", "node", "npm", "commands", "tests", "artifacts"],
             "canonicalization_profile": "veritrail-json-c14n/1"}
@@ -55,11 +60,11 @@ def main() -> int:
     assertions = [assertion("source", "/facts/source_sha", sha), assertion("clean", "/facts/source_clean", True),
                   assertion("node", "/facts/node", "v24.14.0"), assertion("npm", "/facts/npm", "11.9.0")]
     assertions += [assertion("command-" + str(i), "/facts/commands/" + str(i) + "/exit_code", 0) for i in range(5)]
-    assertions += [assertion("case-" + str(i), "/facts/tests/case-" + str(i), True) for i in range(len(CLIENT_CASES))]
+    assertions += [assertion("case-" + str(i), "/facts/tests/case-" + str(i), True) for i in range(len(cases))]
     assertions += [assertion("artifact-" + name, "/facts/artifacts/" + name + "/current_build", True) for name in ("h5", "wechat", "admin")]
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-m5-frontend", "version": 1,
-        "subject": {"id": "qixu-m5-frontend", "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-"+args.stage+"-frontend", "version": 2 if args.stage=="m7" else 1,
+        "subject": {"id": "qixu-"+args.stage+"-frontend", "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do exact locked clean-source frontend builds and the declared request mechanism witnesses hold?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:frontend-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
         "observation_specs": [spec], "evidence_requirements": [{"id": "frontend", "observation_spec_id": spec["id"], "cardinality": "EXACTLY_ONE"}],
@@ -91,7 +96,7 @@ def main() -> int:
     if node_parent:
         env["PATH"] = node_parent + os.pathsep + env.get("PATH", "")
     commands = [[args.npm, "ci", "--no-audit", "--no-fund"], [args.npm, "run", "build", "-w", "@qixu/client"],
-                [args.node, "--test", "--test-reporter=junit", "--test-reporter-destination=" + str(output / "client-tests.xml"), "packages/client/tests/ownership.test.mjs"],
+                [args.node, "--test", "--test-reporter=junit", "--test-reporter-destination=" + str(output / "client-tests.xml"), *(["packages/client/tests/ownership.test.mjs","packages/client/tests/m7-boundaries.test.mjs"] if args.stage=="m7" else ["packages/client/tests/ownership.test.mjs"])],
                 [args.npm, "run", "check"], [args.npm, "run", "build"]]
     steps = []
     execution = "COMPLETED"
@@ -116,7 +121,7 @@ def main() -> int:
             name = case.attrib["name"]
             passed = not any(case.find(kind) is not None for kind in ("failure", "error", "skipped"))
             observed[name] = passed if name not in observed else False
-        tests = {"case-" + str(i): observed[name] for i, name in enumerate(CLIENT_CASES) if name in observed}
+        tests = {"case-" + str(i): observed[name] for i, name in enumerate(cases) if name in observed}
     artifacts = {}
     for name, relative, entry in (("h5", "student/dist/build/h5", "index.html"), ("wechat", "student/dist/build/mp-weixin", "app.json"), ("admin", "admin/dist", "index.html")):
         folder = work / relative
@@ -132,10 +137,10 @@ def main() -> int:
     facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")),
              "source_zip_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
              "node": subprocess.check_output([args.node, "--version"], text=True).strip(), "npm": subprocess.check_output([args.npm, "--version"], text=True).strip(),
-             "commands": steps, "tests": tests, "required_cases": CLIENT_CASES, "artifacts": artifacts,
-             "boundary": "M5_FRONTEND_BUILD_AND_CONTROLLED_TRANSPORT_NOT_INSTALLED_BROWSER_NATIVE_DEVICE_OR_FINAL_VISUAL"}
-    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": COLLECTOR, "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
-                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-frontend-collector", "coverage": "COMPLETE" if len(steps) == 5 and tests and artifacts else "ERROR", "normalization_semantics_version": COLLECTOR, "facts_digest": sha256_json(facts)}}}
+             "commands": steps, "tests": tests, "required_cases": cases, "artifacts": artifacts,
+             "boundary": "M7_ENTRY_CLIENT_STORAGE_ACTOR_BUILD_NOT_WHOLE_M7_BROWSER_BACKUP_DEVICE_OR_FINAL_VISUAL" if args.stage=="m7" else "M5_FRONTEND_BUILD_AND_CONTROLLED_TRANSPORT_NOT_INSTALLED_BROWSER_NATIVE_DEVICE_OR_FINAL_VISUAL"}
+    evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": collector, "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
+                "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-frontend-collector", "coverage": "COMPLETE" if len(steps) == 5 and tests and artifacts else "ERROR", "normalization_semantics_version": collector, "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)
     result = create_acceptance_bundle(plan=plan, evidence_paths=[output / "evidence.json"], output=output / "bundle", acceptance_id=identity, execution_status=execution)
     print(json.dumps({"identity": identity, "source_sha": sha, "verdict": result["verdict"], "cases_observed": len(tests), "bundle": str(output / "bundle"), "boundary": facts["boundary"]}))
