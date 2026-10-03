@@ -116,13 +116,13 @@ class PreparationIT {
         }
         long late=ids.get(10),owner=jdbc.queryForObject("SELECT user_id FROM long_offer WHERE batch_id=? AND status='OPEN'",Long.class,late);
         ok(exit(owner==1?one:two,late,"m8-maint-last-exit"));
-        assertEquals(10,jdbc.queryForObject("SELECT COUNT(*) FROM long_entitlement WHERE status='ACTIVE'",Integer.class));
+        assertEquals(10,jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE status='ACTIVE'",Integer.class));
         assertEquals(11,jdbc.queryForObject("SELECT COUNT(*) FROM waitlist_entry WHERE status='ACTIVE'",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND status='OPEN'",Integer.class,late));
         var tasks=new PreparationTasks(business,freezer,worker,publisher,seats,availability,recovery,true);
         tasks.run();tasks.run();notifications.deliver();notifications.deliver();
         int offers=jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND status='OPEN'",Integer.class,late);
-        facts.put("legalBatches",ids.size());facts.put("earlyActiveRights",jdbc.queryForObject("SELECT COUNT(*) FROM long_entitlement WHERE status='ACTIVE'",Integer.class));facts.put("taskScanRounds",2);facts.put("lateOpenOffers",offers);
+        facts.put("legalBatches",ids.size());facts.put("earlyActiveRights",jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE status='ACTIVE'",Integer.class));facts.put("taskScanRounds",2);facts.put("lateOpenOffers",offers);
         facts.put("latePromotionNotices",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox WHERE entity_type='BATCH' AND entity_id=? AND event_key LIKE 'offer:%:promotion'",Integer.class,late));
         assertEquals(1,offers,"legal lower-id waitlists must not permanently hide the eleventh batch");
     }
