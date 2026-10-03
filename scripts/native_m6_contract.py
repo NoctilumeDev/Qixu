@@ -1,0 +1,36 @@
+"""M6 controlled protocol witnesses are distinct from real DarkRoom/restart proof."""
+M6_CASES={
+    "ExternalIdentityIT":[
+        "upstreamAdminCannotGrantLocalRoleOrAutoEnroll",
+        "subjectAndIssuerMustMatchExplicitActiveBinding",
+        "externalOnlyCannotUsePasswordAndUpstreamCannotVerifyStudent",
+        "externalTicketIsAadBoundEncryptedAndNeverInAudit",
+        "definiteUpstreamRejectionRevokesWhileUnknownPreservesSession",
+        "activeBindingVersionAndLocalRevocationAreCurrentFacts",
+        "malformedProfilesAndDisabledFlagsNeverAuthorize",
+        "localIdentityAndLogoutDoNotNeedUnavailableProvider",
+        "proofExpiresAfterActualFloorWaitWithoutNetworkInsideLocks",
+        "bindingRemovalDuringFloorWaitRollsBackOriginal",
+        "ingressRateLimitPersistsAcrossRejectedExchanges",
+        "providerOutageDoesNotEraseCommittedReceiptOrDuplicateRecoveredWrite",
+    ],
+    "identity.DarkRoomGatewayTest":[
+        "unsafeUrisAndMissingKeyCannotEnableAdapter",
+        "vaultRejectsWrongAadKeyAndTamper",
+        "redirectOversizeSlowBodyAndInvalidUtf8AreBounded",
+        "fifthConcurrentVerificationIsRejectedWithoutQueueOrSourceRequest",
+    ],
+}
+M6_MEASURES={
+    "upstreamAdminCannotGrantLocalRoleOrAutoEnroll":{"localRole":"STUDENT","autoEnrolled":0},
+    "subjectAndIssuerMustMatchExplicitActiveBinding":{"sessions":0},
+    "externalOnlyCannotUsePasswordAndUpstreamCannotVerifyStudent":{"localLoginEnabled":False,"studentVerified":False,"reservations":0,"receipts":0},
+    "externalTicketIsAadBoundEncryptedAndNeverInAudit":{"plaintextTicketRows":0,"credentialAuditRows":0},
+    "definiteUpstreamRejectionRevokesWhileUnknownPreservesSession":{"sessions":0},
+    "malformedProfilesAndDisabledFlagsNeverAuthorize":{"sessions":0},
+    "localIdentityAndLogoutDoNotNeedUnavailableProvider":{"localIndependent":True,"logoutUpstreamCalls":0},
+    "proofExpiresAfterActualFloorWaitWithoutNetworkInsideLocks":{"reservations":0,"receipts":0,"inLockRenewalCalls":0},
+    "bindingRemovalDuringFloorWaitRollsBackOriginal":{"reservations":0,"receipts":0},
+    "ingressRateLimitPersistsAcrossRejectedExchanges":{"admittedRequests":20,"sourceCalls":20,"sessions":0},
+    "providerOutageDoesNotEraseCommittedReceiptOrDuplicateRecoveredWrite":{"reservations":1,"receipts":1,"shortAuditRows":1,"shortOutboxRows":1},
+}

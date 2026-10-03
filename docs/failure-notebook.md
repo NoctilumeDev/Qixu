@@ -145,3 +145,9 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 `m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5`在main@c411cfe7先seal后安装，新浏览器动作正常；REPL变量赋值未改变旧辅助函数闭包，10份新捕获写入上一轮本地目录。公共原Bundle/原捕获未变。按capturedAt≥新seal筛出并把30个文件原字节迁入本轮身份，旧同名本地捕获从不可变公共副本恢复；[逐文件摘要账册](../artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/observer-output-recovery.json)保留。新的辅助函数把目录直接绑定为常量，并使用排他创建，避免再覆盖。分类观察接线缺陷，不能归因于产品，也不能修改捕获时间。
 
 第一次维修关闭采样发生在提交尚未返回时，原始PNG/DOM/元数据以first-repair-closed-pending保留；观察到回执及版本4/复验关闭后才取得新的指定采样。安装重启初期网络提示以extra-startup-network-retry保留，页面刷新恢复。17项最终Core PASS仅声明封存的已观察状态，不升级成全故障或M10资格。
+
+## M6 身份施工 · 测试路由首败
+
+`m6-identity-first-98a8d3e93a0e4ab58309dbcc283e3856`首次真实V9迁移，身份11项中8通过3失败，另网关3项通过。新夹具猜测`/short-reservations`和start/end字段，而既有接口是`/reservations`及startsAt/endsAt，造成404与两项协调屏障未到达。分类测试接线错误，原stdout/XML/匿名请求观察留存；不改产品路由或放宽拒绝。原未提交源的完整ZIP未留存，不补造摘要，保留这一证据缺口和原错误路径作为重入坐标。
+
+修正夹具后`m6-identity-replay-b7cfcabd3c7e485186952871e5c620ba`11项及网关3项通过。仍是施工观察，尚无M6全量/真实暗室/重启资格。V9已生效，不改其迁移字节。后续正式采集绑定可寻址提交及fresh clean源码，原路由反例不删除。

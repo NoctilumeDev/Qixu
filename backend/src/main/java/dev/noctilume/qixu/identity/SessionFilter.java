@@ -57,6 +57,7 @@ public class SessionFilter extends OncePerRequestFilter {
                 throw new DomainException(503,"APPLICATION_NOT_READY","服务正在准备，请稍后重试。");
             boolean anonymous=(path.equals("/api/health") && request.getMethod().equals("GET"))
                 || (path.equals("/api/v1/auth/login") && request.getMethod().equals("POST"))
+                || (path.equals("/api/v1/auth/external/dark-room") && request.getMethod().equals("POST"))
                 || (path.equals("/api/v1/auth/options") && request.getMethod().equals("GET"))
                 || (request.getMethod().equals("GET") && path.matches("/api/public/batches/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/verification"));
             if (path.startsWith("/api/") && !anonymous) {
@@ -65,7 +66,7 @@ public class SessionFilter extends OncePerRequestFilter {
                 if (authorization!=null && !bearer) throw DomainException.unauthorized();
                 String token=bearer?authorization.substring(7):null;
                 if (!bearer && request.getCookies()!=null) for (Cookie cookie:request.getCookies()) if (cookie.getName().equals("qixu_session")) token=cookie.getValue();
-                var session=auth.authenticate(token);
+                var session=auth.authenticate(token,path.equals("/api/v1/auth/logout") && request.getMethod().equals("POST"));
                 if(!bearer && Set.of("GET","HEAD").contains(request.getMethod()) && !path.equals("/api/v1/auth/session") && request.getHeader("X-CSRF-Token")!=null && !Digests.equal(session.csrf(),request.getHeader("X-CSRF-Token")))
                     throw new DomainException(409,"SESSION_OWNER_CHANGED","浏览器会话已由其他页面变更，请重新加载并核对身份。");
                 if (!bearer && !Set.of("GET","HEAD","OPTIONS").contains(request.getMethod()) && !Digests.equal(session.csrf(),request.getHeader("X-CSRF-Token"))) {

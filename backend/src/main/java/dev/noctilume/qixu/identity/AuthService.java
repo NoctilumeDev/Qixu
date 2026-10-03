@@ -21,13 +21,17 @@ public class AuthService {
     private final JdbcTemplate jdbc;
     private final Clock clock;
     private final int sessionHours;
+    private final ExternalSessions external;
     private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);
     private final String dummyHash=encoder.encode(Digests.token());
-    public record Session(Actor actor,String tokenHash,String csrf) {}
+    public record ExternalProof(long binding,long version,String issuer,String subject,java.time.Instant expiresAt,long deadlineNanos) {}
+    public record Session(Actor actor,String tokenHash,String csrf,ExternalProof externalProof) {
+        public Session(Actor actor,String tokenHash,String csrf){this(actor,tokenHash,csrf,null);}
+    }
     public record Login(Actor actor,String token,String csrf) {}
     private record Attempt(int failures,LocalDateTime windowEnd) {}
-    public AuthService(JdbcTemplate jdbc,Clock clock,@Value("${qixu.session-hours:12}") int sessionHours) {
-        this.jdbc=jdbc; this.clock=clock; this.sessionHours=sessionHours;
+    public AuthService(JdbcTemplate jdbc,Clock clock,ExternalSessions external,@Value("${qixu.session-hours:12}") int sessionHours) {
+        this.jdbc=jdbc; this.clock=clock; this.external=external; this.sessionHours=sessionHours;
     }
     private LocalDateTime now() { return LocalDateTime.ofInstant(clock.instant(),ZoneOffset.UTC); }
     static Actor actor(java.sql.ResultSet rs) throws java.sql.SQLException {
@@ -49,12 +53,14 @@ public class AuthService {
         if (failures>=5) throw new DomainException(429,"LOGIN_RATE_LIMIT","尝试次数较多，请稍后再登录。");
         var users=jdbc.query("SELECT * FROM identity_user WHERE username=?",(rs,n)->Map.entry(actor(rs),rs.getString("password_hash")),account);
         boolean matches=encoder.matches(password,users.isEmpty()?dummyHash:users.get(0).getValue());
-        boolean active=!users.isEmpty() && Boolean.TRUE.equals(jdbc.queryForObject("SELECT active FROM identity_user WHERE id=?",Boolean.class,users.get(0).getKey().id()));
+        boolean active=!users.isEmpty() && Boolean.TRUE.equals(jdbc.queryForObject("SELECT active AND local_login_enabled FROM identity_user WHERE id=?",Boolean.class,users.get(0).getKey().id()));
         if (!matches || !active) {
             jdbc.update("UPDATE login_attempt SET failures=failures+1 WHERE attempt_key=?",attempt);
             throw new DomainException(401,"LOGIN_REJECTED","账号、密码或身份状态不正确。");
         }
-        Actor actor=users.get(0).getKey();
+        var locked=jdbc.query("SELECT * FROM identity_user WHERE id=? AND active=TRUE AND local_login_enabled=TRUE AND password_hash=? FOR UPDATE",(rs,n)->actor(rs),users.get(0).getKey().id(),users.get(0).getValue());
+        if(locked.isEmpty())throw new DomainException(401,"LOGIN_REJECTED","账号、密码或身份状态不正确。");
+        Actor actor=locked.get(0);
         String token=Digests.token(),csrf=Digests.token();
         jdbc.update("UPDATE login_attempt SET failures=0 WHERE attempt_key=?",attempt);
         jdbc.update("INSERT INTO auth_session(token_hash,user_id,auth_version,csrf_token,expires_at) VALUES(?,?,?,?,?)",Digests.sha256(token),actor.id(),actor.authVersion(),csrf,at.plusHours(sessionHours));
@@ -62,11 +68,14 @@ public class AuthService {
         return new Login(actor,token,csrf);
     }
     public Session authenticate(String token) {
+        return authenticate(token,false);
+    }
+    public Session authenticate(String token,boolean logout) {
         if (token==null || !token.matches("[a-f0-9]{64}")) throw DomainException.unauthorized();
         String hash=Digests.sha256(token);
         List<Session> sessions=jdbc.query("SELECT u.*,s.csrf_token FROM auth_session s JOIN identity_user u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND u.active=TRUE AND u.auth_version=s.auth_version",(rs,n)->new Session(actor(rs),hash,rs.getString("csrf_token")),hash,now());
         if (sessions.isEmpty()) throw DomainException.unauthorized();
-        return sessions.get(0);
+        return external.verify(sessions.get(0),logout);
     }
     public List<Long> scopes(Actor actor) {
         if (!actor.role().equals("ADMIN")) return List.of();
