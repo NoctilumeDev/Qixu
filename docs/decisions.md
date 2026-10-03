@@ -163,3 +163,9 @@ PR#16按严格三项门禁合入main@52c520c，exact-main CI37096786155三项suc
 PR#17按严格三项门禁合入main@a918a2a，exact-main CI37097881018三项及步骤success；运行资格不由CI自动升级。F12先冻结合同并保留观察器PENDING与97a1d14真实T0首FAIL，再修V10独立账册/同事务marker和隔离。框架commit歧义首FAIL另留，88df403按未知结果修复。新ec31a60的native162及restore0.4/Plan4 PASS22证明原T0/缺账册对照，前提缺口单独版本化，见[M7恢复事实](acceptance/m7-restore.md)。
 
 当前仅候选限定证据，尚待受保护公开合入与新坐标资格。M7继续真实事务/组合/页面，M8两名角色在退出之后，M10精修保留。整个主机回滚、多节点、真掉电和微信送达不被本段宣称。
+
+## 2026-10-03 · D023 · M7恢复段受保护主线资格
+
+PR#18三项及步骤success后按线性历史保护压缩合入main@3b445b9；exact-main CI37101177576三项/步骤success，fresh native166/restore22均PASS，远端main与README字节一致。F12资格绑定该运行主线，不由后续文档提交或绿色CI扩展；完整证据见[M7恢复](acceptance/m7-restore.md)。
+
+当前M7仍IN_PROGRESS；F15借出数据库连接停滞/锁预算，以及真实页面和其他组合继续施工。M8双角色只在M7退出后，M10精修不取消，不宣布全工程完成。
