@@ -212,6 +212,27 @@
       "verdict": "PENDING",
       "path": "artifacts/m7/m7-restore-0525fb9a74c84b82a28c2e989dad4c41",
       "manifest_sha256": "6aef537d43dc1313dc217e2ee5df9fd017d9812e5cbe923e66297c2743989759"
+    },
+    {
+      "identity": "m7-f4be5143a38d46caab9ec32cb0fe1831",
+      "source_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-f4be5143a38d46caab9ec32cb0fe1831",
+      "manifest_sha256": "b62a94a90131fe2cbcf5a18ed2d8539ab2f5dae6b053ea719a7e357abe090f57"
+    },
+    {
+      "identity": "m7-restore-98af32b2df054f5186c33bda423aaac1",
+      "source_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-98af32b2df054f5186c33bda423aaac1",
+      "manifest_sha256": "68710270773511b3a4cd25e1b2e72d3000914622c6feffaf76dcd7721ae136a2"
+    },
+    {
+      "identity": "m7-database-b615ce5733ff4d38a6ce222157f9c5b3",
+      "source_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-database-b615ce5733ff4d38a6ce222157f9c5b3",
+      "manifest_sha256": "d4c1815930a96b804f29afd39d1f6dca6efb0d62a005042952f68f3c3394c895"
     }
   ],
   "not_proven": [
@@ -229,5 +250,7 @@
   "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010",
   "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
   "restore_qualified_main_sha": "3b445b9fd73b88aeaa4d5bab6e6264cd72485766",
-  "restore_exact_main_ci": "37101177576"
+  "restore_exact_main_ci": "37101177576",
+  "database_budget_contract": "docs/contracts/m7-database-budgets.md",
+  "database_budget_candidate_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46"
 }

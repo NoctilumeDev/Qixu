@@ -28,3 +28,11 @@
 固定bfd37f03c8eaa69e69d1429f0eed82e60e1df340的新[native0.18/Plan6 PASS170](../../artifacts/m7/m7-c9aaf7a6f0694c57a26c1528693bbba5/acceptance-report.md)保留166并加入4个实际驱动解析用例。新[database0.4/Plan4 PASS25](../../artifacts/m7/m7-database-fb76310ae3554b08b80a7713506ac894/acceptance-report.md)保留原25断言：实际app session锁预算10秒；持锁请求10.094秒结构化503、无业务/marker；恢复同key唯一。已建立连接业务COM_QUERY被阻断后30.047秒503；无业务/marker变化，解除故障无需重启同PID恢复读取与原回执。全部owned/线程停止、三端口无监听。
 
 该坐标的[restore0.6/Plan6](../../artifacts/m7/m7-restore-0525fb9a74c84b82a28c2e989dad4c41/acceptance-report.md)却PENDING/ERROR：第一次health响应是APPLICATION_NOT_READY 503，观察器误当已稳定状态，未发任何业务/恢复请求。它不支持恢复失败或恢复通过。最小修正startup状态等待，原55秒预算与22断言不变；原Bundle保留，后续新source复验。
+
+## e704b10同坐标复验，尚待主线资格
+
+固定e704b10e2ae739648f5551928f121b4ba4cecf46的新[native170](../../artifacts/m7/m7-f4be5143a38d46caab9ec32cb0fe1831/acceptance-report.md)、[restore0.7/Plan7原22项](../../artifacts/m7/m7-restore-98af32b2df054f5186c33bda423aaac1/acceptance-report.md)及[database0.5/Plan5原25项](../../artifacts/m7/m7-database-b615ce5733ff4d38a6ce222157f9c5b3/acceptance-report.md)均COMPLETED/PASS。观察器只修正启动前提，不改变业务判定：APPLICATION_NOT_READY继续等候，200或明确NOT_RECONCILED才是可判定状态。
+
+真实锁等待10.109秒返回503 DATABASE_UNAVAILABLE；guard期无预约/回执/marker，同键恢复唯一。实际已借出的auth_session COM_QUERY丢server回应30.047秒返回同码；解除故障后同PID读取及原回执恢复。恢复对照保持T0隔离、完整T1正常、仅缺账册隔离，外部world不变。所有owned及relay停止，6975/6976/6977无监听。三个原包按字节发布，96个历史包校验保持，失败未删。
+
+仅为候选限定复验，尚待受保护合入、exact-main CI及新的原生/安装事实。它不证明COMMIT回应丢失、多节点、生产总API时限或微信设备；M7仍IN_PROGRESS。

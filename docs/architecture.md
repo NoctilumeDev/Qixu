@@ -76,3 +76,7 @@ M1项目原生测试按真实MySQL执行，不以H2代表隔离/锁事实。CI�
 ## M7候选 · 恢复后的授权隔离
 
 单实例业务commit前强制持久库外PREPARE并同事务写recovery_marker；确定结果后写终态。启动完整核对generation、规范基线、marker及独立链，不猜测未知提交。NOT_RECONCILED阻断API/身份采纳/任务及demo初始化，保留原外部见证和请求键。正常域锁序不由全库锁替代。实际数据库/受控框架/物理停止后的逻辑恢复三层见[M7恢复](acceptance/m7-restore.md)，不升级为多节点或生产灾备。
+
+## M7候选 · 实际数据库预算
+
+Hikari取得连接时限不约束已借出查询。候选实现通过实际Connector/J解析器校验单主机有效属性，固定connect/socket及pool时限，新连接初始化SESSION锁预算；真实owned floor等待与借出COM_QUERY故障分别复验，见[预算合同](contracts/m7-database-budgets.md)及[原始事实](acceptance/m7-database.md)。这只给这些等待边界，不声称整个请求累计有30秒SLA；通信未知仍不能推断COMMIT回滚。

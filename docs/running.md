@@ -66,4 +66,10 @@ M5运行 `python scripts/veritrail_native.py --stage m5 --maven <mvn>`，随后�
 
 NOT_RECONCILED时健康与业务入口503，原键/凭据保留，演示初始化和调度不继续。恢复与账册相符的数据库再重启可以重新核对；不提供网页强制继续。整主机一起回退、特权SQL绕过、长时间账册轮换、多节点与灾备能力仍未证明。32MiB/200,000事件硬预算耗尽会隔离，不截断历史；现阶段需监控账册大小，不能视作无限运行容量。
 
-M7 native0.17/Plan5执行166项（147原见证+15文件/受控DB视图及框架单元+4真实事务对照），专属测试库账册持久保存于`.tools/runtime/native-<schema>`；真实恢复另运行`veritrail_m7_restore.py --producer-bundle <同source的原native0.17/Plan5 Bundle> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`。它只初始化本轮新数据目录和6975/6976独占实例，保留T0/T1/独立world见证，宿主3306不动。0.5/Plan5保留原18项及4个一致前提控制；测试成功、页面资格和最终Release分别判定。
+M7当前native0.18/Plan6执行170项（原166见证+4个实际驱动配置解析单元），专属测试库账册持久保存于`.tools/runtime/native-<schema>`；真实恢复另运行`veritrail_m7_restore.py --producer-bundle <同source的原native0.18/Plan6 Bundle> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`。它只初始化本轮新数据目录和6975/6976独占实例，保留T0/T1/独立world见证，宿主3306不动。restore0.7/Plan7保留22个业务标准；测试成功、页面资格和最终Release分别判定。
+
+## M7数据库等待预算 · 候选复验
+
+单主机Connector/J连接固定connectTimeout=3000ms、socketTimeout=30000ms，Hikari取得连接3000ms、validation2000ms，每条新连接设置SESSION innodb_lock_wait_timeout=10s。启动前用实际驱动解析有效host属性，拒绝多主机、主机级超时覆盖、零/负/延长预算及缺失锁初始化；不是全API累计时限或生产SLA。URL不可自行放宽预算，生产TLS设置不受故障夹具明文配置影响。
+
+F15运行`veritrail_m7_database.py --producer-bundle <同source原native0.18/Plan6 Bundle> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`：只用本轮新MySQL6976、app6975和loopback relay6977，固定driver9.7.0/pool7.0.2，真实floor锁及已有业务连接的COM_QUERY回应丢失。15/35秒是观察窗口；同源原25标准不靠重启或改幂等key通过。端口已有监听立即停止，绝不接管共享实例。首次FAIL、观察器PENDING和候选复验见[M7数据库事实](acceptance/m7-database.md)。
