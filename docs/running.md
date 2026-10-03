@@ -57,3 +57,13 @@ M5运行 `python scripts/veritrail_native.py --stage m5 --maven <mvn>`，随后�
 隔离恢复先运行 `veritrail_native.py --stage m6` 取得native0.12 / Plan1原Bundle，再运行 `veritrail_m6_installed.py --help`。要求同exact clean source的新JAR、原native清单、专属qixu_test/qixu_ci和qixu_darkroom_test、固定暗室d6e42a8专属检出及私有环境。QIXU_DARK_ROOM_TEST_URL/USER/PASSWORD/JWT_SECRET与QIXU_TEST_DB_*只用于隔离执行；SQL原文及schema-only字节转换摘要分别由QIXU_DARK_ROOM_SQL_SOURCE_SHA256/TRANSFORM_SHA256核对。预先建库权限归部署操作员，不授予采集器共享schema权限。
 
 采集器0.3 / Plan3先seal，使用6970/6971，端口占用拒绝而不清其他进程；真实丢响应、同库重启、pending outbox重投、固定未来round恢复和干净独立复算。PENDING/失败保留在新identity，不覆盖历史。具体证据/未证明边界见[M6](acceptance/m6.md)，不是校园SSO、生产灾备或微信真机证明。
+
+## M7 恢复隔离 · 施工中
+
+原T0与缺账册单故障已有[限定复验](acceptance/m7-restore.md)，M7整体尚未闭合。默认独立账册为进程工作目录`.qixu/transactions.journal`；部署应显式将`QIXU_RECOVERY_JOURNAL`指向MySQL数据目录及SQL恢复对象之外的持久绝对路径。文件与库内generation/marker配对，第二个进程不能共享该账册继续服务。禁止删除/裁剪历史后重新初始化，禁止把账册跟随旧SQL一起回滚。
+
+新空库可首次初始化。已有V1–V9库的操作员在停写、保留备份与旧外部副作用边界后，显式一次性设置`QIXU_RECOVERY_BASELINE=ADOPT_PRE_V10_ONCE`；账册只留规范基线摘要，不保存个人正文。该值不能绕过已有generation的缺失/损坏账册。基线以前的通知/外部世界不因此被证明一致。
+
+NOT_RECONCILED时健康与业务入口503，原键/凭据保留，演示初始化和调度不继续。恢复与账册相符的数据库再重启可以重新核对；不提供网页强制继续。整主机一起回退、特权SQL绕过、长时间账册轮换、多节点与灾备能力仍未证明。32MiB/200,000事件硬预算耗尽会隔离，不截断历史；现阶段需监控账册大小，不能视作无限运行容量。
+
+M7 native0.17/Plan5执行166项（147原见证+15文件/受控DB视图及框架单元+4真实事务对照），专属测试库账册持久保存于`.tools/runtime/native-<schema>`；真实恢复另运行`veritrail_m7_restore.py --producer-bundle <同source的原native0.17/Plan5 Bundle> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`。它只初始化本轮新数据目录和6975/6976独占实例，保留T0/T1/独立world见证，宿主3306不动。0.5/Plan5保留原18项及4个一致前提控制；测试成功、页面资格和最终Release分别判定。

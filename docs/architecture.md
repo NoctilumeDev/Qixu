@@ -72,3 +72,7 @@ M3必须在冻结前绑定未来round，固定canonical inputs/algorithm/来源�
 数据库schema `qixu` 与验收schema `qixu_test` 分离；应用账号不获其他库权限。密码仅本地忽略配置。迁移逐阶段追加、不修改已生效历史；演示图片/测量明确标记DEMO。
 
 M1项目原生测试按真实MySQL执行，不以H2代表隔离/锁事实。CI编译与数据库测试分开命名，失败/跳过/未观察各自保留。验迹消费明确的事实，不把测试“总PASS”作为唯一不变量。生产容量、未观察外部身份/微信行为仍NOT_PROVEN。
+
+## M7候选 · 恢复后的授权隔离
+
+单实例业务commit前强制持久库外PREPARE并同事务写recovery_marker；确定结果后写终态。启动完整核对generation、规范基线、marker及独立链，不猜测未知提交。NOT_RECONCILED阻断API/身份采纳/任务及demo初始化，保留原外部见证和请求键。正常域锁序不由全库锁替代。实际数据库/受控框架/物理停止后的逻辑恢复三层见[M7恢复](acceptance/m7-restore.md)，不升级为多节点或生产灾备。

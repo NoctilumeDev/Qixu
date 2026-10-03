@@ -29,6 +29,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 /** Real HTTP and MySQL. The upstream is explicitly a controlled protocol source, not DarkRoom. */
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@org.springframework.test.annotation.DirtiesContext(classMode=org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("demo")
 @Import(ExternalIdentityIT.TimeConfig.class)
 class ExternalIdentityIT {

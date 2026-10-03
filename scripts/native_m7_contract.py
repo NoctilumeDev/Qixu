@@ -12,3 +12,35 @@ M7_MEASURES={
     M7_CASES["ProtocolProjectionIT"][1]:{"favoritesAfterInvalid":0,"receiptsAfterInvalid":0,"rejected":3,"favoritesAfterValid":1,"receiptsAfterValid":1},
     M7_CASES["ProtocolProjectionIT"][2]:{"firstPageSize":20,"reportedTotal":151,"sqlTotal":151,"observedUnique":151,"oracleEqual":True,"unreadAfter":150},
 }
+
+M7_CASES.update({"recovery.RecoveryJournalTest":[
+ "committedAndRolledBackHistorySurvivesExactFileReopen",
+ "secondOwnerCannotAcquireSameIndependentJournal",
+ "illegalTerminalsAndDuplicatePreparesCannotRewriteBytes",
+ "truncatedOrAlteredHistoryIsNeverSilentlyRepaired",
+ "changedLengthOnOwnedChannelInvalidatesFurtherDurableAuthority",
+ "oversizedJournalIsRejectedWithoutTruncation",
+],"recovery.RecoveryFenceTest":[
+ "oldDatabaseMissingKnownCommitMarkerQuarantinesAllAdmission",
+ "incompletePrepareWithRealMarkerRecoversSameCommitWithoutNewGeneration",
+ "unknownPrepareWithoutMarkerIsNotInventedRollback",
+ "knownRollbackWithoutMarkerCanReopenNormally",
+ "missingJournalCannotBeBypassedByBaselineAdoption",
+ "databaseMarkerWithoutPrepareCannotObtainAuthority",
+ "markerWriteFailureKnownRollbackRetainsPreparedCoordinateAndCanReconcile",
+ "unknownCommitOrTerminalIoFailureNeverRewritesCommitAsRollback",
+ "commitAttemptFailureFollowedBySuccessfulRollbackRemainsUnknown",
+]})
+
+M7_CASES.update({"RecoveryTransactionsIT":[
+ "preparedMarkerAndBusinessShareTheRealCommitVisibilityBoundary",
+ "requiresNewCommitSurvivesOuterRollbackWithoutJoinedPhantomMarkers",
+ "ordinaryRollbackAndReadOnlyQueriesDoNotManufactureCommitMarkers",
+ "rejectedSavepointCannotBecomeIndependentAuthorityAndNormalCommitStillWorks",
+]})
+M7_MEASURES.update({
+ M7_CASES["RecoveryTransactionsIT"][0]:{"insideMarkerDelta":1,"insideBusinessRows":1,"outsideMarkerDeltaBeforeCommit":0,"outsideBusinessRowsBeforeCommit":0,"outsideMarkerDeltaAfterCommit":1,"outsideBusinessRowsAfterCommit":1},
+ M7_CASES["RecoveryTransactionsIT"][1]:{"visibleInnerBeforeOuterRollback":1,"visibleOuterBeforeRollback":0,"outerRows":0,"joinedRows":0,"innerRows":1,"committedMarkerDelta":1},
+ M7_CASES["RecoveryTransactionsIT"][2]:{"observedRows":0,"committedMarkerDelta":0,"outsideBusinessRows":0},
+ M7_CASES["RecoveryTransactionsIT"][3]:{"nestedRows":0,"normalRows":1,"committedMarkerDelta":1},
+})

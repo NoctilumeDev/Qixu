@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class PreparationTasks {
     private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(PreparationTasks.class);
+    private final dev.noctilume.qixu.recovery.RecoveryFence recovery;
     private final Business b;private final BatchFreezer freezer;private final AllocationWorker worker;private final AllocationPublisher publisher;private final LongSeats seats;private final ApplicationAvailability availability;private final boolean enabled;
-    public PreparationTasks(Business b,BatchFreezer freezer,AllocationWorker worker,AllocationPublisher publisher,LongSeats seats,ApplicationAvailability availability,@Value("${qixu.tasks-enabled:true}")boolean enabled) {this.b=b;this.freezer=freezer;this.worker=worker;this.publisher=publisher;this.seats=seats;this.availability=availability;this.enabled=enabled;}
+    public PreparationTasks(Business b,BatchFreezer freezer,AllocationWorker worker,AllocationPublisher publisher,LongSeats seats,ApplicationAvailability availability,dev.noctilume.qixu.recovery.RecoveryFence recovery,@Value("${qixu.tasks-enabled:true}")boolean enabled) {this.b=b;this.freezer=freezer;this.worker=worker;this.publisher=publisher;this.seats=seats;this.availability=availability;this.recovery=recovery;this.enabled=enabled;}
     @Scheduled(fixedDelayString="${qixu.task-delay-ms:5000}",initialDelay=10000)
     public void run() {
-        if(!enabled || availability.getReadinessState()!=ReadinessState.ACCEPTING_TRAFFIC)return;
+        if(!enabled || !recovery.ready() || availability.getReadinessState()!=ReadinessState.ACCEPTING_TRAFFIC)return;
         try {
             var now=b.now();
             for(var row:b.jdbc.queryForList("SELECT id FROM preparation_batch WHERE status='OPEN' AND closes_at<=? ORDER BY freeze_deadline,id LIMIT 2",now))attempt("freeze",Business.number(row,"id"),()->freezer.freezeDue(Business.number(row,"id")));

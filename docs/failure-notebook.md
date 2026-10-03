@@ -177,3 +177,53 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 先冻结[恢复/独立判定合同](contracts/m7-metadata-oracle.md)，4c76123/frontend0.4/Plan3取得[原FAIL](../artifacts/m7/m7-frontend-f5921b7d4d4745428bba7b56ffeb2093/acceptance-report.md)：45例实际观察，新增8例中7例失败，迁移中断恢复控制正确通过。合法坐标的截断/结构不合法/主体不一致被忽略，已有内存正文损坏后也失去原键；非法坐标和坏旧数组容许新POST而非阻止；保存后抛错有持久原键却没有立即可见的恢复项；已确认回执后删除实际成功但抛错仍被误报为存储失败。原始字节、失败XML和Core包保留，分类客户端恢复投影/迁移/部分效果判定，尚未修复。
 
 相同候选的native0.14/Plan2取得[147例PASS](../artifacts/m7/m7-ad2ce37f31a848c7b2db89363fc6bda4/acceptance-report.md)，其中全部65,536个4×4可接受图及2,048个非对称rank/容器重排样本，用不调用产品匹配函数的完整分配枚举判定。目标包含冻结的并列rank排序；不能改成首选总数最优再误报产品失败。此控制没有观察到算法缺陷，不证明完整M7、生产容量、备份或真实浏览器。
+
+## M7 F12 · Windows MySQL观察器首败
+
+`70f49ed`的恢复观察0.1/Plan1取得[原PENDING](../artifacts/m7/m7-restore-53bac83347604e8e881a9b6b524e02e5/acceptance-report.md)，execution ERROR：owned MySQL readiness budget exhausted，没有业务请求。MySQL8.0.44默认启动监控父进程38928，实际监听子进程26780；采集器只接受Popen父PID，所以拒绝了端口。分类观察器生命周期接线，不是产品恢复缺陷。
+
+原包cleanup=true只证明父句柄停止，后续CIM发现同exe/同my.ini、ParentProcessId38928、CreationDate2026-10-03T12:58:36.7879370+08:00的子进程仍监听6976。这是清理证据缺口，不能把原字段升级成无残留。独立核对以上四个坐标后仅停止该子进程，6976读回无监听；原包不改。宿主3306/6947/7897保持原PID和启动时间，6364原无监听。
+
+[MySQL官方选项文档](https://dev.mysql.com/doc/refman/8.0/en/server-options.html#option_mysqld_no-monitor)明确`--no-monitor`抑制Windows监控fork；[原报告#92683](https://bugs.mysql.com/bug.php?id=92683)已关闭并说明两进程是RESTART的默认机制，不借此宣称MySQL漏洞。最小修订仅改owned实例启动方式与清理读回，保留恢复业务断言。原首次包与后续新的观察身份分别保存。
+
+## M7 F12 · 真实T0恢复制造外部世界冲突
+
+候选`97a1d141b027d37255458bc9d4ed7636af54901e`的native0.15/Plan3 [PASS147](../artifacts/m7/m7-4fbf36804b4b4a739cfcae47eb62bedd/acceptance-report.md)不能覆盖恢复。相同source的restore0.2/Plan2取得[原FAIL](../artifacts/m7/m7-restore-1a767fd49106407d96d639211f9219eb/acceptance-report.md)，execution COMPLETED：A提交200并实际读到站内通知，独立world保存完整回执及inbox；正常同库新PID取得相同回执。owned MySQL物理停止/重启后逻辑恢复T0，world摘要不变；服务仍健康200，B同座位/同时间申请200，A原回执404、原键重放409，SQL新预约1/新inbox1。库内当下没有超卖，但库外已交付A的正式凭据未被撤销，系统又承诺给B，击穿恢复后使用权与外部世界一致性。
+
+一致T1库的第二trace中，产品从未创建独立journal，缺账册仍健康200并返回旧回执200。分类产品缺失恢复代/独立事务对账与隔离机制；不能用网络故障或“数据库恢复成功”解释为安全。原dump/完整world/HTTP/SQL/CIM留私有运行目录；公共包原字节不改，不发布票据。6个owned进程停止且6975/6976无监听。
+
+修复按已冻结F12合同：提交前持久PREPARE与同事务marker、启动generation/全账册核对、无法对账时503 NOT_RECONCILED并阻止身份/业务/任务。保留正确正常重启控制与原Plan2断言复验，不靠清库、删除旧见证或改变原请求键修绿。尚未修复；M7整体不闭合。
+
+## M7恢复修复 · 单元夹具首败
+
+`ffbb6a2`的14条文件/受控DB视图单元首跑9通过、1失败4错误，原XML/stdout保留`.tools/m7-recovery-unit-first-ffbb6a2/`，未产生Core资格。Windows排他FileLock为强制锁，测试用Files第二句柄读取/追加被系统拒绝；另一个Mockito桩选中了JdbcTemplate的数组+类型重载，而产品调用Object-varargs，所以预设SQL失败没注入。分类测试夹具，并未观察到恢复规则失效。首次错误工作目录无POM的命令输出也保留，没有测试执行。
+
+修正测试从owned descriptor读取原字节，并仅通过该句柄显式注入长度变化/句柄关闭的IO故障；不移除产品文件锁、不把该注入说成外部攻击或真实磁盘掉电。SQL桩固定Object[]重载。原T0恢复业务断言与首FAIL不变，后续真实MySQL另验。
+
+## M7恢复修复 · commit尝试后rollback成功仍可能UNKNOWN
+
+候选`23d9d2b`新增反例执行真实Spring7.0.9 JdbcTransactionManager的processCommit，连接/DB视图受控：PREPARE与marker步骤后，doCommit抛数据运行时异常，框架随后调用rollback且返回成功，再afterRollback(null)。原XML/stdout留`.tools/m7-recovery-commit-ambiguity-first-23d9d2b/`；1例首FAIL，产品fence仍ready=true并追加ROLLBACK。此观察不冒充MySQL真实丢commit响应。
+
+分类新修复中的结果判定缺陷；afterRollback成功只说明那次rollback调用成功，不足以消除已尝试commit的不确定。Spring源码的运行时异常路径提供该回调顺序，不能用方法名替代事实。最小修复增加每事务“已准许commit尝试”坐标：只有尚未进入commit的marker准备失败且rollback确定成功可记录ROLLBACK；commit已获准后出现失败/rollback则保留PREPARE，隔离UNKNOWN，启动只通过真实marker再判定。原T0首FAIL及所有正常控制保留。
+
+## M7 F12 · 原恢复反例复验与缺账册前提混杂
+
+`88df403d9df6bac79d8943f063dc48d81f7fc93e`的native0.16/Plan4 [PASS162](../artifacts/m7/m7-5bfb66e0329e4d4bbf8cc7dcbe242dfe/acceptance-report.md)，含原147与15文件/受控DB视图/真实框架回调机制；不是162条真实MySQL。restore0.3/Plan3取得[PASS](../artifacts/m7/m7-restore-96c40b10e55547159489bacc8a73d930/acceptance-report.md)，原18断言逐条核对未降标准：正常同库回执相同，T0恢复后健康/竞争者/原回执/重放全503 NOT_RECONCILED，SQL预约0/inbox0，独立world不变，owned停止及6975/6976无监听。原首FAIL保持。
+
+独立复核发现第二trace不能宣称“只缺账册”：T1 dump在正常重启前已有5个marker，正常重启中的demo seed新提交使外部journal已有6个COMMIT；随后恢复T1再移走journal时，另有回退事务的混杂。原Core PASS只证明封存的18项已观察投影，不能扩展为未封存的前提已成立。分类采集前提缺口，保留原包，未把PASS改写为FAIL，独立纯缺账册资格仍NOT_PROVEN。
+
+版本化观察入口补一致性控制：正常重启后停止owned应用并新采T1；T0负向后恢复该T1，先实际读到健康/原回执，再停止应用核对独立journal链与DB全部marker/generation一致，仅移走journal后重启。原18断言保留，额外要求此控制成立与原账册真实存在。产品源码不因该夹具问题改变。
+
+## M7 F12 · 独立缺账册前提恢复
+
+ec31a60的fresh native162与restore0.4/Plan4 [PASS22](../artifacts/m7/m7-restore-26c39280202643e386b1a13b0734a991/acceptance-report.md)：新T1在正常重启后停止应用采集，第二trace恢复后实际200/同回执；独立链与SQL全部marker/generation一致（7 COMMIT、7 marker、0未决），随后只移走存在账册而不再恢复DB，健康/回执均503 NOT_RECONCILED。原18断言未变，新增4个前提均成立，纯缺账册限定资格补齐；原混杂PASS不变。
+
+共享服务复核第一次使用Get-Process.StartTime时受保护MySQL返回null且100ns格式不匹配，原命令/不完整快照保留，不据此宣称相同。改用CIM CreationDate与原捕获同六位精度，真实核对3306/6947/7897的PID和启动时间一致、owned6975/6976无监听，未执行任何共享停止。此为观察接线纠正，非产品修复。
+
+## M7 F12 · 实际框架组合控制与公开来源边界
+
+8337fe4的native0.17/Plan5 PASS166含4条实际MySQL事务控制，marker/业务可见性、REQUIRES_NEW外层回滚、普通回滚/只读及禁止nested均符合冻结合同。restore0.5/Plan5保留22原断言再次通过。原首FAIL不变，不把上述控制说成commit网络真丢失。
+
+补查[Connector/J故障语义](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-troubleshooting.html)说明通信失败不能判定服务器是否commit，是保留UNKNOWN的独立来源。[Hikari历史#1116](https://github.com/brettwooldridge/HikariCP/issues/1116)是旧2.x/3.0已关闭的连接状态增强，只启发只读/池复用对照；[Spring#37084](https://github.com/spring-projects/spring-framework/issues/37084)是Boot3.5/JPA/嵌套事件报告，期序JDBC7.0.9无该事件链，不能搬来宣称漏洞。
+
+[Hikari Rapid Recovery](https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery)提示取连接超时不约束已借出的连接。当前只看到pool connection-timeout=3000，尚未实际验证长SQL/借出连接故障预算。登记F15相邻trace：固定驱动/池版本、独占数据库或loopback故障代理，先观察当前默认预算，再验证明确网络/锁预算及UNKNOWN/隔离；不对共享3306注入故障。触发为借出连接后TCP/SQL停滞，影响锁持有/任务截止与服务恢复；缺实际故障证据，归属期序维护者，M7范围内继续验证。

@@ -1,6 +1,6 @@
 # 数据模型与迁移边界 0.1
 
-状态：M1–M3限定资格已闭合；M4施工。真相存MySQL InnoDB；业务时间UTC，呈现上海时区。JSON仅用于设施/展示画像、冻结快照及回执，不用JSON中的字符串状态替代有索引的业务约束。
+状态：M1–M6限定资格已闭合；M7候选施工。各迁移段保留其当时范围，当前事实另见acceptance。真相存MySQL InnoDB；业务时间UTC，呈现上海时区。JSON仅用于设施/展示画像、冻结快照及回执，不用JSON中的字符串状态替代有索引的业务约束。
 
 ## M1迁移
 
@@ -58,3 +58,9 @@ V1–V8均已在专用qixu_test执行，后续只追加迁移；历史数据升�
 ## M6 V9 · 显式绑定与加密外部会话
 
 identity_user.local_login_enabled区分本地密码与外部专用登录。external_identity新增active/version/issuer_hash，历史默认不启用。auth_session绑定external_binding_id/version/issuer/subject及AES-GCM密文，FK与全有/全无check避免半个外部会话。授权仍取本地当前角色/范围/学生资格，上游角色不入权利表。修改绑定或登录模式提升相应版本并留审计；旧会话不能迁移主体。V9在qixu_test真实迁移，旧迁移字节不改；独立历史V5/V6升级边界仍待M7 F15复核。
+
+## M7 V10 · 恢复代与独立账册
+
+recovery_generation固定唯一id=1、generation UUID、规范基线摘要及是否采纳既有事实；recovery_marker保存本代每个Spring管理非只读提交的唯一事务坐标，和业务效果同事务提交。库外持久journal保存版本/顺序/链摘要、PREPARE与确定终态，不保存票据/密码/个人正文。数据库与账册无法一致时隔离，不自动重新初始化。
+
+V10真实迁移及新空库/已有专属测试库显式基线采纳均有限定运行见证，见[M7恢复](acceptance/m7-restore.md)。已有V1–V9及V10字节不改；后续只追加。独立账册不是MySQL另一份备份，整个主机回滚/特权篡改/生产轮换仍未证明。

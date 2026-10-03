@@ -17,6 +17,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 /** Small bounded protocol traces and an independent raw-SQL projection oracle. */
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@org.springframework.test.annotation.DirtiesContext(classMode=org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("demo")
 class ProtocolProjectionIT {
     @LocalServerPort int port;

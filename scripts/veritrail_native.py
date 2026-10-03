@@ -5,6 +5,7 @@ it does not acquire DB lifecycle authority or prove production capacity.
 """
 from __future__ import annotations
 import argparse
+import os
 import hashlib
 import time
 from datetime import datetime, timezone
@@ -124,7 +125,7 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.14"}.get(args.stage, "qixu-native/0.6")
+    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.17"}.get(args.stage, "qixu-native/0.6")
     request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
     if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7"):
@@ -140,9 +141,12 @@ def main() -> int:
         required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M6_CASES.items() for name in names]
     if args.stage == "m7":
         required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M7_CASES.items() for name in names]
+        request["recovery_fixture"]={"journal":"persistent-dedicated-test-db-ledger","baseline_adoption":"ADOPT_PRE_V10_ONCE","contexts":"AFTER_CLASS","recovery_bypass":False}
         request["migration_sha256"]={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/"backend/src/main/resources/db/migration").glob("*.sql"))}
         request["contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-execution-entry.md").read_bytes()).hexdigest()
         request["metadata_oracle_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-metadata-oracle.md").read_bytes()).hexdigest()
+        request["transaction_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-transaction-coordinates.md").read_bytes()).hexdigest()
+        request["restore_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-restore-fence.md").read_bytes()).hexdigest()
     spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": collector.split("/")[1]},
             "evidence_type": "qixu.native.observation", "coordinates": request,
             "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations", "package"],
@@ -174,7 +178,7 @@ def main() -> int:
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 2}.get(args.stage, 6),
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 5}.get(args.stage, 6),
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -190,10 +194,16 @@ def main() -> int:
     write_new(output / "request.json", request)
     exit_code = -1
     execution = "COMPLETED"
+    environment=dict(os.environ)
+    if args.stage=="m7":
+        database=environment.get("QIXU_TEST_DB_URL","").split("/")[-1].split("?")[0]
+        if database not in {"qixu_test","qixu_ci"}:raise RuntimeError("Dedicated recovery fixture database required")
+        directory=ROOT/".tools/runtime"/("native-"+database);directory.mkdir(parents=True,exist_ok=True)
+        environment.update(QIXU_RECOVERY_JOURNAL=str(directory/"transactions.journal"),QIXU_RECOVERY_BASELINE="ADOPT_PRE_V10_ONCE")
     command_started = time.time()
     try:
         # Fresh reports prevent a failed command from replaying stale green XML.
-        completed = subprocess.run([args.maven, "-B", "-ntp", "-Pmysql-it", "clean", "verify"], cwd=ROOT / "backend", capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900)
+        completed = subprocess.run([args.maven, "-B", "-ntp", "-Pmysql-it", "clean", "verify"], cwd=ROOT / "backend", capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900, env=environment)
         exit_code = completed.returncode
         (output / "stdout.txt").write_text(completed.stdout, encoding="utf-8")
         (output / "stderr.txt").write_text(completed.stderr, encoding="utf-8")
@@ -243,11 +253,12 @@ def main() -> int:
                 if name in measurements: raise RuntimeError("Duplicated observation identity: "+name)
                 measurements[name]=value
     if args.stage == "m7":
-        path=ROOT/"backend/target/failsafe-reports/qixu-m7-protocol-observation.json"
-        if path.exists():
-            for name,value in json.loads(path.read_text(encoding="utf-8")).items():
-                if name in measurements: raise RuntimeError("Duplicated observation identity: "+name)
-                measurements[name]=value
+        for filename in ["qixu-m7-protocol-observation.json","qixu-m7-transactions-observation.json"]:
+            path=ROOT/"backend/target/failsafe-reports"/filename
+            if path.exists():
+                for name,value in json.loads(path.read_text(encoding="utf-8")).items():
+                    if name in measurements: raise RuntimeError("Duplicated observation identity: "+name)
+                    measurements[name]=value
     boundaries = {"m7": "M7_PROTOCOL_PROJECTION_INDEPENDENT_ORACLE_NOT_WHOLE_M7_BROWSER_BACKUP_OR_DEVICE", "m6": "M6_API_MYSQL_CONTROLLED_IDENTITY_NOT_REAL_DARKROOM_RESTART_OR_DEVICE", "m5": "M5_API_MYSQL_CLIENT_RECOVERY_NOT_FRONTEND_BUILD_BROWSER_OR_WECHAT_DEVICE", "m1": "M1_FOUNDATION_ONLY", "m2": "M2_API_MYSQL_ONLY_NOT_UI_OR_ALLOCATION", "m3": "M3_NATIVE_TRANSACTIONS_AND_OFFLINE_PROOF_NOT_FUTURE_BEACON_OR_UI", "m4": "M4_HTTP_MYSQL_CONTROLLED_FAULTS_NOT_PHYSICAL_REPAIR_UI_BACKUP_OR_FUTURE_BEACON"}
     facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": boundaries[args.stage]}
     if args.stage in ("m3", "m4", "m5", "m6", "m7"):

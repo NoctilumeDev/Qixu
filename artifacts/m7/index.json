@@ -1,5 +1,5 @@
 {
-  "phase": "M7_IN_PROGRESS_ENTRY_AND_METADATA_ORACLE",
+  "phase": "M7_IN_PROGRESS_RESTORE_AND_PROTOCOL",
   "entry_contract": "docs/contracts/m7-execution-entry.md",
   "repair_source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
   "bundles": [
@@ -65,15 +65,83 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-cac4bccadb8b46a3bf5b1dd2bf34b33b",
       "manifest_sha256": "675f90be73aacc4ccf370b82a078240c9932aa4753e30779d57704cfbe4c8f58"
+    },
+    {
+      "identity": "m7-restore-53bac83347604e8e881a9b6b524e02e5",
+      "source_sha": "70f49ed2cef3f4f43870c68be8748b255f172973",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-restore-53bac83347604e8e881a9b6b524e02e5",
+      "manifest_sha256": "282af37251d2d95999d87a77ce9f154d1f774cfaf15621b736f3763db15fda5a"
+    },
+    {
+      "identity": "m7-4fbf36804b4b4a739cfcae47eb62bedd",
+      "source_sha": "97a1d141b027d37255458bc9d4ed7636af54901e",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-4fbf36804b4b4a739cfcae47eb62bedd",
+      "manifest_sha256": "7827f68065988c99859110eaffcf2d217f2b968b60ab3bcd144d7d1b2049bf15"
+    },
+    {
+      "identity": "m7-restore-1a767fd49106407d96d639211f9219eb",
+      "source_sha": "97a1d141b027d37255458bc9d4ed7636af54901e",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-restore-1a767fd49106407d96d639211f9219eb",
+      "manifest_sha256": "552f7ffc104db7b45f10324fe0899e4ee14873de43145fb5516524b8d0401368"
+    },
+    {
+      "identity": "m7-5bfb66e0329e4d4bbf8cc7dcbe242dfe",
+      "source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-5bfb66e0329e4d4bbf8cc7dcbe242dfe",
+      "manifest_sha256": "5a22cd3c51f780bd91e93771b55f3ec808f089bcc60005289d90d3ea6d808aca"
+    },
+    {
+      "identity": "m7-restore-96c40b10e55547159489bacc8a73d930",
+      "source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-96c40b10e55547159489bacc8a73d930",
+      "manifest_sha256": "cfb402ef09744d3b02fbf020c4fb6acd23882fa77158d58bde6c444209c37f37"
+    },
+    {
+      "identity": "m7-79dc36b8f9914d519173345021cf9f44",
+      "source_sha": "ec31a60f475d14835d37958a668513deaf094010",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-79dc36b8f9914d519173345021cf9f44",
+      "manifest_sha256": "32e882acec8d3adb1be81f0ebe85615e070a9fa7c08ceb4ca4483400659c04f7"
+    },
+    {
+      "identity": "m7-restore-26c39280202643e386b1a13b0734a991",
+      "source_sha": "ec31a60f475d14835d37958a668513deaf094010",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-26c39280202643e386b1a13b0734a991",
+      "manifest_sha256": "71f29ed6ccdabe5ec4b5f325df7b1c7721a5f5addfb8d0a20f1d178d77eb7132"
+    },
+    {
+      "identity": "m7-6b71360aeabb4012a2a1547f8cc7daca",
+      "source_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-6b71360aeabb4012a2a1547f8cc7daca",
+      "manifest_sha256": "bbe25aa1c6eee37c76281b7ee0c2b26e9fddcd97569f4f5bbe9b6be3e3ca0ac8"
+    },
+    {
+      "identity": "m7-restore-683b6742e8bc4eff9b860c1685a46c62",
+      "source_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-683b6742e8bc4eff9b860c1685a46c62",
+      "manifest_sha256": "8fba952baebfa159b747743a110cc31005d2daab02b415e978889bb1749ba269"
     }
   ],
   "not_proven": [
     "whole M7",
     "installed browser storage and inbox paging",
-    "backup recovery and independent side-effect reconciliation",
     "WeChat device",
-    "production capacity"
+    "production capacity",
+    "whole-host rollback and privileged DB/file tampering",
+    "multi-node recovery and physical power loss"
   ],
   "metadata_oracle_contract": "docs/contracts/m7-metadata-oracle.md",
-  "metadata_repair_source_sha": "a3245e17edc116810d01bd8f800cf5102ed71caa"
+  "metadata_repair_source_sha": "a3245e17edc116810d01bd8f800cf5102ed71caa",
+  "restore_contract": "docs/contracts/m7-restore-fence.md",
+  "restore_repair_source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
+  "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010",
+  "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87"
 }
