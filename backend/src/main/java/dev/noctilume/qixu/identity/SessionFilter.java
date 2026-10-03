@@ -75,6 +75,7 @@ public class SessionFilter extends OncePerRequestFilter {
                     throw new DomainException(403,"CSRF_REQUIRED","页面会话已变化，请刷新后重试。");
                 }
                 request.setAttribute("qixu.session",session);
+                request.setAttribute("qixu.authenticationMode",bearer?"BEARER":"COOKIE");
             }
             chain.doFilter(request,response);
         } catch (DomainException e) {

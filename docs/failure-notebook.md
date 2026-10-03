@@ -6,16 +6,16 @@
 
 | 编号 | 来源 / 原问题 | 对期序的检查 | 当前状态 |
 | --- | --- | --- | --- |
-| R01 | [RoomVox #8](https://github.com/nextcloud/RoomVox/issues/8)：重复会议后续日期漏查冲突 | 周期导入逐次校验；第一版不伪称支持周期课表 | 参考案例 |
-| R02 | [RoomVox #7](https://github.com/nextcloud/RoomVox/issues/7)：活动保存但场地未预约且没有清晰提示 | 申请、批准和占用确认分开显示 | 待验 |
-| R03 | [concurrent-seat-reservation](https://github.com/Chaity-git/concurrent-seat-reservation)：慢网络位于事务内可耗尽连接池 | 身份/随机来源/通知调用与业务锁解耦；有超时与恢复 | 待验，未运行该项目基准 |
-| R04 | [restaurant-reservation-platform](https://github.com/Peggeyyy/restaurant-reservation-platform)：请求幂等与资源级并发判断 | 同键同正文重复结果，同键异正文拒绝，批准重新判冲突 | 待验，未运行该项目测试 |
-| R05 | [NIST 公开随机程序](https://csrc.nist.gov/projects/interoperable-randomness-beacons/apps) | 先冻结输入及未来随机坐标，再取得值；防事后挑种子 | 待验；具体来源合同尚需 M1 |
+| R01 | [RoomVox #8](https://github.com/nextcloud/RoomVox/issues/8)：重复会议后续日期漏查冲突 | 周期导入逐次校验；第一版不伪称支持周期课表 | 范围外：首版没有周期课表导入，未运行其复现 |
+| R02 | [RoomVox #7](https://github.com/nextcloud/RoomVox/issues/7)：活动保存但场地未预约且没有清晰提示 | 申请、批准和占用确认分开显示 | 已迁移为本项目合法场地先成立/换地保参与的真实API见证；M8决定信息与当前实页另验 |
+| R03 | [concurrent-seat-reservation](https://github.com/Chaity-git/concurrent-seat-reservation)：慢网络位于事务内可耗尽连接池 | 身份/随机来源/通知调用与业务锁解耦；有超时与恢复 | 本项目锁外调用、身份租约、物理等待预算已验；未运行该项目基准或生产耗池压力 |
+| R04 | [restaurant-reservation-platform](https://github.com/Peggeyyy/restaurant-reservation-platform)：请求幂等与资源级并发判断 | 同键同正文重复结果，同键异正文拒绝，批准重新判冲突 | 本项目真实同键/异正文/并发批准已验；未运行该项目测试 |
+| R05 | [NIST 公开随机程序](https://csrc.nist.gov/projects/interoperable-randomness-beacons/apps) | 先冻结输入及未来随机坐标，再取得值；防事后挑种子 | 仅规则启发；已选固定drand quicknet未来round，M3/M6独立实际复算；未接入NIST |
 
 ## 本项目必须构造的反例
 
 1. 100 个座位，80 人都只接受 10 个窗边位置：不强制安排不可接受席位。
-2. 甲接受Q/N、乙只接受Q：裸贪心会制造人工稀缺。M3版本2必须在硬约束内达到最大人数，再按固定抽签排列满足偏好；未实现前不称已修。
+2. 甲接受Q/N、乙只接受Q：裸贪心会制造人工稀缺。M3版本2采用硬约束内最大人数，再按固定抽签排列满足偏好；独立小图oracle及真实批次已验，大规模边界仍单列。
 3. 同主体跨考研/考公批次并发确认：不能获得两项重叠长期权。
 4. 暂离的长期席位：不能重新分配给其他人。
 5. 活动占整区与单座预约同时提交：不能同时获准冲突占用。
@@ -29,7 +29,7 @@
 13. 100 人、110 位、安静区仅 30 位：局部公平不得以通知沉默或没有其他选择结束服务；授权兜底和较高志愿候补并存，后续换位无双权。
 14. 100 人、80 个均可接受长期位：不超卖，20人明确候补；其他短位也满时诚实显示无资源。管理员统计区分物理下界、图内条件限制和待确认，初始输出不足图最大人数必须报算法/发布失败。
 
-最新16条组合反例、统一模板、证据状态与恢复边界见 [反例矩阵](counterexamples.md)。
+最新16条组合反例及初始证明义务见[反例矩阵](counterexamples.md)；当前逐条代表见证、GitHub迁移及历史经验范围见[覆盖复核](coverage-review.md)。
 
 ## 实际失败记录格式
 

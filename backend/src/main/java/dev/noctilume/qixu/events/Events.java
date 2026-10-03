@@ -49,10 +49,15 @@ public class Events {
             b.audit(actor.id(),"EVENT_DRAFT","EVENT",id,requestId); return detail(actor,id);
         });
     }
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public Map<String,Object> detail(Actor actor,long id) {
         var event=b.row("campus_event",id); var venue=b.row("venue_request",Business.number(event,"venue_request_id"));
         if(event.get("status").equals("DRAFT")) owner(actor,event,venue);
         var value=b.view(event); value.put("startsAt",Business.iso(Business.date(venue,"starts_at"))); value.put("endsAt",Business.iso(Business.date(venue,"ends_at"))); value.put("spaceId",venue.get("space_id")); value.put("floorId",venue.get("floor_id"));
+        var space=rights.space(Business.number(venue,"space_id"));
+        value.put("code",space.get("code"));value.put("name",space.get("name"));
+        var floor=b.jdbc.queryForMap("SELECT name,building FROM floor WHERE id=?",venue.get("floor_id"));
+        value.put("floorName",floor.get("name"));value.put("building",floor.get("building"));
         String phase=event.get("status").toString(); var now=b.now();
         if(phase.equals("PUBLISHED")) {
             if(!Business.date(venue,"ends_at").isAfter(now)) phase="COMPLETED";
@@ -62,12 +67,18 @@ public class Events {
         }
         value.put("phase",phase); value.put("serverNow",Business.iso(now)); value.put("remaining",Business.number(event,"capacity")-Business.number(event,"confirmed_count"));
         var part=b.jdbc.queryForList("SELECT id,status,sequence_number,version FROM event_participation WHERE event_id=? AND user_id=?",id,actor.id()); value.put("myParticipation",part.isEmpty()?Map.of():b.view(part.get(0)));
+        String ownOverlap=" FROM short_reservation r JOIN space s ON r.space_id=s.id WHERE r.user_id=? AND r.starts_at<? AND r.ends_at>? AND r.ends_at>? AND (r.status='CHECKED_IN' OR (r.status='PENDING' AND r.check_in_deadline>?))";
+        Object[] args={actor.id(),Business.date(venue,"ends_at"),Business.date(venue,"starts_at"),now,now};
+        value.put("personalConflictCount",b.jdbc.queryForObject("SELECT COUNT(*)"+ownOverlap,Integer.class,args));
+        value.put("personalConflicts",b.jdbc.queryForList("SELECT r.id,r.space_id,r.starts_at,r.ends_at,r.status,s.code,s.name"+ownOverlap+" ORDER BY r.starts_at,r.id LIMIT 20",args).stream().map(b::view).toList());
         return value;
     }
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public List<Map<String,Object>> list(Actor actor,boolean own) {
         if(own) Business.organizer(actor);
         return b.jdbc.queryForList(own?"SELECT id FROM campus_event WHERE owner_id=? ORDER BY id DESC LIMIT 100":"SELECT id FROM campus_event WHERE status<>'DRAFT' ORDER BY id DESC LIMIT 100",own?new Object[]{actor.id()}:new Object[]{}).stream().map(r->detail(actor,Business.number(r,"id"))).toList();
     }
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public List<Map<String,Object>> participations(Actor actor) {
         return b.jdbc.queryForList("SELECT event_id FROM event_participation WHERE user_id=? ORDER BY id DESC LIMIT 100",actor.id()).stream().map(r->detail(actor,Business.number(r,"event_id"))).toList();
     }

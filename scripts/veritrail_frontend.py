@@ -18,6 +18,7 @@ from veritrail.acceptance_reporting import create_acceptance_bundle
 from veritrail.canonical import sha256_json
 from frontend_m5_contract import CLIENT_CASES
 from frontend_m7_contract import CLIENT_M7_CASES, CLIENT_M7_METADATA_CASES
+from frontend_m8_contract import CLIENT_M8_CASES
 
 ROOT = Path(__file__).resolve().parents[1]
 COLLECTOR = "qixu-frontend/0.1"
@@ -35,22 +36,24 @@ def write_new(path: Path, value: dict) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", choices=["m5","m7"], default="m5")
+    parser.add_argument("--stage", choices=["m5","m7","m8"], default="m5")
     parser.add_argument("--node", default="node")
     parser.add_argument("--npm", default="npm")
     args = parser.parse_args()
     if version("veritrail") != "0.13.0" or git("status", "--porcelain"):
         raise RuntimeError("Core0.13.0 and exact clean committed source required")
     sha = git("rev-parse", "HEAD")
-    collector="qixu-frontend/0.4" if args.stage=="m7" else COLLECTOR
-    cases=CLIENT_CASES+CLIENT_M7_CASES+CLIENT_M7_METADATA_CASES if args.stage=="m7" else CLIENT_CASES
+    collector={"m7":"qixu-frontend/0.4","m8":"qixu-frontend/0.7"}.get(args.stage,COLLECTOR)
+    cases=CLIENT_CASES+CLIENT_M7_CASES+CLIENT_M7_METADATA_CASES if args.stage in ("m7","m8") else CLIENT_CASES
+    if args.stage=="m8": cases+=CLIENT_M8_CASES
     identity = args.stage+"-frontend-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
     request = {"source_sha": sha, "collector": collector}
-    if args.stage=="m7":
+    if args.stage in ("m7","m8"):
         request["contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-execution-entry.md").read_bytes()).hexdigest()
         request["metadata_oracle_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-metadata-oracle.md").read_bytes()).hexdigest()
+    if args.stage=="m8": request["m8_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m8-repairs.md").read_bytes()).hexdigest()
     spec = {"id": "frontend-build", "contract": {"id": "qixu-frontend", "version": collector.split("/")[1]},
             "evidence_type": "qixu.frontend.build", "coordinates": request,
             "projections": ["source_sha", "source_clean", "node", "npm", "commands", "tests", "artifacts"],
@@ -65,7 +68,7 @@ def main() -> int:
     assertions += [assertion("case-" + str(i), "/facts/tests/case-" + str(i), True) for i in range(len(cases))]
     assertions += [assertion("artifact-" + name, "/facts/artifacts/" + name + "/current_build", True) for name in ("h5", "wechat", "admin")]
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-"+args.stage+"-frontend", "version": 3 if args.stage=="m7" else 1,
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-"+args.stage+"-frontend", "version": 3 if args.stage in ("m7","m8") else 1,
         "subject": {"id": "qixu-"+args.stage+"-frontend", "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do exact locked clean-source frontend builds and the declared request mechanism witnesses hold?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:frontend-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -98,7 +101,7 @@ def main() -> int:
     if node_parent:
         env["PATH"] = node_parent + os.pathsep + env.get("PATH", "")
     commands = [[args.npm, "ci", "--no-audit", "--no-fund"], [args.npm, "run", "build", "-w", "@qixu/client"],
-                [args.node, "--test", "--test-reporter=junit", "--test-reporter-destination=" + str(output / "client-tests.xml"), *(["packages/client/tests/ownership.test.mjs","packages/client/tests/m7-boundaries.test.mjs","packages/client/tests/m7-metadata.test.mjs"] if args.stage=="m7" else ["packages/client/tests/ownership.test.mjs"])],
+                [args.node, "--test", "--test-reporter=junit", "--test-reporter-destination=" + str(output / "client-tests.xml"), *(["packages/client/tests/ownership.test.mjs","packages/client/tests/m7-boundaries.test.mjs","packages/client/tests/m7-metadata.test.mjs"]+(["packages/client/tests/m8-review.test.mjs","packages/client/tests/m8-route.test.mjs"] if args.stage=="m8" else []) if args.stage in ("m7","m8") else ["packages/client/tests/ownership.test.mjs"])],
                 [args.npm, "run", "check"], [args.npm, "run", "build"]]
     steps = []
     execution = "COMPLETED"
@@ -140,7 +143,7 @@ def main() -> int:
              "source_zip_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
              "node": subprocess.check_output([args.node, "--version"], text=True).strip(), "npm": subprocess.check_output([args.npm, "--version"], text=True).strip(),
              "commands": steps, "tests": tests, "required_cases": cases, "artifacts": artifacts,
-             "boundary": "M7_CLIENT_METADATA_ACTOR_BUILD_NOT_WHOLE_M7_BROWSER_BACKUP_DEVICE_OR_FINAL_VISUAL" if args.stage=="m7" else "M5_FRONTEND_BUILD_AND_CONTROLLED_TRANSPORT_NOT_INSTALLED_BROWSER_NATIVE_DEVICE_OR_FINAL_VISUAL"}
+             "boundary": "M8_CLIENT_VUE_SETUP_REVIEW_BUILD_NOT_BROWSER_CREDENTIALS_DEVICE_OR_FINAL_VISUAL" if args.stage=="m8" else "M7_CLIENT_METADATA_ACTOR_BUILD_NOT_WHOLE_M7_BROWSER_BACKUP_DEVICE_OR_FINAL_VISUAL" if args.stage=="m7" else "M5_FRONTEND_BUILD_AND_CONTROLLED_TRANSPORT_NOT_INSTALLED_BROWSER_NATIVE_DEVICE_OR_FINAL_VISUAL"}
     evidence = {"schema_version": "0.1", "evidence_type": spec["evidence_type"], "source": collector, "captured_at": datetime.now(timezone.utc).isoformat(), "facts": facts,
                 "metadata": {"veritrail_observation": {"schema_version": "0.1", "canonicalization_profile": "veritrail-json-c14n/1", "plan_digest": plan["seal"]["digest"], "observation_spec_digest": observation_spec_digest(spec), "request_seal_digest": sha256_json(request), "collection_session_id": identity, "collector_role": "qixu-frontend-collector", "coverage": "COMPLETE" if len(steps) == 5 and tests and artifacts else "ERROR", "normalization_semantics_version": collector, "facts_digest": sha256_json(facts)}}}
     write_new(output / "evidence.json", evidence)

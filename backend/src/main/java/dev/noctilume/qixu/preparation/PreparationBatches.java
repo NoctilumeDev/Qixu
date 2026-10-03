@@ -72,7 +72,9 @@ public class PreparationBatches {
         var result=b.view(row); result.remove("owner_id");
         var now=b.now();String status=row.get("status").toString(),phase=status;
         if(status.equals("OPEN"))phase=now.isBefore(Business.date(row,"opens_at"))?"NOT_OPEN":now.isBefore(Business.date(row,"closes_at"))?"APPLICATION_OPEN":now.isBefore(Business.date(row,"freeze_deadline"))?"FREEZE_DUE":"FAILED_NO_RESULT";
-        if(status.equals("FROZEN") && !now.isBefore(Business.date(row,"result_deadline")))phase="FAILED_NO_RESULT";
+        String deadlineFailure=PreparationValidity.failure(row,now);
+        if(deadlineFailure!=null)phase="FAILED_NO_RESULT";
+        result.put("effectiveFailureReason",deadlineFailure==null?row.get("failure_reason"):deadlineFailure);
         if(status.equals("RESULT_PUBLISHED") && !now.isBefore(Business.date(row,"cycle_ends_at")))phase="CLOSED";
         result.put("effectivePhase",phase);result.put("serverNow",Business.iso(now));result.put("maxApplicants",200);result.put("maxSeats",400);
         result.put("allocationRule","先满足冻结硬约束内最多人数，再按抽签顺序尽量满足个人偏好；要约需确认，候补不重抽。");return result;
@@ -134,8 +136,9 @@ public class PreparationBatches {
         });
     }
     void checkOtherParticipation(long user,long batch,LocalDateTime start,LocalDateTime end) {
-        if(b.jdbc.queryForObject("SELECT COUNT(*) FROM preparation_application a JOIN preparation_batch t ON a.batch_id=t.id WHERE a.user_id=? AND t.id<>? AND a.status='SUBMITTED' AND t.status IN ('OPEN','FROZEN','RESULT_PUBLISHED') AND t.cycle_starts_at<? AND t.cycle_ends_at>? AND t.cycle_ends_at>?",Integer.class,user,batch,end,start,b.now())>0
-            || b.jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE user_id=? AND batch_id<>? AND status='ACTIVE' AND starts_at<? AND ends_at>? AND ends_at>?",Integer.class,user,batch,end,start,b.now())>0)
+        var now=b.now();
+        if(b.jdbc.queryForObject("SELECT COUNT(*) FROM preparation_application a JOIN preparation_batch t ON a.batch_id=t.id WHERE a.user_id=? AND t.id<>? AND a.status='SUBMITTED' AND "+PreparationValidity.ACTIVE_SQL+" AND t.cycle_starts_at<? AND t.cycle_ends_at>? AND t.cycle_ends_at>?",Integer.class,user,batch,now,now,end,start,now)>0
+            || b.jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE user_id=? AND batch_id<>? AND status='ACTIVE' AND starts_at<? AND ends_at>? AND ends_at>?",Integer.class,user,batch,end,start,now)>0)
             throw Business.conflict("OVERLAPPING_LONG_CYCLE","你已参与另一重叠长期周期，请先明确退出原批次；不能同时占用两个长期席位。");
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)

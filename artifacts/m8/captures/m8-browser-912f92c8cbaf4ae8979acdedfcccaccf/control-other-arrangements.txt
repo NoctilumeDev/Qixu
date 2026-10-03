@@ -1,0 +1,22 @@
+- generic: 我的使用安排
+- generic: 长期使用安排
+- button "全部批次"
+- generic: 没有已保存的长期申请，可查看开放批次。
+- generic: 短期预约
+- generic: 没有短期预约，可从空间地图查找。
+- generic: 场地申请
+- generic: 没有场地申请。
+- generic: 活动预约
+- button "M8 原条件读书会复验 候补 · 顺序2":
+  - generic: M8 原条件读书会复验
+  - generic: 候补 · 顺序2
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

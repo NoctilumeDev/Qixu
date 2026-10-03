@@ -23,6 +23,7 @@ from native_m4_contract import M4_CASES, M4_MEASURES
 from native_m5_contract import M5_CASES, M5_MEASURES
 from native_m6_contract import M6_CASES, M6_MEASURES
 from native_m7_contract import M7_CASES, M7_MEASURES
+from native_m8_contract import M8_CASES, M8_MEASURES
 
 ROOT = Path(__file__).resolve().parents[1]
 FOUNDATION_CASES = [
@@ -116,7 +117,7 @@ def write_new(path: Path, value: dict) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", choices=["m1", "m2", "m3", "m4", "m5", "m6", "m7"], default="m1")
+    parser.add_argument("--stage", choices=["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"], default="m1")
     parser.add_argument("--maven", default="mvn")
     args = parser.parse_args()
     if version("veritrail") != "0.13.0" or git("status", "--porcelain"):
@@ -125,21 +126,21 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.19"}.get(args.stage, "qixu-native/0.6")
+    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.19", "m8": "qixu-native/0.22"}.get(args.stage, "qixu-native/0.6")
     request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
-    if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7", "m8"):
         required += ["dev.noctilume.qixu.BookingIT." + name for name in BOOKING_MEASURES]
-    if args.stage in ("m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m3", "m4", "m5", "m6", "m7", "m8"):
         required += ["dev.noctilume.qixu.PreparationIT." + name for name in PREPARATION_MEASURES]
         required += ["dev.noctilume.qixu.preparation." + cls + "." + name for cls, names in PREPARATION_UNITS.items() for name in names]
-    if args.stage in ("m4", "m5", "m6", "m7"):
+    if args.stage in ("m4", "m5", "m6", "m7", "m8"):
         required += ["dev.noctilume.qixu."+cls+"."+name for cls, names in M4_CASES.items() for name in names]
-    if args.stage in ("m5", "m6", "m7"):
+    if args.stage in ("m5", "m6", "m7", "m8"):
         required += ["dev.noctilume.qixu."+cls+"."+name for cls, names in M5_CASES.items() for name in names]
-    if args.stage in ("m6", "m7"):
+    if args.stage in ("m6", "m7", "m8"):
         required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M6_CASES.items() for name in names]
-    if args.stage == "m7":
+    if args.stage in ("m7", "m8"):
         required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M7_CASES.items() for name in names]
         request["recovery_fixture"]={"journal":"persistent-dedicated-test-db-ledger","baseline_adoption":"ADOPT_PRE_V10_ONCE","contexts":"AFTER_CLASS","recovery_bypass":False}
         request["migration_sha256"]={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/"backend/src/main/resources/db/migration").glob("*.sql"))}
@@ -148,6 +149,9 @@ def main() -> int:
         request["transaction_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-transaction-coordinates.md").read_bytes()).hexdigest()
         request["restore_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-restore-fence.md").read_bytes()).hexdigest()
         request["database_budget_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-database-budgets.md").read_bytes()).hexdigest()
+    if args.stage == "m8":
+        required += ["dev.noctilume.qixu."+cls+"."+name for cls,names in M8_CASES.items() for name in names]
+        request["m8_contract_sha256"] = hashlib.sha256((ROOT/"docs/contracts/m8-repairs.md").read_bytes()).hexdigest()
     spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": collector.split("/")[1]},
             "evidence_type": "qixu.native.observation", "coordinates": request,
             "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations", "package"],
@@ -157,29 +161,30 @@ def main() -> int:
         return {"id": name, "severity": "HARD", "left": {"requirement_id": "native", "path": path}, "operator": "eq", "right": value}
 
     assertions = [assertion("exact-source", "/facts/source_sha", sha), assertion("clean-source", "/facts/source_clean", True), assertion("execution-success", "/facts/command_exit", 0)]
-    if args.stage in ("m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m3", "m4", "m5", "m6", "m7", "m8"):
         assertions += [assertion("current-built-artifact", "/facts/package/current_build", True), assertion("artifact-producer-source", "/facts/package/source_sha", sha)]
     assertions += [assertion("case-" + str(i), "/facts/tests/" + name, True) for i, name in enumerate(required)]
     for case, statuses in HTTP_STATUSES.items():
         for i, status in enumerate(statuses):
             assertions.append(assertion("http-" + str(len(assertions)), f"/facts/observations/{case}/requests/{i}/status", status))
     stage_measures = dict(DATABASE_MEASURES)
-    if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7", "m8"):
         stage_measures.update(BOOKING_MEASURES)
-    if args.stage in ("m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m3", "m4", "m5", "m6", "m7", "m8"):
         stage_measures.update(PREPARATION_MEASURES)
-    if args.stage in ("m4", "m5", "m6", "m7"):
+    if args.stage in ("m4", "m5", "m6", "m7", "m8"):
         stage_measures.update(M4_MEASURES)
-    if args.stage in ("m5", "m6", "m7"):
+    if args.stage in ("m5", "m6", "m7", "m8"):
         stage_measures.update(M5_MEASURES)
-    if args.stage in ("m6", "m7"):
+    if args.stage in ("m6", "m7", "m8"):
         stage_measures.update(M6_MEASURES)
-    if args.stage == "m7": stage_measures.update(M7_MEASURES)
+    if args.stage in ("m7", "m8"): stage_measures.update(M7_MEASURES)
+    if args.stage == "m8": stage_measures.update(M8_MEASURES)
     for case, measures in stage_measures.items():
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 7}.get(args.stage, 6),
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 7, "m8": 3}.get(args.stage, 6),
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
@@ -196,7 +201,7 @@ def main() -> int:
     exit_code = -1
     execution = "COMPLETED"
     environment=dict(os.environ)
-    if args.stage=="m7":
+    if args.stage in ("m7", "m8"):
         database=environment.get("QIXU_TEST_DB_URL","").split("/")[-1].split("?")[0]
         if database not in {"qixu_test","qixu_ci"}:raise RuntimeError("Dedicated recovery fixture database required")
         directory=ROOT/".tools/runtime"/("native-"+database);directory.mkdir(parents=True,exist_ok=True)
@@ -213,7 +218,7 @@ def main() -> int:
         (output / "execution-error.txt").write_text("COMMAND_TIMEOUT", encoding="utf-8")
     observed = {}
     report_dirs = [ROOT / "backend/target/failsafe-reports"]
-    if args.stage in ("m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m3", "m4", "m5", "m6", "m7", "m8"):
         report_dirs.append(ROOT / "backend/target/surefire-reports")
     for path in [p for directory in report_dirs for p in directory.glob("TEST-*.xml")]:
         for case in ET.parse(path).getroot().iter("testcase"):
@@ -223,15 +228,15 @@ def main() -> int:
             observed[name] = passed if name not in observed else False
     measurements_path = ROOT / "backend/target/failsafe-reports/qixu-m1-observation.json"
     measurements = json.loads(measurements_path.read_text(encoding="utf-8")) if measurements_path.exists() else {}
-    if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7", "m8"):
         booking_path = ROOT / "backend/target/failsafe-reports/qixu-m2-observation.json"
         if booking_path.exists():
             measurements.update(json.loads(booking_path.read_text(encoding="utf-8")))
-    if args.stage in ("m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m3", "m4", "m5", "m6", "m7", "m8"):
         preparation_path = ROOT / "backend/target/failsafe-reports/qixu-m3-observation.json"
         if preparation_path.exists():
             measurements.update(json.loads(preparation_path.read_text(encoding="utf-8")))
-    if args.stage in ("m4", "m5", "m6", "m7"):
+    if args.stage in ("m4", "m5", "m6", "m7", "m8"):
         for suffix in ("feedback", "spatial", "governance"):
             path = ROOT / f"backend/target/failsafe-reports/qixu-m4-{suffix}-observation.json"
             if path.exists():
@@ -239,7 +244,7 @@ def main() -> int:
                     if name in measurements:
                         raise RuntimeError("Duplicated observation identity: "+name)
                     measurements[name] = value
-    if args.stage in ("m5", "m6", "m7"):
+    if args.stage in ("m5", "m6", "m7", "m8"):
         for suffix in ("projection", "intent"):
             path = ROOT / f"backend/target/failsafe-reports/qixu-m5-{suffix}-observation.json"
             if path.exists():
@@ -247,22 +252,22 @@ def main() -> int:
                     if name in measurements:
                         raise RuntimeError("Duplicated observation identity: "+name)
                     measurements[name] = value
-    if args.stage in ("m6", "m7"):
+    if args.stage in ("m6", "m7", "m8"):
         path = ROOT / "backend/target/failsafe-reports/qixu-m6-identity-observation.json"
         if path.exists():
             for name,value in json.loads(path.read_text(encoding="utf-8")).items():
                 if name in measurements: raise RuntimeError("Duplicated observation identity: "+name)
                 measurements[name]=value
-    if args.stage == "m7":
+    if args.stage in ("m7", "m8"):
         for filename in ["qixu-m7-protocol-observation.json","qixu-m7-transactions-observation.json"]:
             path=ROOT/"backend/target/failsafe-reports"/filename
             if path.exists():
                 for name,value in json.loads(path.read_text(encoding="utf-8")).items():
                     if name in measurements: raise RuntimeError("Duplicated observation identity: "+name)
                     measurements[name]=value
-    boundaries = {"m7": "M7_PROTOCOL_PROJECTION_INDEPENDENT_ORACLE_NOT_WHOLE_M7_BROWSER_BACKUP_OR_DEVICE", "m6": "M6_API_MYSQL_CONTROLLED_IDENTITY_NOT_REAL_DARKROOM_RESTART_OR_DEVICE", "m5": "M5_API_MYSQL_CLIENT_RECOVERY_NOT_FRONTEND_BUILD_BROWSER_OR_WECHAT_DEVICE", "m1": "M1_FOUNDATION_ONLY", "m2": "M2_API_MYSQL_ONLY_NOT_UI_OR_ALLOCATION", "m3": "M3_NATIVE_TRANSACTIONS_AND_OFFLINE_PROOF_NOT_FUTURE_BEACON_OR_UI", "m4": "M4_HTTP_MYSQL_CONTROLLED_FAULTS_NOT_PHYSICAL_REPAIR_UI_BACKUP_OR_FUTURE_BEACON"}
+    boundaries = {"m8": "M8_NATIVE_REVIEW_REGRESSIONS_NOT_BROWSER_CAPACITY_DEVICE_OR_RELEASE", "m7": "M7_PROTOCOL_PROJECTION_INDEPENDENT_ORACLE_NOT_WHOLE_M7_BROWSER_BACKUP_OR_DEVICE", "m6": "M6_API_MYSQL_CONTROLLED_IDENTITY_NOT_REAL_DARKROOM_RESTART_OR_DEVICE", "m5": "M5_API_MYSQL_CLIENT_RECOVERY_NOT_FRONTEND_BUILD_BROWSER_OR_WECHAT_DEVICE", "m1": "M1_FOUNDATION_ONLY", "m2": "M2_API_MYSQL_ONLY_NOT_UI_OR_ALLOCATION", "m3": "M3_NATIVE_TRANSACTIONS_AND_OFFLINE_PROOF_NOT_FUTURE_BEACON_OR_UI", "m4": "M4_HTTP_MYSQL_CONTROLLED_FAULTS_NOT_PHYSICAL_REPAIR_UI_BACKUP_OR_FUTURE_BEACON"}
     facts = {"source_sha": git("rev-parse", "HEAD"), "source_clean": not bool(git("status", "--porcelain")), "command_exit": exit_code, "tests": observed, "observations": measurements, "required_cases": required, "boundary": boundaries[args.stage]}
-    if args.stage in ("m3", "m4", "m5", "m6", "m7"):
+    if args.stage in ("m3", "m4", "m5", "m6", "m7", "m8"):
         jar = ROOT / "backend/target/qixu-api-0.1.0-SNAPSHOT.jar"
         if jar.is_file():
             facts["package"] = {"source_sha": sha, "sha256": hashlib.sha256(jar.read_bytes()).hexdigest(), "size": jar.stat().st_size, "current_build": exit_code == 0 and jar.stat().st_mtime >= command_started}

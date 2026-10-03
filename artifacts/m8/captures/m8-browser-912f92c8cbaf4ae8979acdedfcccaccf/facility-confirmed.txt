@@ -1,0 +1,58 @@
+- banner:
+  - button "展开工作台导航":
+  - heading "反馈与维修" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 空间管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 e5ad0c3b。
+  - link "返回原列表":
+    - /url: "#/feedback?space=2000&page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "记录 1 已核实" [level=2]:
+    - text: 记录 1
+    - generic: 已核实
+  - term: 空间
+  - definition: A001 西区单人位 1
+  - term: 申请主体
+  - definition: "1"
+  - term: 当前版本
+  - definition: "2"
+  - paragraph: M8 演示反馈：A001 插座存在但不能正常供电，请核实后处理；非真实故障。
+  - paragraph: M8 演示核实：确认插座存在，但状态损坏；报告与公开事实分别记录。还有
+  - article:
+    - strong: 待核实 · 10/03 19:14
+    - paragraph: M8 演示反馈：A001 插座存在但不能正常供电，请核实后处理；非真实故障。
+  - article:
+    - strong: 已核实 · 10/03 19:18
+    - paragraph: M8 演示核实：确认插座存在，但状态损坏；报告与公开事实分别记录。还有
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: M8 演示核实：确认插座存在，但状态损坏；报告与公开事实分别记录。还有
+  - group "经核实的空间事实":
+    - generic: 经核实的空间事实
+    - combobox:
+      - option "插座状况" [selected]
+      - option "照明状况"
+      - option "桌面状况"
+      - option "环境状况"
+      - option "有插座"
+      - option "靠窗"
+      - option "安静条件"
+      - option "无障碍通行"
+    - combobox:
+      - option "未知"
+      - option "正常"
+      - option "损坏" [selected]
+      - option "维修中"
+    - button "加入事实项"
+    - text: 有插座 = 有
+    - button "移除"
+    - text: 插座状况 = 损坏
+    - button "移除"
+    - paragraph: 只提交亲自核实的事实；工作完成仍须复验，已知损坏的设施必须明确恢复正常。
+  - button "创建维修事项"

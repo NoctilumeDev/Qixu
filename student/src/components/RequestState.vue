@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {formatTime} from '@qixu/client';
+import {ref,watch,onBeforeUnmount} from 'vue';
+import {formatTime,StaleResponse} from '@qixu/client';
 import {auth,client,errorMessage,go,pendingAction} from '../runtime';
-const busy=ref(false),message=ref('');
-async function recover(key:string,replay=false){if(busy.value)return;busy.value=true;message.value='';try{const result=await pendingAction(key,replay);message.value=result?(result.intentOutcome==='STOPPED_WITHOUT_EFFECT'?'原意图已安全停止，没有产生业务效果。':'原请求已确认，请刷新当前详情。'):'暂未查询到回执；这不代表提交失败，可稍后再查或使用原键重试。';}catch(e){message.value=errorMessage(e);}finally{busy.value=false;}}
-async function stop(key:string){if(busy.value)return;busy.value=true;message.value='';try{const result=await client.stop<Record<string,unknown>>(key);message.value=result.intentOutcome==='STOPPED_WITHOUT_EFFECT'?'原意图已安全停止，没有产生业务效果。':'原提交已成立，不能用停止恢复撤销，请刷新当前详情。';}catch(e){message.value=errorMessage(e);}finally{busy.value=false;}}
+const busy=ref(false),message=ref('');let operation=0;
+watch(()=>auth.generation,()=>{operation++;busy.value=false;message.value='';},{flush:'sync'});
+onBeforeUnmount(()=>{operation++;});
+function owner(){const op=++operation,generation=auth.generation,actor=auth.session?.actor.id;return ()=>op===operation&&generation===auth.generation&&actor===auth.session?.actor.id;}
+async function recover(key:string,replay=false){if(busy.value)return;const current=owner();busy.value=true;message.value='';try{const result=await pendingAction(key,replay);if(!current())return;message.value=result?(result.intentOutcome==='STOPPED_WITHOUT_EFFECT'?'原意图已安全停止，没有产生业务效果。':'原请求已确认，请刷新当前详情。'):'暂未查询到回执；这不代表提交失败，可稍后再查或使用原键重试。';}catch(e){if(current()&&!(e instanceof StaleResponse))message.value=errorMessage(e);}finally{if(current())busy.value=false;}}
+async function stop(key:string){if(busy.value)return;const current=owner();busy.value=true;message.value='';try{const result=await client.stop<Record<string,unknown>>(key);if(!current())return;message.value=result.intentOutcome==='STOPPED_WITHOUT_EFFECT'?'原意图已安全停止，没有产生业务效果。':'原提交已成立，不能用停止恢复撤销，请刷新当前详情。';}catch(e){if(current()&&!(e instanceof StaleResponse))message.value=errorMessage(e);}finally{if(current())busy.value=false;}}
 </script>
 <template>
   <view v-if="auth.error" class="error-note"><text>{{auth.error}}</text><button role="button" class="text-button" @click="go('profile')">查看连接设置</button></view>

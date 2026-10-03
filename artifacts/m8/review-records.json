@@ -1,0 +1,47 @@
+{
+  "boundary": "REPORT_IDENTITIES_NOT_CORE_VERDICTS_RAW_PRIVATE_REPORTS_RETAINED_LOCALLY",
+  "reports": [
+    {
+      "role_record": "m8-functional-tester",
+      "source_sha": "156ae25110c4e9d79599c565dca0de8cd43845e4",
+      "original_report_sha256": "6670286a0acbc204720b4ad9248d5a6cac9e8e5e14fc88d5121e72ca1275d3af",
+      "original_report_size": 17101
+    },
+    {
+      "role_record": "m8-functional-recheck",
+      "source_sha": "ce29fdbc737cfe0f405561fc96b6cb3de8d03b2a",
+      "original_report_sha256": "b0a963f834bd89c4c77b1e9b44efd48547bd4114b23dfad807b27b4faa47295d",
+      "original_report_size": 10506
+    },
+    {
+      "role_record": "m8-second-fix-review",
+      "source_sha": "076dbabd8489fb21509711864a0f1db6593206f7",
+      "original_report_sha256": "29ee20bec8a23e8f8a9e4246e63112c70bef8d1e4f793bb67d0a3c00a2eec8ca",
+      "original_report_size": 13597
+    },
+    {
+      "role_record": "m8-third-fix-review",
+      "source_sha": "4fb184ba2a77daecb0cc33436d6e29ef326e52be",
+      "original_report_sha256": "1d776bd4d68b4ddde798ee663ba4ae05fcd51813528e684a8d40f7866018633b",
+      "original_report_size": 8999
+    },
+    {
+      "role_record": "m8-product-manager",
+      "source_sha": "156ae25110c4e9d79599c565dca0de8cd43845e4",
+      "original_report_sha256": "9365e7a104e0ff08cd249d4fceadb45d52bbc5f1e7ca89297eae9687d79bd1e7",
+      "original_report_size": 15615
+    },
+    {
+      "role_record": "m8-product-recheck",
+      "source_sha": "076dbabd8489fb21509711864a0f1db6593206f7",
+      "original_report_sha256": "c1b705e2c4af52cdac591a0569a1d87967c14f2af21be2f77e1701449d05d1e1",
+      "original_report_size": 19506
+    },
+    {
+      "role_record": "m8-product-third-recheck",
+      "source_sha": "4fb184ba2a77daecb0cc33436d6e29ef326e52be",
+      "original_report_sha256": "34b2c1f718448a6dbfe55c584ebffbd8a843a228964d51da15b861dfb589a06e",
+      "original_report_size": 15821
+    }
+  ]
+}

@@ -50,6 +50,7 @@ class PreparationIT {
     @LocalServerPort int port;
     @Autowired JdbcTemplate jdbc;@Autowired JsonMapper json;@Autowired MutableClock clock;@Autowired ControlledSource source;
     @Autowired LongSeats seats;@Autowired BatchFreezer freezer;@Autowired AllocationPublisher publisher;@Autowired Notifications notifications;@Autowired PlatformTransactionManager manager;
+    @Autowired AllocationWorker worker;@Autowired org.springframework.boot.availability.ApplicationAvailability availability;@Autowired dev.noctilume.qixu.recovery.RecoveryFence recovery;
     @MockitoSpyBean Business business;
     private final HttpClient http=HttpClient.newHttpClient();private final List<Map<String,Object>> requests=new CopyOnWriteArrayList<>();private final Map<String,Object> facts=new LinkedHashMap<>();
     private static final Map<String,Object> OBSERVATIONS=new ConcurrentHashMap<>();private String name;
@@ -95,12 +96,81 @@ class PreparationIT {
         long batch=create(a,List.of(2000L),"valid-create");error(api("POST","/preparation-batches",createBody(List.of(2000L)),a,"overlap-pool"),409,"SPACE_CONFLICT");
         error(api("POST","/reservations",Map.of("spaceId",2000,"startsAt","2026-10-10T02:11:00Z","endsAt","2026-10-10T03:00:00Z"),s,"protected-seat"),409,"SPACE_CONFLICT");facts.put("batches",count("preparation_batch"));facts.put("shorts",count("short_reservation"));
     }
+    @Test void publishedBatchAfterFirstTenReceivesPromotionWithoutStarvation()throws Exception {
+        String admin=login("admin1"),one=login("student1"),two=login("student2");
+        var ids=new ArrayList<Long>();
+        for(int i=0;i<11;i++) {
+            var body=new LinkedHashMap<>(createBody(List.of(2000L)));
+            var start=Instant.parse("2026-10-11T02:10:00Z").plus(Duration.ofDays(i));
+            var end=start.plus(Duration.ofDays(1));
+            body.put("startsAt",start.toString());body.put("endsAt",end.toString());body.put("promotionUntil",end.toString());
+            var created=api("POST","/preparation-batches",body,admin,"m8-maint-create-"+i);ok(created);ids.add(created.id());
+            ok(submit(one,created.id(),0,prefs(2000),"m8-maint-one-"+i));ok(submit(two,created.id(),0,prefs(2000),"m8-maint-two-"+i));
+        }
+        clock.value=Instant.parse("2026-10-10T01:05:00Z");
+        for(long id:ids)ok(action(admin,id,1,"FREEZE","m8-maint-freeze-"+id));
+        clock.value=Instant.parse("2026-10-10T01:07:03Z");
+        for(long id:ids)ok(action(admin,id,2,"ALLOCATE","m8-maint-allocate-"+id));
+        for(int i=0;i<10;i++) {
+            long id=ids.get(i),owner=jdbc.queryForObject("SELECT user_id FROM long_offer WHERE batch_id=? AND status='OPEN'",Long.class,id);
+            ok(respond(owner==1?one:two,offer(id,owner),"ACCEPT","m8-maint-accept-"+id));
+        }
+        long late=ids.get(10),owner=jdbc.queryForObject("SELECT user_id FROM long_offer WHERE batch_id=? AND status='OPEN'",Long.class,late);
+        ok(exit(owner==1?one:two,late,"m8-maint-last-exit"));
+        assertEquals(10,jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE status='ACTIVE'",Integer.class));
+        assertEquals(11,jdbc.queryForObject("SELECT COUNT(*) FROM waitlist_entry WHERE status='ACTIVE'",Integer.class));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND status='OPEN'",Integer.class,late));
+        var tasks=new PreparationTasks(business,freezer,worker,publisher,seats,availability,recovery,true);
+        tasks.run();tasks.run();notifications.dispatch();notifications.dispatch();
+        int offers=jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND status='OPEN'",Integer.class,late);
+        facts.put("legalBatches",ids.size());facts.put("earlyActiveRights",jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE status='ACTIVE'",Integer.class));facts.put("taskScanRounds",2);facts.put("lateOpenOffers",offers);
+        facts.put("latePromotionNotices",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox WHERE entity_type='BATCH' AND entity_id=? AND event_key LIKE 'offer:%:promotion'",Integer.class,late));
+        assertEquals(1,offers,"legal lower-id waitlists must not permanently hide the eleventh batch");
+    }
     @Test void immutableVersionsFreezeExactWinnerAndRejectOfflineOverwrite()throws Exception {
         String a=login("admin1"),s=login("student1");long batch=create(a,List.of(2000L,2100L),"version-create");ok(submit(s,batch,0,prefs(2100,2000),"version-one"));
         var races=race(()->submit(s,batch,1,prefs(2000,2100),"version-two"),()->submit(s,batch,1,prefs(2100,2000),"version-three"));assertEquals(List.of(200,409),races.stream().map(Reply::status).sorted().toList());
         freeze(a,batch);error(submit(s,batch,2,prefs(2000),"offline-late"),409,"BATCH_STATE_CONFLICT");
         assertEquals(2,mine(s,batch).data().path("frozen_version").asInt());facts.put("versions",count("application_version"));facts.put("frozenRevision",jdbc.queryForObject("SELECT revision FROM frozen_person WHERE batch_id=?",Integer.class,batch));
         allocate(a,batch);assertEquals(1,count("long_offer"));
+    }
+    @Test void failedFrozenBatchReleasesParticipationBeforeTaskCleanup()throws Exception {failedBatchWithoutTasks(true);}
+    @Test void missedFreezeBatchReleasesParticipationBeforeTaskCleanup()throws Exception {failedBatchWithoutTasks(false);}
+    @Test void missedFreezeBeforeResultDeadlineReleasesParticipation()throws Exception {failedBatchWithoutTasks(false,true);}
+    void failedBatchWithoutTasks(boolean frozen)throws Exception {
+        failedBatchWithoutTasks(frozen,false);
+    }
+    void failedBatchWithoutTasks(boolean frozen,boolean early)throws Exception {
+        String admin=login("admin1"),student=login("student1"),other=login("student2");long old=create(admin,List.of(2000L),"m8-old-round");
+        var nextBody=new LinkedHashMap<>(createBody(List.of(2200L)));
+        nextBody.put("opensAt","2026-10-10T01:21:00Z");nextBody.put("closesAt","2026-10-10T01:25:00Z");nextBody.put("freezeDeadline","2026-10-10T01:26:00Z");nextBody.put("randomAt","2026-10-10T01:27:00Z");nextBody.put("resultDeadline","2026-10-10T01:40:00Z");
+        if(early) {nextBody.put("opensAt","2026-10-10T01:07:00Z");nextBody.put("closesAt","2026-10-10T01:10:00Z");nextBody.put("freezeDeadline","2026-10-10T01:11:00Z");nextBody.put("randomAt","2026-10-10T01:12:00Z");}
+        var next=api("POST","/preparation-batches",nextBody,admin,"m8-next-round");ok(next);
+        ok(submit(student,old,0,prefs(2000),"m8-old-application"));ok(submit(other,old,0,prefs(2000),"m8-old-other"));if(frozen)freeze(admin,old);
+        String input=frozen?jdbc.queryForObject("SELECT input_hash FROM frozen_input WHERE batch_id=?",String.class,old):"";
+        clock.value=Instant.parse(early?"2026-10-10T01:07:00Z":"2026-10-10T01:21:00Z");
+        if(early) {facts.put("beforeResultDeadline",clock.instant().isBefore(Instant.parse("2026-10-10T01:20:00Z")));assertEquals(true,facts.get("beforeResultDeadline"));}
+        var observation=mine(student,old);ok(observation);assertEquals("FAILED_NO_RESULT",observation.data().at("/batch/effectivePhase").asString());
+        assertEquals(frozen?"FROZEN":"OPEN",jdbc.queryForObject("SELECT status FROM preparation_batch WHERE id=?",String.class,old));
+        var newApplication=submit(student,next.id(),0,prefs(2200),"m8-next-application");
+        var availability=api("GET","/spaces/2000/availability?start=2026-10-10T02:11:00Z&end=2026-10-10T03:00:00Z",null,student,null);
+        var withdrawal=exit(student,old,"m8-expired-exit");
+        facts.put("newApplicationStatus",newApplication.status());facts.put("oldExitStatus",withdrawal.status());facts.put("expiredPoolAvailable",availability.data().path("available").asBoolean());
+        if(frozen)publisher.failDue(old);else freezer.freezeDue(old);notifications.dispatch();
+        facts.put("formalResults",count("allocation_result"));facts.put("oldFailureRecorded","FAILED_NO_RESULT".equals(jdbc.queryForObject("SELECT status FROM preparation_batch WHERE id=?",String.class,old)));
+        facts.put("failureNotices",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox WHERE event_key=?",Integer.class,"batch:"+old+":failed"));
+        ok(newApplication);ok(withdrawal);ok(availability);assertTrue(availability.data().path("available").asBoolean());
+        assertEquals(0,count("allocation_result"));if(frozen)assertEquals(input,jdbc.queryForObject("SELECT input_hash FROM frozen_input WHERE batch_id=?",String.class,old));
+    }
+    @Test void waitlistOwnVersionExitKeepsConfirmedFallback()throws Exception {
+        String a=login("admin1"),s=login("student1"),t=login("student2");long batch=create(a,List.of(2000L,2100L),"m8-wait-create");
+        ok(submit(s,batch,0,prefs(2100,2000),"m8-wait-v1"));ok(submit(s,batch,1,prefs(2100,2000),"m8-wait-v2"));ok(submit(t,batch,0,prefs(2100),"m8-wait-other"));freeze(a,batch);allocate(a,batch);
+        ok(respond(s,offer(batch,1),"ACCEPT","m8-wait-fallback"));ok(respond(t,offer(batch,2),"ACCEPT","m8-wait-target"));
+        var initial=mine(s,batch);assertEquals(2,initial.data().path("current_version").asInt());assertEquals(1,initial.data().at("/waitlist/version").asInt());
+        var wrong=api("POST","/preparation-batches/"+batch+"/waitlist-exit",Map.of("version",2,"action","EXIT_WAITLIST"),s,"m8-wait-wrong");error(wrong,409,"STALE_VERSION");
+        ok(api("POST","/preparation-batches/"+batch+"/waitlist-exit",Map.of("version",1,"action","EXIT_WAITLIST"),s,"m8-wait-own"));
+        facts.put("wrongVersionStatus",wrong.status());facts.put("activeFallback",jdbc.queryForObject("SELECT COUNT(*) FROM seat_entitlement WHERE batch_id=? AND user_id=1 AND space_id=2000 AND status='ACTIVE'",Integer.class,batch));
+        facts.put("waitlistStatus",mine(s,batch).data().at("/waitlist/status").asString());assertEquals(1,facts.get("activeFallback"));assertEquals("EXITED",facts.get("waitlistStatus"));
     }
     @Test void crossBatchConcurrentApplicationsHaveOneIntervalFact()throws Exception {
         String a=login("admin1"),s=login("student1");long one=create(a,List.of(2000L),"create-one"),two=create(a,List.of(2200L),"create-two");
