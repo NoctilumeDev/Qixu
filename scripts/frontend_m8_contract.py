@@ -9,4 +9,9 @@ CLIENT_M8_CASES = [
     'M8 admin recovery message belongs to its current actor',
     'M8 student recovery message belongs to its current actor',
     'M8 management result message is cleared before entering another module',
+    'M8 event publishing identifies missing reason before sending and keeps explicit reason',
+    'M8 private feedback templates show public space identity and detail navigation',
+    'M8 route with page loads repair after feedback navigation',
+    'M8 route without page loads repair after feedback navigation',
+    'M8 stale event read cannot append venue auxiliary or displace venue choices',
 ]

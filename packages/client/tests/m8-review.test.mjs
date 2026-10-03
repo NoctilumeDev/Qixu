@@ -5,6 +5,7 @@ import path from 'node:path';
 import ts from 'typescript';
 import * as vue from 'vue';
 import * as core from '../dist/index.js';
+import {createRequire} from 'node:module';
 
 const root = path.resolve(import.meta.dirname, '../../..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
@@ -84,4 +85,41 @@ test('M8 management result message is cleared before entering another module',as
     await tick();await ui.write('/admin/repairs/1/actions',{});assert.match(ui.message.value,/已确认回执/);
     props.section='batches';assert.equal(ui.message.value,'');await tick();assert.equal(ui.message.value,'');
   }finally{scope.stop();}
+});
+
+test('M8 event publishing identifies missing reason before sending and keeps explicit reason',async()=>{
+  const sent=[];
+  const c=makeClient(async request=>{
+    if(request.method==='GET')return ok(request.path.endsWith('/venue-requests')?[]:{id:9,version:2,status:'DRAFT'});
+    sent.push(request);return ok({receipt:{key:request.headers['Idempotency-Key'],status:'COMMITTED'},id:9});
+  },'COOKIE');c.session={...session(3),actor:{...session(3).actor,role:'TEACHER'}};
+  const auth=vue.reactive({session:c.session,generation:c.generation}),scope=vue.effectScope();
+  try{
+    const ui=scope.run(()=>setup('admin/src/components/ManagementFlows.vue',{defineProps:()=>({section:'events',id:9}),useRoute:()=>({query:{}}),useRouter:()=>({replace:()=>{}}),onBeforeUnmount:()=>{},auth,client:c,api:(p,s)=>c.get('/api/v1'+p,s),errorMessage:e=>e.message},'action,form,error'));
+    await tick();ui.form.reason='   ';await ui.action('PUBLISH');
+    assert.equal(sent.length,0,'empty reason must be identified without creating a business intent');assert.match(ui.error.value,/处理说明/);
+    ui.form.reason='x'.repeat(501);await ui.action('PUBLISH');assert.equal(sent.length,0);assert.match(ui.error.value,/500/);
+    ui.form.reason='已核对场地、时间与影响，按合同发布。';await ui.action('PUBLISH');
+    assert.equal(sent.length,1);assert.equal(sent[0].path,'/api/v1/organizer/events/9/actions');
+    assert.deepEqual(sent[0].body,{version:2,action:'PUBLISH',reason:ui.form.reason});assert.equal(ui.error.value,'');
+  }finally{scope.stop();}
+});
+
+test('M8 private feedback templates show public space identity and detail navigation',async()=>{
+  // Compile the actual two template branches. This witnesses bindings, not a
+  // browser or native uni rendering; API permissions remain backend witnesses.
+  const req=createRequire(path.join(root,'student/package.json'));
+  const vueDeps=createRequire(req.resolve('vue'));
+  const actualVue=req('vue'),{compile}=vueDeps('@vue/compiler-dom'),{renderToString}=vueDeps('@vue/server-renderer');
+  const source=read('student/src/components/PersonalFlows.vue');
+  const report={id:17,space_id:2000,code:'A001',name:'西区单人位 1',status:'REPORTED',category:'OUTLET',updated_at:'2026-10-03T10:00:00Z',description:'可核实的演示报告',attachments:[],history:[]};
+  for(const view of ['feedback','report']){
+    const branch=source.split(`<template v-else-if="view==='${view}'${view==='report'?'&&data.id':''}">`)[1]?.split('</template>')[0];assert.ok(branch,'actual branch located');
+    const {code}=compile(branch,{mode:'function',prefixIdentifiers:true,isCustomElement:tag=>['view','text','image','picker','textarea','button'].includes(tag)});
+    const javascript=ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+    const render=new Function('Vue',javascript)(actualVue);
+    const html=await renderToString(actualVue.createSSRApp({render,setup:()=>({view,id:17,data:report,items:[report],categories:[{value:'OUTLET',label:'插座故障'}],feedbackSpace:null,attachments:[],busy:false,loading:false,error:'',description:'',statement:'',category:'OUTLET',label:core.label,formatTime:core.formatTime,icon:x=>x,go:()=>{},write:()=>{},uploadPhoto:()=>{}})}));
+    assert.match(html,/A001/);assert.match(html,/西区单人位 1/);assert.doesNotMatch(html,/空间2000/);
+    if(view==='report'){assert.match(html,/查看空间档案/);assert.ok(branch.includes("go('space',data.space_id)"),'navigation uses authorized resource id');}
+  }
 });

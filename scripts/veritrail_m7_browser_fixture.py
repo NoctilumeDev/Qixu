@@ -60,7 +60,7 @@ def main():
             count=sql("SELECT COUNT(*) FROM qixu_browser.idempotency_receipt WHERE actor_id=1 AND request_key='"+key+"';")
             receipts.append({'key_sha256':hashlib.sha256(key.encode()).hexdigest(),'count':int(count),'status':r['status'],'path':r['path']})
         review={}
-        if coord.get('collector')=='qixu-m8-browser/0.1':
+        if coord.get('collector') in ('qixu-m8-browser/0.1','qixu-m8-browser/0.2'):
             review={
                 'outlet_true_facts':int(sql("SELECT COUNT(*) FROM qixu_browser.space_fact WHERE space_id=2000 AND feature_key='outlet' AND value_json=CAST('true' AS JSON);")),
                 'outlet_false_facts':int(sql("SELECT COUNT(*) FROM qixu_browser.space_fact WHERE space_id=2000 AND feature_key='outlet' AND value_json=CAST('false' AS JSON);")),
