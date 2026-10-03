@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.transaction.TransactionSystemException;
 
 @RestControllerAdvice
 public class ApiErrors {
@@ -28,7 +29,21 @@ public class ApiErrors {
     }
     @ExceptionHandler(DataAccessException.class)
     ResponseEntity<Object> database(DataAccessException e, HttpServletRequest r) {
-        return ResponseEntity.status(503).body(Api.error("DATABASE_UNAVAILABLE","数据服务暂时不可用，请稍后重试。",r));
+        return databaseUnavailable(r);
+    }
+    @ExceptionHandler(TransactionSystemException.class)
+    ResponseEntity<Object> transaction(TransactionSystemException e, HttpServletRequest r) {
+        // A failed rollback may replace the original commit communications error.
+        // Neither exception establishes that the business transaction rolled back.
+        Throwable original=e.getOriginalException();
+        if(e.contains(java.sql.SQLException.class) || e.contains(DataAccessException.class)
+                || original instanceof DataAccessException || original instanceof java.sql.SQLException) {
+            return databaseUnavailable(r);
+        }
+        return unexpected(e,r);
+    }
+    private ResponseEntity<Object> databaseUnavailable(HttpServletRequest r) {
+        return ResponseEntity.status(503).body(Api.error("DATABASE_UNAVAILABLE","数据服务暂时不可用；写入结果可能尚未确认，请通过原请求回执核对。",r));
     }
     @ExceptionHandler(NoResourceFoundException.class)
     ResponseEntity<Object> missing(Exception e, HttpServletRequest r) {
