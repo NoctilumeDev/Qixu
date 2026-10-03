@@ -40,7 +40,7 @@ test('M8 recover rechecks ownership before receipt adoption',async()=>{
   assert.equal(c.session.actor.id,2);assert.ok(c.pending.some(p=>p.actorId===1&&p.key===key),'old recovery coordinate retained');
 });
 test('M8 a legally settled receipt is not retroactively changed by later login',async()=>{
-  const c=makeClient(r=>r.method==='GET'?Promise.resolve(ok({status:'COMMITTED',result:{receipt:{key:r.path.split('/').at(-1),status:'COMMITTED'},owner:1}})):r.path.endsWith('/login')?Promise.resolve(ok(session(2))):Promise.reject(Error('lost')));c.session=session(1);
+  const c=makeClient(r=>r.method==='GET'?Promise.resolve(ok({status:'COMMITTED',result:{receipt:{key:r.path.split('/').at(-1),status:'COMMITTED'},owner:1}})):r.path.endsWith('/login')?Promise.resolve(ok(session(2))):r.path.endsWith('/logout')?Promise.resolve(ok({})):Promise.reject(Error('lost')));c.session=session(1);
   await assert.rejects(c.mutate('/api/v1/favorites',{spaceId:2000}),core.UnknownSubmission);
   const result=await c.recover(c.visiblePending[0].key);await c.login('demo2','demo');assert.equal(result.owner,1);assert.equal(c.session.actor.id,2);
 });

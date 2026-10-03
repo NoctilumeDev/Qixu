@@ -101,7 +101,8 @@ class PreparationIT {
         var ids=new ArrayList<Long>();
         for(int i=0;i<11;i++) {
             var body=new LinkedHashMap<>(createBody(List.of(2000L)));
-            var start=Instant.parse("2026-10-11T02:10:00Z").plus(Duration.ofDays(i)),end=start.plus(Duration.ofDays(1));
+            var start=Instant.parse("2026-10-11T02:10:00Z").plus(Duration.ofDays(i));
+            var end=start.plus(Duration.ofDays(1));
             body.put("startsAt",start.toString());body.put("endsAt",end.toString());body.put("promotionUntil",end.toString());
             var created=api("POST","/preparation-batches",body,admin,"m8-maint-create-"+i);ok(created);ids.add(created.id());
             ok(submit(one,created.id(),0,prefs(2000),"m8-maint-one-"+i));ok(submit(two,created.id(),0,prefs(2000),"m8-maint-two-"+i));
