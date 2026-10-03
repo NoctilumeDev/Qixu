@@ -50,6 +50,7 @@ class PreparationIT {
     @LocalServerPort int port;
     @Autowired JdbcTemplate jdbc;@Autowired JsonMapper json;@Autowired MutableClock clock;@Autowired ControlledSource source;
     @Autowired LongSeats seats;@Autowired BatchFreezer freezer;@Autowired AllocationPublisher publisher;@Autowired Notifications notifications;@Autowired PlatformTransactionManager manager;
+    @Autowired AllocationWorker worker;@Autowired org.springframework.boot.availability.ApplicationAvailability availability;@Autowired dev.noctilume.qixu.recovery.RecoveryFence recovery;
     @MockitoSpyBean Business business;
     private final HttpClient http=HttpClient.newHttpClient();private final List<Map<String,Object>> requests=new CopyOnWriteArrayList<>();private final Map<String,Object> facts=new LinkedHashMap<>();
     private static final Map<String,Object> OBSERVATIONS=new ConcurrentHashMap<>();private String name;
@@ -94,6 +95,36 @@ class PreparationIT {
         assertEquals(403,api("POST","/preparation-batches",createBody(List.of(2000L)),teacher,"wrong-teacher").status());assertEquals(403,api("POST","/preparation-batches",createBody(List.of(2000L)),s,"wrong-student").status());
         long batch=create(a,List.of(2000L),"valid-create");error(api("POST","/preparation-batches",createBody(List.of(2000L)),a,"overlap-pool"),409,"SPACE_CONFLICT");
         error(api("POST","/reservations",Map.of("spaceId",2000,"startsAt","2026-10-10T02:11:00Z","endsAt","2026-10-10T03:00:00Z"),s,"protected-seat"),409,"SPACE_CONFLICT");facts.put("batches",count("preparation_batch"));facts.put("shorts",count("short_reservation"));
+    }
+    @Test void publishedBatchAfterFirstTenReceivesPromotionWithoutStarvation()throws Exception {
+        String admin=login("admin1"),one=login("student1"),two=login("student2");
+        var ids=new ArrayList<Long>();
+        for(int i=0;i<11;i++) {
+            var body=new LinkedHashMap<>(createBody(List.of(2000L)));
+            var start=Instant.parse("2026-10-11T02:10:00Z").plus(Duration.ofDays(i)),end=start.plus(Duration.ofDays(1));
+            body.put("startsAt",start.toString());body.put("endsAt",end.toString());body.put("promotionUntil",end.toString());
+            var created=api("POST","/preparation-batches",body,admin,"m8-maint-create-"+i);ok(created);ids.add(created.id());
+            ok(submit(one,created.id(),0,prefs(2000),"m8-maint-one-"+i));ok(submit(two,created.id(),0,prefs(2000),"m8-maint-two-"+i));
+        }
+        clock.value=Instant.parse("2026-10-10T01:05:00Z");
+        for(long id:ids)ok(action(admin,id,1,"FREEZE","m8-maint-freeze-"+id));
+        clock.value=Instant.parse("2026-10-10T01:07:03Z");
+        for(long id:ids)ok(action(admin,id,2,"ALLOCATE","m8-maint-allocate-"+id));
+        for(int i=0;i<10;i++) {
+            long id=ids.get(i),owner=jdbc.queryForObject("SELECT user_id FROM long_offer WHERE batch_id=? AND status='OPEN'",Long.class,id);
+            ok(respond(owner==1?one:two,offer(id,owner),"ACCEPT","m8-maint-accept-"+id));
+        }
+        long late=ids.get(10),owner=jdbc.queryForObject("SELECT user_id FROM long_offer WHERE batch_id=? AND status='OPEN'",Long.class,late);
+        ok(exit(owner==1?one:two,late,"m8-maint-last-exit"));
+        assertEquals(10,jdbc.queryForObject("SELECT COUNT(*) FROM long_entitlement WHERE status='ACTIVE'",Integer.class));
+        assertEquals(11,jdbc.queryForObject("SELECT COUNT(*) FROM waitlist_entry WHERE status='ACTIVE'",Integer.class));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND status='OPEN'",Integer.class,late));
+        var tasks=new PreparationTasks(business,freezer,worker,publisher,seats,availability,recovery,true);
+        tasks.run();tasks.run();notifications.deliver();notifications.deliver();
+        int offers=jdbc.queryForObject("SELECT COUNT(*) FROM long_offer WHERE batch_id=? AND status='OPEN'",Integer.class,late);
+        facts.put("legalBatches",ids.size());facts.put("earlyActiveRights",jdbc.queryForObject("SELECT COUNT(*) FROM long_entitlement WHERE status='ACTIVE'",Integer.class));facts.put("taskScanRounds",2);facts.put("lateOpenOffers",offers);
+        facts.put("latePromotionNotices",jdbc.queryForObject("SELECT COUNT(*) FROM notification_outbox WHERE entity_type='BATCH' AND entity_id=? AND event_key LIKE 'offer:%:promotion'",Integer.class,late));
+        assertEquals(1,offers,"legal lower-id waitlists must not permanently hide the eleventh batch");
     }
     @Test void immutableVersionsFreezeExactWinnerAndRejectOfflineOverwrite()throws Exception {
         String a=login("admin1"),s=login("student1");long batch=create(a,List.of(2000L,2100L),"version-create");ok(submit(s,batch,0,prefs(2100,2000),"version-one"));

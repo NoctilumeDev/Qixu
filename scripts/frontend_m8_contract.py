@@ -1,0 +1,9 @@
+"""Actual Client/Vue source under controlled dependencies, not browser proof."""
+CLIENT_M8_CASES = [
+    'M8 recover rechecks ownership before receipt adoption',
+    'M8 a legally settled receipt is not retroactively changed by later login',
+    'M8 Screen leave cannot repopulate favorites',
+    'M8 Screen generation change cannot repopulate favorites',
+    'M8 waitlist exit uses its own version',
+    'M8 boolean facts reject unknown rather than manufacturing absence',
+]

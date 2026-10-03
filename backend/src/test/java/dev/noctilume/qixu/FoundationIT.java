@@ -134,6 +134,25 @@ class FoundationIT {
         assertEquals(3,request("GET","/api/v1/auth/session",null,"Cookie",cookieB,"X-CSRF-Token",old).body().at("/data/actor/id").asInt());
         assertEquals(200,request("GET","/api/v1/inbox",null,"Authorization","Bearer "+token("student1"),"X-CSRF-Token",old).status());
     }
+    @Test void bearerLogoutPreservesUnrelatedCookieSession() throws Exception {
+        var admin=login("admin1","COOKIE");
+        String cookie=admin.raw().headers().firstValue("Set-Cookie").orElseThrow().split(";")[0];
+        String csrf=admin.body().at("/data/csrfToken").asString();
+        String student=token("student1");
+        var loggedOut=request("POST","/api/v1/auth/logout",Map.of(),"Authorization","Bearer "+student,"Cookie",cookie);
+        assertEquals(200,loggedOut.status());
+        measure("bearerSetCookieHeaders",loggedOut.raw().headers().allValues("Set-Cookie").size());
+        var stillAdmin=request("GET","/api/v1/auth/session",null,"Cookie",cookie,"X-CSRF-Token",csrf);
+        measure("remainingAdminSession",stillAdmin.status());
+        error(get("/api/v1/auth/session",student),401,"SESSION_REQUIRED");
+        measure("unrevokedSessions",jdbc.queryForObject("SELECT COUNT(*) FROM auth_session",Integer.class));
+        assertTrue(loggedOut.raw().headers().allValues("Set-Cookie").isEmpty(),"Bearer logout must not clear another browser credential");
+        assertEquals(200,stillAdmin.status());
+        var cookieLogout=request("POST","/api/v1/auth/logout",Map.of(),"Cookie",cookie,"X-CSRF-Token",csrf);
+        assertEquals(200,cookieLogout.status());
+        assertTrue(cookieLogout.raw().headers().firstValue("Set-Cookie").orElseThrow().contains("Max-Age=0"));
+        error(request("GET","/api/v1/auth/session",null,"Cookie",cookie),401,"SESSION_REQUIRED");
+    }
     @Test void originAndMalformedAuthorizationDoNotFallBackToCookie() throws Exception {
         var login=login("student1","COOKIE"); String cookie=login.raw().headers().firstValue("Set-Cookie").orElseThrow().split(";")[0];
         error(request("GET","/api/v1/auth/session",null,"Cookie",cookie,"Authorization","Basic bad"),401,"SESSION_REQUIRED");
