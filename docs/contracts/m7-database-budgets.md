@@ -1,4 +1,4 @@
-# M7 F15 · 数据库停滞预算，版本1
+# M7 F15 · 数据库停滞预算，版本2
 
 先冻结观察标准，再注入故障。连接池获取、已借出连接的网络读、数据库资源锁等待、业务截止是不同时间合同。当前配置的3000ms取连接时间不能代替SQL或网络读预算。
 
@@ -27,3 +27,7 @@
 - [Connector/J troubleshooting](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-troubleshooting.html)：通信失败不裁决commit是否成立。
 
 本合同不关闭M7整体；真实页面、其他组合、M8双角色及M10仍按各自义务推进。
+
+## 观察前提修订，先于0.2执行
+
+0.1原FAIL不改：真实锁预算被击穿，但网络5秒响应尚未证明借出SQL。0.2/Plan2保留原23条/15与35秒标准，增加`target_query_hit`前提。仅owned中继URL设置sslMode=DISABLED/useServerPrepStmts=false便于识别MySQL packet边界；不改产品默认TLS策略。建立连接、ping、其他语句正常转发；在已存在连接上识别COM_QUERY的auth_session只读查询，先标记该连接，再丢其server回应。不保存查询文本/凭据到公开事实。明确target hit与请求/被丢字节；无命中ERROR而非PASS。guard事务释放后EOF正常退出；非零退出是夹具错误。当前阶段只修观察前提，不修业务预算。
