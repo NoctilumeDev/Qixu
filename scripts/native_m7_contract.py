@@ -18,7 +18,7 @@ M7_CASES.update({"recovery.RecoveryJournalTest":[
  "secondOwnerCannotAcquireSameIndependentJournal",
  "illegalTerminalsAndDuplicatePreparesCannotRewriteBytes",
  "truncatedOrAlteredHistoryIsNeverSilentlyRepaired",
- "externalAppendWhileOpenInvalidatesFurtherDurableAuthority",
+ "changedLengthOnOwnedChannelInvalidatesFurtherDurableAuthority",
  "oversizedJournalIsRejectedWithoutTruncation",
 ],"recovery.RecoveryFenceTest":[
  "oldDatabaseMissingKnownCommitMarkerQuarantinesAllAdmission",

@@ -32,7 +32,8 @@ class RecoveryFenceTest {
     }
     @Test void incompletePrepareWithRealMarkerRecoversSameCommitWithoutNewGeneration() throws Exception {
         history(null);try(var f=open(database(List.of(id)))){assertTrue(f.ready());}
-        try(var j=new RecoveryJournal(path(),false)){assertEquals(generation,j.generation());assertEquals("COMMIT",j.transactions().get(id));assertTrue(Files.readString(path()).contains("RECOVER_COMMIT"));}
+        try(var j=new RecoveryJournal(path(),false)){assertEquals(generation,j.generation());assertEquals("COMMIT",j.transactions().get(id));}
+        assertTrue(Files.readString(path()).contains("RECOVER_COMMIT"));
     }
     @Test void unknownPrepareWithoutMarkerIsNotInventedRollback() throws Exception {
         history(null);byte[] before=Files.readAllBytes(path());try(var f=open(database(List.of()))){assertFalse(f.ready());}assertArrayEquals(before,Files.readAllBytes(path()));
@@ -49,7 +50,7 @@ class RecoveryFenceTest {
     }
     @Test void markerWriteFailureKnownRollbackRetainsPreparedCoordinateAndCanReconcile() throws Exception {
         try(var j=new RecoveryJournal(path(),true)){j.initialize(generation,"a".repeat(64));}
-        var jdbc=database(List.of());when(jdbc.update(startsWith("INSERT INTO recovery_marker"),any(),any())).thenThrow(new org.springframework.dao.DataAccessResourceFailureException("controlled marker failure"));
+        var jdbc=database(List.of());when(jdbc.update(startsWith("INSERT INTO recovery_marker"),any(Object[].class))).thenThrow(new org.springframework.dao.DataAccessResourceFailureException("controlled marker failure"));
         try(var f=open(jdbc)) {
             var tx=transaction();assertThrows(org.springframework.dao.DataAccessException.class,()->f.beforeCommit(tx));assertFalse(f.ready());f.afterRollback(tx,null);
         }
@@ -63,9 +64,11 @@ class RecoveryFenceTest {
             var jdbc=database(List.of());
             try(var f=new RecoveryFence(jdbc,null,p.toString(),"")) {
                 var tx=transaction();f.beforeCommit(tx);
-                if(io)Files.writeString(p,"corrupt\n",StandardOpenOption.APPEND);
+                var field=RecoveryFence.class.getDeclaredField("journal");field.setAccessible(true);var journal=(RecoveryJournal)field.get(f);
+                if(io)RecoveryJournalTest.ownedChannel(journal).close();
                 f.afterCommit(tx,io?null:new java.sql.SQLException("controlled unknown commit"));assertFalse(f.ready());
-                assertFalse(Files.readString(p).contains("|ROLLBACK|"));assertFalse(Files.readString(p).contains("|COMMIT|"));
+                String raw=new String(io?Files.readAllBytes(p):RecoveryJournalTest.ownedBytes(journal),java.nio.charset.StandardCharsets.US_ASCII);
+                assertFalse(raw.contains("|ROLLBACK|"));assertFalse(raw.contains("|COMMIT|"));
                 assertThrows(DomainException.class,f::requireReady);
             }
         }

@@ -10,6 +10,13 @@ import org.junit.jupiter.api.io.TempDir;
 class RecoveryJournalTest {
     @TempDir Path root;
     private Path path(){return root.resolve("journal");}
+    static java.nio.channels.FileChannel ownedChannel(RecoveryJournal j) throws Exception {
+        var field=RecoveryJournal.class.getDeclaredField("channel");field.setAccessible(true);return (java.nio.channels.FileChannel)field.get(j);
+    }
+    static byte[] ownedBytes(RecoveryJournal j) throws Exception {
+        var channel=ownedChannel(j);var bytes=java.nio.ByteBuffer.allocate((int)channel.size());long previous=channel.position();
+        try{channel.position(0);while(bytes.hasRemaining())assertTrue(channel.read(bytes)>=0);return bytes.array();}finally{channel.position(previous);}
+    }
     private RecoveryJournal fresh() throws Exception {
         var journal=new RecoveryJournal(path(),true);journal.initialize(UUID.randomUUID().toString(),"a".repeat(64));return journal;
     }
@@ -25,9 +32,9 @@ class RecoveryJournalTest {
     @Test void illegalTerminalsAndDuplicatePreparesCannotRewriteBytes() throws Exception {
         String id=UUID.randomUUID().toString();
         try(var j=fresh()) {
-            byte[] original=Files.readAllBytes(path());assertThrows(IOException.class,()->j.event("COMMIT",id));assertArrayEquals(original,Files.readAllBytes(path()));
-            j.event("PREPARE",id);byte[] prepared=Files.readAllBytes(path());assertThrows(IOException.class,()->j.event("PREPARE",id));assertArrayEquals(prepared,Files.readAllBytes(path()));
-            j.event("ROLLBACK",id);byte[] rolled=Files.readAllBytes(path());assertThrows(IOException.class,()->j.event("COMMIT",id));assertArrayEquals(rolled,Files.readAllBytes(path()));
+            byte[] original=ownedBytes(j);assertThrows(IOException.class,()->j.event("COMMIT",id));assertArrayEquals(original,ownedBytes(j));
+            j.event("PREPARE",id);byte[] prepared=ownedBytes(j);assertThrows(IOException.class,()->j.event("PREPARE",id));assertArrayEquals(prepared,ownedBytes(j));
+            j.event("ROLLBACK",id);byte[] rolled=ownedBytes(j);assertThrows(IOException.class,()->j.event("COMMIT",id));assertArrayEquals(rolled,ownedBytes(j));
         }
     }
     @Test void truncatedOrAlteredHistoryIsNeverSilentlyRepaired() throws Exception {
@@ -37,11 +44,12 @@ class RecoveryJournalTest {
         Files.write(path(),raw);raw[raw.length-3]=raw[raw.length-3]=='a'?(byte)'b':(byte)'a';Files.write(path(),raw);
         assertThrows(IOException.class,()->new RecoveryJournal(path(),false));assertArrayEquals(raw,Files.readAllBytes(path()));
     }
-    @Test void externalAppendWhileOpenInvalidatesFurtherDurableAuthority() throws Exception {
+    @Test void changedLengthOnOwnedChannelInvalidatesFurtherDurableAuthority() throws Exception {
         try(var j=fresh()) {
-            Files.writeString(path(),"unexpected\n",StandardOpenOption.APPEND);
-            byte[] modified=Files.readAllBytes(path());assertThrows(IOException.class,j::assertCurrent);
-            assertThrows(IOException.class,()->j.event("PREPARE",UUID.randomUUID().toString()));assertArrayEquals(modified,Files.readAllBytes(path()));
+            // Windows locks are mandatory. Inject via the owned descriptor; do not disable its lock.
+            var channel=ownedChannel(j);channel.position(channel.size());channel.write(java.nio.ByteBuffer.wrap("unexpected\n".getBytes(java.nio.charset.StandardCharsets.US_ASCII)));
+            byte[] modified=ownedBytes(j);assertThrows(IOException.class,j::assertCurrent);
+            assertThrows(IOException.class,()->j.event("PREPARE",UUID.randomUUID().toString()));assertArrayEquals(modified,ownedBytes(j));
         }
     }
     @Test void oversizedJournalIsRejectedWithoutTruncation() throws Exception {

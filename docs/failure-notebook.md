@@ -193,3 +193,9 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 一致T1库的第二trace中，产品从未创建独立journal，缺账册仍健康200并返回旧回执200。分类产品缺失恢复代/独立事务对账与隔离机制；不能用网络故障或“数据库恢复成功”解释为安全。原dump/完整world/HTTP/SQL/CIM留私有运行目录；公共包原字节不改，不发布票据。6个owned进程停止且6975/6976无监听。
 
 修复按已冻结F12合同：提交前持久PREPARE与同事务marker、启动generation/全账册核对、无法对账时503 NOT_RECONCILED并阻止身份/业务/任务。保留正确正常重启控制与原Plan2断言复验，不靠清库、删除旧见证或改变原请求键修绿。尚未修复；M7整体不闭合。
+
+## M7恢复修复 · 单元夹具首败
+
+`ffbb6a2`的14条文件/受控DB视图单元首跑9通过、1失败4错误，原XML/stdout保留`.tools/m7-recovery-unit-first-ffbb6a2/`，未产生Core资格。Windows排他FileLock为强制锁，测试用Files第二句柄读取/追加被系统拒绝；另一个Mockito桩选中了JdbcTemplate的数组+类型重载，而产品调用Object-varargs，所以预设SQL失败没注入。分类测试夹具，并未观察到恢复规则失效。首次错误工作目录无POM的命令输出也保留，没有测试执行。
+
+修正测试从owned descriptor读取原字节，并仅通过该句柄显式注入长度变化/句柄关闭的IO故障；不移除产品文件锁、不把该注入说成外部攻击或真实磁盘掉电。SQL桩固定Object[]重载。原T0恢复业务断言与首FAIL不变，后续真实MySQL另验。
