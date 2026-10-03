@@ -1,6 +1,6 @@
 # 本地运行与验收
 
-当前后端包含M1–M4限定范围，具体资格见各阶段acceptance。两个前端按里程碑继续施工，不能从启动说明推定已完成。
+当前后端包含M1–M4限定范围，具体资格见各阶段acceptance。两个前端M5主流程正在真实页面验收，尚无阶段资格；M10再做最终精修。启动说明不等于完成证明。
 
 ## 工具与隔离
 
@@ -10,11 +10,19 @@ Java17、Maven3.9、MySQL8。开发库 `qixu`，测试库 `qixu_test`；两套�
 
 ## 启动
 
-在 IDE 运行 `dev.noctilume.qixu.QixuApplication`，或在 backend 下执行 `mvn spring-boot:run`。环境变量见 [模板](../backend/.env.example)；模板不会自动加载。必须提供 `QIXU_DB_PASSWORD`，按实际库设置 `QIXU_DB_URL` / `QIXU_DB_USER`。
+在 IDE 运行 `dev.noctilume.qixu.QixuApplication`，或在 backend 下执行 `mvn spring-boot:run`。环境变量见 [模板](../backend/.env.example)；模板不会自动加载。必须提供 `QIXU_DB_PASSWORD`，按实际库设置 `QIXU_DB_URL` / `QIXU_DB_USERNAME`。
 
 显式 `SPRING_PROFILES_ACTIVE=demo` 才创建虚构空间与演示身份：student1/student2、teacher1、admin1/admin2，演示口令均为 `qixu-demo`。生产 profile 禁止同时开启 demo；默认配置不创建演示管理员。
 
 默认只监听 127.0.0.1:6967，启动前确认端口归属；`GET /api/health` 返回就绪范围。小程序用 Bearer 登录，管理浏览器用 HttpOnly cookie 与绑定 CSRF。设置允许来源时使用完整 origin，不能用通配凭据。
+
+## 两端施工入口
+
+根目录使用锁定的Node24.14.x/npm11.9.0执行`npm ci`，再运行`npm run test:client`、`npm run check`和`npm run build`。构建分别产生学生H5、微信小程序和管理Web；构建不授予页面或真机资格。
+
+后端正常启动后，`npm run dev:student`监听127.0.0.1:6968，`npm run dev:admin`监听127.0.0.1:6969，二者将同源`/api`代理到6967。端口占用时strictPort拒绝，不自动漂移或杀其他服务。共享客户端直接解析到`packages/client/src/index.ts`，避免workspace的node_modules链接缓存保留旧代码；跨合同更新后从冷启动核对实际页面。
+
+微信开发者工具导入`student/dist/build/mp-weixin`，设置本项目自己的AppID；不复用青野AppID。原生端必须配置部署的HTTPS服务origin及平台合法域名；默认不关闭域名校验。H5开发代理不代表微信手机可连接，认证、真机键盘和订阅消息另行验收。
 
 ## 原生验收与验迹
 

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 public class BookingController {
-    private final Business b; private final ShortReservations shorts; private final VenueRequests venues; private final Events events; private final SpaceRights rights; private final Favorites favorites; private final Notifications notifications;
-    public BookingController(Business b,ShortReservations shorts,VenueRequests venues,Events events,SpaceRights rights,Favorites favorites,Notifications notifications) { this.b=b; this.shorts=shorts; this.venues=venues; this.events=events; this.rights=rights; this.favorites=favorites; this.notifications=notifications; }
+    private final IntentRecovery recovery; private final Business b; private final ShortReservations shorts; private final VenueRequests venues; private final Events events; private final SpaceRights rights; private final Favorites favorites; private final Notifications notifications;
+    public BookingController(IntentRecovery recovery,Business b,ShortReservations shorts,VenueRequests venues,Events events,SpaceRights rights,Favorites favorites,Notifications notifications) { this.recovery=recovery; this.b=b; this.shorts=shorts; this.venues=venues; this.events=events; this.rights=rights; this.favorites=favorites; this.notifications=notifications; }
     private AuthService.Session session(HttpServletRequest r) { return SessionFilter.session(r); }
     private String requestId(HttpServletRequest r) { return r.getAttribute("requestId").toString(); }
     @GetMapping("/spaces/{id}/availability") Object availability(@PathVariable long id,@RequestParam OffsetDateTime start,@RequestParam OffsetDateTime end,HttpServletRequest r) { return Api.ok(rights.availability(id,Business.time(start),Business.time(end)),r); }
@@ -38,6 +38,7 @@ public class BookingController {
     @GetMapping("/favorites") Object favorites(HttpServletRequest r) { return Api.ok(favorites.mine(session(r).actor().id()),r); }
     @PostMapping("/favorites") Object favoriteChange(@RequestHeader(value="Idempotency-Key",required=false) String key,@RequestBody Favorites.Change body,HttpServletRequest r) { return Api.ok(favorites.change(session(r),key,body),r); }
     @GetMapping("/receipts/{key}") Object receipt(@PathVariable String key,HttpServletRequest r) { return Api.ok(b.receipt(session(r).actor().id(),key),r); }
+    @PostMapping("/receipts/{key}/stop") Object stop(@PathVariable String key,HttpServletRequest r) { return Api.ok(recovery.stop(session(r),key),r); }
     @GetMapping("/inbox") Object inbox(HttpServletRequest r) { return Api.ok(notifications.mine(session(r).actor().id()),r); }
     @PostMapping("/inbox/{id}/read") Object read(@PathVariable long id,@RequestHeader(value="Idempotency-Key",required=false) String key,HttpServletRequest r) { return Api.ok(notifications.read(session(r),key,id),r); }
 }

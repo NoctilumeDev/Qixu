@@ -70,6 +70,9 @@ class FeedbackIT {
     }
     @Test void reportsArePrivateAndNeverBecomeFactsWithoutScopedVerification() throws Exception {
         var one=token("student1");var two=token("student2");var admin=token("admin1");var outside=token("admin2");var r=report(one,"report-private");
+        assertEquals("FEEDBACK-TEST",r.data().path("code").asString());
+        assertEquals("FEEDBACK-TEST",request("GET","/feedback",null,one,null).data().path("items").get(0).path("code").asString());
+        assertEquals(0,request("GET","/feedback",null,two,null).data().path("total").asInt());
         error(request("GET","/feedback/"+r.id(),null,two,null),404,"RESOURCE_NOT_FOUND");error(request("GET","/feedback/"+r.id(),null,outside,null),403,"SCOPE_FORBIDDEN");
         error(request("POST","/admin/feedback/"+r.id()+"/actions",Map.of("version",1,"action","VERIFY","reason","模拟创始人权限"),one,"student-claims-admin"),403,"SCOPE_FORBIDDEN");
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM space_fact",Integer.class));assertTrue(request("GET","/spaces/4990",null,two,null).data().at("/profile/features/outlet").asBoolean());
@@ -82,6 +85,21 @@ class FeedbackIT {
         var student=token("student1");var admin=token("admin1");var r=verify(admin,report(student,"report-duplicate").id());var body=repairBody(List.of(r));var created=repair(admin,List.of(r),"create-repair-duplicate");
         var again=request("POST","/admin/repairs",body,admin,"create-repair-duplicate");assertEquals(200,again.status(),again.body().toString());assertEquals(created.data(),again.data());
         assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket",Integer.class));assertEquals("IN_REPAIR",request("GET","/feedback/"+r.id(),null,student,null).data().path("status").asString());facts.put("repairs",jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket",Integer.class));
+    }
+    @Test void repairActionsAcceptEmptyReferencesButOnlyLinkActionCanAttachReports() throws Exception {
+        var student=token("student1");var admin=token("admin1");var report=verify(admin,report(student,"report-empty-refs").id());var ticket=repair(admin,List.of(report),"repair-empty-refs");
+        assertEquals("FEEDBACK-TEST",ticket.data().path("code").asString());
+        assertEquals("FEEDBACK-TEST",request("GET","/admin/repairs",null,admin,null).data().path("items").get(0).path("code").asString());
+        var body=new HashMap<String,Object>(Map.of("version",1,"action","ASSIGN","reason","界面空引用回归","assignee","模拟维修人员","reports",List.of(Map.of("id",report.id(),"version",3))));
+        int audit=jdbc.queryForObject("SELECT COUNT(*) FROM audit_entry",Integer.class);
+        error(request("POST","/admin/repairs/"+ticket.id()+"/actions",body,admin,"invalid-hidden-links"),422,"INVALID_INPUT");
+        assertEquals(audit,jdbc.queryForObject("SELECT COUNT(*) FROM audit_entry",Integer.class));assertEquals(1,jdbc.queryForObject("SELECT version FROM repair_ticket WHERE id=?",Integer.class,ticket.id()));
+        body.put("reports",List.of());assertEquals(200,request("POST","/admin/repairs/"+ticket.id()+"/actions",body,admin,"assign-empty-refs").status());
+        body.put("version",2);body.put("action","WORK_DONE");assertEquals(200,request("POST","/admin/repairs/"+ticket.id()+"/actions",body,admin,"work-empty-refs").status());
+        assertEquals("IN_REPAIR",request("GET","/feedback/"+report.id(),null,student,null).data().path("status").asString());
+        body.put("version",3);body.put("action","VERIFY");body.put("verified",true);body.put("facts",List.of(Map.of("key","outlet","value",true),Map.of("key","outletCondition","value","WORKING")));
+        var closed=request("POST","/admin/repairs/"+ticket.id()+"/actions",body,admin,"verify-empty-refs");assertEquals(200,closed.status(),closed.body().toString());assertEquals("VERIFIED_CLOSED",closed.data().path("status").asString());
+        facts.put("emptyReferenceClosedRepairs",jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket WHERE status='VERIFIED_CLOSED'",Integer.class));
     }
     @Test void workDoneIsNotResolvedAndFailedVerificationCanContinue() throws Exception {
         var student=token("student1");var admin=token("admin1");var r=verify(admin,report(student,"report-workflow").id());var repair=repair(admin,List.of(r),"create-repair-workflow");

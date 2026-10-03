@@ -123,6 +123,16 @@ class FoundationIT {
         error(request("GET","/api/v1/auth/session",null,"Cookie",cookie),401,"SESSION_REQUIRED");
         assertEquals(200,get("/api/v1/auth/session",other).status());
     }
+    @Test void cookieReadBindingRejectsAnotherDocumentSessionAndSameActorRotation() throws Exception {
+        Reply a=login("admin1","COOKIE"),b=login("teacher1","COOKIE"),c=login("admin1","COOKIE");
+        String old=a.body().at("/data/csrfToken").asString(),cookieB=b.raw().headers().firstValue("Set-Cookie").orElseThrow().split(";")[0],cookieC=c.raw().headers().firstValue("Set-Cookie").orElseThrow().split(";")[0];
+        error(request("GET","/api/v1/inbox",null,"Cookie",cookieB,"X-CSRF-Token",old),409,"SESSION_OWNER_CHANGED");
+        error(request("GET","/api/v1/inbox",null,"Cookie",cookieC,"X-CSRF-Token",old),409,"SESSION_OWNER_CHANGED");
+        assertEquals(200,request("GET","/api/v1/inbox",null,"Cookie",cookieB,"X-CSRF-Token",b.body().at("/data/csrfToken").asString()).status());
+        assertEquals(200,request("GET","/api/v1/inbox",null,"Cookie",cookieB).status());
+        assertEquals(3,request("GET","/api/v1/auth/session",null,"Cookie",cookieB,"X-CSRF-Token",old).body().at("/data/actor/id").asInt());
+        assertEquals(200,request("GET","/api/v1/inbox",null,"Authorization","Bearer "+token("student1"),"X-CSRF-Token",old).status());
+    }
     @Test void originAndMalformedAuthorizationDoNotFallBackToCookie() throws Exception {
         var login=login("student1","COOKIE"); String cookie=login.raw().headers().firstValue("Set-Cookie").orElseThrow().split(";")[0];
         error(request("GET","/api/v1/auth/session",null,"Cookie",cookie,"Authorization","Basic bad"),401,"SESSION_REQUIRED");

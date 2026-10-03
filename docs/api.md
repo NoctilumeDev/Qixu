@@ -121,3 +121,17 @@ V6施工补充：Block撤销和场地/活动取消、换地保留原通知对象
 - `POST /preparation-batches/{id}/cancel`：{version,action:CANCEL/CANCEL_UNUSED,reason}。前者仅OPEN/FROZEN；后者已发布且无任何持权历史、无当前有效OPEN要约。保留冻结/正式结果/回执；不是批量收回旁路。
 
 当前资格在提交/冻结/发布/确认/递补校验，`GET .../{id}/application`的已申请视图含currentEligibility。处罚自然到期不靠任务；原提交回执可按原actor/key恢复。所有时间输入含offset且精确到秒，响应秒以下精度属于真实Clock读值，客户端不能直接复制成业务输入。
+
+## M5 两端读取与未知意图恢复（施工中，未取得阶段资格）
+
+| 接口 / 字段 | 当前语义 |
+| --- | --- |
+| GET /preparation-applications?page=1 | 当前主体历史申请分页20条，页码1–10000；不从最近公开批次推断本人历史，忽略客户端userId授权主张 |
+| GET /admin/space-blocks；GET /admin/long-entitlements | 当前管理楼层范围分页，page/size/floor，size≤50；老师和学生403。只投影合同白名单，不提供直接改权 |
+| GET /admin/operations；GET /admin/audit | 可归属当前管理范围的通知统计与审计；未知实体不回退到全校。审计不返回detail_json/凭据 |
+| POST /receipts/{key}/stop | 仅当前主体，同用户锁内返回原回执，或持久化client.intent-stop屏障；不会撤销已成立业务，迟到原请求同键409 |
+| Cookie GET上的X-CSRF-Token | 除auth/session冷启动核对外，携带旧绑定与当前Cookie不同则409 SESSION_OWNER_CHANGED；无绑定传统读取仍按当前Cookie授权，不获得旧文档投影资格 |
+| 短约/场地/反馈/维修授权投影code/name | 授权之后追加公开空间编号/名称及必要关联；历史回执不重写，其他主体记录不可枚举 |
+| POST /admin/repairs/{id}/actions 的 reports | 仅LINK_REPORTS消费非空引用。其他动作允许缺省/空列表，非空明确422，不静默关联；安排、工作完成不等于复验关闭 |
+
+前端回执404仍为未确认。只有原事实或原子停止屏障才能结束原意图；本地清除、GET成功和单次4xx均不代替该裁决。端点保护与两端真实页面资格分别记录。
