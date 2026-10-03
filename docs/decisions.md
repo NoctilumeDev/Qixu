@@ -181,3 +181,7 @@ F15固定原15/35秒窗口后取得真实锁等待及借出COM_QUERY首FAIL，�
 PR#20按三项及步骤success保护合入main@ffa01ffe，exact-main CI37104669176和远端全字节读回闭合。新native170/restore22/database25均PASS且owned清理成立；99个原Bundle不改。预算与恢复资格绑定该主线，文档投影不升级后续源码。
 
 先冻结[COMMIT回应丢失合同v1](contracts/m7-commit-reply.md)，独立精确帧触发、SQL真实提交、实时隔离、完整未知PREPARE和同generation恢复。此决策当时只有合同与私有草稿，尚未启动新攻击/修改产品；原database25/restore22不重写。范围内首败保留再修，不能把真实COMMIT歧义直接藏进NOT_PROVEN。
+
+## 2026-10-03 · D026 · 真实COMMIT首败分类
+
+978983a的native170 PASS；独立COMMIT29出现范围内FAIL：服务器真实提交后响应丢失，Spring rollback失败包装成TransactionSystemException，首响应500 INTERNAL_ERROR。SQL唯一效果、实时NOT_RECONCILED、同库同generation恢复及原回执完全一致；清理成立。101个原Bundle字节不改。先冻结合同1.1，仅修数据库事务异常错误映射和结果未知文案，不修改权利/恢复算法及原29标准。

@@ -30,3 +30,9 @@ exact clean candidate + 同source的原native0.18/Plan6 PASS/JAR；Core0.13.0。
 此段只有单实例、真实TCP COMMIT回应丢失与同库重启。没有真实掉电、未确认TCP发送阻塞、整个主机/库与独立账册同时回滚、特权文件篡改、多节点、主从切换、生产容量或外部微信送达资格。这些未知归期序维护者，触发相应部署/事故/新版本时按恢复与预算合同重新冻结环境和Plan；不能用本段PASS迁移。
 
 公开错题启发：MySQL官方[通信/commit歧义](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-troubleshooting.html)明确驱动无法凭通信失败判定commit结果；Hikari[Rapid Recovery](https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery)说明借出连接须独立driver预算。来源只是启发，期序是否成立由本段真实SQL/账册/HTTP判定。
+
+## 最小修复边界1.1 · 不改原29条判定
+
+978983a原native170 PASS和真实COMMIT观察`m7-commit-35238faf86214af08fc9df4f516ca4d2` FAIL完整公开。精确COMMIT命中、真实SQL已提交、实时隔离、唯一效果、RECOVER_COMMIT及原回执恢复均成立；首响应30.031秒为500 INTERNAL_ERROR。私有原日志定位Spring的`TransactionSystemException: JDBC rollback failed`覆盖提交通信错误；分类PRODUCT_ERROR_ENVELOPE，不是提交重复或恢复失败。
+
+修复前固定：仅数据库原因的事务系统异常映射503 DATABASE_UNAVAILABLE，消息明确写入结果待确认并保留requestId；非数据库事务异常仍500，不返回cause/SQL/凭据。不得改变事务、隔离、账册、marker、迁移或relay，原COMMIT29断言全保留。新增三个边界见证（数据库事务/原异常/普通编程异常），native观察0.19/Plan7将170扩大至173；真实29项复验仍是主证据，单测不冒充物理COMMIT。

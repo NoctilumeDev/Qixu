@@ -254,6 +254,20 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-database-f95a73c66a4b4edcab194455a2ea3ea7",
       "manifest_sha256": "c3b97185657009c527a6e3217b0e6c305722e7f432c3bd58820846175972d5fe"
+    },
+    {
+      "identity": "m7-b425173a96704ea28c7c9e4c98188484",
+      "source_sha": "978983a079c0f638d90a645d28d5f909210f21e8",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-b425173a96704ea28c7c9e4c98188484",
+      "manifest_sha256": "fb260bf54a159573732cd0a3e6283a099fd59cd2609277531e6af248886f8f7d"
+    },
+    {
+      "identity": "m7-commit-35238faf86214af08fc9df4f516ca4d2",
+      "source_sha": "978983a079c0f638d90a645d28d5f909210f21e8",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-commit-35238faf86214af08fc9df4f516ca4d2",
+      "manifest_sha256": "7f80f12308625fff9bc845d897dbccc6fa2fd7687f84bce32842b544b2e6a2a4"
     }
   ],
   "not_proven": [
