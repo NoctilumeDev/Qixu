@@ -20,7 +20,7 @@ Java17，Maven3.9；后端选官方当前稳定 Spring Boot4.1.1、Spring JDBC�
 
 管理端 Vue3.5.43、Vite8.3.2、TypeScript5.9.3。学生端采用官方uni-app Vue3/Vite CLI结构，固定同一DCloud发布组 `3.0.0-5020620260917001`、其peer Vite5.2.8及types3.4.31；两前端独立lockfile，避免强行统一不兼容peer。版本观察来自官方npm包元数据，构建事实后补。
 
-本地主机拟用 backend6967/admin6968/student-H5 6969；启动前复核归属和占用。生产HTTPS、微信AppID与合法域名是部署参数；不复用青野AppID，不宣称小程序已经上线。时间输入含偏移，数据库统一UTC，界面Asia/Shanghai。
+M1初始拟用 backend6967/admin6968/student-H5 6969；M5实际部署确定为 backend6967/student-H5 6968/admin6969，与运行指南一致。前一方案是历史计划，不是当前入口；启动前复核归属和占用。生产HTTPS、微信AppID与合法域名是部署参数；不复用青野AppID，不宣称小程序已经上线。时间输入含偏移，数据库统一UTC，界面Asia/Shanghai。
 
 ## 模块与事实
 
