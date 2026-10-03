@@ -1,5 +1,7 @@
 # M7 F15 · 数据库停滞事实
 
+本文件按历史执行顺序保留首次失败、夹具问题和后续限定资格，各段“当前”均指该次观察。最终[M7主线有限退出](m7.md)及[当前里程碑](../milestones.md)另行记录，原裁决不覆盖。
+
 合同[数据库预算](../contracts/m7-database-budgets.md)在116b3fa先于观察器。固定f46cf774c7a6d1048e39e1479ff806c4ed4ac1ec的新[native PASS166](../../artifacts/m7/m7-71ea391836c147eea3e76f6922b765d3/acceptance-report.md)绑定全新JAR，内含Connector/J9.7.0、Hikari7.0.2。随后新owned数据库/中继观察[database0.1/Plan1原FAIL](../../artifacts/m7/m7-database-54e73228d8e14232860b3d1290f43463/acceptance-report.md)，execution COMPLETED，24条断言原包保留。
 
 ## 首次分类，先于修复

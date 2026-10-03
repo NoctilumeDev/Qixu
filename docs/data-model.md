@@ -1,6 +1,6 @@
 # 数据模型与迁移边界 0.1
 
-状态：M1–M6限定资格已闭合；M7候选施工。各迁移段保留其当时范围，当前事实另见acceptance。真相存MySQL InnoDB；业务时间UTC，呈现上海时区。JSON仅用于设施/展示画像、冻结快照及回执，不用JSON中的字符串状态替代有索引的业务约束。
+状态：M1–M7限定资格已闭合；M8复验中，M9待交付，M10等待用户参与。各迁移段保留其当时范围和待验记录，最新阶段见[里程碑](milestones.md)及acceptance；历史段落不是当前完成声明。迁移权威为[Flyway源码](../backend/src/main/resources/db/migration)，不另造手工合并SQL。真相存MySQL InnoDB；业务时间UTC，呈现上海时区。JSON仅用于设施/展示画像、冻结快照及回执，不用JSON中的字符串状态替代有索引的业务约束。
 
 ## M1迁移
 

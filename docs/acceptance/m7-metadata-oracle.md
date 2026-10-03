@@ -1,6 +1,8 @@
 # M7恢复元数据与独立分配判定事实
 
-状态：M7 IN_PROGRESS，本段是候选证据，不是完整M7或新主线运行资格。合同[版本1](../contracts/m7-metadata-oracle.md)在762f22b先冻结；测试4c76123在产品修复前执行。受保护基线52c520c的exact-main CI [37096786155](https://github.com/NoctilumeDev/Qixu/actions/runs/37096786155)三项success，只支持公共构建事实。
+当时状态：M7 IN_PROGRESS，本段是候选证据，不是完整M7或新主线运行资格。合同[版本1](../contracts/m7-metadata-oracle.md)在762f22b先冻结；测试4c76123在产品修复前执行。受保护基线52c520c的exact-main CI [37096786155](https://github.com/NoctilumeDev/Qixu/actions/runs/37096786155)三项success，只支持公共构建事实。
+
+以下为历史候选记录，原裁决不改；后续[M7有限退出](m7.md)及[当前里程碑](../milestones.md)另行记录，不把后来资格回填给本候选。
 
 ## 首败与分类
 

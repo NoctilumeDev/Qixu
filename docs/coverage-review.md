@@ -4,7 +4,9 @@
 
 历史M7主线 `c876d1a35b11dfdf4fda74b67be9451aef8b3a49` 的原native173中，以下35处引用对应的34个不同具名键均在保留Evidence中为true；另有物理COMMIT、旧库恢复、数据库预算、实际浏览器及真实暗室来源的独立证据。不能把这些历史记录直接升级成M8通过。见[M7原资格](acceptance/m7.md)、[未知重入](m7-unknowns.md)。
 
-最近固定修复候选 `4fb184ba2a77daecb0cc33436d6e29ef326e52be` 的native181、frontend59及真实页面18命名捕获各有预封Plan和原Core PASS；两名独立角色报告及产品反馈处置已交付。范围是API/MySQL/受控Clock、实际Client/Vue源码模型/构建及指定实页/SQL，**受保护主线新资格与M8整体退出尚未闭合**。见[M8候选事实](acceptance/m8.md)及[修复合同](contracts/m8-repairs.md)；不将历史或候选资格升级成新main通过。
+下表保留固定修复候选 `4fb184ba2a77daecb0cc33436d6e29ef326e52be` 时的覆盖快照，并非最新执行状态。该候选的native181、frontend59及真实页面18命名捕获各有预封Plan和原Core PASS；两名独立角色报告及产品反馈处置已交付。范围是API/MySQL/受控Clock、实际Client/Vue源码模型/构建及指定实页/SQL。见[M8历史候选事实](acceptance/m8.md)及[修复合同](contracts/m8-repairs.md)；不将历史或候选资格升级成新main通过。
+
+当前追加PM11登录错误投影修复仍在[草稿PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)。已有页面捕获与受控模型支持最小修复，原浏览器Core FAIL/ERROR及缺少SQL/短约保留的边界不改；完整复验、受保护主线新资格与M8整体退出仍未闭合。当前待办以[里程碑](milestones.md)为准，不重写下表当时的待验记录。
 
 ## 用户十六条
 
