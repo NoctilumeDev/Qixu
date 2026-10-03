@@ -1,4 +1,4 @@
-# M7 F15 · 数据库停滞预算，版本2
+# M7 F15 · 数据库停滞预算，版本3
 
 先冻结观察标准，再注入故障。连接池获取、已借出连接的网络读、数据库资源锁等待、业务截止是不同时间合同。当前配置的3000ms取连接时间不能代替SQL或网络读预算。
 
@@ -33,3 +33,9 @@
 0.1原FAIL不改：真实锁预算被击穿，但网络5秒响应尚未证明借出SQL。0.2/Plan2保留原24条/15与35秒标准，增加`target_query_hit`前提。仅owned中继URL设置sslMode=DISABLED/useServerPrepStmts=false便于识别MySQL packet边界；不改产品默认TLS策略。建立连接、ping、其他语句正常转发；在已存在连接上识别COM_QUERY的auth_session只读查询，先标记该连接，再丢其server回应。不保存查询文本/凭据到公开事实。明确target hit与请求/被丢字节；无命中ERROR而非PASS。guard事务释放后EOF正常退出；非零退出是夹具错误。当前阶段只修观察前提，不修业务预算。
 
 0.2未达health的RSA交换前提错误保留PENDING/ERROR。0.3/Plan3仅绑定本轮MySQL自动生成public_key.pem（私有绝对路径、公开公钥hash/owned坐标），仍拒绝任意PublicKeyRetrieval。25条断言不变，先正常就绪再注入。本段还未改变产品代码。
+
+## 首败后的产品入口，先于实现
+
+真实c4f5724负向已证锁和借出SQL两个预算缺失。新增Hikari取连接3000ms、存活检查2000ms、Connector/J建连3000ms/网络读30000ms、每个新物理连接SET SESSION innodb_lock_wait_timeout=10。启动前用锁定Connector/J解析最终single-host参数（包含host-specific override），预算不符/多host/缺session初始化必须拒绝，错误不输出可能带凭据的JDBC URL。普通URL属性不能使已配置预算失效；若驱动最终host参数为0，禁止进入服务。
+
+native0.18/Plan6保留原166并增加4个真实驱动解析/启动前校验用例：genericUrlCannotDisableConfiguredDriverBudgets、hostSpecificOverrideCannotBypassGlobalSocketBudget、zeroNegativeOrExtendedDriverBudgetsFailBeforeConnections、multipleHostsOrMissingLockInitializationCannotInventFiniteBudget，共170。不是网络实测的替代。database0.4/Plan4仅绑定新producer，保留0.3全部25断言及15/35窗；restore0.6/Plan6仅绑定新producer，保留0.5全部22断言。native新增预算合同digest。原SQL迁移/V10和commit歧义隔离不改。

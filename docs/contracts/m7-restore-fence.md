@@ -59,3 +59,5 @@
 ## 版本1.5 · 真实事务坐标控制
 
 按[m7-transaction-coordinates](m7-transaction-coordinates.md)在原162例上增加4个真实MySQL事务见证。native0.17/Plan5为新的fresh producer；restore0.5/Plan5仅接入新producer，保留0.4原22断言及其中18原负向/正常断言，不改产品恢复语义。当前未执行新例，不预填通过。
+
+F15预算修复按[数据库预算v3](m7-database-budgets.md)接入native0.18/Plan6的170例；restore0.6/Plan6仅版本化producer身份，原22断言不降低，V10及独立账册语义不改。必须新坐标重跑，不能把旧恢复资格搬给新预算提交。

@@ -16,3 +16,9 @@
 固定dbdb83b的[native166 PASS](../../artifacts/m7/m7-c77b660b7d2e48628e4befd3f6abb89e/acceptance-report.md)后，[database0.2/Plan2](../../artifacts/m7/m7-database-0997e88828a54be9aef3d749cc7f66f5/acceptance-report.md)为PENDING/ERROR：owned实例的sslMode=DISABLED不再满足caching_sha2_password初始RSA交换；Connector/J默认拒绝未信任的public-key retrieval，app在health前退出，未执行故障请求。此为观察夹具前提错误，不是产品借出查询结果。所有owned停止/三端口无监听。0.3先约定从本轮owned MySQL数据目录绑定自动生成的public_key.pem，记录公钥摘要；不启用任意取key，不改产品TLS或共享库。
 
 0.3入口f9fc054先发生Python3.10 f-string语法错误；命令未正确检查退出码，随后原生166仍PASS（[原Bundle](../../artifacts/m7/m7-eb5225adaaf84fabba4f8d29e5e302f1/acceptance-report.md)），该PASS不验证观察器语法。故障采集未启动，无database0.3 Bundle。修正语法并新增CI scripts compileall，后续用check=True顺序执行，编译失败禁止提交/启动。原错误私有坐标保留，业务预算仍未修。
+
+## 已借出查询的真实负向，先于产品修复
+
+固定c4f572440d0ad444096384541dee2bd430a78dd5的[native166 PASS](../../artifacts/m7/m7-afb489561d914ea5957f3d8cd2f99ac6/acceptance-report.md)后，真实[database0.3/Plan3 FAIL25](../../artifacts/m7/m7-database-fa6ca6208c294463a695ca6fa68fb936/acceptance-report.md)为COMPLETED。本轮公钥绑定、正常就绪与短约控制成立；guard释放正常退出。锁等待15秒仍无响应，保持guard期间业务/回执/marker零；释放后同键效果唯一。已存在连接上的auth_session COM_QUERY实际命中并丢server回应，35秒仍无响应；独立SQL无业务/marker变化。解除故障后需停止/重启本轮app才能结束原未知读，正常读取与原回执恢复。全部owned/中继停止，三端口无监听。
+
+分类：实际锁预算与已借出网络读预算违反合同。未知读不被宣布数据库回滚；本例只读不证明commit丢响应。按合同版本3实施最小配置/启动校验，保留25条原标准，不修改原包。
