@@ -209,10 +209,12 @@ export class Client {
     const pending=this.pending.find(p=>p.key===key&&p.actorId===this.session?.actor.id);
     if(!pending||this.session?.actor.id!==pending.actorId)throw new ApiError(403,'ACTOR_CHANGED','只能用提交时的同一账号恢复。');
     if(replay)return this.send<T>(pending);
+    const generation=this.generation;
     try{
       const receipt=await this.get<{status:string;result:T}>('/api/v1/receipts/'+encodeURIComponent(key));
+      if(!this.owned(generation,pending.actorId))throw new StaleResponse();
       return this.receiptResult<T>(pending,receipt);
-    }catch(e){if(e instanceof ApiError&&e.status===404)return null;throw e;}
+    }catch(e){if(!this.owned(generation,pending.actorId))throw new StaleResponse();if(e instanceof ApiError&&e.status===404)return null;throw e;}
   }
 }
 
@@ -230,3 +232,4 @@ export const query=(params:Record<string,unknown>)=>Object.entries(params).filte
 export const imageKey=(key:string|null)=>['window-seat','quiet-room','hall'].includes(key||'')?key:'window-seat';
 
 export const factLabel:Record<string,string>={outletCondition:'插座状况',lightCondition:'照明状况',deskCondition:'桌面状况',environmentCondition:'环境状况',window:'靠窗',outlet:'有插座',quiet:'安静条件',accessible:'无障碍通行'};
+export const factValueLabel=(value:unknown)=>value===true||value==='true'?'有':value===false||value==='false'?'无':label(value);

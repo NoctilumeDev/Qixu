@@ -11,7 +11,7 @@ const view=computed(()=>props.view),id=computed(()=>props.resourceId),loading=re
 watch(error,async value=>{if(!value)return;await nextTick();if(error.value===value)uni.pageScrollTo({scrollTop:0,duration:160});});
 const floors=ref<Floor[]>([]),spaces=ref<Space[]>([]),batches=ref<Row[]>([]),events=ref<Row[]>([]),favorites=ref<Space[]>([]),selected=ref<Space|null>(null),available=ref<Row|null>(null),rules=ref<Row>({}),facts=ref<Row[]>([]);
 const floor=ref(100),search=ref(''),tag=ref(''),kind=ref(''),mapMode=ref(true),startsAt=ref(''),endsAt=ref(''),people=ref('1'),purpose=ref(''),description=ref(''),contact=ref('');
-let revision=0;let visible=true;
+let revision=0;let visible=true;let operation=0;
 const titles:Record<string,string>={home:'期序',map:'空间地图',space:'空间详情',favorites:'收藏与对比',batches:'备考席位',batch:'批次与我的申请',events:'近期活动',event:'活动详情',mine:'我的使用安排',messages:'消息',profile:'我的',feedback:'空间反馈',report:'反馈详情',governance:'使用权处置'};
 const showParentBack=ref(false);
 const personal=ref<{refresh:()=>void;leave:()=>void}|null>(null);
@@ -22,16 +22,18 @@ const activeBatch=computed(()=>batches.value.find(b=>['APPLICATION_OPEN','NOT_OP
 const tabs=[{view:'home',name:'首页',icon:'house'},{view:'map',name:'找空间',icon:'armchair'},{view:'mine',name:'我的安排',icon:'clipboard-text'},{view:'messages',name:'消息',icon:'chat-circle'},{view:'profile',name:'我的',icon:'user'}];
 function remember(){uni.setStorageSync('qixu.mapContext',JSON.stringify({floor:floor.value,search:search.value,tag:tag.value,kind:kind.value,mapMode:mapMode.value}));}
 async function allSpaces(run:number){const collected:Space[]=[];for(let p=1;p<=40;p++){if(run!==revision)return;const page=await api<Page<Space>>('/spaces?'+query({floor:floor.value,page:p,search:search.value,tag:tag.value,kind:kind.value}),'spaces');if(run!==revision)return;collected.push(...page.items);if(collected.length>=page.total){spaces.value=collected;return;}}throw new ApiError(503,'MAP_TOO_LARGE','当前楼层记录较多，请缩小筛选范围。');}
-async function load(){const run=++revision;loading.value=true;error.value='';try{await initialize();if(run!==revision)return;if(!auth.session)return;
-  if(['home','map','space'].includes(view.value)){floors.value=await api<Floor[]>('/floors','floors');rules.value=await api('/booking-rules');if(run!==revision)return;}
+async function load(){const run=++revision;loading.value=true;error.value='';try{await initialize();if(run!==revision||!visible)return;if(!auth.session)return;
+  const generation=auth.generation,actor=auth.session.actor.id;
+  const current=()=>visible&&run===revision&&generation===auth.generation&&actor===auth.session?.actor.id;
+  if(['home','map','space'].includes(view.value)){const fs=await api<Floor[]>('/floors','floors');if(!current())return;floors.value=fs;const rs=await api('/booking-rules');if(!current())return;rules.value=rs;}
   if(['home','map'].includes(view.value))await allSpaces(run);
-  if(['home','batches'].includes(view.value))batches.value=await api<Row[]>('/preparation-batches');
-  if(['home','events'].includes(view.value))events.value=await api<Row[]>('/events');
-  if(['favorites','space'].includes(view.value))favorites.value=await api<Space[]>('/favorites');
-  if(view.value==='space'){const s=await api<Space>('/spaces/'+id.value);if(run!==revision)return;selected.value=s;const result=await api<Row>('/spaces/'+id.value+'/facts');facts.value=Array.isArray(result)?result:result.items||[];}
-}catch(e){if(run===revision&&!(e instanceof StaleResponse))error.value=errorMessage(e);}finally{if(run===revision)loading.value=false;}}
+  if(['home','batches'].includes(view.value)){const bs=await api<Row[]>('/preparation-batches');if(!current())return;batches.value=bs;}
+  if(['home','events'].includes(view.value)){const es=await api<Row[]>('/events');if(!current())return;events.value=es;}
+  if(['favorites','space'].includes(view.value)){const fs=await api<Space[]>('/favorites');if(!current())return;favorites.value=fs;}
+  if(view.value==='space'){const s=await api<Space>('/spaces/'+id.value);if(!current())return;selected.value=s;const result=await api<Row>('/spaces/'+id.value+'/facts');if(!current())return;facts.value=Array.isArray(result)?result:result.items||[];}
+}catch(e){if(visible&&run===revision&&!(e instanceof StaleResponse))error.value=errorMessage(e);}finally{if(visible&&run===revision)loading.value=false;}}
 async function changeFilter(){remember();if(view.value==='map')uni.setStorageSync('qixu.mapScroll',0);await load();}
-async function write(path:string,body:unknown,sensitive=false){if(busy.value)return;const run=revision;busy.value=true;error.value='';success.value='';try{const r=await client.mutate<Row>('/api/v1'+path,body,{sensitive});if(run!==revision)return;available.value=null;success.value='原提交已确认，回执 '+r.receipt.key.slice(-8)+'。';await load();if(run+1===revision&&!error.value)success.value+='当前详情已刷新。';}catch(e){if(run===revision)error.value=errorMessage(e);}finally{busy.value=false;}}
+async function write(path:string,body:unknown,sensitive=false){if(busy.value)return;const run=revision,op=++operation;busy.value=true;error.value='';success.value='';try{const r=await client.mutate<Row>('/api/v1'+path,body,{sensitive});if(!visible||run!==revision||op!==operation)return;available.value=null;success.value='原提交已确认，回执 '+r.receipt.key.slice(-8)+'。';await load();if(visible&&op===operation&&run+1===revision&&!error.value)success.value+='当前详情已刷新。';}catch(e){if(visible&&run===revision&&op===operation&&!(e instanceof StaleResponse))error.value=errorMessage(e);}finally{if(op===operation)busy.value=false;}}
 async function checkAvailability(){available.value=null;error.value='';const run=revision,start=startsAt.value,end=endsAt.value,space=id.value;try{const result=await api('/spaces/'+space+'/availability?'+query({start:businessTime(start),end:businessTime(end)}),'selected-availability');if(run===revision&&start===startsAt.value&&end===endsAt.value&&space===id.value)available.value=result;}catch(e){if(run===revision&&start===startsAt.value&&end===endsAt.value)error.value=errorMessage(e);}}
 function datePart(value:string){return value.split('T')[0]||'';}function timePart(value:string){return value.split('T')[1]||'08:00';}
 function pickTime(field:'starts'|'ends',part:'date'|'time',event:Row){const r=field==='starts'?startsAt:endsAt;const old=r.value||localDateTime(rules.value.serverNow);r.value=part==='date'?event.detail.value+'T'+timePart(old):datePart(old)+'T'+event.detail.value;available.value=null;}
@@ -41,11 +43,12 @@ async function submitShort(){try{await write('/reservations',{spaceId:id.value,s
 async function submitVenue(){try{await write('/venue-requests',{spaceId:id.value,startsAt:businessTime(startsAt.value),endsAt:businessTime(endsAt.value),people:Number(people.value),purpose:purpose.value,description:description.value,contact:contact.value},true);}catch(e){error.value=errorMessage(e);}}
 function chooseFloor(e:Row){floor.value=Number(floors.value[Number(e.detail.value)].id);changeFilter();}
 function trackScroll(value:number){if(visible&&view.value==='map')uni.setStorageSync('qixu.mapScroll',Math.max(0,value));}
-function leave(){visible=false;revision++;description.value='';contact.value='';personal.value?.leave();client.clearSensitive();}
+function clearProjection(){operation++;loading.value=false;busy.value=false;error.value='';success.value='';floors.value=[];rules.value={};spaces.value=[];batches.value=[];events.value=[];favorites.value=[];selected.value=null;facts.value=[];available.value=null;description.value='';contact.value='';}
+function leave(){visible=false;revision++;clearProjection();personal.value?.leave();client.clearSensitive();}
 async function refresh(){visible=true;showParentBack.value=getCurrentPages().length<=1;const scroll=Number(uni.getStorageSync('qixu.mapScroll')||0);await load();personal.value?.refresh();if(view.value==='map'&&visible&&scroll>0)await nextTick(()=>uni.pageScrollTo({scrollTop:scroll,duration:0}));}
 defineExpose({refresh,leave,trackScroll});
 onMounted(()=>{if(['map','home'].includes(view.value)){try{const context=JSON.parse(String(uni.getStorageSync('qixu.mapContext')||'{}'));floor.value=Number(context.floor)||100;if(view.value==='map'){search.value=String(context.search||'');tag.value=String(context.tag||'');kind.value=String(context.kind||'');mapMode.value=context.mapMode!==false;}}catch{}}uni.setNavigationBarTitle({title:title.value});load();});
-watch(()=>auth.generation,()=>{revision++;spaces.value=[];batches.value=[];events.value=[];favorites.value=[];selected.value=null;facts.value=[];available.value=null;description.value='';contact.value='';});
+watch(()=>auth.generation,()=>{revision++;clearProjection();},{flush:'sync'});
 watch(()=>rules.value.serverNow,()=>{if(!startsAt.value)initTimes();});
 </script>
 <template>

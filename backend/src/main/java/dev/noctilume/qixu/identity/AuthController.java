@@ -57,7 +57,8 @@ public class AuthController {
     }
     @PostMapping("/logout") Object logout(HttpServletRequest r,HttpServletResponse response) {
         auth.logout(SessionFilter.session(r));
-        response.addHeader(HttpHeaders.SET_COOKIE,ResponseCookie.from("qixu_session","").httpOnly(true).secure(secure).sameSite("Lax").path("/api").maxAge(Duration.ZERO).build().toString());
+        if("COOKIE".equals(r.getAttribute("qixu.authenticationMode")))
+            response.addHeader(HttpHeaders.SET_COOKIE,ResponseCookie.from("qixu_session","").httpOnly(true).secure(secure).sameSite("Lax").path("/api").maxAge(Duration.ZERO).build().toString());
         return Api.ok(Map.of("loggedOut",true),r);
     }
 }
