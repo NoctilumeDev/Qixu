@@ -1,0 +1,30 @@
+- generic: 批次与我的申请
+- generic: 已确认回执 7baodjh7。
+- generic: M8 主线冻结期限复验
+- generic: 本轮未产生结果
+- generic: 使用周期 10/03 21:19 — 10/04 20:44
+- generic: 申请截止
+- generic: 10/03 20:48
+- generic: 结果最迟公布
+- generic: 10/03 21:09
+- generic: 首次确认截止
+- generic: 10/03 21:14
+- generic: 递补停止
+- generic: 10/03 21:44
+- generic: 固定输入、未来公开随机源、最大可满足人数优先。不以提交手速或学习时长决定中签。
+- generic: 未能在公布期限内完成冻结，本轮已停止。可选择普通空间或明确退出本轮。
+- generic: 故障记录：FREEZE_DEADLINE_MISSED
+- generic: 我的申请
+- generic: 编号1 · 已接收版本1
+- generic: 接收时间 10/03 20:46
+- button "普通空间与其他选择"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

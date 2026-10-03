@@ -1,0 +1,103 @@
+- banner:
+  - button "展开工作台导航":
+  - heading "长期席位批次" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 空间管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - paragraph: 正在读取…
+  - generic: 1项 · 当前身份 空间管理员
+  - button "刷新当前事实":
+  - heading "公开长期批次" [level=2]
+  - table:
+    - rowgroup:
+      - row "编号/名称 状态/动作 关联空间/实体 时间/期限 操作":
+        - columnheader "编号/名称"
+        - columnheader "状态/动作"
+        - columnheader "关联空间/实体"
+        - columnheader "时间/期限"
+        - columnheader "操作"
+    - rowgroup
+  - heading "配置长期批次" [level=2]
+  - paragraph: 大规模配置建议在桌面完成。全部时间提前公布；随机来源不可事后选择，失败也必须明确通知。
+  - text: 批次名称
+  - textbox "批次名称": M8 主线冻结期限复验
+  - text: 声明用途
+  - combobox "声明用途":
+    - option "考研" [selected]
+    - option "考公"
+    - option "其他长期备考"
+  - text: 申请/预约开放
+  - textbox "申请/预约开放": 2026-10-03T20:42
+  - text: 申请/预约截止
+  - textbox "申请/预约截止": 2026-10-03T20:48
+  - text: 冻结最迟时间
+  - textbox "冻结最迟时间": 2026-10-03T20:49
+  - text: 未来随机源时刻
+  - textbox "未来随机源时刻": 2026-10-03T20:50
+  - text: 结果最迟公布
+  - textbox "结果最迟公布": 2026-10-03T21:09
+  - text: 首次确认截止
+  - textbox "首次确认截止": 2026-10-03T21:14
+  - text: 使用开始
+  - textbox "使用开始": 2026-10-03T21:19
+  - text: 使用结束
+  - textbox "使用结束": 2026-10-04T20:44
+  - text: 递补停止
+  - textbox "递补停止": 2026-10-03T21:44
+  - text: 递补响应时间（60–86400秒）
+  - spinbutton "递补响应时间（60–86400秒）": "3600"
+  - group "可分配长期座位（最多400个）":
+    - generic: 可分配长期座位（最多400个）
+    - checkbox "B001 · 东区备考位 1" [checked]
+    - text: B001 · 东区备考位 1
+    - checkbox "B002 · 东区备考位 2"
+    - text: B002 · 东区备考位 2
+    - checkbox "B003 · 东区备考位 3"
+    - text: B003 · 东区备考位 3
+    - checkbox "B004 · 东区备考位 4"
+    - text: B004 · 东区备考位 4
+    - checkbox "B005 · 东区备考位 5"
+    - text: B005 · 东区备考位 5
+    - checkbox "B006 · 东区备考位 6"
+    - text: B006 · 东区备考位 6
+    - checkbox "B007 · 东区备考位 7"
+    - text: B007 · 东区备考位 7
+    - checkbox "B008 · 东区备考位 8"
+    - text: B008 · 东区备考位 8
+    - checkbox "B009 · 东区备考位 9"
+    - text: B009 · 东区备考位 9
+    - checkbox "B010 · 东区备考位 10"
+    - text: B010 · 东区备考位 10
+    - checkbox "B011 · 东区备考位 11"
+    - text: B011 · 东区备考位 11
+    - checkbox "B012 · 东区备考位 12"
+    - text: B012 · 东区备考位 12
+    - checkbox "B013 · 东区备考位 13"
+    - text: B013 · 东区备考位 13
+    - checkbox "B014 · 东区备考位 14"
+    - text: B014 · 东区备考位 14
+    - checkbox "B015 · 东区备考位 15"
+    - text: B015 · 东区备考位 15
+    - checkbox "B016 · 东区备考位 16"
+    - text: B016 · 东区备考位 16
+    - checkbox "B017 · 东区备考位 17"
+    - text: B017 · 东区备考位 17
+    - checkbox "B018 · 东区备考位 18"
+    - text: B018 · 东区备考位 18
+    - checkbox "B019 · 东区备考位 19"
+    - text: B019 · 东区备考位 19
+    - checkbox "B020 · 东区备考位 20"
+    - text: B020 · 东区备考位 20
+    - checkbox "B021 · 东区备考位 21"
+    - text: B021 · 东区备考位 21
+    - checkbox "B022 · 东区备考位 22"
+    - text: B022 · 东区备考位 22
+    - checkbox "B023 · 东区备考位 23"
+    - text: B023 · 东区备考位 23
+    - checkbox "B024 · 东区备考位 24"
+    - text: B024 · 东区备考位 24
+  - paragraph: 已选1位；窗口顺序与场地冲突仍由服务端裁决。
+  - button "保存批次规则"

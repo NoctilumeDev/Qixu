@@ -1,0 +1,62 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "我的场地申请":
+      - /url: "#/venues"
+      - generic: 我的场地申请
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "活动组织" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 周老师
+  - generic: 老师
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 b3c57d04。
+  - link "返回原列表":
+    - /url: "#/events?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "M8 原条件读书会复验 预约开放" [level=2]:
+    - text: M8 原条件读书会复验
+    - generic: 预约开放
+  - term: 空间
+  - definition: R-A 研讨室 A
+  - term: 当前版本
+  - definition: "2"
+  - term: 开始
+  - definition: 10/03 21:20
+  - term: 结束
+  - definition: 10/03 21:50
+  - term: 申请截止
+  - definition: 10/03 21:19
+  - paragraph: M8隔离的读书会演示，验证场地绑定、满额候补和短约保留。
+  - text: 处理说明（必填）
+  - textbox "处理说明（必填）":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: M8隔离演示：本人场地已获批准，容量1符合规则，核验后发布。
+  - paragraph: 发布、换地或取消前，请填写真实处理说明，最多500字。
+  - paragraph: 主讲人：M8演示周老师 · 预约截止 10/03 21:19 · 递补停止 10/03 21:20
+  - paragraph: 剩余1/1；预约关系随合法换地保持。
+  - text: 换用本人已批准场地
+  - combobox "换用本人已批准场地":
+    - option "请选择"
+    - option "R-A · M8 原条件读书会复验 · 10/03 21:20" [selected]
+  - button "提交合法换地"
+  - button "取消活动并通知"

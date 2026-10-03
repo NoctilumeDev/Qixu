@@ -14,4 +14,6 @@ CLIENT_M8_CASES = [
     'M8 route with page loads repair after feedback navigation',
     'M8 route without page loads repair after feedback navigation',
     'M8 stale event read cannot append venue auxiliary or displace venue choices',
+    'M8 successful Bearer login clears initialization identity error',
+    'M8 invalid Bearer login cannot adopt a Cookie-only identity',
 ]

@@ -150,6 +150,27 @@
       "verdict": "PASS",
       "path": "artifacts/m8/m8-product-85ce60c35fdd40beb68c21189b455c2c",
       "manifest_sha256": "65bb87facea8d5c3fde9337379b7356378f8d333caeef12239d5d77c6198c01a"
+    },
+    {
+      "identity": "m8-3ee8405ad0f549ac89613debe9f0ccda",
+      "source_sha": "dbdbbe02465228c6d545628251c12acb5a8935cb",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-3ee8405ad0f549ac89613debe9f0ccda",
+      "manifest_sha256": "0d84bc77dd1fc84c7788bca2c54d4e72fbe1cfbb87de297206b0fbed2943a79b"
+    },
+    {
+      "identity": "m8-browser-bbe95e5f11c54f64a9fbf9b284212dd1",
+      "source_sha": "dbdbbe02465228c6d545628251c12acb5a8935cb",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-browser-bbe95e5f11c54f64a9fbf9b284212dd1",
+      "manifest_sha256": "b0ea76206e43cfe946d978931e74d286154586841db70ef954b8223a21df6cbc"
+    },
+    {
+      "identity": "m8-frontend-1d18c14ce1c04387aedadb876cb962fb",
+      "source_sha": "dbdbbe02465228c6d545628251c12acb5a8935cb",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-frontend-1d18c14ce1c04387aedadb876cb962fb",
+      "manifest_sha256": "fe2c0cf45c4e5b03e2111a030c3bb6293b3f93885f1b86371227c253a36b9c52"
     }
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "kind": "CAPTURE_PRECONDITION_ERROR_NOT_PRODUCT_FAILURE",
+  "source": "dbdbbe02465228c6d545628251c12acb5a8935cb",
+  "capturedState": "student-feedback-list",
+  "expectedWidth": 390,
+  "observedWidth": 1280,
+  "reason": "Viewport override was set before creating the new tab and did not apply to its default viewport.",
+  "preservedOriginalTriplet": true
+}

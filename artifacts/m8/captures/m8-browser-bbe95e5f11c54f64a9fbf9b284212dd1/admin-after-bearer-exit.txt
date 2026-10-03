@@ -1,0 +1,170 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "申请审批":
+      - /url: "#/venues"
+      - generic: 申请审批
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "长期席位批次":
+      - /url: "#/batches"
+      - generic: 长期席位批次
+    - link "占用与冲突":
+      - /url: "#/blocks"
+      - generic: 占用与冲突
+    - link "反馈与维修":
+      - /url: "#/feedback"
+      - generic: 反馈与维修
+    - link "使用权处置":
+      - /url: "#/governance"
+      - generic: 使用权处置
+    - link "运行投影":
+      - /url: "#/operations"
+      - generic: 运行投影
+    - link "审计记录":
+      - /url: "#/audit"
+      - generic: 审计记录
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "空间地图" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 三楼管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - combobox:
+    - option "图书馆 · 三楼 · 学习与研讨" [selected]
+  - button "平面图"
+  - button "列表"
+  - textbox:
+    - /placeholder: 搜索空间名称或编号
+  - combobox "设施筛选":
+    - option "全部公开条件" [selected]
+    - option "靠窗"
+    - option "有插座"
+    - option "安静"
+    - option "无障碍"
+  - button "刷新空间":
+  - generic "地图大小":
+    - button "缩小" [disabled]
+    - generic: 100%
+    - button "放大"
+    - button "复位"
+  - generic "可平移的演示楼层图":
+    - group "演示楼层坐标图":
+      - generic: 东区 · 备考座位
+      - generic: 西区 · 普通自习
+      - button "A001 西区单人位 1 短期预约": "01"
+      - button "A002 西区单人位 2 短期预约": "02"
+      - button "A003 西区单人位 3 短期预约": "03"
+      - button "A004 西区单人位 4 短期预约": "04"
+      - button "A005 西区单人位 5 短期预约": "05"
+      - button "A006 西区单人位 6 短期预约": "06"
+      - button "A007 西区单人位 7 短期预约": "07"
+      - button "A008 西区单人位 8 短期预约": "08"
+      - button "A009 西区单人位 9 短期预约": "09"
+      - button "A010 西区单人位 10 短期预约": "10"
+      - button "A011 西区单人位 11 短期预约": "11"
+      - button "A012 西区单人位 12 短期预约": "12"
+      - button "A013 西区单人位 13 短期预约": "13"
+      - button "A014 西区单人位 14 短期预约": "14"
+      - button "A015 西区单人位 15 短期预约": "15"
+      - button "A016 西区单人位 16 短期预约": "16"
+      - button "A017 西区单人位 17 短期预约": "17"
+      - button "A018 西区单人位 18 短期预约": "18"
+      - button "A019 西区单人位 19 短期预约": "19"
+      - button "A020 西区单人位 20 短期预约": "20"
+      - button "A021 西区单人位 21 短期预约": "21"
+      - button "A022 西区单人位 22 短期预约": "22"
+      - button "A023 西区单人位 23 短期预约": "23"
+      - button "A024 西区单人位 24 短期预约": "24"
+      - button "B001 东区备考位 1 长期批次": "01"
+      - button "B002 东区备考位 2 长期批次": "02"
+      - button "B003 东区备考位 3 长期批次": "03"
+      - button "B004 东区备考位 4 长期批次": "04"
+      - button "B005 东区备考位 5 长期批次": "05"
+      - button "B006 东区备考位 6 长期批次": "06"
+      - button "B007 东区备考位 7 长期批次": "07"
+      - button "B008 东区备考位 8 长期批次": "08"
+      - button "B009 东区备考位 9 长期批次": "09"
+      - button "B010 东区备考位 10 长期批次": "10"
+      - button "B011 东区备考位 11 长期批次": "11"
+      - button "B012 东区备考位 12 长期批次": "12"
+      - button "B013 东区备考位 13 长期批次": "13"
+      - button "B014 东区备考位 14 长期批次": "14"
+      - button "B015 东区备考位 15 长期批次": "15"
+      - button "B016 东区备考位 16 长期批次": "16"
+      - button "B017 东区备考位 17 长期批次": "17"
+      - button "B018 东区备考位 18 长期批次": "18"
+      - button "B019 东区备考位 19 长期批次": "19"
+      - button "B020 东区备考位 20 长期批次": "20"
+      - button "B021 东区备考位 21 长期批次": "21"
+      - button "B022 东区备考位 22 长期批次": "22"
+      - button "B023 东区备考位 23 长期批次": "23"
+      - button "B024 东区备考位 24 长期批次": "24"
+      - button "H-A 报告厅 A 场地申请": 报告厅 A
+      - button "R-A 研讨室 A 场地申请": 研讨室 A
+      - button "R-B 研讨室 B 场地申请": 研讨室 B
+  - generic: 绿：短约规则
+  - generic: 灰蓝：长期批次
+  - generic: 米色：场地申请
+  - paragraph: 演示坐标 · 可放大和平移，或用列表选择。规则颜色不代表当前时段空闲或现场人数。
+  - heading "待处理场地申请 0" [level=2]
+  - link "查看申请":
+    - /url: "#/venues"
+  - table:
+    - rowgroup:
+      - row "使用时间 空间 用途 人数 状态 操作":
+        - columnheader "使用时间"
+        - columnheader "空间"
+        - columnheader "用途"
+        - columnheader "人数"
+        - columnheader "状态"
+        - columnheader "操作"
+    - rowgroup
+  - paragraph: 没有待处理场地申请。
+  - complementary:
+    - heading "A001" [level=2]
+    - generic: 短期预约
+    - paragraph: 图书馆 · 西区单人位 1
+    - img "演示空间图片，非真实馆内照片"
+    - paragraph: 演示示意图片 · 非真实现场
+    - button "基本信息"
+    - button "使用规则"
+    - button "时段查询"
+    - term: 类型
+    - definition: 座位 · 容量1
+    - term:
+      - text: 靠窗
+    - definition: 有
+    - term:
+      - text: 插座
+    - definition: 有
+    - term:
+      - text: 安静
+    - definition: 有
+    - term:
+      - text: 无障碍
+    - definition: 有
+    - term: 插座状况
+    - definition: 正常
+    - term: 档案说明
+    - definition: 单人学习空间，查看公开设施条件后选择。
+    - link "查看/创建限制":
+      - /url: "#/blocks?space=2000"
+    - link "反馈与维修":
+      - /url: "#/feedback?space=2000"
