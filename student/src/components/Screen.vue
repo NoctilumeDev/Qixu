@@ -8,6 +8,7 @@ import SpaceCard from './SpaceCard.vue';
 import PersonalFlows from './PersonalFlows.vue';
 const props=defineProps<{view:string;resourceId:number}>();
 const view=computed(()=>props.view),id=computed(()=>props.resourceId),loading=ref(false),error=ref(''),success=ref(''),busy=ref(false);
+watch(error,async value=>{if(!value)return;await nextTick();if(error.value===value)uni.pageScrollTo({scrollTop:0,duration:160});});
 const floors=ref<Floor[]>([]),spaces=ref<Space[]>([]),batches=ref<Row[]>([]),events=ref<Row[]>([]),favorites=ref<Space[]>([]),selected=ref<Space|null>(null),available=ref<Row|null>(null),rules=ref<Row>({}),facts=ref<Row[]>([]);
 const floor=ref(100),search=ref(''),tag=ref(''),kind=ref(''),mapMode=ref(true),startsAt=ref(''),endsAt=ref(''),people=ref('1'),purpose=ref(''),description=ref(''),contact=ref('');
 let revision=0;let visible=true;

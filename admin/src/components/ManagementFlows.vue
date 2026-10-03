@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed,reactive,ref,watch,onBeforeUnmount} from 'vue';
+import {computed,reactive,ref,watch,nextTick,onBeforeUnmount} from 'vue';
 import {RouterLink,useRoute,useRouter} from 'vue-router';
 import {PhArrowLeft,PhArrowClockwise} from '@phosphor-icons/vue';
 import {ApiError,StaleResponse,factLabel,label,formatTime,businessTime,localDateTime,type Row,type Page,type Space,type Floor} from '@qixu/client';
@@ -8,6 +8,8 @@ const props=defineProps<{section:string;id:number}>();const route=useRoute(),rou
 const items=ref<Row[]>([]),data=ref<Row>({}),aux=ref<Row[]>([]),spaces=ref<Space[]>([]),rights=ref<Row[]>([]),page=ref(Number(route.query.page)||1),total=ref(0),error=ref(''),message=ref(''),loading=ref(false),busy=ref(false),preview=ref<Row|null>(null),choices=reactive<Record<string,Row>>({});let revision=0;const images=ref<{id:number;url:string}[]>([]),photoError=ref('');
 const form=reactive<Row>({reportRefs:[],spaceId:Number(route.query.space)||0,startsAt:'',endsAt:'',people:1,purpose:'',description:'',contact:'',reason:'',title:'',speaker:'',notice:'',capacity:1,venueRequestId:0,eventType:'READING',opensAt:'',closesAt:'',promotionUntil:'',freezeDeadline:'',randomAt:'',resultDeadline:'',confirmationDeadline:'',promotionSeconds:3600,batchPurpose:'POSTGRADUATE',kind:'MAINTENANCE',venueVersion:1,seatIds:[],facts:[],factKey:'outletCondition',factValue:'BROKEN',assignee:'',verified:false,blockId:0,blockVersion:1,entitlementId:0,entitlementVersion:1,reasonCode:'EXPLICIT_RULE_VIOLATION',statementUntil:'',penaltyUntil:''});
 const isAdmin=computed(()=>auth.session?.actor.role==='ADMIN');
+const errorAlert=ref<HTMLElement|null>(null);
+watch(error,async value=>{if(!value)return;await nextTick();if(error.value!==value)return;errorAlert.value?.focus({preventScroll:true});errorAlert.value?.scrollIntoView({block:'nearest',behavior:'auto'});});
 const administrative=computed(()=>['batches','blocks','feedback','repairs','governance','operations','audit'].includes(props.section));
 const fieldNames:Record<string,string>={startsAt:'使用开始',endsAt:'使用结束',opensAt:'申请/预约开放',closesAt:'申请/预约截止',promotionUntil:'递补停止',freezeDeadline:'冻结最迟时间',randomAt:'未来随机源时刻',resultDeadline:'结果最迟公布',confirmationDeadline:'首次确认截止',statementUntil:'陈述截止（至少24小时）'};
 const batchTimes=['opensAt','closesAt','freezeDeadline','randomAt','resultDeadline','confirmationDeadline','startsAt','endsAt','promotionUntil'];
@@ -63,7 +65,7 @@ watch(()=>[props.section,props.id,route.query.page,auth.generation],()=>{revisio
 watch(()=>[form.spaceId,form.startsAt,form.endsAt,form.kind,form.reason,form.venueRequestId,form.venueVersion],()=>{preview.value=null;});
 </script>
 <template>
-<div v-if="error" class="alert danger" role="alert">{{error}}<button @click="load">刷新事实（保留输入）</button></div><div v-if="message" class="alert">{{message}}</div><p v-if="loading" class="muted">正在读取…</p>
+<div v-if="error" ref="errorAlert" class="alert danger" role="alert" tabindex="-1">{{error}}<button @click="load">刷新事实（保留输入）</button></div><div v-if="message" class="alert">{{message}}</div><p v-if="loading" class="muted">正在读取…</p>
 <template v-if="!administrative||isAdmin">
 <div class="section-header"><RouterLink v-if="id" :to="{path:'/'+section,query:{...route.query,page}}" class="back-link"><PhArrowLeft :size="16"/>返回原列表</RouterLink><span v-else class="muted">{{total}}项 · 当前身份 {{auth.session?.actor.displayName}}</span><button class="icon-button" aria-label="刷新当前事实" @click="load"><PhArrowClockwise :size="20"/></button></div>
 <section v-if="section==='operations'" class="panel"><h2>授权事件投递概况</h2><div class="metric-grid"><div><strong>{{data.notifications?.total??'未知'}}</strong><span>持久事件</span></div><div><strong>{{data.notifications?.pending??'未知'}}</strong><span>等待站内投递</span></div><div><strong>{{data.notifications?.delivered??'未知'}}</strong><span>已持久到站内</span></div></div><p>最早等待 {{data.notifications?.oldest_pending_at?formatTime(data.notifications.oldest_pending_at):'无等待事件'}}</p><p class="muted">只统计当前范围能归属的已知业务实体。已投递不代表已读或外部微信送达；没有把未采集的重试次数当0。</p></section>

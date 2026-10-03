@@ -132,4 +132,10 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 
 ## M5 · 当前施工恢复坐标
 
+固定源码`07ece2f2b936ac9ee1649bc11dd73eff7e4d005b`原生`m5-a4998661d43e41c880c08c57b0f95ade`PASS126，前端`m5-frontend-a1f439a381504e238d9421a3fe0a32bc`PASS31及H5/微信/admin构建。安装浏览器`m5-browser-3fe31f03dadf45739f48ba448c518071`保留私有服务初始化首败（尚未建立Handler.server）、修复后的17份固定产物DOM/截图及Core FAIL：两条观察器字面预期错误。页面实际为“输入保留”和“身份或当前管理范围不允许”，不是观察器猜测的文案。原raw字节不改，另seal `m5-browser-remeasure-a55953076fd24982b9f90f3756521a1b`对固定旧捕获重测PASS；明确不是新浏览器执行、不是全部业务语义证明。
+
+截图复核发现独立产品问题：390px管理员从维修表单底部提交，409提示位于顶部但没进入当前视口。首次`repair-missing-fact.png/txt`保留；后端正确拒绝、输入确实保留，仍不足以说明错误可见。最小修复在错误呈现后聚焦/滚动提示，学生页同步确保顶端提示可见；保留字段与业务拒绝规则。受影响前端从新固定候选构建并实页复验，不用旧PASS升级修改后页面。
+
+正常Clock下真实UI产生A018短约取消、收藏、范围管理员批准场地3→活动2发布、活动1重约/取消、反馈2附私有图→核实→维修2安排/工作完成→缺恢复事实409→复验关闭。SQL `m5-sql-readback-73118bba5560439ebd781e8f890770ab`退出0并核对对应终态；错误查询JSON顶层outletCondition得到NULL，后续`f2502921342b4cc8a48d59c4aabb32cf`按实际完整profile读回`conditions.outletCondition=WORKING`。不得把第一次NULL冒充设施未知或产品失败。通知6份已投递站内，未把投递称为已读。模拟图片和维修不代表实际场馆或维修事实。
+
 隔离真实MySQL施工`m5-client-tests-548496199cac43ca9bab2bfa28e7ba6d`61项执行成功，source ZIP `2de57a4247dfcd94d4ef4bcf29c3af7fe40981a7fd5b04b52475799346a000b1`。干净前端副本`m5-frontend-clean-2b9f7d8a13ac4079a9afdf6ad222ab35`npm ci、31项请求机制、两端类型检查、H5/微信/admin构建退出0，source ZIP `a19e62c36aad2c269d1377355cc1ee2a596b268af20e7dd5d6da50ff53fdb405`。此后还有加载提示与按钮小修，因此不能把该构建当最后候选；正式M5需固定提交、预封存Plan、全回归、构建及新鲜安装页面读回和公开门禁。以上均不称M5已资格闭合。
