@@ -8,11 +8,11 @@
 
 ## 当前状态
 
-2026-10-03：**M0–M6限定范围已验收；M7–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。M7新增[旧库恢复与独立账册主线限定资格](docs/acceptance/m7-restore.md)，原失败和边界均保留，尚非完整M7。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
+2026-10-03：**M0–M7限定范围已验收；M8–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。M7的原失败、修复及有限退出见[主线证据](docs/acceptance/m7.md)。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 
-M7单实例[数据库等待预算](docs/acceptance/m7-database.md)已在受保护main@ffa01ffe取得新原生170、恢复22、真实锁/查询回应故障25及公开CI读回。后续[真实COMMIT回应丢失](docs/acceptance/m7-commit-reply.md)与[实际页面组合](docs/acceptance/m7-browser.md)已有固定修复候选限定复验，原失败保留；尚待主线新坐标资格，整体M7未退出。[机制账册](docs/m7-coverage-ledger.md)与[未知重入](docs/m7-unknowns.md)区分已验证和未证明。
+M7单实例[数据库等待预算](docs/acceptance/m7-database.md)已在受保护main@ffa01ffe取得新原生170、恢复22、真实锁/查询回应故障25及公开CI读回。随后在受保护main@c876d1a取得[同一源码的M7有限退出资格](docs/acceptance/m7.md)：新native173、frontend45、恢复22、数据库预算25、COMMIT29及真实页面14均通过，原失败保留；两名独立角色按[M8合同](docs/contracts/independent-review.md)继续挑战，精修留M10。[机制账册](docs/m7-coverage-ledger.md)与[未知重入](docs/m7-unknowns.md)区分已验证和未证明。
 
 ![学生空间档案](artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/student-space.png)
 

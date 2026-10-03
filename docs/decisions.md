@@ -193,3 +193,9 @@ COMMIT首败仅修数据库事务包装异常的503/未知语义，非数据库�
 页面最小修复6ae43a4的新native173/frontend45/COMMIT29/browser14均PASS，实际第8页与已读保页、UNKNOWN重载恢复、双管理文档换号、学生消息隔离、地图上下文和390px现场链路成立。113个历史原Bundle字节保持，迁移/恢复/事务规则未改。归并F01–F15代表性机制与U01–U08未知重入，不以测试数量宣布零Bug。
 
 此时仅候选限定资格；下一步受保护PR、exact-main CI/公开读回及新运行资格。M7整体未退出，M8两名独立角色尚未开始，M10不取消。
+
+## 2026-10-03 · D028 · M7有限退出与独立复核入口
+
+PR#21 exact head22a98c5三项及步骤success，正常受保护squash合入main@c876d1a；exact-main CI37109397118三项及步骤success、远端main和README全字节读回一致。该主线fresh native173/frontend45/restore22/database25/COMMIT29/browser14各独立identity均PASS，原标准、SQL与owned清理保持；119个原Bundle字节保留。
+
+F01–F15按机制有限收束，U01–U08逐项触发/影响/缺证据/环境/重入/归属公开；没有范围内已观察未处置核心错误，不输出零Bug。M7资格限定于实际见证，见[M7](acceptance/m7.md)。冻结[M8合同](contracts/independent-review.md)后，两名独立测试/产品角色从固定源码和原证据复核，不继承主代理自评；M9及M10仍未完成。

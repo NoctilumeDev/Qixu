@@ -55,3 +55,7 @@ PR[#18](https://github.com/NoctilumeDev/Qixu/pull/18) exact head5f34b6f的[CI371
 新主线[CI37101177576](https://github.com/NoctilumeDev/Qixu/actions/runs/37101177576) exact SHA及三项/步骤success；fresh [native166](../../artifacts/m7/m7-a33774021b0f4827964e24a9ad2fd145/acceptance-report.md)与同producer新[restore22](../../artifacts/m7/m7-restore-9e1efc1ca9bc41f98496952d970aa5cf/acceptance-report.md)均Core PASS。真实旧库隔离、同库正常重启、7 marker/7 COMMIT一致正控制、仅移走账册后的隔离全部复验。owned清理与两端口无监听成立，远端main与README完整字节读回一致。
 
 资格仅为上述F12单实例恢复/事务边界；文档后续发布是此主线资格的投影，不对新文档SHA伪造运行资格。M7其他组合/页面及M8–M10仍未闭合，已列未知不升级。
+
+## 后续主线对齐
+
+上述段落保留其发生时的候选/历史范围。main@c876d1a的新同源运行、公开CI及有限退出统一见[M7](m7.md)，不是把历史Bundle改写成新资格；微信设备及生产边界继续NOT_PROVEN。

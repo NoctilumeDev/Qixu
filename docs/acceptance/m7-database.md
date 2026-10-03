@@ -44,3 +44,7 @@ PR#20候选c6ef1195e028152af2e4cd75bc488301c175d976的CI37104452916三项及所�
 该主线全新[native170](../../artifacts/m7/m7-805001f3b21349b19ef4cf524113423f/acceptance-report.md)、[restore22](../../artifacts/m7/m7-restore-9e75cadba74749da8f8837933ce6d696/acceptance-report.md)、[database25](../../artifacts/m7/m7-database-f95a73c66a4b4edcab194455a2ea3ea7/acceptance-report.md)各有新身份且COMPLETED/PASS。锁响应10.094秒、目标业务COM_QUERY丢回应30.031秒，零故障期新增效果、同key恢复唯一、同PID恢复原回执；T0及单缺账册保持隔离。owned及relay全部停止，三端口无监听。共享3306/6947/7897的PID及启动时间与初始记录相同。
 
 99个历史Bundle字节保持。此资格仅主线单实例数据库预算与既定恢复范围，未升级整个M7。COMMIT丢回应另按[新合同](../contracts/m7-commit-reply.md)攻击，不能由本段只读故障代替。
+
+## 后续主线对齐
+
+上述段落保留其发生时的候选/历史范围。main@c876d1a的新同源运行、公开CI及有限退出统一见[M7](m7.md)，不是把历史Bundle改写成新资格；微信设备及生产边界继续NOT_PROVEN。
