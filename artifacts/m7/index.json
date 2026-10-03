@@ -324,6 +324,34 @@
       "verdict": "FAIL",
       "path": "artifacts/m7/m7-browser-a30741a1f205491f937528762a22f102",
       "manifest_sha256": "9872fd2a231b457717887409c83bb9f29b276c4295e30cbe6cc09328535ebf98"
+    },
+    {
+      "identity": "m7-a3a62b4fc3224eb8b68b60212802353e",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-a3a62b4fc3224eb8b68b60212802353e",
+      "manifest_sha256": "e8f42f8426c331227809d19f233211bd591fc286e350227feb7799e76e18e5a8"
+    },
+    {
+      "identity": "m7-frontend-166c3c0255244fa7a19f8dd48990f570",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-166c3c0255244fa7a19f8dd48990f570",
+      "manifest_sha256": "0a87593b0879ec3be55990ef83fa0b92a7239238d0c9c9f3fbb8b5ebb11d6385"
+    },
+    {
+      "identity": "m7-commit-35fa2caf31154f0591afe2ae75b637f0",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-commit-35fa2caf31154f0591afe2ae75b637f0",
+      "manifest_sha256": "844731c0b5ba961ff03cd218f0312059c5d63686d4bfd1a08fb77dc39d4533cb"
+    },
+    {
+      "identity": "m7-browser-7559f46d192f47cf8f34ebbc0c26feda",
+      "source_sha": "6ae43a4ff112b6984fa17f68d1fab6133580e9d6",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-browser-7559f46d192f47cf8f34ebbc0c26feda",
+      "manifest_sha256": "225ede18bb21f1cbe91cb102d5f3ff5b51b361f431741326cec85d5d0ad2506b"
     }
   ],
   "not_proven": [

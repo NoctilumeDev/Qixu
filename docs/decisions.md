@@ -185,3 +185,11 @@ PR#20按三项及步骤success保护合入main@ffa01ffe，exact-main CI371046691
 ## 2026-10-03 · D026 · 真实COMMIT首败分类
 
 978983a的native170 PASS；独立COMMIT29出现范围内FAIL：服务器真实提交后响应丢失，Spring rollback失败包装成TransactionSystemException，首响应500 INTERNAL_ERROR。SQL唯一效果、实时NOT_RECONCILED、同库同generation恢复及原回执完全一致；清理成立。101个原Bundle字节不改。先冻结合同1.1，仅修数据库事务异常错误映射和结果未知文案，不修改权利/恢复算法及原29标准。
+
+## 2026-10-03 · D027 · COMMIT与实际页面原条件复验
+
+COMMIT首败仅修数据库事务包装异常的503/未知语义，非数据库程序错误保留500；18cba85的fresh native173/COMMIT29 PASS。页面合同另冻结，初始化日志重名首PENDING按观察前提最小修订，7619d8f实际14捕获为FAIL：管理端默认100却总151，无分页与未读数。原FAIL与其他已成立事实分别保存，未改原14标准。
+
+页面最小修复6ae43a4的新native173/frontend45/COMMIT29/browser14均PASS，实际第8页与已读保页、UNKNOWN重载恢复、双管理文档换号、学生消息隔离、地图上下文和390px现场链路成立。113个历史原Bundle字节保持，迁移/恢复/事务规则未改。归并F01–F15代表性机制与U01–U08未知重入，不以测试数量宣布零Bug。
+
+此时仅候选限定资格；下一步受保护PR、exact-main CI/公开读回及新运行资格。M7整体未退出，M8两名独立角色尚未开始，M10不取消。

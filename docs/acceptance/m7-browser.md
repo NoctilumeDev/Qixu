@@ -19,3 +19,15 @@
 新干净修复源依次运行fresh native0.19、frontend0.4，`veritrail_m7_browser.py seal <native> <frontend>`，再启动owned fixture、通过CUA重复原UI动作、stop、finalize。不得覆写当前FAIL或继承旧源的构建资格。
 
 尚未观察原生微信键盘、浏览器真实存储拒绝/配额、晚Set-Cookie调度与所有设备。相应入口仍是M7未知账册/F08/F09及M10设备合同；这次正常H5不将它们升级为已证明。
+
+## 固定修复候选原条件复验
+
+`6ae43a4ff112b6984fa17f68d1fab6133580e9d6`的新[native173](../../artifacts/m7/m7-a3a62b4fc3224eb8b68b60212802353e/acceptance-report.md)、[frontend45及三个构建](../../artifacts/m7/m7-frontend-166c3c0255244fa7a19f8dd48990f570/acceptance-report.md)、[原14实际页面PASS](../../artifacts/m7/m7-browser-7559f46d192f47cf8f34ebbc0c26feda/acceptance-report.md)各为新身份。管理消息显式20条，第一页151/151、第8页最旧001、读后150并保留第8页。原其他11状态、SQL唯一性、当前主体、390px无文档横溢和owned清理均成立。采集器、fixture、14断言不变；不继承旧提交产物。
+
+原条件动作中的登录过渡截图私有追加保留；等实际身份加载完成后才进入地图并保存最终状态，不把登录标签上的名字替代授权地图。早先误用无Core环境的Python在import阶段退出、未启动夹具；正确入口必须是已安装Core的虚拟环境，原工具错误不算产品失败。
+
+下图为同一候选的实际第8页与390px页面，仅演示数据，精修仍归M10。
+
+![管理消息最旧页](../../artifacts/m7/captures/m7-browser-7559f46d192f47cf8f34ebbc0c26feda/admin-old.jpg)
+
+![390px管理消息](../../artifacts/m7/captures/m7-browser-7559f46d192f47cf8f34ebbc0c26feda/admin-mobile.jpg)
