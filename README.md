@@ -10,13 +10,20 @@
 
 本轮自动施工与收尾止于 **M9 工程交付**。M10 前端精修由用户参与，待以后明确重新开启；工程交付资格、视觉精修与微信真机边界分别记录，不以M10延期提前授予M8/M9通过。
 
-2026-10-03：**M0–M7限定范围已验收；M8–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。M7的原失败、修复及有限退出见[主线证据](docs/acceptance/m7.md)。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
+2026-10-03：**M0–M7限定范围已验收；M8复验中，M9待交付，M10等待用户参与**。当前可运行代码、阶段限定资格和整个工程交付分别记录：
+
+| 阶段 | 当前事实 |
+| --- | --- |
+| M0–M7 | 已取得各自限定资格。[M7主线证据](docs/acceptance/m7.md)保留原失败、修复及有限停止线；不宣称零缺陷 |
+| M8 | 两名独立角色已复核，并发现新的登录错误投影问题（PM11）；修复仍在[草稿 PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)，尚未合入主线。候选 `19cfa925` 的[公开 CI](https://github.com/NoctilumeDev/Qixu/actions/runs/37132322289)通过，仍不能代替实际页面及 SQL 的完整复验 |
+| M9 | 尚未完成。等待 M8 闭合后，执行干净检出、两次 fresh 运行、验迹裁决与公开交付对齐 |
+| M10 | 已按用户要求后置；以后由用户参与并明确开启。最终视觉和微信真机仍为待验边界 |
+
+PM11已有五个命名页面状态的原始捕获支持显示问题修复，但该次采集缺少完整 SQL 和原短约保留见证，Core结果为 **FAIL / ERROR**；不能据此宣布M8结束。首败和后续修复见[PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)。夜间开放规则照常生效，不为复验伪造服务器时间。阶段证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)、[M6](docs/acceptance/m6.md)、[M8](docs/acceptance/m8.md)；前端精修归[M10](docs/contracts/frontend-refinement.md)。
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 
-M7在受保护main@c876d1a取得[有限退出资格](docs/acceptance/m7.md)：新native173、frontend45、恢复22、数据库预算25、COMMIT29及真实页面14通过，原失败保留。[十六条与外部经验覆盖复核](docs/coverage-review.md)、[机制账册](docs/m7-coverage-ledger.md)和[未知重入](docs/m7-unknowns.md)分别说明已验证与未证明范围。
-
-M8由两名独立角色按[合同](docs/contracts/independent-review.md)复核。公开main@dbdbbe的181/59/18限定检查通过后，实页仍发现PM11旧身份错误残留；最小修复候选1ffe的新native181/frontend61及五页原图支持修复，但该实页原Core为FAIL，停止控制错误造成缺SQL，短约前提也已错过开放窗口。原包、实际清理与待复验分别保留，**M8仍未完成**；详情见[阶段记录](docs/acceptance/m8.md)，不将方法文档或页面截图作为全工程资格。
+十六条反例与外部经验的实际证明范围见[覆盖复核](docs/coverage-review.md)。[机制账册](docs/m7-coverage-ledger.md)与[未知重入](docs/m7-unknowns.md)区分已验证和未证明；[M8合同](docs/contracts/independent-review.md)保留独立测试和产品复核的有限停止条件。后续只处理阻断发现及原条件复验，不继续穷举同类排列。
 
 ![学生空间档案](artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/student-space.png)
 

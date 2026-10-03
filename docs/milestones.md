@@ -12,7 +12,7 @@
 | M5 两端真实链路 | VERIFIED_LIMITED_API_BUILD_BROWSER | uni-app 小程序及 H5 验证入口、响应式管理 Web、主流程、素材与合理结构 | PR#11/main@c411cfe7三项CI、fresh native126/build31/installed browser17及真实SQL闭合；视觉留M10，真机NOT_PROVEN |
 | M6 回归与外部接入 | VERIFIED_LIMITED_API_MYSQL_REAL_IDENTITY_RESTART | [M6主线证据](acceptance/m6.md)：真实暗室当前身份适配、同库重启和固定round干净复算 | PR#14/main@5ca0b5e三项CI及fresh native142/build31/installed PASS；原候选PENDING保留，不含SSO/备份回滚/真机 |
 | M7 外部错题复核与修复 | VERIFIED_LIMITED_FAILURE_MECHANISMS | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | [M7](acceptance/m7.md)：PR#21/main@c876d1a三组CI及fresh native173/frontend45/restore22/database25/COMMIT29/browser14；119原包保留、F01–F15及U01–U08有坐标，不宣称零缺陷 |
-| M8 独立测试及产品复验 | IN_PROGRESS_FOCUSED_IDENTITY_RETEST | [候选与主线事实](acceptance/m8.md)：两角色报告、主线181/59/18原包；PM11修复181/61及五页原件，实页原FAIL保留 | 有效短约窗口重走PM11有限契约并保存SQL；受保护PR、exact-main门禁及公开读回尚待闭合 |
+| M8 独立测试及产品复验 | IN_PROGRESS_REPAIR_RETEST | [历史候选事实](acceptance/m8.md)及两名独立角色报告；PM11修复在[草稿PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)，候选19cfa925公开CI通过 | PM11既有页面支持显示修复，但原Core FAIL/ERROR保留；合法开放窗口内的完整页面/SQL/短约保留复验，以及受保护合入、exact-main CI、新主线安装/读回尚待闭合 |
 | M9 公开工程候选与冻结 | PLANNED | CI、README/截图、SQL入口、部署/恢复、工程候选与公开事实对齐 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
 | M10 前端精修与验收 | DEFERRED_HUMAN_PARTICIPATION | 按[精修合同](contracts/frontend-refinement.md)待用户参与后统一两端视觉、素材、排版与响应式细节 | 用户明确重新开启后执行原精修条件；不作为本轮M9工程交付阻断，也不授予最终视觉或微信真机资格 |
 
@@ -52,4 +52,4 @@ M7按主要失败机制有限收束：覆盖核心不变量、典型单故障及
 
 真实微信手机行为依赖用户设备和微信平台。可以先完成开发工具及 H5 的真实链路，但未经手机观察的键盘/扫码行为必须保留待验状态。公开随机源和暗室服务可用性分别记录，不能以本地模拟覆盖真实供应商失败。
 
-M0文档、M1基础、M2 API/MySQL各有资格，见 [M0](acceptance/m0.md)、[M1](acceptance/m1.md)、[M2](acceptance/m2.md)。M3闭合见[M3事实](acceptance/m3.md)。M4限定范围见[M4事实](acceptance/m4.md)，M5限定构建和页面资格见[M5事实](acceptance/m5.md)，M6接入与恢复限定资格见[M6事实](acceptance/m6.md)。M7有限退出见[M7](acceptance/m7.md)，M8–M10和最终交付尚未完成。
+M0文档、M1基础、M2 API/MySQL各有资格，见 [M0](acceptance/m0.md)、[M1](acceptance/m1.md)、[M2](acceptance/m2.md)。M3闭合见[M3事实](acceptance/m3.md)。M4限定范围见[M4事实](acceptance/m4.md)，M5限定构建和页面资格见[M5事实](acceptance/m5.md)，M6接入与恢复限定资格见[M6事实](acceptance/m6.md)。M7有限退出见[M7](acceptance/m7.md)；M8/M9尚未完成，M10等待用户参与，不是已验收。
