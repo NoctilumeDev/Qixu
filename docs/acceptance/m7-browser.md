@@ -1,6 +1,6 @@
 # M7 · 真实页面组合观察
 
-当前为施工候选，M7整体尚未退出；不是主线或微信真机资格。原包字节见[索引](../../artifacts/m7/index.json)。
+以下保留施工候选时的首次失败及复验；当前主线有限退出见[M7](m7.md)，不是微信真机资格。原包字节见[索引](../../artifacts/m7/index.json)。
 
 ## 首次产品失败
 
@@ -31,3 +31,7 @@
 ![管理消息最旧页](../../artifacts/m7/captures/m7-browser-7559f46d192f47cf8f34ebbc0c26feda/admin-old.jpg)
 
 ![390px管理消息](../../artifacts/m7/captures/m7-browser-7559f46d192f47cf8f34ebbc0c26feda/admin-mobile.jpg)
+
+## 后续主线对齐
+
+上述段落保留其发生时的候选/历史范围。main@c876d1a的新同源运行、公开CI及有限退出统一见[M7](m7.md)，不是把历史Bundle改写成新资格；微信设备及生产边界继续NOT_PROVEN。

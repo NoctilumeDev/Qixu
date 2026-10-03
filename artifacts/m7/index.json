@@ -1,5 +1,5 @@
 {
-  "phase": "M7_IN_PROGRESS_RESTORE_AND_PROTOCOL",
+  "phase": "M7_VERIFIED_LIMITED_FAILURE_MECHANISMS",
   "entry_contract": "docs/contracts/m7-execution-entry.md",
   "repair_source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
   "bundles": [
@@ -352,15 +352,57 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-browser-7559f46d192f47cf8f34ebbc0c26feda",
       "manifest_sha256": "225ede18bb21f1cbe91cb102d5f3ff5b51b361f431741326cec85d5d0ad2506b"
+    },
+    {
+      "identity": "m7-3ae98f0c252e43f19dc6fe17222aeaca",
+      "source_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-3ae98f0c252e43f19dc6fe17222aeaca",
+      "manifest_sha256": "64824c8d7a0c067aef5eeed264050ca7648fcd45ac1f1f8b25fae3001bb4c08c"
+    },
+    {
+      "identity": "m7-frontend-bdb96633f6264077b37a25d5bfe3115e",
+      "source_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-bdb96633f6264077b37a25d5bfe3115e",
+      "manifest_sha256": "a665f6bfff9425c04f6be58eabe6cafebdc11a61253d606ff2364c3b3773436c"
+    },
+    {
+      "identity": "m7-commit-64c1c252669140bdb5d2c4b6ace27d80",
+      "source_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-commit-64c1c252669140bdb5d2c4b6ace27d80",
+      "manifest_sha256": "c423dbd755f29b255cdbf54a71861f42b70014e19f631b12d3c556cc52249893"
+    },
+    {
+      "identity": "m7-restore-e720f59e2381417ea8d9a0483c5800fe",
+      "source_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-e720f59e2381417ea8d9a0483c5800fe",
+      "manifest_sha256": "fc8bb3f4f7462b512af99f9ae8521cc752e9a8dc130e0a398dba7fa279d22510"
+    },
+    {
+      "identity": "m7-database-5f0749b33db3440cac78e0ae20f90134",
+      "source_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-database-5f0749b33db3440cac78e0ae20f90134",
+      "manifest_sha256": "81922a6bc5e2bd597f15afb39b92a283834c082cbe6f6a6ebfb5af09e1d2a144"
+    },
+    {
+      "identity": "m7-browser-3bdade60099d4bf0acb3c09ed340f9d9",
+      "source_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-browser-3bdade60099d4bf0acb3c09ed340f9d9",
+      "manifest_sha256": "bac1b69900470682d3c6abf73ba600547719130d4949bc8d4c01498d4ec755df"
     }
   ],
   "not_proven": [
-    "whole M7",
-    "installed browser storage and inbox paging",
     "WeChat device",
-    "production capacity",
+    "real browser storage policy and delayed Set-Cookie",
+    "production capacity and long-term fairness",
     "whole-host rollback and privileged DB/file tampering",
-    "multi-node recovery and physical power loss"
+    "multi-node recovery and physical power loss",
+    "campus SSO and real facilities or delivery/read semantics"
   ],
   "metadata_oracle_contract": "docs/contracts/m7-metadata-oracle.md",
   "metadata_repair_source_sha": "a3245e17edc116810d01bd8f800cf5102ed71caa",
@@ -373,5 +415,9 @@
   "database_budget_contract": "docs/contracts/m7-database-budgets.md",
   "database_budget_candidate_sha": "e704b10e2ae739648f5551928f121b4ba4cecf46",
   "database_budget_qualified_main_sha": "ffa01ffe4e97728352cbbafc5349172d7a2ffbc3",
-  "database_budget_exact_main_ci": "37104669176"
+  "database_budget_exact_main_ci": "37104669176",
+  "qualified_main_sha": "c876d1a35b11dfdf4fda74b67be9451aef8b3a49",
+  "exact_main_ci": "37109397118",
+  "stage_qualification": "VERIFIED_LIMITED_FAILURE_MECHANISMS",
+  "unknown_ledger": "docs/m7-unknowns.md"
 }

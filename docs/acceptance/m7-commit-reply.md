@@ -1,6 +1,6 @@
 # M7 · 真实COMMIT回应丢失
 
-当前为施工候选限定资格，尚非受保护main或完整M7。先冻结[合同](../contracts/m7-commit-reply.md)，原29项HARD断言不变，独占MySQL/API/TCP中继；不接管共享实例。
+以下保留施工候选的首次失败及限定复验；当前受保护main和有限退出见[M7](m7.md)。先冻结[合同](../contracts/m7-commit-reply.md)，原29项HARD断言不变，独占MySQL/API/TCP中继；不接管共享实例。
 
 原源`978983a079c0f638d90a645d28d5f909210f21e8`的[Core FAIL](../../artifacts/m7/m7-commit-35238faf86214af08fc9df4f516ca4d2/acceptance-report.md)为COMPLETED：精确COM_QUERY COMMIT命中并丢server回应，独立SQL确认真实唯一提交、一个marker、同generation；首响应30.031秒却为500 INTERNAL_ERROR。随后实时NOT_RECONCILED、同库新PID恢复原回执与完整账册均正常。错误由Spring rollback失败包装覆盖原通信原因；分类PRODUCT_ERROR_ENVELOPE，不是重复业务提交。
 
@@ -11,3 +11,7 @@
 这些证明的是单实例真实TCP提交通信歧义与同库恢复，不证明整个主机回滚、硬件掉电、多节点、主从切换或生产容量。未知有[具体重入坐标](../m7-unknowns.md)。修复前FAIL与各新PASS按原字节公开；不能用后来的UI或CI覆盖原失败。
 
 复验使用已安装Core虚拟环境：先在exact clean source生产native0.19/Plan7，再运行 `.tools/veritrail/Scripts/python.exe scripts/veritrail_m7_commit.py --producer-bundle <fresh-native/bundle> --java <java17> --mysql-bin <mysql8-bin>`。先sealed Plan再安装；secret只在私有环境，stdout不打印凭据。
+
+## 后续主线对齐
+
+上述段落保留其发生时的候选/历史范围。main@c876d1a的新同源运行、公开CI及有限退出统一见[M7](m7.md)，不是把历史Bundle改写成新资格；微信设备及生产边界继续NOT_PROVEN。
