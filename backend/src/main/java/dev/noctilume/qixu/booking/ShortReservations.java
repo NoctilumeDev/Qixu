@@ -35,6 +35,8 @@ public class ShortReservations {
         var view=b.view(row); var status=row.get("status").toString(); var now=b.now();
         if(status.equals("PENDING") && !Business.date(row,"check_in_deadline").isAfter(now)) status="EXPIRED";
         else if(status.equals("CHECKED_IN") && !Business.date(row,"ends_at").isAfter(now)) status="ENDED";
+        var space=rights.space(Business.number(row,"space_id"));view.put("code",space.get("code"));view.put("name",space.get("name"));
+        view.put("relocations",b.jdbc.queryForList("SELECT h.original_id,h.replacement_id,h.created_at,a.code AS original_code,z.code AS replacement_code FROM short_relocation h JOIN short_reservation x ON x.id=h.original_id JOIN short_reservation y ON y.id=h.replacement_id JOIN space a ON a.id=x.space_id JOIN space z ON z.id=y.space_id WHERE (h.original_id=? OR h.replacement_id=?) AND x.user_id=? AND y.user_id=? ORDER BY h.created_at",id,id,user,user).stream().map(b::view).toList());
         view.put("effectiveStatus",status); view.put("serverNow",Business.iso(now)); return view;
     }
     public List<Map<String,Object>> mine(long user) {

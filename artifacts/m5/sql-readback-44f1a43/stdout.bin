@@ -1,0 +1,28 @@
+id	status	version
+3	VERIFIED_CLOSED	4
+id	user_id	space_id	status	version
+3	1	2017	RESOLVED	4
+report_id	action	count
+3	REPORTED	1
+3	VERIFIED	1
+3	REPAIR_LINKED	1
+3	REPAIR_DONE	1
+3	RESOLVED	1
+report_id	media_type	width	height	bytes	sha256
+3	image/jpeg	1200	800	167875	b2f66ab3d724a653522eaf9878ddebf43af624fc4df95537f734ddf7faf917d7
+id	version	outlet_condition
+2017	5	WORKING
+id	status	version	source_round
+2	CANCELED	2	32731212
+id	batch_id	user_id	current_version	status
+3	2	1	2	SUBMITTED
+application_id	revision	preferences_json
+3	1	[{"rank": 1, "seatId": 2123}]
+3	2	[{"rank": 1, "seatId": 2123}]
+formal_results
+0
+event_id	user_id	status	sequence_number	version
+2	1	CANCELED	1	2
+recipient_id	entity_type	entity_id	notices	delivered
+1	FEEDBACK	3	6	6
+1	BATCH	2	3	3

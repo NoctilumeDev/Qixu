@@ -1,0 +1,16 @@
+- main:
+  - img "演示示意：靠窗学习空间"
+  - heading "期序 · Qixu" [level=1]
+  - paragraph: 让每一处校园空间，各得其用。
+  - text: 校园空间预约与使用权管理
+  - generic: QIXU WORKSPACE
+  - heading "进入工作台" [level=2]
+  - paragraph: 老师组织活动，管理员在授权范围内处理空间与使用权。
+  - text: 会话已变更或控制结果尚未确认，当前页已停止读写。
+  - button "重新加载并核对身份"
+  - alert: 登录状态尚未确认，请重新加载页面后核对身份。 输入保留，须核对当前版本/影响再提交。
+  - text: 账号
+  - textbox "账号"
+  - text: 密码
+  - textbox "密码"
+  - button "登录" [disabled]

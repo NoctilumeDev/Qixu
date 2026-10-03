@@ -1,0 +1,68 @@
+- banner:
+  - button "展开工作台导航":
+  - heading "维修事项" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 三楼管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 33e3c8ab。
+  - link "返回原列表":
+    - /url: "#/repairs?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "记录 3 复验关闭" [level=2]:
+    - text: 记录 3
+    - generic: 复验关闭
+  - term: 空间
+  - definition: A018
+  - term: 当前版本
+  - definition: "4"
+  - paragraph: 演示核实插座损坏，必须经过维修工作完成与独立复验后才能恢复公开事实。
+  - article:
+    - strong: 事项已建立 · 10/03 10:09
+    - paragraph: 演示核实插座损坏，必须经过维修工作完成与独立复验后才能恢复公开事实。
+  - article:
+    - strong: 已安排 · 10/03 10:09
+    - paragraph: 固定候选演示维修安排，设施仍须复验。
+  - article:
+    - strong: 工作已完成，待复验 · 10/03 10:10
+    - paragraph: 演示执行人报告插座维修工作完成，当前只是报告，尚待复验。
+  - article:
+    - strong: 复验关闭 · 10/03 10:10
+    - paragraph: 固定候选演示复验：插座明确恢复正常，反馈和维修保留原始历史。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: 固定候选演示复验：插座明确恢复正常，反馈和维修保留原始历史。
+  - group "经核实的空间事实":
+    - generic: 经核实的空间事实
+    - combobox:
+      - option "插座状况" [selected]
+      - option "照明状况"
+      - option "桌面状况"
+      - option "环境状况"
+      - option "有插座"
+      - option "靠窗"
+      - option "安静条件"
+      - option "无障碍通行"
+    - combobox:
+      - option "未知"
+      - option "正常" [selected]
+      - option "损坏"
+      - option "维修中"
+      - option "true"
+      - option "false"
+    - button "加入事实项"
+    - text: 插座状况 = 正常
+    - button "移除"
+    - paragraph: 只提交亲自核实的事实；工作完成仍须复验，已知损坏的设施必须明确恢复正常。
+  - text: 维修执行人
+  - textbox "维修执行人": 演示维修人员
+  - checkbox "明确复验通过（仍须填实际设施事实）" [checked]
+  - text: 明确复验通过（仍须填实际设施事实）
+  - text: 同空间安全/维护来源ID
+  - spinbutton "同空间安全/维护来源ID": "0"
+  - text: 来源当前版本
+  - spinbutton "来源当前版本": "1"

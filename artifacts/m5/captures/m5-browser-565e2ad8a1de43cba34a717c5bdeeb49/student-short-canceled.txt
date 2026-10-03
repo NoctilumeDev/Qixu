@@ -1,0 +1,38 @@
+- generic: 我的使用安排
+- generic: 长期使用安排
+- button "全部批次"
+- button "真实未来随机源整批验收 · 3be57bf4 结果已公布 · 在稳定候补中":
+  - generic: 真实未来随机源整批验收 · 3be57bf4
+  - generic: 结果已公布 · 在稳定候补中
+- generic: 短期预约
+- generic: A018 · 已取消
+- generic: 10/03 09:49 — 10/03 10:49
+- generic: 到场期限 10/03 09:59
+- button "空间档案"
+- generic: C001 · 已取消
+- generic: 10/03 08:07 — 10/03 09:07
+- generic: 到场期限 10/03 08:17
+- button "空间档案"
+- generic: 场地申请
+- generic: M5真实页面读书交流验收 · 已批准
+- generic: R-A · 10/03 08:24 — 10/03 09:24 · 4人
+- generic: 审批说明：演示验收：核对容量与时段无冲突，批准四人阅读交流。
+- button "查看空间"
+- button "取消场地申请"
+- generic: 活动预约
+- button "窗边共读 · 固定M5候选 已取消 · 顺序1":
+  - generic: 窗边共读 · 固定M5候选
+  - generic: 已取消 · 顺序1
+- button "窗边共读 · M5真实页面读书会 已取消 · 顺序2":
+  - generic: 窗边共读 · M5真实页面读书会
+  - generic: 已取消 · 顺序2
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

@@ -1,0 +1,92 @@
+[
+  {
+    "name": "campus-hero.jpg",
+    "sourceKind": "GENERATED_DEMO",
+    "originalPixels": [
+      1942,
+      809
+    ],
+    "pixels": [
+      1440,
+      600
+    ],
+    "originalSha256": "9dc01810fbef3d831da1e39221ee37e04ac2a46c2df7291c6bf9714759d422b0",
+    "sha256": "40931ab187f14ab37261bee38f207dd4ad269ebbd1ee8a2bc08f62cf4db396cc",
+    "bytes": 111193
+  },
+  {
+    "name": "window-seat.jpg",
+    "sourceKind": "GENERATED_DEMO",
+    "originalPixels": [
+      1536,
+      1024
+    ],
+    "pixels": [
+      1200,
+      800
+    ],
+    "originalSha256": "3c3463c6623d7fa80d37bcc692abcf9dabb898aeeed99c55c2fac1fddd35b465",
+    "sha256": "b2f66ab3d724a653522eaf9878ddebf43af624fc4df95537f734ddf7faf917d7",
+    "bytes": 167875
+  },
+  {
+    "name": "quiet-room.jpg",
+    "sourceKind": "GENERATED_DEMO",
+    "originalPixels": [
+      1536,
+      1024
+    ],
+    "pixels": [
+      1200,
+      800
+    ],
+    "originalSha256": "8458bcfbcb2e67dd4b9694d904f5fe324c59f1a436469fb228ead759acf1dfd9",
+    "sha256": "0064a795641d51e976e0608489c4d3eee6e4a8ba48d0abb021f3f7f07cbc22d1",
+    "bytes": 199477
+  },
+  {
+    "name": "hall.jpg",
+    "sourceKind": "GENERATED_DEMO",
+    "originalPixels": [
+      1536,
+      1024
+    ],
+    "pixels": [
+      1200,
+      800
+    ],
+    "originalSha256": "e8512ce0ac4f6736e0042af938bde996bae20727716129c32df5f3fff4ac4073",
+    "sha256": "e95dd00f20292ae2088d0622716b57502fe61d3f5be506e6f603a6feff0653f7",
+    "bytes": 150288
+  },
+  {
+    "name": "ink-sidebar.jpg",
+    "sourceKind": "GENERATED_DEMO",
+    "originalPixels": [
+      948,
+      1659
+    ],
+    "pixels": [
+      400,
+      700
+    ],
+    "originalSha256": "ea7ab834ab9e9de496d0ce27fdf14a90726e74681df8fcb924807f43e374168c",
+    "sha256": "8b87ac8be67630d35396489cbe49846a5c6945183e7084ee5f52a25b12c358bf",
+    "bytes": 12285
+  },
+  {
+    "name": "qixu-brand.png",
+    "sourceKind": "GENERATED_DEMO",
+    "originalPixels": [
+      1881,
+      836
+    ],
+    "pixels": [
+      900,
+      400
+    ],
+    "originalSha256": "ae9e8ab61ab43e2b86d5e252644e31bec82309f07baacafd05cca917e9437b2c",
+    "sha256": "b180e490f5bca8b2541817ca613d9e123b2187172c1edf313998cfdeeab31861",
+    "bytes": 134613
+  }
+]

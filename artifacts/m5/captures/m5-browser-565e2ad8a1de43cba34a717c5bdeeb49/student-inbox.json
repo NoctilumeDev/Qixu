@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:6968/#/pages/messages/index",
+  "errorAlert": {
+    "focused": false,
+    "visible": false
+  },
+  "viewport": {
+    "documentWidth": 375,
+    "height": 844,
+    "width": 390
+  },
+  "capturedAt": "2026-10-03T02:11:25.464Z"
+}

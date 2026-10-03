@@ -1,0 +1,13 @@
+{
+  "name": "qixu", "version": "0.1.0", "private": true,
+  "engines": {"node": "24.14.x"}, "packageManager": "npm@11.9.0",
+  "workspaces": ["packages/client", "student", "admin"],
+  "scripts": {
+    "test:client": "npm run test -w @qixu/client",
+    "check": "npm run type-check -w @qixu/student && npm run type-check -w @qixu/admin",
+    "build": "npm run build:h5 -w @qixu/student && npm run build:mp-weixin -w @qixu/student && npm run build -w @qixu/admin",
+    "dev:student": "npm run dev:h5 -w @qixu/student", "dev:admin": "npm run dev -w @qixu/admin",
+    "icons": "node scripts/export-icons.mjs"
+  },
+  "devDependencies": {"@phosphor-icons/core": "2.1.1", "typescript": "5.9.3"}
+}

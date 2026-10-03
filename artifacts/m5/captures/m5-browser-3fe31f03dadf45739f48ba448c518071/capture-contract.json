@@ -1,0 +1,76 @@
+{
+  "checks": {
+    "cookie-other-document": [
+      "重新加载",
+      "会话"
+    ],
+    "event-published": [
+      "窗边共读",
+      "已发布"
+    ],
+    "repair-closed": [
+      "维修事项",
+      "复验关闭"
+    ],
+    "repair-missing-fact": [
+      "请保留输入",
+      "工作已完成，待复验"
+    ],
+    "repair-work-done": [
+      "维修事项",
+      "工作已完成，待复验"
+    ],
+    "student-event-canceled": [
+      "窗边共读",
+      "已取消"
+    ],
+    "student-event-confirmed": [
+      "窗边共读",
+      "已确认"
+    ],
+    "student-favorites": [
+      "收藏与对比",
+      "A018"
+    ],
+    "student-inbox": [
+      "消息",
+      "未读"
+    ],
+    "student-map-context": [
+      "空间地图",
+      "A018",
+      "150%"
+    ],
+    "student-report-photo": [
+      "反馈",
+      "受权限保护的照片"
+    ],
+    "student-report-resolved": [
+      "反馈",
+      "已解决",
+      "重新核实"
+    ],
+    "student-result": [
+      "批次",
+      "候补"
+    ],
+    "student-short-canceled": [
+      "短期预约",
+      "A018",
+      "已取消"
+    ],
+    "student-space": [
+      "A018",
+      "查看使用时段",
+      "演示示意图片"
+    ],
+    "teacher-no-admin": [
+      "当前身份或管理范围无此权限"
+    ],
+    "teacher-venue-approved": [
+      "场地申请",
+      "已批准"
+    ]
+  },
+  "sealed_at": "2026-10-03T01:29:56.828344+00:00"
+}

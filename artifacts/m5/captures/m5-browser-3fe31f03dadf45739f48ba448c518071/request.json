@@ -1,0 +1,13 @@
+{
+  "collector": "qixu-manual-browser/0.1",
+  "frontend_evidence_sha256": "a12d3c077eb7e9422dee30be31760277bd4ae40dec2b587b58cad97befb88450",
+  "frontend_manifests": {
+    "admin": "a74932e8057d485cf0928b399bc128ef5344de9ba6ad12bb5b9e34d57cc8244a",
+    "h5": "158818c98e85748ab4f5e769c609b096d11d8b40cf57e1148fa589c6d91ecb4c",
+    "wechat": "be52937ef4f788028d76622d49db9a3c9f06a94a753f75330f34e6e3e1a70a6b"
+  },
+  "jar_sha256": "a30748cc4916cffc8ac14e276f62fa234aa026d9bc1dde10881029d14de8565e",
+  "native_evidence_sha256": "351adb09e62e3afa2ffaba99a9484d389bc27e856990904645674ee362334d62",
+  "observer_sha256": "d67a44c1750929df083912e9cf2d016c2d3d0574d000cb479816a7e61b18ae86",
+  "source_sha": "07ece2f2b936ac9ee1649bc11dd73eff7e4d005b"
+}

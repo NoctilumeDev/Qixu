@@ -46,7 +46,7 @@ public class Feedback {
         b.notify(Business.number(report,"user_id"),"feedback:"+report.get("id")+":"+suffix,"空间反馈处理进展",message,"FEEDBACK",Business.number(report,"id"));
     }
     public Map<String,Object> detail(Actor actor,long id) {
-        var report=row("feedback_report",id);readable(actor,report);var value=b.view(report);
+        var report=row("feedback_report",id);readable(actor,report);var value=b.view(report);value.putAll(b.jdbc.queryForMap("SELECT code,name FROM space WHERE id=?",report.get("space_id")));
         value.put("history",b.jdbc.queryForList("SELECT id,action,message,created_at FROM feedback_history WHERE report_id=? ORDER BY id",id).stream().map(b::view).toList());
         value.put("attachments",b.jdbc.queryForList("SELECT id,media_type,sha256,width,height,created_at FROM feedback_attachment WHERE report_id=? ORDER BY id",id).stream().map(b::view).toList());
         value.put("repairs",b.jdbc.queryForList("SELECT t.id,t.status,t.version,t.updated_at FROM repair_ticket t JOIN repair_report r ON t.id=r.repair_id WHERE r.report_id=? ORDER BY t.id DESC",id).stream().map(b::view).toList());
@@ -60,7 +60,7 @@ public class Feedback {
         if(administrative && !actor.role().equals("ADMIN"))throw DomainException.forbidden();
         String where=administrative?" EXISTS(SELECT 1 FROM admin_scope s WHERE s.floor_id=r.floor_id AND s.user_id=?)":" r.user_id=?";
         long total=b.jdbc.queryForObject("SELECT COUNT(*) FROM feedback_report r WHERE"+where,Long.class,actor.id());
-        var values=b.jdbc.queryForList("SELECT r.id,r.space_id,r.floor_id,r.category,r.status,r.version,r.created_at,r.updated_at FROM feedback_report r WHERE"+where+" ORDER BY r.id DESC LIMIT 50 OFFSET ?",actor.id(),(page-1)*50).stream().map(b::view).toList();
+        var values=b.jdbc.queryForList("SELECT r.id,r.space_id,r.floor_id,r.category,r.status,r.version,r.created_at,r.updated_at,p.code,p.name FROM feedback_report r JOIN space p ON p.id=r.space_id WHERE"+where+" ORDER BY r.id DESC LIMIT 50 OFFSET ?",actor.id(),(page-1)*50).stream().map(b::view).toList();
         return Map.of("items",values,"total",total,"page",page,"size",50);
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
@@ -174,7 +174,7 @@ public class Feedback {
         });
     }
     public Map<String,Object> repairDetail(Actor actor,long id) {
-        var ticket=row("repair_ticket",id);b.admin(actor,Business.number(ticket,"floor_id"));var value=b.view(ticket);value.remove("active_space");
+        var ticket=row("repair_ticket",id);b.admin(actor,Business.number(ticket,"floor_id"));var value=b.view(ticket);value.remove("active_space");value.putAll(b.jdbc.queryForMap("SELECT code,name FROM space WHERE id=?",ticket.get("space_id")));
         value.put("reports",b.jdbc.queryForList("SELECT report_id FROM repair_report WHERE repair_id=? ORDER BY report_id",id));
         value.put("limits",b.jdbc.queryForList("SELECT l.block_id,l.reason,l.created_at,k.status,k.version,k.kind FROM repair_limit l JOIN space_block k ON l.block_id=k.id WHERE l.repair_id=?",id).stream().map(b::view).toList());
         value.put("history",b.jdbc.queryForList("SELECT id,action,message,created_at FROM repair_history WHERE repair_id=? ORDER BY id",id).stream().map(b::view).toList());return value;
@@ -185,12 +185,13 @@ public class Feedback {
     public Map<String,Object> repairs(Actor actor,int page) {
         if(!actor.role().equals("ADMIN"))throw DomainException.forbidden();if(page<1 || page>10_000)throw DomainException.invalid("页码超出范围。");
         long count=b.jdbc.queryForObject("SELECT COUNT(*) FROM repair_ticket t JOIN admin_scope s ON t.floor_id=s.floor_id WHERE s.user_id=?",Long.class,actor.id());
-        return Map.of("items",b.jdbc.queryForList("SELECT t.id,t.space_id,t.category,t.status,t.version,t.assignee,t.updated_at FROM repair_ticket t JOIN admin_scope s ON t.floor_id=s.floor_id WHERE s.user_id=? ORDER BY t.id DESC LIMIT 50 OFFSET ?",actor.id(),(page-1)*50).stream().map(b::view).toList(),"total",count,"page",page,"size",50);
+        return Map.of("items",b.jdbc.queryForList("SELECT t.id,t.space_id,t.category,t.status,t.version,t.assignee,t.updated_at,p.code,p.name FROM repair_ticket t JOIN space p ON p.id=t.space_id JOIN admin_scope s ON t.floor_id=s.floor_id WHERE s.user_id=? ORDER BY t.id DESC LIMIT 50 OFFSET ?",actor.id(),(page-1)*50).stream().map(b::view).toList(),"total",count,"page",page,"size",50);
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> repairAction(AuthService.Session session,long id,String key,RepairAction body,String requestId) {
         if(!session.actor().role().equals("ADMIN"))throw DomainException.forbidden();
-        var initial=row("repair_ticket",id);long floor=Business.number(initial,"floor_id");var added=body.reports()==null?List.<Map<String,Object>>of():refs(body.reports(),false);var floors=new ArrayList<Long>(List.of(floor));added.forEach(r->floors.add(Business.number(r,"floor_id")));var reports=b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id);
+        if(!"LINK_REPORTS".equals(body.action())&&body.reports()!=null&&!body.reports().isEmpty())throw DomainException.invalid("只有关联反馈动作可以提交报告引用。");
+        var initial=row("repair_ticket",id);long floor=Business.number(initial,"floor_id");var added="LINK_REPORTS".equals(body.action())?refs(body.reports(),false):List.<Map<String,Object>>of();var floors=new ArrayList<Long>(List.of(floor));added.forEach(r->floors.add(Business.number(r,"floor_id")));var reports=b.jdbc.queryForList("SELECT f.* FROM feedback_report f JOIN repair_report r ON f.id=r.report_id WHERE r.repair_id=? ORDER BY f.id",id);
         var users=reportUsers(reports,session.actor().id());users.addAll(reportUsers(added,session.actor().id()));var source=repairLimit(id);var batches=new TreeSet<Long>();if(source!=null) {batches.addAll(notices.batches(Business.number(source,"id")));users.addAll(notices.users(Business.number(source,"id")));}
         var impact=changes.lock(Business.number(initial,"space_id"),batches,users,floors);var currentSource=repairLimit(id);if(source==null&&currentSource!=null||source!=null&&(currentSource==null||Business.number(source,"id")!=Business.number(currentSource,"id")))throw Business.conflict("IMPACT_COORDINATES_CHANGED","维修来源在等待期间变化，请重试。");var actor=b.current(session);b.admin(actor,floor);for(var report:added)b.admin(actor,Business.number(report,"floor_id"));
         return b.once(actor,key,"repair.action:"+id,body,()->{

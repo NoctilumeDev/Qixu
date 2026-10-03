@@ -1,0 +1,67 @@
+- banner:
+  - button "展开工作台导航":
+  - heading "维修事项" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 空间管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - alert:
+    - text: 复验通过须明确修正这项设施的已知损坏事实，不能同时保留损坏或缺失状态。 输入保留，须核对当前版本/影响再提交。（编号 21c8a452）
+    - button "刷新事实（保留输入）"
+  - link "返回原列表":
+    - /url: "#/repairs?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "记录 2 工作已完成，待复验" [level=2]:
+    - text: 记录 2
+    - generic: 工作已完成，待复验
+  - term: 空间
+  - definition: A018
+  - term: 当前版本
+  - definition: "3"
+  - paragraph: M5模拟维修事项：处理A018插座，安排后须工作完成及复验才能关闭。
+  - article:
+    - strong: 事项已建立 · 10/03 09:39
+    - paragraph: M5模拟维修事项：处理A018插座，安排后须工作完成及复验才能关闭。
+  - article:
+    - strong: 已安排 · 10/03 09:40
+    - paragraph: M5模拟安排执行人；不声明已完成或设施恢复。
+  - article:
+    - strong: 工作已完成，待复验 · 10/03 09:40
+    - paragraph: M5模拟：维修执行人声明工作已完成，尚未复验；设施不能自动恢复。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: M5反例：仅勾选复验通过但没有提交插座恢复事实，系统必须拒绝关闭并保留输入。
+  - group "经核实的空间事实":
+    - generic: 经核实的空间事实
+    - combobox:
+      - option "插座状况" [selected]
+      - option "照明状况"
+      - option "桌面状况"
+      - option "环境状况"
+      - option "有插座"
+      - option "靠窗"
+      - option "安静条件"
+      - option "无障碍通行"
+    - combobox:
+      - option "未知"
+      - option "正常"
+      - option "损坏" [selected]
+      - option "维修中"
+      - option "true"
+      - option "false"
+    - button "加入事实项"
+    - paragraph: 只提交亲自核实的事实；工作完成仍须复验，已知损坏的设施必须明确恢复正常。
+  - text: 维修执行人
+  - textbox "维修执行人": 演示维修人员
+  - checkbox "明确复验通过（仍须填实际设施事实）" [checked]
+  - text: 明确复验通过（仍须填实际设施事实）
+  - button "按事实复验"
+  - text: 同空间安全/维护来源ID
+  - spinbutton "同空间安全/维护来源ID": "0"
+  - text: 来源当前版本
+  - spinbutton "来源当前版本": "1"
+  - button "关联本维修限制"

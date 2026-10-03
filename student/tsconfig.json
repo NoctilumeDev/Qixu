@@ -1,0 +1,1 @@
+{"compilerOptions":{"target":"ES2022","module":"ESNext","moduleResolution":"Bundler","strict":true,"skipLibCheck":true,"sourceMap":true,"baseUrl":".","paths":{"@/*":["./src/*"]},"lib":["ESNext","DOM"],"types":["@dcloudio/types","vite/client"]},"include":["src/**/*.ts","src/**/*.d.ts","src/**/*.vue","../packages/client/src/**/*.ts"]}

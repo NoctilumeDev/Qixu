@@ -99,3 +99,43 @@ M2首次6例失败归于测试夹具编号/楼层目标不符，保留其FAIL后
 `559b13ca79782ad44fc6c63185ddf0b734e59763` 的native Plan2 PASS110，producer-bound `m4-live-0e54e4f2266447d3b4a0281fec8c6b58` 在真实未来round32725403冻结/发布和私有反馈、维修闭环后为execution ERROR/Core PENDING：治理通知POST422 INVALID_INPUT。探针statementUntil由Python当前微秒时间加24小时5分钟生成，违反既有Business.time的精确到秒要求；不是治理无法创建，也不放宽时间合同。原packet、请求/SQL测量、Bundle和runtime记录保留，own JVM26504已停止。
 
 最小修复将探针的公告期限在生成时对齐秒，保留24小时安全余量；同Plan1/live0.4新identity从fresh native producer复跑。实际跨天治理仍为native受控Clock证明，安装探针只观察正常Clock下陈述/提前收回拒绝/DISMISS，不冒充一天已流逝。
+
+## M5依赖首次失败 · 精确pin不满足官方peer
+
+main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固定版本3.0.0-5020420260813003要求@dcloudio/types精确3.4.31，而本项目从官方模板的^3.4.8错误收紧为3.4.8。分类工具链选型缺陷，未产生运行产物或页面资格。原报告/调试日志留存在`.tools/m5-first-failures/npm-peer-types/`；官方npm peer元数据重新读回后，只改types为3.4.31，不使用force或legacy-peer-deps绕过契约。后续恢复结果另记，不覆盖首次失败。
+
+依赖恢复首次安装退出0，锁文件产生；官方工具链带来phin/vue-i18n弃用警告，保留为后续依赖边界，不称所有供应链风险已消失。请求内核首10例通过后加4个施工反例，首次14例10通过4失败：旧GET异常未校验序号、无效key被送出后重载丢失、错key回执被当成提交成功、Cookie控制未知仍允许换号。原源码/测试/输出留`.tools/m5-first-failures/client-ownership/`。分类前三项为产品内核缺陷，第四项为未实现的可靠性保护；最小补充Cookie未知必须重载细则，保留原账号/未知提交合同，随后修复并按原14例复验。尚无页面或M5资格。
+
+## M5 · 请求恢复与多文档首败
+
+`private-recovery/`保存原合同、客户端和首轮输出。清除敏感正文后，未知请求不能在重载中凭空重放，也不能因为正文不可得就抹除原键。先补0.3恢复元数据/原子停止合同，再实现当前主体锁内屏障；原事实已成立则返回它，屏障只阻止尚未发生的原意图。
+
+真实双管理文档`m5-ui-live-4d171ba8c83a4907a2e1194a5216fb9a`的`first-cookie-multitab-owner.txt/jpg`观察到旧文档仍以空间管理员为标题，读到共享Cookie新主体的消息。分类产品所有者漂移；JS generation不能控制浏览器共享Cookie。最小补0.5：Cookie GET绑定当前CSRF所有者，不匹配409；其他文档控制广播清私有投影并要求重载。修复后`d59b13e2`的`cookie-other-document-stopped.txt/jpg`留存真实停止页，HTTP回归覆盖不同主体与同主体轮换。
+
+双文档恢复记录原用全量数组写回，会使旧文档清理抹掉新意图或使迟到失败复活已解决键。0.6改逐键不可变元数据、先持久化再发送、旧数组仅一次迁移；0.7区分单次4xx和整个意图结果，通过原子屏障结束确定拒绝。可控传输31项包含原键在途竞争、配额失败、迟到回写、旧主体和私有文件释放。它们是客户端机制见证，不冒充真实网络或真机。
+
+## M5 · 真实页面投影与上下文
+
+`m5-ui-live-d59b13e206294a16a3c0a612da850fde`保留两个首败：本人活动列表用活动PUBLISHED替代参与CONFIRMED且入口误用参与ID；管理活动行把缺space_id说成“批次资源池”。修复分别显示活动与本人参与状态，以event.id进入详情；地点/时间从合法场地绑定投影，不猜不存在的空间。后续`student-event-confirmed.jpg`、`1fa00800.../student-personal-event-corrected.jpg`与真实取消读回保留。
+
+`4d171ba8.../first-unlabeled-fields.txt/jpg`保留字段标签不足；`recovery-f06ddef82e37414d919431b0dccc0b7b/first-post-write-availability.jpg`保留写后旧可用性提示。页面补可识别字段名、空间code/name与换位关联，写后清旧可用性再读当前事实；错误/409保留输入，加载不展示假空结果。`0d6aa0b3.../student-map-return-context.txt/jpg`实际观察390px搜索A018、座位筛选、150%地图进入详情再返回仍保持条件/缩放；离开私有报告后DOM中blob原图数为0。属于施工页面观察，不继承最终M10视觉资格。
+
+## M5 · 私有照片运行污染与维修动作首败
+
+`m5-ui-live-1fa00800d52143f086488b48557d00cb/first-private-photo-download.txt/jpg`：照片上传成立、服务器字节有效，刷新却INVALID_RESPONSE。临时诊断观察传输为JSON，与当前FILE源码矛盾。保留旧进程坐标和原日志后，只重启owned学生Node；当前源码实际下载并显示1200×800原图，管理员绑定下载也成立。分类开发服务器共享workspace缓存污染；两端Vite直接alias到共享源码，避免node_modules忽略HMR，诊断已移除。不能把该现象归为已证明的iOS/Android下载故障。
+
+同身份的`first-repair-assign-empty-reports.txt/jpg`观察ASSIGN因页面发送空reports被422拒绝。分类动作字段契约缺陷；0.9明确仅LINK_REPORTS消费引用，其他动作空/缺省可用、非空拒绝，页面仅发送所需字段。新增真实HTTP/MySQL反例`repairActionsAcceptEmptyReferencesButOnlyLinkActionCanAttachReports`，非空隐藏关联422且无版本/审计变化；空列表安排→工作完成→明确复验通过闭环。
+
+`m5-ui-live-0d6aa0b3fc184342858f37f370f0d3ba`实际页面工作完成仍待复验；缺设施恢复事实409 REPAIR_FACT_REQUIRED、输入保留，记录为正确拒绝，不删保护。补outlet=true与outletCondition=WORKING才复验关闭，学生读回RESOLVED。实际SQL终态`m5-sql-readback-a67e5c0e0a884bf3a6b31096a76a02a4`退出0：feedback1 RESOLVED/v4、repair1 VERIFIED_CLOSED/v4、公开设施WORKING，6份反馈通知均已有站内投递；不把delivered称为read，不把模拟维修称为现场维修。查询输出SHA256 `15db42f3c0be9076f5183dad2c9621be8e29e1afaa28de62c9a9d5d7fabc92b0`。
+
+两次SQL测量器`1d71f7ad351840d6add598a1c91b34b8`、`9e0256839a7246b0be4a9f657c02f47b`错误猜notification_outbox.aggregate_key/status，退出1原输出保留；按实际DDL recipient_id/event_key/created_at/delivered_at修测量，不是产品失败，也不升级原部分观察。
+
+## M5 · 当前施工恢复坐标
+
+固定源码`07ece2f2b936ac9ee1649bc11dd73eff7e4d005b`原生`m5-a4998661d43e41c880c08c57b0f95ade`PASS126，前端`m5-frontend-a1f439a381504e238d9421a3fe0a32bc`PASS31及H5/微信/admin构建。安装浏览器`m5-browser-3fe31f03dadf45739f48ba448c518071`保留私有服务初始化首败（尚未建立Handler.server）、修复后的17份固定产物DOM/截图及Core FAIL：两条观察器字面预期错误。页面实际为“输入保留”和“身份或当前管理范围不允许”，不是观察器猜测的文案。原raw字节不改，另seal `m5-browser-remeasure-a55953076fd24982b9f90f3756521a1b`对固定旧捕获重测PASS；明确不是新浏览器执行、不是全部业务语义证明。
+
+截图复核发现独立产品问题：390px管理员从维修表单底部提交，409提示位于顶部但没进入当前视口。首次`repair-missing-fact.png/txt`保留；后端正确拒绝、输入确实保留，仍不足以说明错误可见。最小修复在错误呈现后聚焦/滚动提示，学生页同步确保顶端提示可见；保留字段与业务拒绝规则。受影响前端从新固定候选构建并实页复验，不用旧PASS升级修改后页面。
+
+正常Clock下真实UI产生A018短约取消、收藏、范围管理员批准场地3→活动2发布、活动1重约/取消、反馈2附私有图→核实→维修2安排/工作完成→缺恢复事实409→复验关闭。SQL `m5-sql-readback-73118bba5560439ebd781e8f890770ab`退出0并核对对应终态；错误查询JSON顶层outletCondition得到NULL，后续`f2502921342b4cc8a48d59c4aabb32cf`按实际完整profile读回`conditions.outletCondition=WORKING`。不得把第一次NULL冒充设施未知或产品失败。通知6份已投递站内，未把投递称为已读。模拟图片和维修不代表实际场馆或维修事实。
+
+隔离真实MySQL施工`m5-client-tests-548496199cac43ca9bab2bfa28e7ba6d`61项执行成功，source ZIP `2de57a4247dfcd94d4ef4bcf29c3af7fe40981a7fd5b04b52475799346a000b1`。干净前端副本`m5-frontend-clean-2b9f7d8a13ac4079a9afdf6ad222ab35`npm ci、31项请求机制、两端类型检查、H5/微信/admin构建退出0，source ZIP `a19e62c36aad2c269d1377355cc1ee2a596b268af20e7dd5d6da50ff53fdb405`。此后还有加载提示与按钮小修，因此不能把该构建当最后候选；正式M5需固定提交、预封存Plan、全回归、构建及新鲜安装页面读回和公开门禁。以上均不称M5已资格闭合。

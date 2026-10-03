@@ -29,6 +29,14 @@ public class LongSeats {
     }
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public Map<String,Object> mine(long user,long batch) {return p.mine(user,batch);}
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
+    public Map<String,Object> minePage(long user,int page) {
+        if(page<1||page>10000)throw DomainException.invalid("页码须在1至10000之间。");
+        var jdbc=p.business().jdbc;
+        long total=jdbc.queryForObject("SELECT COUNT(*) FROM preparation_application WHERE user_id=?",Long.class,user);
+        var items=jdbc.queryForList("SELECT batch_id FROM preparation_application WHERE user_id=? ORDER BY id DESC LIMIT 20 OFFSET ?",user,(page-1)*20).stream().map(row->p.mine(user,Business.number(row,"batch_id"))).toList();
+        return Map.of("items",items,"total",total,"page",page,"size",20);
+    }
     private void published(Map<String,Object> batch) {
         PreparationBatches.state(batch,"RESULT_PUBLISHED");
         if(!p.business().now().isBefore(Business.date(batch,"cycle_ends_at")))throw Business.conflict("CYCLE_ENDED","本周期已结束，旧要约不能恢复使用权。");

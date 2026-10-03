@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-2026-10-03：**M0文档与M1–M4限定API/MySQL范围已验收，M5两端页面进入合同阶段**。长期分配有真实未来来源和独立复算；冲突、私有反馈、维修复验与明确治理有受保护主线及fresh原生/安装证据。两端页面尚未实现，参考图不是产品运行截图。首次失败、修复和门禁见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)；阶段PASS不代表整个工程完成。
+2026-10-03：**M0文档与M1–M4限定API/MySQL范围已验收，M5两端真实页面施工与验收中，尚未取得阶段资格**。长期分配有真实未来来源和独立复算；冲突、私有反馈、维修复验与明确治理有受保护主线及fresh原生/安装证据。两端已实现主流程并进行真实浏览器核对，参考图仍不是产品运行截图。当前先保证可用性、素材展示与合理结构，最终视觉精修新增为[M10](docs/contracts/frontend-refinement.md)。首次失败、修复和门禁见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)；阶段PASS不代表整个工程完成。
 
 | 部分 | 设计方向 |
 | --- | --- |

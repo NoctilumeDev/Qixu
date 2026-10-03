@@ -31,12 +31,13 @@ public class VenueRequests {
     }
     public Map<String,Object> detail(Actor actor,long id) {
         var row=b.row("venue_request",id); if(Business.number(row,"user_id")!=actor.id()) b.admin(actor,Business.number(row,"floor_id"));
-        return b.view(row);
+        return named(row);
     }
-    public List<Map<String,Object>> mine(Actor actor) { return b.jdbc.queryForList("SELECT * FROM venue_request WHERE user_id=? ORDER BY id DESC LIMIT 100",actor.id()).stream().map(b::view).toList(); }
+    private Map<String,Object> named(Map<String,Object> row) {var view=b.view(row);var space=rights.space(Business.number(row,"space_id"));view.put("code",space.get("code"));view.put("name",space.get("name"));return view;}
+    public List<Map<String,Object>> mine(Actor actor) { return b.jdbc.queryForList("SELECT * FROM venue_request WHERE user_id=? ORDER BY id DESC LIMIT 100",actor.id()).stream().map(this::named).toList(); }
     public List<Map<String,Object>> pending(Actor actor) {
         if(!actor.role().equals("ADMIN")) throw DomainException.forbidden();
-        return b.jdbc.queryForList("SELECT v.* FROM venue_request v JOIN admin_scope s ON v.floor_id=s.floor_id WHERE s.user_id=? ORDER BY v.created_at DESC LIMIT 200",actor.id()).stream().map(b::view).toList();
+        return b.jdbc.queryForList("SELECT v.* FROM venue_request v JOIN admin_scope s ON v.floor_id=s.floor_id WHERE s.user_id=? ORDER BY v.created_at DESC LIMIT 200",actor.id()).stream().map(this::named).toList();
     }
     @Transactional(isolation=Isolation.READ_COMMITTED)
     public Map<String,Object> decide(AuthService.Session session,long id,String key,Decision body,String requestId) {

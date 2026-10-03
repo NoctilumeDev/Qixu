@@ -1,0 +1,42 @@
+- generic: 空间地图
+- text: 图书馆 · 三楼 · 学习与研讨
+- button "上一层" [disabled]
+- button "下一层"
+- searchbox "搜索编号或空间名称": A018
+- button "查找"
+- button "全部条件"
+- button "靠窗"
+- button "有插座"
+- button "安静"
+- button "无障碍"
+- button "全部空间"
+- button "座位"
+- button "研讨室"
+- button "报告厅"
+- button "切换列表"
+- button "缩小"
+- generic: 200%
+- button "放大" [active]
+- button "复位"
+- generic "演示数据坐标图，下面提供列表入口":
+  - button "A018 短期预约": "18"
+- generic: 绿：短约
+- generic: 灰蓝：长期批次
+- generic: 米色：场地
+- generic: 位置为演示数据坐标；颜色表示使用规则，未查询时段可用性。
+- generic: 1个可选择空间符合当前公开条件。可用时段需在详情查询。
+- button "A018 · 西区单人位 18 座位 · 短期预约 插座 无障碍":
+  - generic: A018 · 西区单人位 18
+  - generic: 座位 · 短期预约
+  - generic: 插座
+  - generic: 无障碍
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

@@ -66,6 +66,8 @@ public class SessionFilter extends OncePerRequestFilter {
                 String token=bearer?authorization.substring(7):null;
                 if (!bearer && request.getCookies()!=null) for (Cookie cookie:request.getCookies()) if (cookie.getName().equals("qixu_session")) token=cookie.getValue();
                 var session=auth.authenticate(token);
+                if(!bearer && Set.of("GET","HEAD").contains(request.getMethod()) && !path.equals("/api/v1/auth/session") && request.getHeader("X-CSRF-Token")!=null && !Digests.equal(session.csrf(),request.getHeader("X-CSRF-Token")))
+                    throw new DomainException(409,"SESSION_OWNER_CHANGED","浏览器会话已由其他页面变更，请重新加载并核对身份。");
                 if (!bearer && !Set.of("GET","HEAD","OPTIONS").contains(request.getMethod()) && !Digests.equal(session.csrf(),request.getHeader("X-CSRF-Token"))) {
                     throw new DomainException(403,"CSRF_REQUIRED","页面会话已变化，请刷新后重试。");
                 }
