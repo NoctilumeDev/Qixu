@@ -124,7 +124,7 @@ def main() -> int:
     identity = args.stage + "-" + uuid.uuid4().hex
     output = ROOT / "artifacts/local" / identity
     output.mkdir(parents=True, exist_ok=False)
-    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.14"}.get(args.stage, "qixu-native/0.6")
+    collector = {"m3": "qixu-native/0.8", "m4": "qixu-native/0.10", "m5": "qixu-native/0.11", "m6": "qixu-native/0.12", "m7": "qixu-native/0.15"}.get(args.stage, "qixu-native/0.6")
     request = {"source_sha": sha, "stage": args.stage, "collector": collector}
     required = ["dev.noctilume.qixu.FoundationIT." + name for name in FOUNDATION_CASES]
     if args.stage in ("m2", "m3", "m4", "m5", "m6", "m7"):
@@ -143,6 +143,7 @@ def main() -> int:
         request["migration_sha256"]={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/"backend/src/main/resources/db/migration").glob("*.sql"))}
         request["contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-execution-entry.md").read_bytes()).hexdigest()
         request["metadata_oracle_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-metadata-oracle.md").read_bytes()).hexdigest()
+        request["restore_contract_sha256"]=hashlib.sha256((ROOT/"docs/contracts/m7-restore-fence.md").read_bytes()).hexdigest()
     spec = {"id": "native-observation", "contract": {"id": "qixu-native", "version": collector.split("/")[1]},
             "evidence_type": "qixu.native.observation", "coordinates": request,
             "projections": ["source_sha", "source_clean", "command_exit", "tests", "observations", "package"],
@@ -174,7 +175,7 @@ def main() -> int:
         for key, value in measures.items():
             assertions.append(assertion("db-" + str(len(assertions)), f"/facts/observations/{case}/database/{key}", value))
     plan = seal_acceptance_plan({
-        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 2}.get(args.stage, 6),
+        "plan_kind": "ACCEPTANCE", "schema_version": "0.1", "plan_id": "qixu-native-" + args.stage, "version": {"m3": 8, "m4": 2, "m5": 1, "m6": 1, "m7": 3}.get(args.stage, 6),
         "subject": {"id": "qixu-" + args.stage, "version": sha, "source_ref": "github:NoctilumeDev/Qixu"},
         "question": "Do the declared native stage witnesses pass at the exact clean coordinate with real HTTP and dedicated MySQL?",
         "governance": {"claim_owner_ref": "human:repository-owner", "drafter_ref": "qixu:native-adapter", "seal_authority_ref": "human:repository-owner:authorized-engineering-goal", "seal_decision": "CONFIRMED"},
