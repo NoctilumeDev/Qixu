@@ -1,0 +1,102 @@
+{
+  "boundary": "M6_LIMITED_HTTP_MYSQL_REAL_ISOLATED_IDENTITY_RESTART_NOT_SSO_BACKUP_DEVICE_OR_WHOLE_PROJECT",
+  "runtime_source_sha": "5ca0b5ee6c52e14bdc12585f90d849b238992787",
+  "entries": [
+    {
+      "identity": "m5-frontend-45e53e50325b40e29038d5bc51e743ac",
+      "subject": {
+        "id": "qixu-m5-frontend",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "0dfd05fb9d877c759b36b360914cdaeb9b16c23604112b07e1cd6691aef80a41",
+      "kind": "FRESH_EXACT_MAIN_EXECUTION"
+    },
+    {
+      "identity": "m5-frontend-7456ed00b8b04cfab484f0552d506ec9",
+      "subject": {
+        "id": "qixu-m5-frontend",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "da0570cb71815ffd4ae4f175c2bd51f342e6bbbf"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "d7bd7c0999058bf9ba42bb6b76d57565a3fe9904e1f5280005ce7256e7b19f61",
+      "kind": "ORIGINAL_CANDIDATE_EXECUTION"
+    },
+    {
+      "identity": "m6-33f26c5c191742c7affd97a86d9c3bd3",
+      "subject": {
+        "id": "qixu-m6",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "da0570cb71815ffd4ae4f175c2bd51f342e6bbbf"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "494584df87530d7439e00bf556ad8a58f58df60cdf868187204675b60521ab9d",
+      "kind": "ORIGINAL_CANDIDATE_EXECUTION"
+    },
+    {
+      "identity": "m6-48c7e3f66545411f97e219e9f7202f01",
+      "subject": {
+        "id": "qixu-m6",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "71a6c57b414e434ee3cb8c9714380cc4c7a71cfe2713fe592c337619a2772de3",
+      "kind": "FRESH_EXACT_MAIN_EXECUTION"
+    },
+    {
+      "identity": "m6-installed-27f9ad8162e24a88b8eeb3cb1a9f3827",
+      "subject": {
+        "id": "qixu-m6-installed",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "da0570cb71815ffd4ae4f175c2bd51f342e6bbbf"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "61869e535ddff384df13607e5c679a373f4a3845838089175c2b57792699e8a7",
+      "kind": "ORIGINAL_CANDIDATE_EXECUTION"
+    },
+    {
+      "identity": "m6-installed-95fcabede37d4929b198d73581d0ad12",
+      "subject": {
+        "id": "qixu-m6-installed",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "5ca0b5ee6c52e14bdc12585f90d849b238992787"
+      },
+      "verdict": "PASS",
+      "execution_status": "COMPLETED",
+      "manifest_sha256": "c0e6fe6539e4e3eb3043dd84f1ccaa2f2f3e67e79484f9a7971bb9cb5e9fcce4",
+      "kind": "FRESH_EXACT_MAIN_EXECUTION"
+    },
+    {
+      "identity": "m6-installed-ddee3c99b17546dd9a0d06e3e075fbc0",
+      "subject": {
+        "id": "qixu-m6-installed",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "c2b8151f93beddbe26e061ea004e792abc33ebd0"
+      },
+      "verdict": "PENDING",
+      "execution_status": "ERROR",
+      "manifest_sha256": "6ee1490a82094dfc9cfa1eec9ba6b5297a1bd173f28e24c545ba4fa4411bba95",
+      "kind": "ORIGINAL_CANDIDATE_EXECUTION"
+    },
+    {
+      "identity": "m6-installed-fa1d847cab1d45dd83a40b755cf9d3a5",
+      "subject": {
+        "id": "qixu-m6-installed",
+        "source_ref": "github:NoctilumeDev/Qixu",
+        "version": "32a5bb531d65047ff1d42accb7b400281930709f"
+      },
+      "verdict": "PENDING",
+      "execution_status": "ERROR",
+      "manifest_sha256": "7f51a48da4b93bf044d2d138b7de5af8590124853fd67c36907211c2955c24e2",
+      "kind": "ORIGINAL_CANDIDATE_EXECUTION"
+    }
+  ]
+}
