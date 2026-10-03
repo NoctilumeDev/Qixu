@@ -282,6 +282,27 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-commit-ea058a4436a2487ea7dfb27ce76ef7c5",
       "manifest_sha256": "3c76878bd837d84a3bf96d2c77b2bcc2e43492b9d67826e61210b5f96f031aba"
+    },
+    {
+      "identity": "m7-ef239fee08b84a95871192a34ffd3666",
+      "source_sha": "3dae690f0cf4baea3f3a5b2fc647c71012c67c6d",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-ef239fee08b84a95871192a34ffd3666",
+      "manifest_sha256": "27ddacc95017f9d9e0b130f2067a430200849157aad7bd8cf76fdce369b04bbc"
+    },
+    {
+      "identity": "m7-frontend-b07725a265764dbc97ff294aed78f7d5",
+      "source_sha": "3dae690f0cf4baea3f3a5b2fc647c71012c67c6d",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-b07725a265764dbc97ff294aed78f7d5",
+      "manifest_sha256": "225318709b7681d9b8085f839f45898594fac3ddf26c0410c6ae2210fdf6ada2"
+    },
+    {
+      "identity": "m7-browser-238ae91b8fc040b8b6f57ecc6a50ba01",
+      "source_sha": "3dae690f0cf4baea3f3a5b2fc647c71012c67c6d",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-browser-238ae91b8fc040b8b6f57ecc6a50ba01",
+      "manifest_sha256": "fcb05c596cff661ecd59f6b7ac5a3ac592971114cab1ed2c2bee6480b9d06e1e"
     }
   ],
   "not_proven": [

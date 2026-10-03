@@ -13,3 +13,9 @@
 停止条件：双权、他人消息/旧主体泄漏、UNKNOWN被清除、旧key丢失、无分页、按钮无法操作立即保留首次证据；M10后置不豁免这些可用性问题。公开仅捕获摘要/文字存在/SQL计数及清理，不公开账号token、原键或私有正文。新缺陷先冻结最小修复，不改原标准。
 
 边界：实际浏览器存储拒绝/配额、浏览器原生晚Set-Cookie未在此夹具控制，保留模型45见证与NOT_PROVEN实际策略；源生产多节点/原生微信/现实空间照片未证明。重入归期序维护者，具备相应设备/多标签页调度夹具/存储策略环境后重开F08/F09；不得把模型与正常浏览器合并为所有浏览器已证明。
+
+## 观察前提修订1.1
+
+3dae690原native173/frontend45通过，但`m7-browser-238ae91b8fc040b8b6f57ecc6a50ba01`在初始化后、DB启动前发生FileExistsError：采集器stdout与MySQL log-error同名。原Plan/ERROR/PENDING及四端口已释放事实保留；零页面不获得任何产品资格。
+
+先固定最小采集修复：stdout使用独立`.stdout.private.log`；未建立fixture-facts或任一必需capture缺少时，最终观察必须产生coverage ERROR和execution ERROR的原Bundle，不靠异常退出丢记录。观察器0.2/Plan2保持原14状态/文字/SQL/清理断言不变，只有故障证据保留行为和采集坐标版本变化；不得因此修改产品或放宽分页与UNKNOWN要求。
