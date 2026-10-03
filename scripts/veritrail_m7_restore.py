@@ -4,7 +4,7 @@ Never connects to host3306, never adopts a process by port, never uses shared DB
 credentials. Restore operates only on a newly created schema inside this run.
 """
 from __future__ import annotations
-import argparse,json,os,secrets,shutil,socket,subprocess,time,urllib.request,urllib.error,uuid
+import argparse,hashlib,json,os,re,secrets,shutil,socket,subprocess,time,urllib.request,urllib.error,uuid
 from datetime import datetime,timedelta,timezone
 from pathlib import Path
 from importlib.metadata import version
@@ -14,12 +14,47 @@ from veritrail.canonical import sha256_json
 from m7_producer_binding import bind,digest
 
 ROOT=Path(__file__).resolve().parents[1]
-COLLECTOR='qixu-m7-restore/0.3'
+COLLECTOR='qixu-m7-restore/0.4'
 MYSQL_PORT=6976;APP_PORT=6975;SCHEMA='qixu_restore'
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT,text=True).strip()
 def write(path,value):
     with Path(path).open('x',encoding='utf-8',newline='\n') as f:json.dump(value,f,ensure_ascii=False,sort_keys=True,indent=2);f.write('\n')
+
+def independent_ledger(path,generation_rows,marker_rows):
+    """Read the stopped instance's complete chain, independently of product code.
+
+    Unreadable/malformed inputs are observation errors, never empty marker sets.
+    """
+    with path.open('rb') as stream:raw=stream.read(32*1024*1024+1)
+    if not raw or len(raw)>32*1024*1024 or not raw.endswith(b'\n'):raise RuntimeError('Independent ledger byte budget/termination invalid')
+    text=raw.decode('ascii')
+    if not re.fullmatch(r'[A-Za-z0-9_|\-\n]+',text):raise RuntimeError('Independent ledger alphabet invalid')
+    lines=text[:-1].split('\n')
+    if len(lines)>200_000:raise RuntimeError('Independent ledger event budget exhausted')
+    states={};chain='0'*64;generation=baseline=None
+    for index,line in enumerate(lines):
+        fields=line.split('|')
+        if len(fields)!=6 or fields[0]!=str(index) or fields[4]!=chain or fields[5]!=hashlib.sha256('|'.join(fields[:5]).encode('ascii')).hexdigest():raise RuntimeError('Independent ledger chain invalid')
+        if not re.fullmatch(r'[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',fields[2]):raise RuntimeError('Independent ledger UUID invalid')
+        if index==0:
+            if fields[1]!='QXJ1' or not re.fullmatch(r'[a-f0-9]{64}',fields[3]):raise RuntimeError('Independent ledger header invalid')
+            generation,baseline=fields[2:4]
+        else:
+            event,transaction=fields[1:3]
+            if fields[3]!=generation:raise RuntimeError('Independent ledger generation changed')
+            if event=='PREPARE':
+                if transaction in states:raise RuntimeError('Independent ledger duplicate preparation')
+                states[transaction]='PREPARE'
+            elif event in ['COMMIT','ROLLBACK','RECOVER_COMMIT'] and states.get(transaction)=='PREPARE':states[transaction]='ROLLBACK' if event=='ROLLBACK' else 'COMMIT'
+            else:raise RuntimeError('Independent ledger terminal invalid')
+        chain=fields[5]
+    generations=[line.split('\t') for line in generation_rows.splitlines()]
+    markers=[line.split('\t') for line in marker_rows.splitlines()]
+    if len(generations)!=1 or any(len(row)!=2 for row in generations+markers) or len(markers)>200_000:raise RuntimeError('Independent SQL projection malformed/incomplete')
+    marker_ids={row[0] for row in markers};committed={key for key,state in states.items() if state=='COMMIT'}
+    equal=(generations[0]==[generation,baseline] and len(marker_ids)==len(markers) and all(row[1]==generation for row in markers) and marker_ids==committed and 'PREPARE' not in states.values())
+    return {'equal':equal,'marker_count':len(markers),'committed_count':len(committed),'rollback_count':sum(state=='ROLLBACK' for state in states.values()),'event_count':len(lines),'journal_sha256':hashlib.sha256(raw).hexdigest()}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--producer-bundle',type=Path,required=True);p.add_argument('--java',type=Path,required=True);p.add_argument('--mysql-bin',type=Path,required=True)
@@ -38,10 +73,11 @@ def main():
     installed=out/'qixu-api.jar';shutil.copy2(jar,installed)
     if digest(installed)!=producer['jar_sha256']:raise RuntimeError('Jar copy changed bytes')
     coord={'source_sha':source,'collector':COLLECTOR,'collector_sha256':digest(Path(__file__)),'producer_manifest_sha256':producer['manifest_sha256'],'jar_sha256':digest(installed),'restore_contract_sha256':digest(ROOT/'docs/contracts/m7-restore-fence.md'),'migration_sha256':{f.name:digest(f) for f in sorted((ROOT/'backend/src/main/resources/db/migration').glob('*.sql'))},'mysql_exe_sha256':digest(binary['mysqld']),'java_exe_sha256':digest(a.java)}
-    spec={'id':'restore','contract':{'id':'qixu-m7-restore','version':'0.3'},'evidence_type':'qixu.m7.restore','coordinates':coord,'projections':['source_sha','producer','normal','restored','missing_journal','world','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
+    spec={'id':'restore','contract':{'id':'qixu-m7-restore','version':'0.4'},'evidence_type':'qixu.m7.restore','coordinates':coord,'projections':['source_sha','producer','normal','restored','missing_journal','world','cleanup'],'canonicalization_profile':'veritrail-json-c14n/1'}
     expected={'/source_sha':source,'/source_clean':True,'/producer/bytes_checked':True,'/normal/create_status':200,'/normal/receipt_equal_after_restart':True,'/world/original_notification_observed':True,'/world/witness_unchanged_after_restore':True,'/restored/health_status':503,'/restored/health_code':'NOT_RECONCILED','/restored/competitor_status':503,'/restored/receipt_status':503,'/restored/replay_status':503,'/restored/reservations_after':0,'/restored/inbox_after':0,'/missing_journal/health_status':503,'/missing_journal/health_code':'NOT_RECONCILED','/missing_journal/receipt_status':503,'/cleanup/all_owned_stopped':True}
+    expected.update({'/missing_journal/consistent_health_status':200,'/missing_journal/consistent_receipt_equal':True,'/missing_journal/consistent_ledger_equal':True,'/missing_journal/journal_existed_before_removal':True})
     assertions=[{'id':'restore-'+str(i),'severity':'HARD','left':{'requirement_id':'restore','path':'/facts'+path},'operator':'eq','right':value} for i,(path,value) in enumerate(expected.items())]
-    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m7-restore','version':3,'subject':{'id':'qixu-m7-restore','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does a restored database or missing independent ledger quarantine authority rather than silently replay committed rights?','governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:m7-restore-collector','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'restore','observation_spec_id':'restore','cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'restore','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':600},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu F12 single-instance recovery','consumers':['M7-restore']},'reproduction_steps':['Use exact clean source and its original native0.16/Plan4 PASS Bundle with fresh jar.','Run this collector with the pinned Windows Java/MySQL binaries; it creates a new owned data directory and schema, seals before initialization, captures T0 and independent T1 witness, stops owned processes, restores T0 and probes quarantine.'],'cleanup_steps':['Only verified Popen child handles, exe and data-directory/jar coordinates may be stopped.','Retain all dump, private packets, world witness and immutable Bundle; no host database or other service is touched.']})
+    plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m7-restore','version':4,'subject':{'id':'qixu-m7-restore','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does a restored database or missing independent ledger quarantine authority rather than silently replay committed rights?','governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:m7-restore-collector','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'restore','observation_spec_id':'restore','cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'restore','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':600},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu F12 single-instance recovery','consumers':['M7-restore']},'reproduction_steps':['Use exact clean source and its original native0.16/Plan4 PASS Bundle with fresh jar.','Run this collector with the pinned Windows Java/MySQL binaries; it creates a new owned data directory and schema, seals before initialization, captures T0 and independent T1 witness, stops owned processes, restores T0 and probes quarantine; restores a current T1, independently proves complete ledger equality, then removes only the ledger and probes quarantine.'],'cleanup_steps':['Only verified Popen child handles, exe and data-directory/jar coordinates may be stopped.','Retain all dump, private packets, world witness and immutable Bundle; no host database or other service is touched.']})
     write(out/'sealed-plan.json',plan);write(out/'coordinate.json',coord)
     facts={'source_sha':source,'producer':producer,'normal':{},'restored':{},'missing_journal':{},'world':{},'requests':[],'boundary':'OWN_PHYSICAL_PROCESS_LOGICAL_T0_RESTORE_NOT_HOST_DISK_FAILURE_MULTI_NODE_OR_WECHAT'}
     children=[];logs=[];db=None;app=None;execution='COMPLETED';completed=False;root_password='';app_password=secrets.token_hex(24);sequence=0
@@ -138,16 +174,22 @@ def main():
         if not inbox:raise RuntimeError('Original standing notification not observed within budget')
         witness=runtime/'observed-world.json';write(witness,{'receipt':original,'inbox':inbox});world_hash=digest(witness);facts['world'].update({'original_notification_observed':True,'witness_sha256':world_hash});t1=dump('T1')
         stop(app);app_start();status,value=request('GET','/api/v1/receipts/'+key,token=tokens[0]);facts['normal']['receipt_equal_after_restart']=status==200 and value.get('data',{}).get('result')==original
-        stop(app);stop(db);db_start();restore(t0);progress('T0_RESTORED_WITH_EXTERNAL_WORLD_RETAINED');status,value=app_start()
+        stop(app);t1_current=dump('T1-after-normal-restart');stop(db);db_start();restore(t0);progress('T0_RESTORED_WITH_EXTERNAL_WORLD_RETAINED');status,value=app_start()
         facts['restored'].update({'health_status':status,'health_code':value.get('error',{}).get('code',value.get('data',{}).get('recoveryState','MISSING'))})
         status,_=request('POST','/api/v1/reservations',body,tokens[1],'m7_restored_competing_booking');facts['restored']['competitor_status']=status
         status,_=request('GET','/api/v1/receipts/'+key,token=tokens[0]);facts['restored']['receipt_status']=status
         status,_=request('POST','/api/v1/reservations',body,tokens[0],key);facts['restored']['replay_status']=status
         time.sleep(12);facts['restored']['reservations_after']=int(sql('SELECT COUNT(*) FROM qixu_restore.short_reservation;'));facts['restored']['inbox_after']=int(sql('SELECT COUNT(*) FROM qixu_restore.inbox;'));facts['world']['witness_unchanged_after_restore']=digest(witness)==world_hash
-        stop(app);restore(t1)
+        stop(app);restore(t1_current)
+        progress('CONSISTENT_DB_LEDGER_POSITIVE_CONTROL');status,value=app_start()
+        facts['missing_journal']['consistent_health_status']=status
+        status,value=request('GET','/api/v1/receipts/'+key,token=tokens[0]);facts['missing_journal']['consistent_receipt_equal']=status==200 and value.get('data',{}).get('result')==original
+        stop(app)
+        comparison=independent_ledger(journal,sql('SELECT generation,baseline_hash FROM qixu_restore.recovery_generation ORDER BY id;'),sql('SELECT transaction_id,generation FROM qixu_restore.recovery_marker ORDER BY transaction_id LIMIT 200001;'))
+        facts['missing_journal']['consistency_control']=comparison;facts['missing_journal']['consistent_ledger_equal']=comparison['equal']
         facts['missing_journal']['journal_existed_before_removal']=journal.is_file()
         if journal.exists():journal.rename(runtime/'transactions-retained.original.journal')
-        progress('CONSISTENT_DB_WITH_MISSING_JOURNAL');status,value=app_start();facts['missing_journal'].update({'health_status':status,'health_code':value.get('error',{}).get('code',value.get('data',{}).get('recoveryState','MISSING'))})
+        progress('ONLY_JOURNAL_REMOVED_DB_UNCHANGED');status,value=app_start();facts['missing_journal'].update({'health_status':status,'health_code':value.get('error',{}).get('code',value.get('data',{}).get('recoveryState','MISSING'))})
         status,_=request('GET','/api/v1/receipts/'+key,token=tokens[0]);facts['missing_journal']['receipt_status']=status;completed=True
     except Exception as error:
         execution='ERROR';facts['collection_error']={'kind':type(error).__name__,'message':str(error)[:200]}
