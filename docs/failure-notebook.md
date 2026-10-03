@@ -213,3 +213,9 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 独立复核发现第二trace不能宣称“只缺账册”：T1 dump在正常重启前已有5个marker，正常重启中的demo seed新提交使外部journal已有6个COMMIT；随后恢复T1再移走journal时，另有回退事务的混杂。原Core PASS只证明封存的18项已观察投影，不能扩展为未封存的前提已成立。分类采集前提缺口，保留原包，未把PASS改写为FAIL，独立纯缺账册资格仍NOT_PROVEN。
 
 版本化观察入口补一致性控制：正常重启后停止owned应用并新采T1；T0负向后恢复该T1，先实际读到健康/原回执，再停止应用核对独立journal链与DB全部marker/generation一致，仅移走journal后重启。原18断言保留，额外要求此控制成立与原账册真实存在。产品源码不因该夹具问题改变。
+
+## M7 F12 · 独立缺账册前提恢复
+
+ec31a60的fresh native162与restore0.4/Plan4 [PASS22](../artifacts/m7/m7-restore-26c39280202643e386b1a13b0734a991/acceptance-report.md)：新T1在正常重启后停止应用采集，第二trace恢复后实际200/同回执；独立链与SQL全部marker/generation一致（7 COMMIT、7 marker、0未决），随后只移走存在账册而不再恢复DB，健康/回执均503 NOT_RECONCILED。原18断言未变，新增4个前提均成立，纯缺账册限定资格补齐；原混杂PASS不变。
+
+共享服务复核第一次使用Get-Process.StartTime时受保护MySQL返回null且100ns格式不匹配，原命令/不完整快照保留，不据此宣称相同。改用CIM CreationDate与原捕获同六位精度，真实核对3306/6947/7897的PID和启动时间一致、owned6975/6976无监听，未执行任何共享停止。此为观察接线纠正，非产品修复。

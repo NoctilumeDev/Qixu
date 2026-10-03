@@ -1,5 +1,5 @@
 {
-  "phase": "M7_IN_PROGRESS_ENTRY_AND_METADATA_ORACLE",
+  "phase": "M7_IN_PROGRESS_RESTORE_AND_PROTOCOL",
   "entry_contract": "docs/contracts/m7-execution-entry.md",
   "repair_source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
   "bundles": [
@@ -100,15 +100,34 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-restore-96c40b10e55547159489bacc8a73d930",
       "manifest_sha256": "cfb402ef09744d3b02fbf020c4fb6acd23882fa77158d58bde6c444209c37f37"
+    },
+    {
+      "identity": "m7-79dc36b8f9914d519173345021cf9f44",
+      "source_sha": "ec31a60f475d14835d37958a668513deaf094010",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-79dc36b8f9914d519173345021cf9f44",
+      "manifest_sha256": "32e882acec8d3adb1be81f0ebe85615e070a9fa7c08ceb4ca4483400659c04f7"
+    },
+    {
+      "identity": "m7-restore-26c39280202643e386b1a13b0734a991",
+      "source_sha": "ec31a60f475d14835d37958a668513deaf094010",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-26c39280202643e386b1a13b0734a991",
+      "manifest_sha256": "71f29ed6ccdabe5ec4b5f325df7b1c7721a5f5addfb8d0a20f1d178d77eb7132"
     }
   ],
   "not_proven": [
     "whole M7",
     "installed browser storage and inbox paging",
-    "backup recovery and independent side-effect reconciliation",
     "WeChat device",
-    "production capacity"
+    "production capacity",
+    "whole-host rollback and privileged DB/file tampering",
+    "multi-node recovery and physical power loss",
+    "real transaction nesting and marker visibility controls"
   ],
   "metadata_oracle_contract": "docs/contracts/m7-metadata-oracle.md",
-  "metadata_repair_source_sha": "a3245e17edc116810d01bd8f800cf5102ed71caa"
+  "metadata_repair_source_sha": "a3245e17edc116810d01bd8f800cf5102ed71caa",
+  "restore_contract": "docs/contracts/m7-restore-fence.md",
+  "restore_repair_source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
+  "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010"
 }
