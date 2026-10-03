@@ -1,0 +1,49 @@
+{
+  "phase": "M7_IN_PROGRESS_FIRST_ENTRY_ONLY",
+  "entry_contract": "docs/contracts/m7-execution-entry.md",
+  "repair_source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
+  "bundles": [
+    {
+      "identity": "m7-3a768c84c51f4c57a6dc0092e2223919",
+      "source_sha": "e78f0b4de18495008b476a7d0f313b1154a8dff4",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-3a768c84c51f4c57a6dc0092e2223919",
+      "manifest_sha256": "dedc9d54163ad146736bab337b3f3072de9548cc65fc01d4ecaa433ee0c0ccd3"
+    },
+    {
+      "identity": "m7-9d0c92074a054c9c8183dda757c2559d",
+      "source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-9d0c92074a054c9c8183dda757c2559d",
+      "manifest_sha256": "b2345d0e4b728a51b0eaa429d7b07e12d113ebfc12d78a554dd2a43803843f8d"
+    },
+    {
+      "identity": "m7-frontend-0939b9fc2e294245897292ec688b68e8",
+      "source_sha": "10c2a96d88169c455f1fdcefeed9ab5b117090f6",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-frontend-0939b9fc2e294245897292ec688b68e8",
+      "manifest_sha256": "8d3331d3b0e7b413d29468095c80d2da01a05980a0e2eb220d28b48183d1b1a8"
+    },
+    {
+      "identity": "m7-frontend-bc89491def23465ba8ddc6139a56c195",
+      "source_sha": "e78f0b4de18495008b476a7d0f313b1154a8dff4",
+      "verdict": "PENDING",
+      "path": "artifacts/m7/m7-frontend-bc89491def23465ba8ddc6139a56c195",
+      "manifest_sha256": "84bf93c58b1e7c8fefa45dcb34822b2a460c3a38e1e8bf66f89a9663630e9b7f"
+    },
+    {
+      "identity": "m7-frontend-c65075cd30d647999afaf66a7cbf653a",
+      "source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-c65075cd30d647999afaf66a7cbf653a",
+      "manifest_sha256": "d098891957c0775da38a26471f2f5ee51658dfe9c7852d49a5a15b19e672a89d"
+    }
+  ],
+  "not_proven": [
+    "whole M7",
+    "installed browser storage and inbox paging",
+    "backup recovery and independent side-effect reconciliation",
+    "WeChat device",
+    "production capacity"
+  ]
+}
