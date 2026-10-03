@@ -171,3 +171,9 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 执行入口合同先于测试，原生e78f0b4/native0.13产生[原FAIL](../artifacts/m7/m7-3a768c84c51f4c57a6dc0092e2223919/acceptance-report.md)：重复/转义同名JSON三次均200，产生3回执和1收藏；尾随JSON三次均422正确拒绝。151本人消息的逐页请求每次只得最新100条，总量字段缺失，8页并集100而SQL151；分类产品协议歧义与截断投影，未修。
 
 前端0.2封37用例但选择文件仅31，产生[原PENDING](../artifacts/m7/m7-frontend-bc89491def23465ba8ddc6139a56c195/acceptance-report.md)，分类采集器遗漏；v0.3/Plan2按修订1.1重采。10c2a96取得[原FAIL](../artifacts/m7/m7-frontend-0939b9fc2e294245897292ec688b68e8/acceptance-report.md)：同名key先找到A而拒绝B，A晚成功擦掉B同名元数据；构造/扫描/删除存储异常为原生Error，注销在清敏感正文和远端撤销前被本地删除异常打断。六个新增反例均失败，原31例仍通过。此处是受控Transport/Storage，实际浏览器另验，不冒充真机或全部M7。
+
+## 2026-10-03 · M7损坏元数据首败与独立算法控制
+
+先冻结[恢复/独立判定合同](contracts/m7-metadata-oracle.md)，4c76123/frontend0.4/Plan3取得[原FAIL](../artifacts/m7/m7-frontend-f5921b7d4d4745428bba7b56ffeb2093/acceptance-report.md)：45例实际观察，新增8例中7例失败，迁移中断恢复控制正确通过。合法坐标的截断/结构不合法/主体不一致被忽略，已有内存正文损坏后也失去原键；非法坐标和坏旧数组容许新POST而非阻止；保存后抛错有持久原键却没有立即可见的恢复项；已确认回执后删除实际成功但抛错仍被误报为存储失败。原始字节、失败XML和Core包保留，分类客户端恢复投影/迁移/部分效果判定，尚未修复。
+
+相同候选的native0.14/Plan2取得[147例PASS](../artifacts/m7/m7-ad2ce37f31a848c7b2db89363fc6bda4/acceptance-report.md)，其中全部65,536个4×4可接受图及2,048个非对称rank/容器重排样本，用不调用产品匹配函数的完整分配枚举判定。目标包含冻结的并列rank排序；不能改成首选总数最优再误报产品失败。此控制没有观察到算法缺陷，不证明完整M7、生产容量、备份或真实浏览器。

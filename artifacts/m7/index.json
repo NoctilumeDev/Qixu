@@ -1,5 +1,5 @@
 {
-  "phase": "M7_IN_PROGRESS_FIRST_ENTRY_ONLY",
+  "phase": "M7_IN_PROGRESS_ENTRY_AND_METADATA_ORACLE",
   "entry_contract": "docs/contracts/m7-execution-entry.md",
   "repair_source_sha": "4dbf3642a4cdb812de3681b0ad09d1cff24b33b4",
   "bundles": [
@@ -37,6 +37,20 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-frontend-c65075cd30d647999afaf66a7cbf653a",
       "manifest_sha256": "d098891957c0775da38a26471f2f5ee51658dfe9c7852d49a5a15b19e672a89d"
+    },
+    {
+      "identity": "m7-frontend-f5921b7d4d4745428bba7b56ffeb2093",
+      "source_sha": "4c76123e03126f8e8ae7336ce4ac0443de8977ed",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-frontend-f5921b7d4d4745428bba7b56ffeb2093",
+      "manifest_sha256": "025df5c8bd69dd041881b624595c562fab1bb6b5c5576de47f41ab381b09591c"
+    },
+    {
+      "identity": "m7-ad2ce37f31a848c7b2db89363fc6bda4",
+      "source_sha": "4c76123e03126f8e8ae7336ce4ac0443de8977ed",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-ad2ce37f31a848c7b2db89363fc6bda4",
+      "manifest_sha256": "00fe4fd1b07fcd893410c057252f12f0541d78db0948c05aa9cb296b86807c39"
     }
   ],
   "not_proven": [
@@ -45,5 +59,6 @@
     "backup recovery and independent side-effect reconciliation",
     "WeChat device",
     "production capacity"
-  ]
+  ],
+  "metadata_oracle_contract": "docs/contracts/m7-metadata-oracle.md"
 }
