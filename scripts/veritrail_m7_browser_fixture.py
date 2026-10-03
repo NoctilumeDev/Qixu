@@ -59,7 +59,18 @@ def main():
             key=r['key'];assert len(key)<150 and all(c.isalnum() or c in '-_' for c in key)
             count=sql("SELECT COUNT(*) FROM qixu_browser.idempotency_receipt WHERE actor_id=1 AND request_key='"+key+"';")
             receipts.append({'key_sha256':hashlib.sha256(key.encode()).hexdigest(),'count':int(count),'status':r['status'],'path':r['path']})
-        return {'source_sha':source,'inbox':counts,'favorite_count':int(favorites),'lost_responses':receipts,'request_count':len(requests),'static_bytes_checked':True}
+        review={}
+        if coord.get('collector')=='qixu-m8-browser/0.1':
+            review={
+                'outlet_true_facts':int(sql("SELECT COUNT(*) FROM qixu_browser.space_fact WHERE space_id=2000 AND feature_key='outlet' AND value_json=CAST('true' AS JSON);")),
+                'outlet_false_facts':int(sql("SELECT COUNT(*) FROM qixu_browser.space_fact WHERE space_id=2000 AND feature_key='outlet' AND value_json=CAST('false' AS JSON);")),
+                'published_events':int(sql("SELECT COUNT(*) FROM qixu_browser.campus_event WHERE status='PUBLISHED';")),
+                'confirmed_parts':int(sql("SELECT COUNT(*) FROM qixu_browser.event_participation WHERE status='CONFIRMED';")),
+                'waitlisted_parts':int(sql("SELECT COUNT(*) FROM qixu_browser.event_participation WHERE status='WAITLISTED';")),
+                'kept_short':int(sql("SELECT COUNT(*) FROM qixu_browser.short_reservation WHERE user_id=1 AND status IN ('PENDING','CHECKED_IN');")),
+                'exited_applications':int(sql("SELECT COUNT(*) FROM qixu_browser.preparation_application WHERE user_id=1 AND status='WITHDRAWN';")),
+            }
+        return {'source_sha':source,'inbox':counts,'favorite_count':int(favorites),'lost_responses':receipts,'request_count':len(requests),'static_bytes_checked':True,'m8':review}
     class Handler(SimpleHTTPRequestHandler):
         def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(args[2].document_root),**kwargs)
         def log_message(self,*_):pass

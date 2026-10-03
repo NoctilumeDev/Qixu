@@ -199,3 +199,8 @@ COMMIT首败仅修数据库事务包装异常的503/未知语义，非数据库�
 PR#21 exact head22a98c5三项及步骤success，正常受保护squash合入main@c876d1a；exact-main CI37109397118三项及步骤success、远端main和README全字节读回一致。该主线fresh native173/frontend45/restore22/database25/COMMIT29/browser14各独立identity均PASS，原标准、SQL与owned清理保持；119个原Bundle字节保留。
 
 F01–F15按机制有限收束，U01–U08逐项触发/影响/缺证据/环境/重入/归属公开；没有范围内已观察未处置核心错误，不输出零Bug。M7资格限定于实际见证，见[M7](acceptance/m7.md)。冻结[M8合同](contracts/independent-review.md)后，两名独立测试/产品角色从固定源码和原证据复核，不继承主代理自评；M9及M10仍未完成。
+
+
+## 2026-10-03 · M8覆盖复核和最小修复
+
+独立角色报告不是零缺陷资格。35处原M7引用对应34个不同代表见证逐键回核；16条、公开来源和生命周期经验分别见docs/coverage-review.md。首次native175有2项、frontend51有5项产品失败，三次夹具前提/编译错误另保留；fdda898修复后175/51通过。ce29fdb第二段native180有4项真实失败、frontend54通过；独立测试者指出freeze/result同时过期盲区，另封0.22/Plan3补01:07控制，不改原失败。ca1aeb5新native181、frontend54 PASS，当前只授予对应API/MySQL/Clock/源码模型/构建，实页、公开主线、M8退出未授予。原冻结输入、截止和候补顺序未放宽；仅任务落账滞后不再继续阻止下一轮或保护失效池。
