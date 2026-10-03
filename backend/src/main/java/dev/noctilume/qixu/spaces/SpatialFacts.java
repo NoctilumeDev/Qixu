@@ -1,6 +1,7 @@
 package dev.noctilume.qixu.spaces;
 
 import dev.noctilume.qixu.common.*;
+import dev.noctilume.qixu.preparation.PreparationValidity;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class SpatialFacts {
             if(r.get("entitlement_starts_at")!=null)r.put("starts_at",r.get("entitlement_starts_at"));
             roots.add(root("LONG",Business.number(r,"id"),Business.number(r,"batch_id"),r,Business.number(r,"version"),r.get("entitlement_version")==null?0:Business.number(r,"entitlement_version")));
         }
-        for(var r:bounded("SELECT p.*,t.cycle_starts_at AS starts_at,t.cycle_ends_at AS ends_at,t.status,t.version,0 AS user_id FROM preparation_pool p JOIN preparation_batch t ON p.batch_id=t.id WHERE t.status IN ('OPEN','FROZEN','RESULT_PUBLISHED') AND t.cycle_starts_at<? AND t.cycle_ends_at>? AND t.cycle_ends_at>? ORDER BY p.batch_id,p.space_id",end,start,now))
+        for(var r:bounded("SELECT p.*,t.cycle_starts_at AS starts_at,t.cycle_ends_at AS ends_at,t.status,t.version,0 AS user_id FROM preparation_pool p JOIN preparation_batch t ON p.batch_id=t.id WHERE "+PreparationValidity.ACTIVE_SQL+" AND t.cycle_starts_at<? AND t.cycle_ends_at>? AND t.cycle_ends_at>? ORDER BY p.batch_id,p.space_id",now,now,end,start,now))
             roots.add(root("POOL",Business.number(r,"space_id"),Business.number(r,"batch_id"),r,Business.number(r,"version"),Business.number(r,"space_version")));
         var limits=new ArrayList<Limit>();for(var r:bounded("SELECT * FROM space_block WHERE status='ACTIVE' AND starts_at<? AND ends_at>? AND ends_at>? ORDER BY id",end,start,now))
             limits.add(new Limit(Business.number(r,"id"),Business.number(r,"space_id"),Business.number(r,"floor_id"),r.get("kind").toString(),r.get("venue_request_id")==null?null:Business.number(r,"venue_request_id"),Business.date(r,"starts_at"),Business.date(r,"ends_at"),r));

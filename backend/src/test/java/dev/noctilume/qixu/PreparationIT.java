@@ -136,14 +136,20 @@ class PreparationIT {
     }
     @Test void failedFrozenBatchReleasesParticipationBeforeTaskCleanup()throws Exception {failedBatchWithoutTasks(true);}
     @Test void missedFreezeBatchReleasesParticipationBeforeTaskCleanup()throws Exception {failedBatchWithoutTasks(false);}
+    @Test void missedFreezeBeforeResultDeadlineReleasesParticipation()throws Exception {failedBatchWithoutTasks(false,true);}
     void failedBatchWithoutTasks(boolean frozen)throws Exception {
+        failedBatchWithoutTasks(frozen,false);
+    }
+    void failedBatchWithoutTasks(boolean frozen,boolean early)throws Exception {
         String admin=login("admin1"),student=login("student1"),other=login("student2");long old=create(admin,List.of(2000L),"m8-old-round");
         var nextBody=new LinkedHashMap<>(createBody(List.of(2200L)));
         nextBody.put("opensAt","2026-10-10T01:21:00Z");nextBody.put("closesAt","2026-10-10T01:25:00Z");nextBody.put("freezeDeadline","2026-10-10T01:26:00Z");nextBody.put("randomAt","2026-10-10T01:27:00Z");nextBody.put("resultDeadline","2026-10-10T01:40:00Z");
+        if(early) {nextBody.put("opensAt","2026-10-10T01:07:00Z");nextBody.put("closesAt","2026-10-10T01:10:00Z");nextBody.put("freezeDeadline","2026-10-10T01:11:00Z");nextBody.put("randomAt","2026-10-10T01:12:00Z");}
         var next=api("POST","/preparation-batches",nextBody,admin,"m8-next-round");ok(next);
         ok(submit(student,old,0,prefs(2000),"m8-old-application"));ok(submit(other,old,0,prefs(2000),"m8-old-other"));if(frozen)freeze(admin,old);
         String input=frozen?jdbc.queryForObject("SELECT input_hash FROM frozen_input WHERE batch_id=?",String.class,old):"";
-        clock.value=Instant.parse("2026-10-10T01:21:00Z");
+        clock.value=Instant.parse(early?"2026-10-10T01:07:00Z":"2026-10-10T01:21:00Z");
+        if(early) {facts.put("beforeResultDeadline",clock.instant().isBefore(Instant.parse("2026-10-10T01:20:00Z")));assertEquals(true,facts.get("beforeResultDeadline"));}
         var observation=mine(student,old);ok(observation);assertEquals("FAILED_NO_RESULT",observation.data().at("/batch/effectivePhase").asString());
         assertEquals(frozen?"FROZEN":"OPEN",jdbc.queryForObject("SELECT status FROM preparation_batch WHERE id=?",String.class,old));
         var newApplication=submit(student,next.id(),0,prefs(2200),"m8-next-application");

@@ -232,4 +232,17 @@ export const query=(params:Record<string,unknown>)=>Object.entries(params).filte
 export const imageKey=(key:string|null)=>['window-seat','quiet-room','hall'].includes(key||'')?key:'window-seat';
 
 export const factLabel:Record<string,string>={outletCondition:'插座状况',lightCondition:'照明状况',deskCondition:'桌面状况',environmentCondition:'环境状况',window:'靠窗',outlet:'有插座',quiet:'安静条件',accessible:'无障碍通行'};
+const allocationFailureText:Record<string,string>={
+  FREEZE_DEADLINE_MISSED:'未能在公布期限内完成冻结，本轮已停止',
+  RESULT_DEADLINE_MISSED:'未能在结果期限内完成合法分配，本轮已停止',
+  INPUT_RESOURCE_CHANGED:'冻结前资源已经变化，不能沿用原资源池',
+  INPUT_RESOURCE_CONFLICT:'资源出现占用冲突，本轮不能继续分配',
+  INPUT_INVALIDATED_RESOURCE:'冻结后资源条件变化，本轮没有发布结果',
+  INPUT_INVALIDATED_ELIGIBILITY:'冻结后参与资格发生变化，本轮没有发布结果',
+  INPUT_INVALIDATED_PERSONAL_CYCLE:'冻结后发现重叠长期周期，本轮没有发布结果',
+  INPUT_LIMIT_OR_MISSING_POOL:'申请或资源数量不符合本轮处理边界',
+  INPUT_PREFERENCE_CHANGED:'申请志愿与本轮资源池不一致',
+  INPUT_BYTES_LIMIT:'冻结材料超出本轮处理边界'
+};
+export const allocationFailureLabel=(reason:unknown)=>allocationFailureText[String(reason)]||'本轮未产生合法结果，请查看故障记录或联系管理员';
 export const factValueLabel=(value:unknown)=>value===true||value==='true'?'有':value===false||value==='false'?'无':label(value);

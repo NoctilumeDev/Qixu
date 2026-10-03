@@ -96,7 +96,7 @@ public class LongSeats {
             if(!"EXIT".equals(body.action()))throw DomainException.invalid("请选择明确退出本轮。");
             var rows=p.business().jdbc.queryForList("SELECT * FROM preparation_application WHERE batch_id=? AND user_id=?",id,actor.id());if(rows.isEmpty())throw DomainException.missing();var application=rows.get(0);
             Business.version(Business.number(application,"current_version"),body.version());
-            if(!Set.of("RESULT_PUBLISHED","FAILED_NO_RESULT","CANCELED","CLOSED").contains(batch.get("status")))throw Business.conflict("BATCH_STATE_CONFLICT","申请期请用撤回，冻结后需等明确结果，不能改冻结集合。");
+            if(!Set.of("RESULT_PUBLISHED","FAILED_NO_RESULT","CANCELED","CLOSED").contains(batch.get("status")) && PreparationValidity.failure(batch,p.business().now())==null)throw Business.conflict("BATCH_STATE_CONFLICT","申请期请用撤回，冻结后需等明确结果，不能改冻结集合。");
             if("WITHDRAWN".equals(application.get("status")))throw Business.conflict("APPLICATION_STATE_CONFLICT","你已退出本轮。");
             p.business().jdbc.update("UPDATE long_offer SET status='CANCELED',version=version+1 WHERE batch_id=? AND user_id=? AND status='OPEN'",id,actor.id());
             p.business().jdbc.update("UPDATE seat_entitlement SET status='RELINQUISHED',closed_at=?,version=version+1 WHERE batch_id=? AND user_id=? AND status='ACTIVE'",p.business().now(),id,actor.id());

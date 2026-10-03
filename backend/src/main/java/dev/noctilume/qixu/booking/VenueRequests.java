@@ -33,7 +33,13 @@ public class VenueRequests {
         var row=b.row("venue_request",id); if(Business.number(row,"user_id")!=actor.id()) b.admin(actor,Business.number(row,"floor_id"));
         return named(row);
     }
-    private Map<String,Object> named(Map<String,Object> row) {var view=b.view(row);var space=rights.space(Business.number(row,"space_id"));view.put("code",space.get("code"));view.put("name",space.get("name"));return view;}
+    private Map<String,Object> named(Map<String,Object> row) {
+        var view=b.view(row);var space=rights.space(Business.number(row,"space_id"));
+        view.put("code",space.get("code"));view.put("name",space.get("name"));view.put("spaceCapacity",space.get("capacity"));
+        // Only reached through the request owner's view or an administrator's scoped view.
+        var applicant=b.jdbc.queryForMap("SELECT display_name,username FROM identity_user WHERE id=?",row.get("user_id"));
+        view.put("applicantName",applicant.get("display_name"));view.put("applicantUsername",applicant.get("username"));return view;
+    }
     public List<Map<String,Object>> mine(Actor actor) { return b.jdbc.queryForList("SELECT * FROM venue_request WHERE user_id=? ORDER BY id DESC LIMIT 100",actor.id()).stream().map(this::named).toList(); }
     public List<Map<String,Object>> pending(Actor actor) {
         if(!actor.role().equals("ADMIN")) throw DomainException.forbidden();

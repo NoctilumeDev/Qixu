@@ -45,3 +45,7 @@
 - PM06两端恢复提示按页面和主体归属；已经合法settled的原Promise不被后来换号倒改，但消费者不能在新主体页面显示旧回执。增加原setup迟到/已有消息清除及当前主体正常恢复控制。
 
 新增具名见证进入native `qixu-native/0.21` / Plan2及frontend `qixu-frontend/0.6` / Plan2；0.1全部175/51见证保留，先封新Plan再执行。原失败、测试前提纠正和当前修复分别登记，不将扩大后的要求倒用到旧Bundle。
+
+## 期限细分复核 · 0.3
+
+独立测试者发现原错过freeze见证也越过了result截止，不能排除错误实现把OPEN保护到result。保留原180项，另加`missedFreezeBeforeResultDeadlineReleasesParticipation`：01:07已越freeze(01:06)、尚未越result(01:20)，下一轮合法开放；立即申请、退出与池可用，恢复后只落失败和通知。新native `qixu-native/0.22` / Plan3，原0.21首次180/176失败Bundle保留。前端Plan2不扩大；实页仍另验。
