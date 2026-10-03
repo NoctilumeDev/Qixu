@@ -128,6 +128,20 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-restore-683b6742e8bc4eff9b860c1685a46c62",
       "manifest_sha256": "8fba952baebfa159b747743a110cc31005d2daab02b415e978889bb1749ba269"
+    },
+    {
+      "identity": "m7-a33774021b0f4827964e24a9ad2fd145",
+      "source_sha": "3b445b9fd73b88aeaa4d5bab6e6264cd72485766",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-a33774021b0f4827964e24a9ad2fd145",
+      "manifest_sha256": "fc5643cf5f882ec350f8570ff425bcf3e768e58ee186e2ff053cd7a931ece06c"
+    },
+    {
+      "identity": "m7-restore-9e1efc1ca9bc41f98496952d970aa5cf",
+      "source_sha": "3b445b9fd73b88aeaa4d5bab6e6264cd72485766",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-9e1efc1ca9bc41f98496952d970aa5cf",
+      "manifest_sha256": "b7d8f9394941647ec8a539a164b53b6fd29802aecbb5e08f05aa0e9d4a86461d"
     }
   ],
   "not_proven": [
@@ -143,5 +157,7 @@
   "restore_contract": "docs/contracts/m7-restore-fence.md",
   "restore_repair_source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
   "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010",
-  "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87"
+  "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
+  "restore_qualified_main_sha": "3b445b9fd73b88aeaa4d5bab6e6264cd72485766",
+  "restore_exact_main_ci": "37101177576"
 }

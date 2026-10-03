@@ -47,3 +47,11 @@ F12限定旧库/缺账册反例已修复复验；其他机制、实际页面、M
 | 禁止savepoint与正常恢复 | nested拒绝且行0；同外层正常写1/marker增1 |
 
 同source的[restore0.5/Plan5 PASS22](../../artifacts/m7/m7-restore-683b6742e8bc4eff9b860c1685a46c62/acceptance-report.md)保留0.4全部22断言，仅绑定新的原producer。T0隔离、7marker/7COMMIT一致正控制、仅移走账册后的503再次成立，全部owned停止且两端口无监听。版本控制/回调故障与实际连接隔离分别保留，不升级为真断电或分布式提交证明。
+
+## 受保护主线限定资格
+
+PR[#18](https://github.com/NoctilumeDev/Qixu/pull/18) exact head5f34b6f的[CI37100968730](https://github.com/NoctilumeDev/Qixu/actions/runs/37100968730)三项及步骤success后，按严格门禁/enforce-admins/linear-history规则压缩合入main@3b445b9fd73b88aeaa4d5bab6e6264cd72485766，未使用admin旁路。原普通merge方式被线性历史规则拒绝，没有发生该合并，随后使用规则允许的squash。
+
+新主线[CI37101177576](https://github.com/NoctilumeDev/Qixu/actions/runs/37101177576) exact SHA及三项/步骤success；fresh [native166](../../artifacts/m7/m7-a33774021b0f4827964e24a9ad2fd145/acceptance-report.md)与同producer新[restore22](../../artifacts/m7/m7-restore-9e1efc1ca9bc41f98496952d970aa5cf/acceptance-report.md)均Core PASS。真实旧库隔离、同库正常重启、7 marker/7 COMMIT一致正控制、仅移走账册后的隔离全部复验。owned清理与两端口无监听成立，远端main与README完整字节读回一致。
+
+资格仅为上述F12单实例恢复/事务边界；文档后续发布是此主线资格的投影，不对新文档SHA伪造运行资格。M7其他组合/页面及M8–M10仍未闭合，已列未知不升级。
