@@ -303,6 +303,27 @@
       "verdict": "PENDING",
       "path": "artifacts/m7/m7-browser-238ae91b8fc040b8b6f57ecc6a50ba01",
       "manifest_sha256": "fcb05c596cff661ecd59f6b7ac5a3ac592971114cab1ed2c2bee6480b9d06e1e"
+    },
+    {
+      "identity": "m7-22ca9863e03a45f49fb95bd9ec95e337",
+      "source_sha": "7619d8f3fc001950b0909a1b2f806913fd034365",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-22ca9863e03a45f49fb95bd9ec95e337",
+      "manifest_sha256": "bb41cca81cddfd7043be0b43fb59c7e3593a322c1cbf76ac9c21bb5190949fa3"
+    },
+    {
+      "identity": "m7-frontend-10b8e5fe0da34648a437affb7ad6d4a7",
+      "source_sha": "7619d8f3fc001950b0909a1b2f806913fd034365",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-frontend-10b8e5fe0da34648a437affb7ad6d4a7",
+      "manifest_sha256": "99481b4e749b4ec5d0b7eac15ae5da727408a771cbbe5bb21cf304c6be1a522a"
+    },
+    {
+      "identity": "m7-browser-a30741a1f205491f937528762a22f102",
+      "source_sha": "7619d8f3fc001950b0909a1b2f806913fd034365",
+      "verdict": "FAIL",
+      "path": "artifacts/m7/m7-browser-a30741a1f205491f937528762a22f102",
+      "manifest_sha256": "9872fd2a231b457717887409c83bb9f29b276c4295e30cbe6cc09328535ebf98"
     }
   ],
   "not_proven": [
