@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.Flow;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import tools.jackson.core.StreamReadFeature;
@@ -29,11 +32,14 @@ public class DarkRoomGateway {
     private final HttpClient client;
     private final Semaphore budget=new Semaphore(4);
     private final JsonMapper json=JsonMapper.builder().enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build();
+    public DarkRoomGateway(boolean enabled,String endpoint,boolean allowLoopback){this(enabled,endpoint,allowLoopback,new StandardEnvironment());}
+    @Autowired
     public DarkRoomGateway(@Value("${qixu.external.dark-room.enabled:false}") boolean enabled,
                            @Value("${qixu.external.dark-room.auth-uri:}") String endpoint,
-                           @Value("${qixu.external.dark-room.allow-loopback-http:false}") boolean allowLoopback) {
+                           @Value("${qixu.external.dark-room.allow-loopback-http:false}") boolean allowLoopback,Environment environment) {
         this.enabled=enabled;
         this.uri=enabled?validate(endpoint,allowLoopback):null;
+        if(enabled && "http".equals(uri.getScheme()) && environment.matchesProfiles("prod","production"))throw new IllegalStateException("Production identity endpoints require HTTPS");
         this.client=HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500)).followRedirects(HttpClient.Redirect.NEVER).build();
     }
     static URI validate(String endpoint,boolean allowLoopback) {
@@ -67,7 +73,7 @@ public class DarkRoomGateway {
             if(response.statusCode()==401 || response.statusCode()==403)throw rejected();
             if(response.statusCode()!=200)throw unavailable();
             var type=response.headers().firstValue("Content-Type").orElse("").toLowerCase(java.util.Locale.ROOT);
-            if(!type.startsWith("application/json"))throw unavailable();
+            if(!type.split(";",2)[0].trim().equals("application/json"))throw unavailable();
             String text=StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT)
                     .decode(ByteBuffer.wrap(response.body())).toString();
             JsonNode root=json.readTree(text),data=root.path("data");

@@ -15,6 +15,7 @@ class DarkRoomGatewayTest {
     @Test void unsafeUrisAndMissingKeyCannotEnableAdapter(){
         for(String u:List.of("http://example.com"+path,"https://x@host"+path,"https://host"+path+"?subject=1","https://host"+path+"#x","https://host/other","http://localhost"+path,"file:///tmp/identity"))assertThrows(IllegalStateException.class,()->new DarkRoomGateway(true,u,true));
         var gateway=new DarkRoomGateway(true,"http://127.0.0.1:1"+path,true);assertThrows(IllegalStateException.class,()->new ExternalTicketVault(gateway,""));assertThrows(IllegalStateException.class,()->new ExternalTicketVault(gateway,"broken"));
+        var prod=new org.springframework.mock.env.MockEnvironment();prod.setActiveProfiles("prod");assertThrows(IllegalStateException.class,()->new DarkRoomGateway(true,"http://127.0.0.1:1"+path,true,prod));
     }
     @Test void vaultRejectsWrongAadKeyAndTamper(){
         var g=new DarkRoomGateway(false,"",false);var v=new ExternalTicketVault(g,Base64.getEncoder().encodeToString(new byte[32]));String cipher=v.seal("synthetic.payload.signature","actor-a");assertEquals("synthetic.payload.signature",v.open(cipher,"actor-a"));assertThrows(DomainException.class,()->v.open(cipher,"actor-b"));assertThrows(DomainException.class,()->v.open(cipher+"x","actor-a"));byte[] key=new byte[32];key[0]=1;var other=new ExternalTicketVault(g,Base64.getEncoder().encodeToString(key));assertThrows(DomainException.class,()->other.open(cipher,"actor-a"));assertNotEquals(cipher,v.seal("synthetic.payload.signature","actor-a"));
