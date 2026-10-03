@@ -1,0 +1,33 @@
+id	space_id	status	version
+2	2017	CANCELED	2
+3	2017	CANCELED	2
+id	status	version
+4	RESOLVED	4
+id	status	version	verification_note
+4	VERIFIED_CLOSED	4	新主线演示复验：插座明确恢复正常；原始报告、维修记录及拒绝历史保留。
+action	occurrences
+REPORTED	1
+VERIFIED	1
+REPAIR_LINKED	1
+REPAIR_DONE	1
+RESOLVED	1
+action	occurrences
+OPENED	1
+ASSIGNED	1
+WORK_DONE	1
+VERIFIED_CLOSED	1
+report_id	media_type	width	height	bytes	sha256
+4	image/jpeg	1200	800	167875	b2f66ab3d724a653522eaf9878ddebf43af624fc4df95537f734ddf7faf917d7
+id	version	outlet
+2017	7	"WORKING"
+id	user_id	space_id	people	status	version
+4	3	3000	6	APPROVED	2
+request_id	status
+4	ACTIVE
+id	owner_id	venue_request_id	status	capacity	confirmed_count	version
+3	3	4	PUBLISHED	6	0	4
+event_id	user_id	status	sequence_number	version
+3	1	CANCELED	1	2
+entity_type	created	delivered
+FEEDBACK	6	6
+EVENT	3	3

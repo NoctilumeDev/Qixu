@@ -1,0 +1,8 @@
+{
+  "identity": "m5-sql-readback-4214a1c62fe34fa3af6f93bb510863ab",
+  "kind": "CONSTRUCTION_READBACK_NOT_QUALIFICATION",
+  "at": "2026-10-03T02:50:14.183935+00:00",
+  "query": "SELECT id,space_id,status,version FROM short_reservation WHERE user_id=1 AND space_id=2017 ORDER BY id;SELECT id,status,version FROM feedback_report WHERE id=4;SELECT id,status,version,verification_note FROM repair_ticket WHERE id=4;SELECT action,COUNT(*) AS occurrences FROM feedback_history WHERE report_id=4 GROUP BY action;SELECT action,COUNT(*) AS occurrences FROM repair_history WHERE repair_id=4 GROUP BY action;SELECT report_id,media_type,width,height,OCTET_LENGTH(content) AS bytes,sha256 FROM feedback_attachment WHERE report_id=4;SELECT id,version,JSON_EXTRACT(profile_json,\"$.conditions.outletCondition\") AS outlet FROM space WHERE id=2017;SELECT id,user_id,space_id,people,status,version FROM venue_request WHERE id=4;SELECT request_id,status FROM venue_entitlement WHERE request_id=4;SELECT id,owner_id,venue_request_id,status,capacity,confirmed_count,version FROM campus_event WHERE id=3;SELECT event_id,user_id,status,sequence_number,version FROM event_participation WHERE event_id=3;SELECT entity_type,COUNT(*) AS created,SUM(delivered_at IS NOT NULL) AS delivered FROM notification_outbox WHERE (entity_type=\"FEEDBACK\" AND entity_id=4) OR (entity_type=\"EVENT\" AND entity_id=3) GROUP BY entity_type;",
+  "exitCode": 0,
+  "stdoutSha256": "a926529820c7d88e84afcfa3bc7f9136d061e71db68095d2791bdcf6ae4aa329"
+}

@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:6969/#/login",
+  "errorAlert": {
+    "focused": false,
+    "visible": true
+  },
+  "viewport": {
+    "documentWidth": 375,
+    "height": 844,
+    "width": 390
+  },
+  "capturedAt": "2026-10-03T02:44:05.411Z"
+}

@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:6969/#/venues/4?page=1",
+  "errorAlert": {
+    "focused": false,
+    "visible": false
+  },
+  "viewport": {
+    "documentWidth": 390,
+    "height": 844,
+    "width": 390
+  },
+  "capturedAt": "2026-10-03T02:45:20.989Z"
+}

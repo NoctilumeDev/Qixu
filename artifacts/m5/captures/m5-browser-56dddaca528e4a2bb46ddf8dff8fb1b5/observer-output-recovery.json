@@ -1,0 +1,248 @@
+{
+  "classification": "OBSERVER_OUTPUT_DIRECTORY_STALE_CLOSURE_NOT_PRODUCT_FAILURE",
+  "old_identity": "m5-browser-565e2ad8a1de43cba34a717c5bdeeb49",
+  "new_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+  "items": [
+    {
+      "path": "extra-short-receipt.json",
+      "new_capture_sha256": "08e59cece15d1ac65cfca0f38cff2aaa2d24a446060b9d3469d4cc3d8751caec",
+      "bytes": 257,
+      "captured_at": "2026-10-03T02:35:13.025Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "original_public_capture": "ABSENT_EXTRA_NEW_CAPTURE_ONLY"
+    },
+    {
+      "path": "extra-short-receipt.txt",
+      "new_capture_sha256": "c66a8ebfc560902516c4b45d5bb6f98f4da05a141da418b38c428829c4435b01",
+      "bytes": 1235,
+      "captured_at": "2026-10-03T02:35:13.025Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "original_public_capture": "ABSENT_EXTRA_NEW_CAPTURE_ONLY"
+    },
+    {
+      "path": "extra-short-receipt.png",
+      "new_capture_sha256": "0d68afc582da79d170ee90e4e16f0ecff8d3e77d50060a52721edd8395ed5019",
+      "bytes": 33789,
+      "captured_at": "2026-10-03T02:35:13.025Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "original_public_capture": "ABSENT_EXTRA_NEW_CAPTURE_ONLY"
+    },
+    {
+      "path": "extra-startup-network-retry.json",
+      "new_capture_sha256": "6899d29b7ab1eb06d9ccac7a817ac608c779ce691bcf0ab87228d3cea05d0857",
+      "bytes": 246,
+      "captured_at": "2026-10-03T02:34:32.297Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "original_public_capture": "ABSENT_EXTRA_NEW_CAPTURE_ONLY"
+    },
+    {
+      "path": "extra-startup-network-retry.txt",
+      "new_capture_sha256": "125607b3df7a200b8741837b09e74462053d09a0aa2b9d6398f99c05b0f20755",
+      "bytes": 1078,
+      "captured_at": "2026-10-03T02:34:32.297Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "original_public_capture": "ABSENT_EXTRA_NEW_CAPTURE_ONLY"
+    },
+    {
+      "path": "extra-startup-network-retry.png",
+      "new_capture_sha256": "2dc33a844467e4bba810654c76d3296009b2151f64894fab02644fea8b5a8dd1",
+      "bytes": 21834,
+      "captured_at": "2026-10-03T02:34:32.297Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "original_public_capture": "ABSENT_EXTRA_NEW_CAPTURE_ONLY"
+    },
+    {
+      "path": "repair-missing-fact.json",
+      "new_capture_sha256": "11fdb7585a8ba2ff6eb971170ce6442a45448ad1c89aa451fe440534f4450f80",
+      "bytes": 239,
+      "captured_at": "2026-10-03T02:40:05.606Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "be4ed13b926e6b903da74250f814ac14df891e6dac61259889eab7e2adfc953b"
+    },
+    {
+      "path": "repair-missing-fact.txt",
+      "new_capture_sha256": "010338588725aa92d75c28d6552cd08d3726d3752e3957191f4de31f26b0a378",
+      "bytes": 2745,
+      "captured_at": "2026-10-03T02:40:05.606Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "740c191c79f66d4555fceb8f4f161f11e2d922dc7e8d110da4831e87f3b367d6"
+    },
+    {
+      "path": "repair-missing-fact.png",
+      "new_capture_sha256": "1b6ab160b4c0015ddd1a09e2f203cb8659a32b2217f57b6e22d05480f494b4bb",
+      "bytes": 38960,
+      "captured_at": "2026-10-03T02:40:05.606Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "8c5f4853c95099d133dd1aa5d522430c3936dccf33825118debe667316a172ee"
+    },
+    {
+      "path": "repair-work-done.json",
+      "new_capture_sha256": "fe67b0702a6c411754bae89d3f8ade9671ec7b61762260580e268d3b1ae192fe",
+      "bytes": 241,
+      "captured_at": "2026-10-03T02:39:53.504Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "f45b94f6bbd9f00c19bdcca970db6c12dd5188c35dad6075395f268077f5c6e9"
+    },
+    {
+      "path": "repair-work-done.txt",
+      "new_capture_sha256": "1a56be323f95890f2cc989b02b52ff05aa282ff2c138934c435f3109433a34f3",
+      "bytes": 2484,
+      "captured_at": "2026-10-03T02:39:53.504Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "11a6927c98d6f12ba6bb33d06d7503794e12c0dd0e90d7653f4464d8ba8ff22a"
+    },
+    {
+      "path": "repair-work-done.png",
+      "new_capture_sha256": "ac4fcb79c18ae7f348b0d8194cf12aa2e8da66fe6f7267067c42f232d50df116",
+      "bytes": 27432,
+      "captured_at": "2026-10-03T02:39:53.504Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "54f1d140a571cac170c0faead426c96cd487382a527112f1ac59bf5e8f19c23f"
+    },
+    {
+      "path": "student-favorites.json",
+      "new_capture_sha256": "3d35630164065410faea1c6148fd3bd3b1c6f2b0f25a1968ce880830394618c7",
+      "bytes": 253,
+      "captured_at": "2026-10-03T02:37:37.325Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "6deebfc678414bf578b02ccee265314cfd103d0262d9f4e169b3d483f0d4eb5e"
+    },
+    {
+      "path": "student-favorites.txt",
+      "new_capture_sha256": "07988a5e5a7039d947d1cd14c4d638d4d75205060c053d7e45a9c915376ab06c",
+      "bytes": 638,
+      "captured_at": "2026-10-03T02:37:37.325Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "07988a5e5a7039d947d1cd14c4d638d4d75205060c053d7e45a9c915376ab06c"
+    },
+    {
+      "path": "student-favorites.png",
+      "new_capture_sha256": "411b59ac098f5e87143f9a81ded9dc3b5884f1f0937f8348a0912eb889dac3a6",
+      "bytes": 25448,
+      "captured_at": "2026-10-03T02:37:37.325Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "411b59ac098f5e87143f9a81ded9dc3b5884f1f0937f8348a0912eb889dac3a6"
+    },
+    {
+      "path": "student-map-context.json",
+      "new_capture_sha256": "122bdfaa80fd38099c2f4ed6fd181a1082d4a5561db0cad2ff66c5f3eac15307",
+      "bytes": 247,
+      "captured_at": "2026-10-03T02:34:44.890Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "6931e75b772a3f7b8d1f654c02e2de903d15fd8e30a9e08f69b167069f5c699e"
+    },
+    {
+      "path": "student-map-context.txt",
+      "new_capture_sha256": "a9f5b9af0a8a9d10cc4211632615386eaf48cbf2b157712eca2f16236dc75366",
+      "bytes": 1307,
+      "captured_at": "2026-10-03T02:34:44.890Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "4674b107dbaf72195ff074bde3cb022a63a272342e3cce46afcaf4631ed668e3"
+    },
+    {
+      "path": "student-map-context.png",
+      "new_capture_sha256": "2382ea0d2c4240dde212ef83a63d8a903c2f7f6fbde77ddc92e45300afa648db",
+      "bytes": 22453,
+      "captured_at": "2026-10-03T02:34:44.890Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "6ec50f0ab0d76475836051d2a2ac804febb20ecea86795d5e9c132cf2e8a0fe9"
+    },
+    {
+      "path": "student-report-photo.json",
+      "new_capture_sha256": "f967b1861d9b0c95ebe024acb7a349256924ee78e7162bd502b25bf554169dd0",
+      "bytes": 255,
+      "captured_at": "2026-10-03T02:38:44.935Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "3b7526a52211c5aec352bf23d1c339857689891681f601002fdc87b15cad3e57"
+    },
+    {
+      "path": "student-report-photo.txt",
+      "new_capture_sha256": "0af27350306717078382e8d405399b7222a6dcbc906abec86a5ba470378accd1",
+      "bytes": 966,
+      "captured_at": "2026-10-03T02:38:44.935Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "17aa713fa83a5934f3565400815a337271fb7aa407180dbdc4040ec8e26769b2"
+    },
+    {
+      "path": "student-report-photo.png",
+      "new_capture_sha256": "8c110669248440473a61436b20ffe69e00c287110e872c35bfb9f2ad68373ae7",
+      "bytes": 43082,
+      "captured_at": "2026-10-03T02:38:44.935Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "61484b0662598ff1a7c18eab0e56ec0e477f79ea728cd3c183f77237367300e6"
+    },
+    {
+      "path": "student-result.json",
+      "new_capture_sha256": "83fb846c94bb029287e666542d49f139374e8371364f0fec49a469dc7c162e2b",
+      "bytes": 254,
+      "captured_at": "2026-10-03T02:36:44.862Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "eee72c20fe84acca2016827c2e93cff00554ab3a37f3a0085bb3432f944c2af2"
+    },
+    {
+      "path": "student-result.txt",
+      "new_capture_sha256": "d995e504dc6990e914674753c0df1c55a4489332d489ca824e4faf546ba75740",
+      "bytes": 1415,
+      "captured_at": "2026-10-03T02:36:44.862Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "d995e504dc6990e914674753c0df1c55a4489332d489ca824e4faf546ba75740"
+    },
+    {
+      "path": "student-result.png",
+      "new_capture_sha256": "f4cacc7d207b4c82c82663100ab3f697ed4e9ec9e816cc608fdf3ca5bdbae9ac",
+      "bytes": 38161,
+      "captured_at": "2026-10-03T02:36:44.862Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "f4cacc7d207b4c82c82663100ab3f697ed4e9ec9e816cc608fdf3ca5bdbae9ac"
+    },
+    {
+      "path": "student-short-canceled.json",
+      "new_capture_sha256": "2399b12a04cacceacd39a88b50415b47cfa520bf39cca617f5752a18ae5b705b",
+      "bytes": 248,
+      "captured_at": "2026-10-03T02:36:13.501Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "6fd4e26aa663e953c370bf4407989aec51594088a0edb35dedde300341d7a569"
+    },
+    {
+      "path": "student-short-canceled.txt",
+      "new_capture_sha256": "e479c5343969981034d52a42dc59471714e6b225bfa287e7c6b62bdfbb1ab6a0",
+      "bytes": 1762,
+      "captured_at": "2026-10-03T02:36:13.501Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "1da4917bb260754462c6898600439bcd7079c81135ef35711cd1ace8dfc6eca7"
+    },
+    {
+      "path": "student-short-canceled.png",
+      "new_capture_sha256": "4eba1215d94a10fa088d42630db08dc294dbc38d56ed645e93bc758d68b429a7",
+      "bytes": 30089,
+      "captured_at": "2026-10-03T02:36:13.501Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "7dce28181bec9f772c98c6af4ba09fc16a06ae87f6519e35e62150b0f3786002"
+    },
+    {
+      "path": "student-space.json",
+      "new_capture_sha256": "27d73ccd441d1e8d236afd4431d2ccaffbc0a2515da66256f556b071253a0173",
+      "bytes": 257,
+      "captured_at": "2026-10-03T02:35:04.662Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "6562b7303d5b9edd4b73c2e4caaf651ae2dd891116e5fc146ef89497552a69ce"
+    },
+    {
+      "path": "student-space.txt",
+      "new_capture_sha256": "d0b2bb552bc466bbd26b336b9adebe8ad98ef2ae768ead34c1475fb6f7c2d8da",
+      "bytes": 1151,
+      "captured_at": "2026-10-03T02:35:04.662Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "feb48c1f586b8b310e1cf04559db6ebdff72ebb7c83692bd15d0dadf1fe59858"
+    },
+    {
+      "path": "student-space.png",
+      "new_capture_sha256": "13043e0a6191d7ad5b43127959967a6010459ea9454e4ac36e4d13b05bed5d97",
+      "bytes": 39530,
+      "captured_at": "2026-10-03T02:35:04.662Z",
+      "recovered_to_identity": "m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5",
+      "restored_from_immutable_public_sha256": "13043e0a6191d7ad5b43127959967a6010459ea9454e4ac36e4d13b05bed5d97"
+    }
+  ],
+  "rule": "Actual fresh captures after new seal copied without changing bytes or metadata; prior original captures restored from retained immutable public bytes."
+}

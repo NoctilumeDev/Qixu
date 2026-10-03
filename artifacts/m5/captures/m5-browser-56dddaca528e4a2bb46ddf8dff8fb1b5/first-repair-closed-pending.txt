@@ -1,0 +1,71 @@
+- banner:
+  - button "展开工作台导航":
+  - heading "维修事项" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 三楼管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - strong: 正在提交
+  - generic: 原键 48677f7d-7fc0-431d-9cea-3e083ed3ad30 · 10/03 10:42
+  - button "查询回执" [disabled]
+  - button "同键重试" [disabled]
+  - button "确认或停止原意图" [disabled]
+  - link "返回原列表":
+    - /url: "#/repairs?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "记录 4 工作已完成，待复验" [level=2]:
+    - text: 记录 4
+    - generic: 工作已完成，待复验
+  - term: 空间
+  - definition: A018
+  - term: 当前版本
+  - definition: "3"
+  - paragraph: 主线演示核实插座损坏；维修工作和事实复验分别记录，不代表实际维修。
+  - article:
+    - strong: 事项已建立 · 10/03 10:39
+    - paragraph: 主线演示核实插座损坏；维修工作和事实复验分别记录，不代表实际维修。
+  - article:
+    - strong: 已安排 · 10/03 10:39
+    - paragraph: 主线验收安排演示执行人，尚未完成工作。
+  - article:
+    - strong: 工作已完成，待复验 · 10/03 10:39
+    - paragraph: 演示工作完成，仍等待独立复验及插座恢复事实。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: 新主线演示复验：插座明确恢复正常；原始报告、维修记录及拒绝历史保留。
+  - group "经核实的空间事实":
+    - generic: 经核实的空间事实
+    - combobox:
+      - option "插座状况" [selected]
+      - option "照明状况"
+      - option "桌面状况"
+      - option "环境状况"
+      - option "有插座"
+      - option "靠窗"
+      - option "安静条件"
+      - option "无障碍通行"
+    - combobox:
+      - option "未知"
+      - option "正常" [selected]
+      - option "损坏"
+      - option "维修中"
+      - option "true"
+      - option "false"
+    - button "加入事实项"
+    - text: 插座状况 = 正常
+    - button "移除"
+    - paragraph: 只提交亲自核实的事实；工作完成仍须复验，已知损坏的设施必须明确恢复正常。
+  - text: 维修执行人
+  - textbox "维修执行人": 演示执行人 · c411cfe7
+  - checkbox "明确复验通过（仍须填实际设施事实）" [checked]
+  - text: 明确复验通过（仍须填实际设施事实）
+  - button "按事实复验" [disabled] [active]
+  - text: 同空间安全/维护来源ID
+  - spinbutton "同空间安全/维护来源ID": "0"
+  - text: 来源当前版本
+  - spinbutton "来源当前版本": "1"
+  - button "关联本维修限制" [disabled]

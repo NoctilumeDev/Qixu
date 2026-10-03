@@ -1,0 +1,40 @@
+- generic: 空间地图
+- button "返回首页":
+  - text: 返回首页
+- alert:
+  - text: 网络暂时未响应，请重试；已有提交请先确认结果。
+  - button "刷新当前事实"
+- text: ·
+- button "上一层" [disabled]
+- button "下一层" [disabled]
+- searchbox "搜索编号或空间名称": A018
+- button "查找"
+- button "全部条件"
+- button "靠窗"
+- button "有插座"
+- button "安静"
+- button "无障碍"
+- button "全部空间"
+- button "座位"
+- button "研讨室"
+- button "报告厅"
+- button "切换列表"
+- button "缩小" [disabled]
+- generic: 100%
+- button "放大"
+- button "复位"
+- generic "演示数据坐标图，下面提供列表入口"
+- generic: 绿：短约
+- generic: 灰蓝：长期批次
+- generic: 米色：场地
+- generic: 位置为演示数据坐标；颜色表示使用规则，未查询时段可用性。
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

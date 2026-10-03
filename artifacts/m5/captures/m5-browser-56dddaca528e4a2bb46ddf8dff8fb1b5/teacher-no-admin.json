@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:6969/#/operations",
+  "errorAlert": {
+    "focused": true,
+    "visible": true
+  },
+  "viewport": {
+    "documentWidth": 981,
+    "height": 871,
+    "width": 981
+  },
+  "capturedAt": "2026-10-03T02:49:20.294Z"
+}

@@ -1,0 +1,53 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "我的场地申请":
+      - /url: "#/venues"
+      - generic: 我的场地申请
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "我的场地申请" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 周老师
+  - generic: 老师
+  - button "退出当前账号":
+- main:
+  - link "返回原列表":
+    - /url: "#/venues?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "M5新主线 · 窗边共读 已批准" [level=2]:
+    - text: M5新主线 · 窗边共读
+    - generic: 已批准
+  - term: 空间
+  - definition: R-A
+  - term: 申请主体
+  - definition: "3"
+  - term: 当前版本
+  - definition: "2"
+  - term: 开始
+  - definition: 10/03 13:00
+  - term: 结束
+  - definition: 10/03 14:00
+  - paragraph: c411cfe7固定产物真实页面验收，演示读书交流；不是现实活动。
+  - paragraph: 主线演示验收：确认人数及13:00–14:00时段无有效冲突，批准空间使用权。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+  - button "明确取消"
