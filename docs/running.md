@@ -66,4 +66,4 @@ M5运行 `python scripts/veritrail_native.py --stage m5 --maven <mvn>`，随后�
 
 NOT_RECONCILED时健康与业务入口503，原键/凭据保留，演示初始化和调度不继续。恢复与账册相符的数据库再重启可以重新核对；不提供网页强制继续。整主机一起回退、特权SQL绕过、长时间账册轮换、多节点与灾备能力仍未证明。32MiB/200,000事件硬预算耗尽会隔离，不截断历史；现阶段需监控账册大小，不能视作无限运行容量。
 
-M7 native0.16/Plan4执行162项（147原见证+15文件/受控DB视图及框架单元），专属测试库账册持久保存于`.tools/runtime/native-<schema>`；真实恢复另运行`veritrail_m7_restore.py --producer-bundle <同source的原native0.16/Plan4 Bundle> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`。它只初始化本轮新数据目录和6975/6976独占实例，保留T0/T1/独立world见证，宿主3306不动。0.4/Plan4保留原18项并加4个一致前提控制；测试成功、页面资格和最终Release分别判定。
+M7 native0.17/Plan5执行166项（147原见证+15文件/受控DB视图及框架单元+4真实事务对照），专属测试库账册持久保存于`.tools/runtime/native-<schema>`；真实恢复另运行`veritrail_m7_restore.py --producer-bundle <同source的原native0.17/Plan5 Bundle> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`。它只初始化本轮新数据目录和6975/6976独占实例，保留T0/T1/独立world见证，宿主3306不动。0.5/Plan5保留原18项及4个一致前提控制；测试成功、页面资格和最终Release分别判定。

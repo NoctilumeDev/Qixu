@@ -114,6 +114,20 @@
       "verdict": "PASS",
       "path": "artifacts/m7/m7-restore-26c39280202643e386b1a13b0734a991",
       "manifest_sha256": "71f29ed6ccdabe5ec4b5f325df7b1c7721a5f5addfb8d0a20f1d178d77eb7132"
+    },
+    {
+      "identity": "m7-6b71360aeabb4012a2a1547f8cc7daca",
+      "source_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-6b71360aeabb4012a2a1547f8cc7daca",
+      "manifest_sha256": "bbe25aa1c6eee37c76281b7ee0c2b26e9fddcd97569f4f5bbe9b6be3e3ca0ac8"
+    },
+    {
+      "identity": "m7-restore-683b6742e8bc4eff9b860c1685a46c62",
+      "source_sha": "8337fe43f3464b5a0362519116f9958f8db28b87",
+      "verdict": "PASS",
+      "path": "artifacts/m7/m7-restore-683b6742e8bc4eff9b860c1685a46c62",
+      "manifest_sha256": "8fba952baebfa159b747743a110cc31005d2daab02b415e978889bb1749ba269"
     }
   ],
   "not_proven": [
@@ -122,12 +136,12 @@
     "WeChat device",
     "production capacity",
     "whole-host rollback and privileged DB/file tampering",
-    "multi-node recovery and physical power loss",
-    "real transaction nesting and marker visibility controls"
+    "multi-node recovery and physical power loss"
   ],
   "metadata_oracle_contract": "docs/contracts/m7-metadata-oracle.md",
   "metadata_repair_source_sha": "a3245e17edc116810d01bd8f800cf5102ed71caa",
   "restore_contract": "docs/contracts/m7-restore-fence.md",
   "restore_repair_source_sha": "88df403d9df6bac79d8943f063dc48d81f7fc93e",
-  "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010"
+  "restore_isolated_observation_sha": "ec31a60f475d14835d37958a668513deaf094010",
+  "transaction_observation_sha": "8337fe43f3464b5a0362519116f9958f8db28b87"
 }

@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-2026-10-03：**M0–M6限定范围已验收；M7–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
+2026-10-03：**M0–M6限定范围已验收；M7–M10尚未完成**。M5在受保护main@c411cfe7取得真实浏览器及MySQL证据；M6在受保护main@5ca0b5e取得三项公开CI、fresh原生142、干净构建31，以及真实暗室接入、同库重启和固定未来round的独立复算，见[M6范围和首败](docs/acceptance/m6.md)。M7新增[旧库恢复与独立账册候选复验](docs/acceptance/m7-restore.md)，原失败和边界均保留，尚非完整M7。当前资格不含微信真机、最终视觉或整个工程。历史证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)，前端精修归[M10](docs/contracts/frontend-refinement.md)。
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 

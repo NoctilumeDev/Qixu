@@ -32,6 +32,18 @@
 | 真掉电、fsync/文件系统失效、驱动commit响应真丢失 | 现有文件IO/真实框架受控异常不等于断电；需隔离故障宿主/驱动网络代理 | F12物理故障合同，重放保留原PREPARE坐标；期序维护者 |
 | 多节点共享库或长期账册耗尽 | 当前单实例独占文件锁、32MiB/200,000事件，耗尽隔离；无轮换/多节点资格 | 新部署/轮换合同与容量环境出现时重开，不截断旧历史；期序维护者 |
 | 实际微信送达或学生已读 | 独立world仅证明采集器读到站内通知，不证明平台/真人 | F10微信设备及渠道合同；设备观察可用时重开，期序维护者 |
-| REQUIRES_NEW/只读/marker真实可见性 | 现有真实业务回归及受控机制不代替明确框架组合对照 | 下一真实事务坐标合同；期序维护者，M7范围内继续验证 |
 
 F12限定旧库/缺账册反例已修复复验；其他机制、实际页面、M8双角色与M10仍待完成，不能从本段PASS升级整个M7。
+
+## 实际MySQL事务坐标补充
+
+合同[真实事务坐标v1](../contracts/m7-transaction-coordinates.md)在4a8caa4先于新增用例实现。8337fe43f3464b5a0362519116f9958f8db28b87取得[native0.17/Plan5 PASS166](../../artifacts/m7/m7-6b71360aeabb4012a2a1547f8cc7daca/acceptance-report.md)，包含原162及4个实际MySQL对照：
+
+| trace | 原始SQL观察 |
+| --- | --- |
+| 提交可见性 | beforeCommit本事务业务1/marker增1；独立连接业务0/marker增0；commit后分别1/1 |
+| REQUIRES_NEW与外层回滚 | 内层真实提交1行/1marker；外层及REQUIRED加入事务各0行，不产生额外marker |
+| 普通回滚与只读 | 原写行0，查询0，新marker0 |
+| 禁止savepoint与正常恢复 | nested拒绝且行0；同外层正常写1/marker增1 |
+
+同source的[restore0.5/Plan5 PASS22](../../artifacts/m7/m7-restore-683b6742e8bc4eff9b860c1685a46c62/acceptance-report.md)保留0.4全部22断言，仅绑定新的原producer。T0隔离、7marker/7COMMIT一致正控制、仅移走账册后的503再次成立，全部owned停止且两端口无监听。版本控制/回调故障与实际连接隔离分别保留，不升级为真断电或分布式提交证明。

@@ -219,3 +219,11 @@ main@95be282后的两端基础施工首次npm install退出ERESOLVE：uni-app固
 ec31a60的fresh native162与restore0.4/Plan4 [PASS22](../artifacts/m7/m7-restore-26c39280202643e386b1a13b0734a991/acceptance-report.md)：新T1在正常重启后停止应用采集，第二trace恢复后实际200/同回执；独立链与SQL全部marker/generation一致（7 COMMIT、7 marker、0未决），随后只移走存在账册而不再恢复DB，健康/回执均503 NOT_RECONCILED。原18断言未变，新增4个前提均成立，纯缺账册限定资格补齐；原混杂PASS不变。
 
 共享服务复核第一次使用Get-Process.StartTime时受保护MySQL返回null且100ns格式不匹配，原命令/不完整快照保留，不据此宣称相同。改用CIM CreationDate与原捕获同六位精度，真实核对3306/6947/7897的PID和启动时间一致、owned6975/6976无监听，未执行任何共享停止。此为观察接线纠正，非产品修复。
+
+## M7 F12 · 实际框架组合控制与公开来源边界
+
+8337fe4的native0.17/Plan5 PASS166含4条实际MySQL事务控制，marker/业务可见性、REQUIRES_NEW外层回滚、普通回滚/只读及禁止nested均符合冻结合同。restore0.5/Plan5保留22原断言再次通过。原首FAIL不变，不把上述控制说成commit网络真丢失。
+
+补查[Connector/J故障语义](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-troubleshooting.html)说明通信失败不能判定服务器是否commit，是保留UNKNOWN的独立来源。[Hikari历史#1116](https://github.com/brettwooldridge/HikariCP/issues/1116)是旧2.x/3.0已关闭的连接状态增强，只启发只读/池复用对照；[Spring#37084](https://github.com/spring-projects/spring-framework/issues/37084)是Boot3.5/JPA/嵌套事件报告，期序JDBC7.0.9无该事件链，不能搬来宣称漏洞。
+
+[Hikari Rapid Recovery](https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery)提示取连接超时不约束已借出的连接。当前只看到pool connection-timeout=3000，尚未实际验证长SQL/借出连接故障预算。登记F15相邻trace：固定驱动/池版本、独占数据库或loopback故障代理，先观察当前默认预算，再验证明确网络/锁预算及UNKNOWN/隔离；不对共享3306注入故障。触发为借出连接后TCP/SQL停滞，影响锁持有/任务截止与服务恢复；缺实际故障证据，归属期序维护者，M7范围内继续验证。
