@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {computed,ref,watch} from 'vue';
+import {computed,ref,watch,nextTick} from 'vue';
 import {ApiError,StaleResponse,label,formatTime,type Row,type Page,type Space} from '@qixu/client';
 import {api,asset,auth,baseUrl,client,errorMessage,go,icon,releaseDownloaded} from '../runtime';
 const props=defineProps<{view:string;resourceId:number}>();
 const id=computed(()=>props.resourceId);
 const data=ref<Row>({}),items=ref<Row[]>([]),shorts=ref<Row[]>([]),venues=ref<Row[]>([]),parts=ref<Row[]>([]),myBatches=ref<Row[]>([]),options=ref<Row[]>([]),error=ref(''),message=ref(''),busy=ref(false),loading=ref(false),page=ref(1),total=ref(0);
+watch(error,async value=>{if(!value)return;await nextTick();if(error.value===value)uni.pageScrollTo({scrollTop:0,duration:160});});
 const username=ref(''),password=ref(''),origin=ref(String(uni.getStorageSync('qixu.apiOrigin')||'')),spaceId=ref(String(props.resourceId||'')),category=ref('OUTLET'),description=ref(''),statement=ref('');
 const feedbackSpace=ref<Space|null>(null),attachments=ref<{id:number;path:string}[]>([]);
 const preferences=ref<Record<string,number>>({}),keepWaitlist=ref(true),dirty=ref(false),impact=ref<Row|null>(null),impactOffer=ref(0),agreedImpact=ref(false),exitConfirmation=ref(false);
