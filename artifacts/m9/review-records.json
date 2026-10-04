@@ -203,6 +203,48 @@
           "public_path": "reviews/m9-product-final-review-f0ef8e0-complete/erratum-batch-title-round.md"
         }
       ]
+    },
+    {
+      "role_record": "m9-test-public-projection-review-d35d79d",
+      "candidate_source_sha": "d35d79dd3461e7fe6869ca3383038f8d83d39225",
+      "minimal_correction_reviewed": "944fc563dd0d5e805b4c5e0db803fa24225da84a",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-test-public-projection-review-d35d79d/report.md",
+          "size": 6090,
+          "sha256": "2b7d815ac004084f6ec5c84eddbc12b95adff081b88b73d43c5192d26d2f349d",
+          "public_path": "reviews/m9-test-public-projection-review-d35d79d/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-test-public-projection-review-d35d79d/metadata.json",
+          "size": 13392,
+          "sha256": "bff824ffebedb0d86f5b3646a665ff40a65e59955d5118507d37b6102e3585cc"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-product-public-projection-review-d35d79d",
+      "candidate_source_sha": "d35d79dd3461e7fe6869ca3383038f8d83d39225",
+      "minimal_correction_reviewed": "944fc563dd0d5e805b4c5e0db803fa24225da84a",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-product-public-projection-review-d35d79d/report.md",
+          "size": 5531,
+          "sha256": "67181c3fe300f26786ecf3441c9aab61ea90edf84380a4eb92478346a17c377b",
+          "public_path": "reviews/m9-product-public-projection-review-d35d79d/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-product-public-projection-review-d35d79d/metadata.json",
+          "size": 2377,
+          "sha256": "79cb386504f82521a4fe1bce6a552a3f927b0b6e8217d69ee8a7837da158e4bb"
+        },
+        {
+          "original_local_path": ".tools/m9-product-public-projection-review-d35d79d/addendum-944fc563.md",
+          "size": 1792,
+          "sha256": "449a343b397c611d0bddb1e05260c0d796ec54cbb72b32810c3489c2373c3a18",
+          "public_path": "reviews/m9-product-public-projection-review-d35d79d/addendum-944fc563.md"
+        }
+      ]
     }
   ],
   "corrections": [
