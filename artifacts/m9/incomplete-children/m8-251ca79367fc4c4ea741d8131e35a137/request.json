@@ -1,0 +1,29 @@
+{
+  "collector": "qixu-native/0.22",
+  "contract_sha256": "be21ae2fbbf91e3e75121fcb4d294e3aaeda6374a78c61bfc77f255075a9ef00",
+  "database_budget_contract_sha256": "089868b912f22ada64c6b94e07fa8e43fd24c11f439c8c443a3ae659ad258aee",
+  "m8_contract_sha256": "3a42c4d2e4a88e1817d19a20ff0ee2bec9b1e58f1a3d3bdce5ea98ae0f7b6501",
+  "metadata_oracle_contract_sha256": "34d9423e4f10919754a460f623f54c4beb195ff029868ab2fe47e9e89714ee7a",
+  "migration_sha256": {
+    "V10__recovery_generation.sql": "a473db2c97e4bd2237ec1aaaaa04a511d79c45e98a6417c71ff8e232d582c1c2",
+    "V1__identity_and_spaces.sql": "2406a2fd5679db1349fbb9f2df0247cb6f44698623c9cede45bef09639c337f1",
+    "V2__short_venue_and_events.sql": "2d51880f0b3030a0d0a348d211f0292e5f1082a3ffa8dba4bf470d2a95db50a3",
+    "V3__preparation_versions_and_rights.sql": "0209d42c24fc5b882fa0f39d1bffd5d3c0b8153c46af823018726d61cceea1eb",
+    "V4__feedback_facts_and_repairs.sql": "22f9ddd00012c57ad80f0d93119fdc79ce260f9e7a1b763a59b37a4f937a1bfa",
+    "V5__spatial_limits_and_temporary_rights.sql": "6ad7763ec2fd1ef001bcac068b0e607c815ae636a5e4987ea642994544c17759",
+    "V6__immutable_block_recipients.sql": "bb2ad17ff8aa3789b7853abb5feb2ef5edc3b65621ecead4d7d2af643f4768ee",
+    "V7__temporary_facilities_and_repair_sources.sql": "04411ed16b375f2dd0a3fb5ed284dc6178adb22b99f670511d554136cb3507bc",
+    "V8__entitlement_governance_cases.sql": "637f14246848533dcb62276dc782ab8cf7e7e4924b530bc6dfc91c353e55d5fa",
+    "V9__external_session_bindings.sql": "d5fd7b7978ed72347c2cc47bb54377c586de251e387b52761e9515e3be3fda27"
+  },
+  "recovery_fixture": {
+    "baseline_adoption": "ADOPT_PRE_V10_ONCE",
+    "contexts": "AFTER_CLASS",
+    "journal": "persistent-dedicated-test-db-ledger",
+    "recovery_bypass": false
+  },
+  "restore_contract_sha256": "b63c79d8296366f403b8e19de14095c00e4c50fdf076f45932c1a79e2ae342b9",
+  "source_sha": "12bdf5d3f1794058385d374f445b5e83fbb263e0",
+  "stage": "m8",
+  "transaction_contract_sha256": "e35f3568d4c258f1549d5bd7aedf8ce924ef133f9da38b673585d8460a8ea2c7"
+}

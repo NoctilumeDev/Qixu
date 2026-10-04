@@ -10,13 +10,13 @@
 
 本轮自动施工与收尾止于 **M9 工程交付**。M10 前端精修由用户参与，待以后明确重新开启；工程交付资格、视觉精修与微信真机边界分别记录，不以M10延期提前授予M8/M9通过。
 
-2026-10-04：**M0–M8限定范围已验收；M9待交付，M10等待用户参与**。当前可运行代码、阶段限定资格和整个工程交付分别记录：
+2026-10-04：**M0–M9限定范围已验收；M10等待用户参与**。工程预发行版见 [v0.1.0-engineering.1](https://github.com/NoctilumeDev/Qixu/releases/tag/v0.1.0-engineering.1)。当前可运行代码、阶段限定资格和视觉/设备资格分别记录：
 
 | 阶段 | 当前事实 |
 | --- | --- |
 | M0–M7 | 已取得各自限定资格。[M7主线证据](docs/acceptance/m7.md)保留原失败、修复及有限停止线；不宣称零缺陷 |
 | M8 | [PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)受保护合入 `4c220626`；该主线 fresh 原生181、前端61及原条件实页/SQL通过，两名独立角色完成新原件对齐。见[M8限定资格](docs/acceptance/m8.md#2026-10-04--主线有限退出) |
-| M9 | IN_PROGRESS。[交付合同](docs/contracts/engineering-delivery.md)已冻结，正在准备[两次fresh运行](docs/m9-reproduction.md)、验迹裁决与公开候选；尚未授予资格 |
+| M9 | 实际源码`f0ef8e0`，两次公共fresh检出、各native181/frontend61、真实未来分配、七实页/SQL及同库正常重启；Core0.13父PASS/COMPLETED。原首败、公开交付及证明边界见[M9](docs/acceptance/m9.md) |
 | M10 | 已按用户要求后置；以后由用户参与并明确开启。最终视觉和微信真机仍为待验边界 |
 
 PM11已在真实开放窗口完成正常身份切换、双方参与/候补及原短约保留复验。原 Core **FAIL / ERROR** 与旧未执行计划均保留；后续通过不覆盖首败。阶段证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)、[M6](docs/acceptance/m6.md)、[M8](docs/acceptance/m8.md)；前端精修归[M10](docs/contracts/frontend-refinement.md)。
@@ -25,7 +25,7 @@ PM11已在真实开放窗口完成正常身份切换、双方参与/候补及原
 
 十六条反例与外部经验的实际证明范围见[覆盖复核](docs/coverage-review.md)。[机制账册](docs/m7-coverage-ledger.md)与[未知重入](docs/m7-unknowns.md)区分已验证和未证明；[M8合同](docs/contracts/independent-review.md)保留独立测试和产品复核的有限停止条件。后续只处理阻断发现及原条件复验，不继续穷举同类排列。
 
-![学生空间档案](artifacts/m5/captures/m5-browser-56dddaca528e4a2bb46ddf8dff8fb1b5/student-space.png)
+![学生空间档案 · M9第二轮实际H5](artifacts/m9/captures/m9-engineering-bc4fdd5dfe7442aaaa4b4a1719013c95/run-2/student-space.jpg)
 
 | 部分 | 设计方向 |
 | --- | --- |
@@ -70,6 +70,7 @@ PM11已在真实开放窗口完成正常身份切换、双方参与/候补及原
 | [生命周期合同](docs/lifecycle.md) | 时间、会话、重试、就绪及前端请求所有权 |
 | [可靠性合同](docs/reliability.md) | 断网、未知提交、原键恢复与通知事实 |
 | [运行说明](docs/running.md) | 独立 MySQL、明确演示模式和当前后端入口 |
+| [M9复现与工程包](docs/m9-reproduction.md) | 两次fresh运行、原裁决、预发行包和本机休眠恢复入口 |
 | [外部身份合同](docs/contracts/external-identity-and-recovery.md) | 显式绑定、票据保护、权限及恢复边界 |
 
 ## 独立积木

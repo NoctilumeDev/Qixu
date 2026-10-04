@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "graceful_marker": true,
+  "method": "OWNED_STDIN_SYSTEM_EXIT_0",
+  "normal_exit": true,
+  "processId": 28952,
+  "stopped": true,
+  "stoppedUtc": "2026-10-04T02:47:23.805978+00:00"
+}

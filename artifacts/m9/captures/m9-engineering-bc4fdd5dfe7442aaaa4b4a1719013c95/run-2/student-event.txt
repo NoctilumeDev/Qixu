@@ -1,0 +1,28 @@
+- generic: 活动详情
+- generic: 已确认回执 bz66m8kj。
+- generic: M9 演示读书会
+- generic: 预约开放
+- generic: 演示老师 · 10/05 14:00—10/05 15:00
+- generic: 第二轮 M9 演示读书会，非真实校园活动。
+- generic: 请遵守空间使用规则。
+- generic: 图书馆 · 三楼 · 学习与研讨 · R-A 研讨室 A
+- button "查看场地档案与位置"
+- generic: 预约开放
+- generic: 10/04 10:00
+- generic: 预约截止
+- generic: 10/05 13:00
+- generic: 递补停止
+- generic: 10/05 13:30
+- generic: 当前剩余0/1名额；满额进入按预约顺序候补。
+- generic: 我的状态：已确认 · 顺序1
+- button "取消本次活动预约"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

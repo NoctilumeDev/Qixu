@@ -276,3 +276,11 @@ SQL：published_events=1、confirmed_parts=1、waitlisted_parts=1、kept_short=1
 ## 2026-10-04 · M9范围先冻结
 
 M8主线4c220626的两角色/原包/实页/SQL闭合后，冻结contracts/engineering-delivery.md 0.1。M9只验证两次公共fresh clone、锁定依赖/迁移、有限正常链、同库journal正常重启与工程候选公开对齐；不新增业务、不扩张攻击、不启动M10。父Plan在两次producer之前seal，原首败和当前未知保留。Windows本机owned工具链由采集器管理，不宣称通用部署托管。
+
+## 2026-10-04 · M9首败、两次fresh与工程交付
+
+原M9入口分别暴露RSA URL编码、Windows落盘路径长度和Core脱敏前摘要/脱敏后Evidence误比较，三个父PENDING/ERROR均保留。PR#30–32只修对应边界，第三项最小版本化合同0.2/Plan2；不改Core、原Verdict或产品业务判据。业务事实及脱敏隐藏名称改动的负控制均拒绝。
+
+actual main f0ef8e0523b4441fbd710796f75d881f2476e4f1的CI37170285041三任务/32步骤和六文件读回成功。新父先seal后两次公共clone，native181/frontend61、真实未来round、正常CUA七状态/SQL/同库正常重启全部闭合，Core0.13父m9-engineering-bc4fdd5dfe7442aaaa4b4a1719013c95 PASS/COMPLETED。两个JAR不同，未声称bit-identical。第一轮桌面attempt及手机全页日期列表原件保留限定；第二轮新390初始化图无列表，主页只换用第二轮原图。
+
+公开12原Bundle、65原capture/run/incomplete文件、原件校验器及工程预发行版v0.1.0-engineering.1；tag绑定actual source，纯文档投影不重复制造安装资格。两角色有限原件复核及剩余P3、运行/未知边界见[M9](acceptance/m9.md)。本轮止于M9，收尾只清owned可重建实例，Git/首败/正式证据保留；179图候选暂停，不开始其他仓库。

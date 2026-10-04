@@ -1,6 +1,6 @@
 # M9 两次干净工程复现
 
-状态：IN_PROGRESS，尚未取得工程候选资格。范围以[交付合同](contracts/engineering-delivery.md)为准，M10等待用户参与。
+状态：VERIFIED_LIMITED_FRESH_ENGINEERING_CANDIDATE。实际两轮源码f0ef8e0，Core0.13父PASS/COMPLETED，原件及公开工程包见[M9验收](acceptance/m9.md)。范围以[交付合同](contracts/engineering-delivery.md)为准，M10等待用户参与。
 
 使用公开固定的VeriTrail Core0.13.0及Python3.10、Java17、MySQL8.0.44、Maven3.9.11、Node24.14.0/npm11.9.0。安装依赖和工具路径见[运行说明](running.md)。本采集器为Windows单实例项目适配器，不是验迹提供通用多服务托管能力。
 

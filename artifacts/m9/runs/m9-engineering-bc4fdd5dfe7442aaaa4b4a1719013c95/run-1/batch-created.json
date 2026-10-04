@@ -1,0 +1,10 @@
+{
+  "algorithm": "qixu-max-cardinality-lottery-v2",
+  "closes_at": "2026-10-04T02:18:23Z",
+  "freeze_deadline": "2026-10-04T02:18:53Z",
+  "id": 1,
+  "public_id": "f48b7de0-577b-4749-be4f-213c2785a985",
+  "random_at": "2026-10-04T02:19:09Z",
+  "result_deadline": "2026-10-04T02:23:23Z",
+  "source_round": 32758995
+}

@@ -1,0 +1,36 @@
+{
+  "cleanup": {
+    "children": [
+      {
+        "name": "mysql",
+        "stopped": true
+      }
+    ],
+    "ports_free": {
+      "6967": true,
+      "6968": true,
+      "6969": true,
+      "6980": true
+    },
+    "threads_stopped": true
+  },
+  "clone": {
+    "checkout_relative": ".tools/9064ec0b51",
+    "created_at": "2026-10-04T01:53:15.341558+00:00",
+    "no_initial_instances": true,
+    "origin": "https://github.com/NoctilumeDev/Qixu.git",
+    "source_sha": "430928a7431595c100b813aa181d4f2ead26a191",
+    "tree": "51e1aa3a591c501f3b19414c776449d11316c354"
+  },
+  "execution_status": "ERROR",
+  "failure": {
+    "message": "Unbound child facts",
+    "type": "RuntimeError"
+  },
+  "finished_at": "2026-10-04T01:58:57.403402+00:00",
+  "jar_sha256": "e4f711361b443d116743cc3dd5e4bed5bf745036eb46329457896fc62be95b83",
+  "native": "artifacts\\local\\m8-c8c75168fe66438a82c0ad8c88c97f21",
+  "run": 1,
+  "source_sha": "430928a7431595c100b813aa181d4f2ead26a191",
+  "started_at": "2026-10-04T01:53:09.786764+00:00"
+}

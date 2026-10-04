@@ -1,0 +1,262 @@
+{
+  "boundary": "ORIGINAL_ROLE_REPORTS_NOT_CORE_VERDICTS_NO_PERSONAL_BROWSER_OPERATION_OR_PUBLICATION_CLAIM_INHERITANCE",
+  "qualified_runtime_source": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+  "reports": [
+    {
+      "role_record": "m9-product-entry-review-72642b7",
+      "candidate_source_sha": "72642b748bb94bbee33f907efef8b40ec22720af",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-product-entry-review-72642b7/report.md",
+          "size": 5615,
+          "sha256": "11038ba0d04eb1808b407fd523c93ecbd249e362affa0e736a823b73b5dfb724"
+        },
+        {
+          "original_local_path": ".tools/m9-product-entry-review-72642b7/metadata.json",
+          "size": 1675,
+          "sha256": "702f68f88d7bcad73cf3559042fd8baa84add1e2db1f6ff84bbd14f136810261"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-test-entry-review-72642b7",
+      "candidate_source_sha": "72642b748bb94bbee33f907efef8b40ec22720af",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-test-entry-review-72642b7/report.md",
+          "size": 4888,
+          "sha256": "71637a9451492ea34b72f43f3cea7f86e2d6ce113221ddb000aa7179319f4044"
+        },
+        {
+          "original_local_path": ".tools/m9-test-entry-review-72642b7/metadata.json",
+          "size": 3106,
+          "sha256": "c7e810792154f6ddbeae8aa2dbcbb3f467caea5ee756f97c364e2cc52cfe520a"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-product-entry-recheck-e28762a",
+      "candidate_source_sha": "e28762ad2bc9d5506fa92c2495d348b02e1d6568",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-product-entry-recheck-e28762a/report.md",
+          "size": 3456,
+          "sha256": "a7064e21737151710b58e01d5ae6000011c9a03ecb307fb1756b271444da86dc"
+        },
+        {
+          "original_local_path": ".tools/m9-product-entry-recheck-e28762a/metadata.json",
+          "size": 1430,
+          "sha256": "5e80b1a561a2a1a19b48785cf580bcf80335fe4248adfed71c8b10621de4a197"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-test-entry-recheck-e28762a",
+      "candidate_source_sha": null,
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-test-entry-recheck-e28762a/report.md",
+          "size": 7244,
+          "sha256": "72ac0843347ccbc228d5090d9796b9a3d6a07c275999398b56287d2aae36982c"
+        },
+        {
+          "original_local_path": ".tools/m9-test-entry-recheck-e28762a/metadata.json",
+          "size": 5682,
+          "sha256": "8f0d616846796ee58ec50eb9601301b82f1c2489451de9a0b23316ca5aa6e38d"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-url-test-review-90894b5",
+      "candidate_source_sha": "90894b5b25bee933ef4d81d7339afb67a5ca6f4b",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-url-test-review-90894b5/report.md",
+          "size": 4510,
+          "sha256": "bf19dea57480dfd95f921d37656ea5d848b50e68b525dd75fac9d38e2b6c0f4f"
+        },
+        {
+          "original_local_path": ".tools/m9-url-test-review-90894b5/metadata.json",
+          "size": 10407,
+          "sha256": "d77e97e15f60af7d3f404deba614ac03dadfb3715ec7608007e36694e8f3a897"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-path-test-review-434d6e1",
+      "candidate_source_sha": "434d6e187618636e90216b2cae672f4e7b78fd40",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-path-test-review-434d6e1/report.md",
+          "size": 4147,
+          "sha256": "e0c6782388190fb35c25045852a7a0c9eed914f1ed229f12973f75047de3a68a"
+        },
+        {
+          "original_local_path": ".tools/m9-path-test-review-434d6e1/metadata.json",
+          "size": 15451,
+          "sha256": "52ffc5382eb521d7aa18e4e8d53159f5eb70596122958d17c1f252ccb3ee0ce6"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-final-entry-test-review-430928a",
+      "candidate_source_sha": null,
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-final-entry-test-review-430928a/report.md",
+          "size": 4253,
+          "sha256": "fcc660eafed85702e5304221f54e41147dce4de79a4411a54f29eef3668fe6b9"
+        },
+        {
+          "original_local_path": ".tools/m9-final-entry-test-review-430928a/metadata.json",
+          "size": 18647,
+          "sha256": "069a45252d3f6c09d374885b8fb506ceefe4f470d1b9d9cd8799b89bad0a4519"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-privacy-entry-test-review-2e52556",
+      "candidate_source_sha": "2e525561f94529faccca587279f8d637c8c77b03",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-privacy-entry-test-review-2e52556/report.md",
+          "size": 4845,
+          "sha256": "b9f2db79a851195e53a8442b152e002388a7ea32d24f07086eccab7b53eb98c7"
+        },
+        {
+          "original_local_path": ".tools/m9-privacy-entry-test-review-2e52556/metadata.json",
+          "size": 15300,
+          "sha256": "4942567e3779fa563c00c355c77d1828b8febe31ff5a042606e2183c5949ff02"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-test-final-review-f0ef8e0-run1",
+      "candidate_source_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-test-final-review-f0ef8e0-run1/report.md",
+          "size": 6433,
+          "sha256": "af7e5f0b68a41b92d0173d46b5757a159b58f1929e6c9f8f8a7783b3fe7818f8",
+          "public_path": "reviews/m9-test-final-review-f0ef8e0-run1/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-test-final-review-f0ef8e0-run1/metadata.json",
+          "size": 37108,
+          "sha256": "3ab4612dc17504e7187c259db6e954db5a022613c8744a924096f3fac3d4087e"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-product-final-review-f0ef8e0-run1",
+      "candidate_source_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-product-final-review-f0ef8e0-run1/report.md",
+          "size": 6234,
+          "sha256": "d808f3681c9a2f3078114d014d301ac7820dbc8f70b75daf4e27ca426521cb4b",
+          "public_path": "reviews/m9-product-final-review-f0ef8e0-run1/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-product-final-review-f0ef8e0-run1/metadata.json",
+          "size": 3787,
+          "sha256": "9952bc2f31ece5a01893181e501426bfd541c0c87eddddfccc36149db605325c"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-test-final-review-f0ef8e0-complete",
+      "candidate_source_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-test-final-review-f0ef8e0-complete/report.md",
+          "size": 9854,
+          "sha256": "bbead23bae99a3c1d14b57371e6f837d5e2354bd9afd8f455f9d1656cac8f7c5",
+          "public_path": "reviews/m9-test-final-review-f0ef8e0-complete/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-test-final-review-f0ef8e0-complete/metadata.json",
+          "size": 108461,
+          "sha256": "6b8fd92842541c1924ebcaf8f9992e49efbbd34708d36d365c2f2281eb23d593"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-product-final-review-f0ef8e0-complete",
+      "candidate_source_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-product-final-review-f0ef8e0-complete/report.md",
+          "size": 9782,
+          "sha256": "efdb128c5a981595dbfc63f96c8438a46cc28566d5af95dd01a11ac731f6e473",
+          "public_path": "reviews/m9-product-final-review-f0ef8e0-complete/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-product-final-review-f0ef8e0-complete/metadata.json",
+          "size": 7373,
+          "sha256": "2c0cdb3476b78af8c943960a56941463dd2726541d71699e889c68a1c5014e07"
+        },
+        {
+          "original_local_path": ".tools/m9-product-final-review-f0ef8e0-complete/erratum-batch-title-round.md",
+          "size": 1562,
+          "sha256": "f04d0ec885a5d44d1f1b5a425476ea68021bf20dd59801f242135690ec006617",
+          "public_path": "reviews/m9-product-final-review-f0ef8e0-complete/erratum-batch-title-round.md"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-test-public-projection-review-d35d79d",
+      "candidate_source_sha": "d35d79dd3461e7fe6869ca3383038f8d83d39225",
+      "minimal_correction_reviewed": "944fc563dd0d5e805b4c5e0db803fa24225da84a",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-test-public-projection-review-d35d79d/report.md",
+          "size": 6090,
+          "sha256": "2b7d815ac004084f6ec5c84eddbc12b95adff081b88b73d43c5192d26d2f349d",
+          "public_path": "reviews/m9-test-public-projection-review-d35d79d/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-test-public-projection-review-d35d79d/metadata.json",
+          "size": 13392,
+          "sha256": "bff824ffebedb0d86f5b3646a665ff40a65e59955d5118507d37b6102e3585cc"
+        }
+      ]
+    },
+    {
+      "role_record": "m9-product-public-projection-review-d35d79d",
+      "candidate_source_sha": "d35d79dd3461e7fe6869ca3383038f8d83d39225",
+      "minimal_correction_reviewed": "944fc563dd0d5e805b4c5e0db803fa24225da84a",
+      "documents": [
+        {
+          "original_local_path": ".tools/m9-product-public-projection-review-d35d79d/report.md",
+          "size": 5531,
+          "sha256": "67181c3fe300f26786ecf3441c9aab61ea90edf84380a4eb92478346a17c377b",
+          "public_path": "reviews/m9-product-public-projection-review-d35d79d/report.md"
+        },
+        {
+          "original_local_path": ".tools/m9-product-public-projection-review-d35d79d/metadata.json",
+          "size": 2377,
+          "sha256": "79cb386504f82521a4fe1bce6a552a3f927b0b6e8217d69ee8a7837da158e4bb"
+        },
+        {
+          "original_local_path": ".tools/m9-product-public-projection-review-d35d79d/addendum-944fc563.md",
+          "size": 1792,
+          "sha256": "449a343b397c611d0bddb1e05260c0d796ec54cbb72b32810c3489c2373c3a18",
+          "public_path": "reviews/m9-product-public-projection-review-d35d79d/addendum-944fc563.md"
+        }
+      ]
+    }
+  ],
+  "corrections": [
+    {
+      "original": "m9-test-final-review-f0ef8e0-run1",
+      "corrected_by": "m9-test-final-review-f0ef8e0-complete",
+      "scope": "SQL item2 is PUBLISHED event; item7 is ACTIVE entitlement. Original numeric record was correct."
+    },
+    {
+      "original": "m9-product-final-review-f0ef8e0-complete/report.md",
+      "corrected_by": "m9-product-final-review-f0ef8e0-complete/erratum-batch-title-round.md",
+      "scope": "37871709 is displayed batch-title suffix; actual frozen/proof random round is 32759425."
+    }
+  ]
+}

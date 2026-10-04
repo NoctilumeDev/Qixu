@@ -1,0 +1,147 @@
+{
+  "name": "Qixu-v0.1.0-engineering.1.zip",
+  "bytes": 26857726,
+  "sha256": "25dce0d17754036431ba03eddedbf97bb94bf9b9d6cde4b90ef02f90c45275e2",
+  "source_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+  "parent_identity": "m9-engineering-bc4fdd5dfe7442aaaa4b4a1719013c95",
+  "files": {
+    "DELIVERY.json": {
+      "bytes": 503,
+      "sha256": "384770cc954472ffdeb18e99662cfac813381729b7f2422fef9e222620e4c82d"
+    },
+    "LICENSE": {
+      "bytes": 1069,
+      "sha256": "160db069f85c3cebe8485ca621764a7d92d67df5e5e3d8cf832a3caef4bb71aa"
+    },
+    "READ-ME-FIRST.md": {
+      "bytes": 2354,
+      "sha256": "56bb4248c95b8fedb216c1847a656babe696aac7a3d272ade33b0f376cc56fec"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/admin.zip": {
+      "bytes": 848657,
+      "sha256": "9cc1b192d216d6ba58f11c2de229929e63a2dd8cc64f72c0a579fe9b1b9d5466"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/bundle/acceptance-bundle-manifest.json": {
+      "bytes": 780,
+      "sha256": "771738caa4e98807b5b47d868a8f61e3acfcea6ba31f038eedddc85db78e6d7c"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/bundle/acceptance-evidence-manifest.json": {
+      "bytes": 782,
+      "sha256": "959838710f6e8ee9aff58ceb04e28d3f5b19ec41d2fbb4dcbe76baa88040f324"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/bundle/acceptance-report.json": {
+      "bytes": 40729,
+      "sha256": "6525e8be9665e09c5dcf67486055f7b16410054074442f7d99f3a43ac7945787"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/bundle/acceptance-report.md": {
+      "bytes": 30811,
+      "sha256": "11eb0ac4b700595ef50c48d21ac598cb5afc3865805d0cb3220442d35a4d4b77"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/bundle/evidence/001-qixu.frontend.build-82e4b80a28c9.json": {
+      "bytes": 42732,
+      "sha256": "82e4b80a28c9264d4337c072173691574eab174f5dbff956fff1b7197619434e"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/bundle/sealed-acceptance-plan.json": {
+      "bytes": 11738,
+      "sha256": "f48310076340f7e8b370ac43c3e433e31a8b3269096675b505913ad65fcce101"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/evidence.json": {
+      "bytes": 58971,
+      "sha256": "0ed49e9b2046602a778d06cc4521f34589c55efb5528e1bec0b32366789da843"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/h5.zip": {
+      "bytes": 930630,
+      "sha256": "57a290c96792738cdc82c585d073750b80350ce2cb0d2f2a93e8aa55c5cfdda7"
+    },
+    "artifacts/local/m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8/wechat.zip": {
+      "bytes": 882733,
+      "sha256": "b45d52adf663b2ebdcf25cedcc36da9e67ed9c77805fad982ae9fe07bea4d948"
+    },
+    "backend/.env.example": {
+      "bytes": 1612,
+      "sha256": "a38a344c2c3ce591a0583664a288c2bf848f668ef0f960dcebacdb179ac94c21"
+    },
+    "backend/qixu-api-0.1.0-SNAPSHOT.jar": {
+      "bytes": 26743520,
+      "sha256": "3457b243e6bca056ef50a506255b207b74c7c07413ccc29b40e6c6946e1a6d77"
+    },
+    "docs/assets.json": {
+      "bytes": 2190,
+      "sha256": "c7ac75ed084e2921d123f9b68b4a2481d46d609f11f5a50fce0d767b542c2283"
+    },
+    "docs/assets.md": {
+      "bytes": 1206,
+      "sha256": "b2b664f43969cf79945cf14d584ea897a7036b9d2da73d66c1ae642563c7a6ba"
+    },
+    "docs/contracts/engineering-delivery.md": {
+      "bytes": 4447,
+      "sha256": "b3007733684b0b5614bd2977d955a17d6f0a8df2c402d5fed81c3387fdb5afd2"
+    },
+    "docs/m9-reproduction.md": {
+      "bytes": 3500,
+      "sha256": "cd0e887457e38f0d61171d8b59aafe6f625bfbcf488a8765fd4a68eba7f58998"
+    },
+    "docs/running.md": {
+      "bytes": 15941,
+      "sha256": "ce748c6b51224f5660a1ac485339c02f80f9cb972050cf32f70013e91ab9dac7"
+    },
+    "migrations/V10__recovery_generation.sql": {
+      "bytes": 710,
+      "sha256": "a473db2c97e4bd2237ec1aaaaa04a511d79c45e98a6417c71ff8e232d582c1c2"
+    },
+    "migrations/V1__identity_and_spaces.sql": {
+      "bytes": 3013,
+      "sha256": "2406a2fd5679db1349fbb9f2df0247cb6f44698623c9cede45bef09639c337f1"
+    },
+    "migrations/V2__short_venue_and_events.sql": {
+      "bytes": 5666,
+      "sha256": "2d51880f0b3030a0d0a348d211f0292e5f1082a3ffa8dba4bf470d2a95db50a3"
+    },
+    "migrations/V3__preparation_versions_and_rights.sql": {
+      "bytes": 9820,
+      "sha256": "0209d42c24fc5b882fa0f39d1bffd5d3c0b8153c46af823018726d61cceea1eb"
+    },
+    "migrations/V4__feedback_facts_and_repairs.sql": {
+      "bytes": 4785,
+      "sha256": "22f9ddd00012c57ad80f0d93119fdc79ce260f9e7a1b763a59b37a4f937a1bfa"
+    },
+    "migrations/V5__spatial_limits_and_temporary_rights.sql": {
+      "bytes": 3479,
+      "sha256": "6ad7763ec2fd1ef001bcac068b0e607c815ae636a5e4987ea642994544c17759"
+    },
+    "migrations/V6__immutable_block_recipients.sql": {
+      "bytes": 1363,
+      "sha256": "bb2ad17ff8aa3789b7853abb5feb2ef5edc3b65621ecead4d7d2af643f4768ee"
+    },
+    "migrations/V7__temporary_facilities_and_repair_sources.sql": {
+      "bytes": 733,
+      "sha256": "04411ed16b375f2dd0a3fb5ed284dc6178adb22b99f670511d554136cb3507bc"
+    },
+    "migrations/V8__entitlement_governance_cases.sql": {
+      "bytes": 2691,
+      "sha256": "637f14246848533dcb62276dc782ab8cf7e7e4924b530bc6dfc91c353e55d5fa"
+    },
+    "migrations/V9__external_session_bindings.sql": {
+      "bytes": 1039,
+      "sha256": "d5fd7b7978ed72347c2cc47bb54377c586de251e387b52761e9515e3be3fda27"
+    },
+    "randomness/package-lock.json": {
+      "bytes": 6505,
+      "sha256": "59309b309957ea9fb636a31cb8c5a95f7c5caa765738ae4d5f9876b778895ce6"
+    },
+    "randomness/package.json": {
+      "bytes": 238,
+      "sha256": "23bd54feec333a660bb5a1ae0a75ca0220c55bd73bedc8f721ec0353269a0e87"
+    },
+    "randomness/verify.mjs": {
+      "bytes": 2334,
+      "sha256": "3874809e5698d70a3d9cc83efc940c651ec4e9f7d1e15c57192b0aa620a3ebdb"
+    },
+    "scripts/serve_bound_frontend.py": {
+      "bytes": 2794,
+      "sha256": "1a08367d9d1c3657e5c9cb3b671e49afb7a63b1f6ed1f5aadc48367516381429"
+    }
+  },
+  "archive_all_entries_original_or_declared_guide": true,
+  "plaintext_secret_or_database_inclusion": false
+}

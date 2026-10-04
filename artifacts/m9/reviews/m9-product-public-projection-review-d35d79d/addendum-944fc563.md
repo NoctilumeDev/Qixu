@@ -1,0 +1,16 @@
+M9公开投影有限增量附录：D-PM01关闭
+
+新固定文档候选：944fc563dd0d5e805b4c5e0db803fa24225da84a；其唯一父提交为d35d79dd3461e7fe6869ca3383038f8d83d39225。实际已运行及Release tag源码仍为f0ef8e0523b4441fbd710796f75d881f2476e4f1。
+
+只读核对两提交差异：唯一changed path为docs/running.md，numstat为1增1删，实际仅首段一行替换。其他tracked文件Git原blob保持相同，没有修改原Bundle、manifest、角色报告、勘误、packet或运行源码。
+
+docs/running.md:3已将“M9正在准备两次fresh工程复现”改为“M1–M9限定资格”及指向acceptance/m9的“两次fresh工程复现与预发行版已完成”；保留“M10等待用户参与”，并明确说明本文“不授予当前提交新的安装、生产或微信真机资格”。实际运行坐标通过M9验收入口及本文既有M9节继续绑定，未把新文档SHA冒称新的安装源码。
+
+D-PM01已关闭。基于原d35d79dd报告及本次唯一行增量，产品角色对944fc563固定文档候选没有剩余已确认公开一致性阻断。此前实际tag/两个上传资产的独立读取与流式下载核对结论不变，本次不再下载资产、不复查页面、不重跑产品/测试或完整性验证器。
+
+原report.md、metadata.json原文及摘要保留：
+report.md SHA256 67181c3fe300f26786ecf3441c9aab61ea90edf84380a4eb92478346a17c377b。
+metadata.json SHA256 79cb386504f82521a4fe1bce6a552a3f927b0b6e8217d69ee8a7837da158e4bb。
+
+受保护合入PR #33、exact-main CI/远端文档及原字节读回、owned清理由主流程继续执行，本附录不声称这些后续动作已发生。M10保持DEFERRED_HUMAN_PARTICIPATION，不扩大任何运行或设备资格。
+增量校对完成UTC：2026-10-04T03:15:37.2088445Z

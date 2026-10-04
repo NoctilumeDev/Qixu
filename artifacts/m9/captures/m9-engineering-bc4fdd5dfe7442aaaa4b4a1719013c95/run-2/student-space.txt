@@ -1,0 +1,39 @@
+- generic: 空间详情
+- generic: 演示示意图片 · 非真实馆内照片
+- generic: A001 · 西区单人位 1
+- button "收藏空间":
+- generic: 座位 · 短期预约 · 容量1人
+- generic: 单人学习空间，查看公开设施条件后选择。
+- generic: 靠窗
+- generic: 有
+- generic: 插座
+- generic: 有
+- generic: 安静
+- generic: 有
+- generic: 无障碍
+- generic: 有
+- generic: 演示空间与示意图片，不代表实际校园测量。
+- generic: 插座状况
+- generic: 正常
+- generic: 设施未采集时显示未知。原始反馈核实后才进入公开事实。
+- generic: 查看使用时段
+- generic: 服务器时间 10/04 10:43；开放08:00–22:00。短约限当天未来4小时。
+- generic: 开始
+- generic: 2026-10-04
+- generic: 10:58
+- generic: 结束
+- generic: 2026-10-04
+- generic: 11:58
+- button "查询时段可用性"
+- button "申请这个时段"
+- button "反馈这个空间的问题"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

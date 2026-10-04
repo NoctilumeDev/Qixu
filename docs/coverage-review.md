@@ -6,7 +6,7 @@
 
 下表保留固定修复候选 `4fb184ba2a77daecb0cc33436d6e29ef326e52be` 时的覆盖快照，并非最新执行状态。该候选的native181、frontend59及真实页面18命名捕获各有预封Plan和原Core PASS；两名独立角色报告及产品反馈处置已交付。范围是API/MySQL/受控Clock、实际Client/Vue源码模型/构建及指定实页/SQL。见[M8历史候选事实](acceptance/m8.md)及[修复合同](contracts/m8-repairs.md)；不将历史或候选资格升级成新main通过。
 
-当前追加PM11登录错误投影修复仍在[草稿PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)。已有页面捕获与受控模型支持最小修复，原浏览器Core FAIL/ERROR及缺少SQL/短约保留的边界不改；完整复验、受保护主线新资格与M8整体退出仍未闭合。当前待办以[里程碑](milestones.md)为准，不重写下表当时的待验记录。
+当前PM11已由[PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)受保护合入，并取得[M8限定退出](acceptance/m8.md#2026-10-04--主线有限退出)；[M9](acceptance/m9.md)另有两轮fresh与工程候选。原FAIL/ERROR、历史候选缺口及下表当时待验记录保留，不能以新结果覆写。当前事实以[里程碑](milestones.md)为准。
 
 ## 用户十六条
 

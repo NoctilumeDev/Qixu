@@ -1,0 +1,22 @@
+{
+  "batch": "f48b7de0-577b-4749-be4f-213c2785a985",
+  "frozen_at": "2026-10-04T02:18:23.179557Z",
+  "input_bytes": "{\"algorithm\":\"qixu-max-cardinality-lottery-v2\",\"batch\":\"f48b7de0-577b-4749-be4f-213c2785a985\",\"cycle\":{\"end\":\"2026-10-06T03:03:23Z\",\"start\":\"2026-10-04T03:03:23Z\"},\"graph\":{\"algorithm\":\"qixu-max-cardinality-lottery-v2\",\"candidates\":[{\"acceptable\":[{\"rank\":2,\"seat\":\"s2000\"},{\"rank\":1,\"seat\":\"s2100\"}],\"id\":\"002e49b4-e2f7-4ae8-adda-892b5210e8ba\"},{\"acceptable\":[{\"rank\":1,\"seat\":\"s2100\"}],\"id\":\"26afc25c-ccc5-4fac-b474-08c5ab502128\"}],\"seats\":[\"s2000\",\"s2100\"]},\"schedule\":{\"close\":\"2026-10-04T02:18:23Z\",\"confirmationDeadline\":\"2026-10-04T02:53:23Z\",\"freezeDeadline\":\"2026-10-04T02:18:53Z\",\"promotionSeconds\":600,\"promotionUntil\":\"2026-10-06T03:03:23Z\",\"randomAt\":\"2026-10-04T02:19:09Z\",\"resultDeadline\":\"2026-10-04T02:23:23Z\"},\"schema\":\"qixu-allocation-input/2\",\"seats\":[{\"code\":\"A001\",\"floor\":100,\"id\":\"s2000\",\"name\":\"西区单人位 1\",\"version\":1},{\"code\":\"B001\",\"floor\":100,\"id\":\"s2100\",\"name\":\"东区备考位 1\",\"version\":1}],\"source\":{\"chain\":\"52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971\",\"round\":32758995},\"versions\":[{\"candidate\":\"002e49b4-e2f7-4ae8-adda-892b5210e8ba\",\"keepWaitlist\":true,\"revision\":1},{\"candidate\":\"26afc25c-ccc5-4fac-b474-08c5ab502128\",\"keepWaitlist\":true,\"revision\":1}]}",
+  "input_hash": "7b2fc5faf41669bb71eaffb5a902ca0118c0869f705fbc8945b7e0762d9a424b",
+  "phase": "RESULT_PUBLISHED",
+  "result": {
+    "candidate_count": 2,
+    "input_hash": "7b2fc5faf41669bb71eaffb5a902ca0118c0869f705fbc8945b7e0762d9a424b",
+    "maximum_count": 2,
+    "outputBytes": "{\"algorithm\":\"qixu-max-cardinality-lottery-v2\",\"assignments\":[{\"candidate\":\"002e49b4-e2f7-4ae8-adda-892b5210e8ba\",\"rank\":2,\"reason\":\"AUTHORIZED_FALLBACK_OFFER\",\"seat\":\"s2000\"},{\"candidate\":\"26afc25c-ccc5-4fac-b474-08c5ab502128\",\"rank\":1,\"reason\":\"PREFERRED_OFFER\",\"seat\":\"s2100\"}],\"maximum\":2,\"order\":[\"002e49b4-e2f7-4ae8-adda-892b5210e8ba\",\"26afc25c-ccc5-4fac-b474-08c5ab502128\"],\"seedDigest\":\"bdb61de33413eb8b976a755eadea3730a815c97871e4b124eeda3ec5cb787b53\"}",
+    "output_hash": "85f5bbb35aff2fcaa7ced7da81c86ea2c71e8caf0e79462bdd0b03c36d3cb44d",
+    "proof": {
+      "chain": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+      "randomness": "2749fcc1d34b7c92529c95acb497f57d782190dfca56191becc9ed8d6b8cc09b",
+      "round": 32758995,
+      "signature": "857715f7a7cc1894e1f23b647f60969e183fc48f9db8077d3a9a6ae93122c0ff42e25a7f28ca79f18626c82d5bb1e3bd",
+      "verifier": "drand-client/1.4.2:qixu-offline/0.1"
+    },
+    "published_at": "2026-10-04T02:19:12.225877Z"
+  }
+}
