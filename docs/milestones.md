@@ -13,7 +13,7 @@
 | M6 回归与外部接入 | VERIFIED_LIMITED_API_MYSQL_REAL_IDENTITY_RESTART | [M6主线证据](acceptance/m6.md)：真实暗室当前身份适配、同库重启和固定round干净复算 | PR#14/main@5ca0b5e三项CI及fresh native142/build31/installed PASS；原候选PENDING保留，不含SSO/备份回滚/真机 |
 | M7 外部错题复核与修复 | VERIFIED_LIMITED_FAILURE_MECHANISMS | 按[M7攻击合同](m7-adversarial-contract.md)重新研究公开错题，攻击全操作序列/复合故障、独立oracle与最小trace | [M7](acceptance/m7.md)：PR#21/main@c876d1a三组CI及fresh native173/frontend45/restore22/database25/COMMIT29/browser14；119原包保留、F01–F15及U01–U08有坐标，不宣称零缺陷 |
 | M8 独立测试及产品复验 | VERIFIED_LIMITED_INDEPENDENT_REVIEW_NATIVE_BUILD_BROWSER | [M8原件及处置](acceptance/m8.md)：独立测试/产品报告、首次失败、最小修复与原条件复验 | PR#25/main@4c220626 exact CI及步骤success；fresh native181/frontend61/browser39规则、真实SQL与owned清理成立；新主线两角色复核，无新已确认阻断；不含M9/M10或设备 |
-| M9 公开工程候选与冻结 | PLANNED | CI、README/截图、SQL入口、部署/恢复、工程候选与公开事实对齐 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
+| M9 公开工程候选与冻结 | IN_PROGRESS | 按[交付合同](contracts/engineering-delivery.md)执行[两次fresh复现](m9-reproduction.md)，对齐CI、README/截图、SQL、恢复与工程候选 | exact main 检查、远端读回、干净复现；验迹封存计划/真实证据/裁决包与复跑闭合；明确M10未完成，不提前宣称最终前端交付 |
 | M10 前端精修与验收 | DEFERRED_HUMAN_PARTICIPATION | 按[精修合同](contracts/frontend-refinement.md)待用户参与后统一两端视觉、素材、排版与响应式细节 | 用户明确重新开启后执行原精修条件；不作为本轮M9工程交付阻断，也不授予最终视觉或微信真机资格 |
 
 ## 每阶段的施工要求
