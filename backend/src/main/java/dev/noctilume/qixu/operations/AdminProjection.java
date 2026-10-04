@@ -79,25 +79,25 @@ public class AdminProjection {
               + entry.getKey()
               + "' AND EXISTS(SELECT 1 FROM "
               + entry.getValue()
-              + " x WHERE CAST(x.id AS CHAR)="
+              + " x WHERE CAST(x.id AS BINARY)=CAST("
               + a
-              + ".entity_id AND "
+              + ".entity_id AS BINARY) AND "
               + floor("x.floor_id")
               + "))");
     parts.add(
         "("
             + a
-            + ".entity_type='EVENT' AND EXISTS(SELECT 1 FROM campus_event x JOIN venue_request v ON v.id=x.venue_request_id WHERE CAST(x.id AS CHAR)="
+            + ".entity_type='EVENT' AND EXISTS(SELECT 1 FROM campus_event x JOIN venue_request v ON v.id=x.venue_request_id WHERE CAST(x.id AS BINARY)=CAST("
             + a
-            + ".entity_id AND "
+            + ".entity_id AS BINARY) AND "
             + floor("v.floor_id")
             + "))");
     parts.add(
         "("
             + a
-            + ".entity_type='BATCH' AND EXISTS(SELECT 1 FROM preparation_batch x WHERE CAST(x.id AS CHAR)="
+            + ".entity_type='BATCH' AND EXISTS(SELECT 1 FROM preparation_batch x WHERE CAST(x.id AS BINARY)=CAST("
             + a
-            + ".entity_id AND "
+            + ".entity_id AS BINARY) AND "
             + batch("x.id")
             + "))");
     parts.add(
