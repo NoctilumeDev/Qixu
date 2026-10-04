@@ -191,7 +191,7 @@ def run(a):
         app_password=secrets.token_hex(24); new_root=secrets.token_hex(24)
         sql("ALTER USER 'root'@'localhost' IDENTIFIED BY '"+new_root+"';CREATE DATABASE qixu_test CHARACTER SET utf8mb4;CREATE USER 'qixu_test_app'@'127.0.0.1' IDENTIFIED BY '"+app_password+"';GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX,REFERENCES ON qixu_test.* TO 'qixu_test_app'@'127.0.0.1';")
         root_password=new_root
-        db_url='jdbc:mysql://127.0.0.1:6980/qixu_test?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8&sslMode=DISABLED&serverRSAPublicKeyFile='+quote((data/'public_key.pem').as_posix())
+        db_url='jdbc:mysql://127.0.0.1:6980/qixu_test?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8&sslMode=DISABLED&serverRSAPublicKeyFile='+quote((data/'public_key.pem').as_posix(),safe='')
         db_env=dict(env,QIXU_TEST_DB_URL=db_url,QIXU_TEST_DB_USER='qixu_test_app',QIXU_TEST_DB_PASSWORD=app_password)
         command([tools['npm'],'ci','--prefix','randomness','--ignore-scripts','--no-audit','--no-fund'],'randomness-install',work)
         command([sys.executable,'-B',str(work/'scripts/veritrail_native.py'),'--stage','m8','--maven',tools['maven']],'native',work,db_env)
