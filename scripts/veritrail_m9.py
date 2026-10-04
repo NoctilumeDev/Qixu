@@ -25,7 +25,7 @@ CAPTURES = {
     'student-long': {'port':6968, 'route':'/pages/batch/index', 'width':390, 'height':844, 'words':['结果已公布','暂离不丢失长期使用权','本轮结果']},
     'student-event': {'port':6968, 'route':'/pages/event/index', 'width':390, 'height':844, 'words':['M9 演示读书会','我的状态：已确认']},
     'student-feedback': {'port':6968, 'route':'/pages/report/index', 'width':390, 'height':844, 'words':['已解决','Explicit synthetic restored facts']},
-    'admin-venue': {'port':6969, 'route':'/venue-requests', 'width':1280, 'height':720, 'words':['已批准','M9 演示读书会']},
+    'admin-venue': {'port':6969, 'route':'/venues', 'width':1280, 'height':720, 'words':['已批准','M9 演示读书会']},
     'admin-repair-mobile': {'port':6969, 'route':'/repairs', 'width':390, 'height':844, 'words':['复验关闭','Explicit synthetic restored facts']},
 }
 
@@ -59,7 +59,7 @@ def seal(a):
     bindings = {p.relative_to(ROOT).as_posix():digest(p) for p in
                 [Path(__file__), ROOT/'scripts/veritrail_future_batch.py', ROOT/'scripts/veritrail_native.py',
                  ROOT/'scripts/veritrail_frontend.py', ROOT/'scripts/serve_bound_frontend.py',
-                 ROOT/'docs/contracts/engineering-delivery.md', ROOT/'package-lock.json', ROOT/'randomness/package-lock.json',
+                 ROOT/'docs/contracts/engineering-delivery.md', ROOT/'scripts/java/M9StopAgent.java', ROOT/'package-lock.json', ROOT/'randomness/package-lock.json',
                  *sorted((ROOT/'backend/src/main/resources/db/migration').glob('V*.sql')),
                  *sorted(p for folder in (ROOT/'student/src/static',ROOT/'admin/public/assets') for p in folder.rglob('*') if p.is_file())]}
     c = {'source_sha':git('rev-parse','HEAD'), 'tree':git('rev-parse','HEAD^{tree}'), 'remote':REMOTE,
@@ -102,12 +102,13 @@ def bundle(folder, source, expected_collector, expected_plan):
         seen.add(e['path']); require(f.stat().st_size==e['size'] and digest(f)==e['sha256'], 'Child byte drift')
     require(seen=={p.relative_to(folder).as_posix() for p in folder.rglob('*') if p.is_file() and p.name!='acceptance-bundle-manifest.json'}, 'Unmanifested child files')
     r=read(folder/'acceptance-report.json'); p=read(folder/'sealed-acceptance-plan.json'); verify_sealed_acceptance_plan(p)
-    require(r['subject']==p['subject'] and r['subject']['version']==source and r['plan']['version']==expected_plan
+    expected_subject={'qixu-native/0.22':'qixu-m8','qixu-frontend/0.8':'qixu-m8-frontend','qixu-live-observation/0.5':'qixu-m9-live'}[expected_collector]
+    require(r['subject']==p['subject'] and r['subject']['id']==expected_subject and r['subject']['version']==source and r['plan']['version']==expected_plan
             and r['plan']['sha256']==p['seal']['digest'] and r['verdict']=='PASS' and r['execution_status']=='COMPLETED', 'Unqualified child')
     require(len(r['evidence'])==1, 'Ambiguous child evidence'); entry=r['evidence'][0]; e=read(folder/entry['path'])
     require(entry['path'] in seen and entry['sha256']==digest(folder/entry['path']) and e['source']==expected_collector
             and entry['facts_digest']==sha256_json(e['facts']) and e['metadata']['veritrail_observation']['plan_digest']==p['seal']['digest'], 'Unbound child facts')
-    return r,e['facts'],p
+    return r,e['facts'],p,e
 
 def run(a):
     out, plan, c = bound(a.output); n=a.run; d=out/f'run-{n}'; d.mkdir()
@@ -122,10 +123,10 @@ def run(a):
         with (d/(name+'.stdout.private.log')).open('xb') as so, (d/(name+'.stderr.private.log')).open('xb') as se:
             r=subprocess.run(cmd,cwd=cwd,env=e,stdout=so,stderr=se,timeout=timeout,creationflags=subprocess.CREATE_NO_WINDOW)
         require(r.returncode==0, 'Command failed: '+name)
-    def launch(cmd, name, e=env, interactive=False):
+    def launch(cmd, name, e=env, interactive=False, controlled=False):
         log=(d/(name+'.stdout.private.log')).open('xb'); logs.append(log)
         p=subprocess.Popen(cmd,cwd=work,env=e,stdout=subprocess.PIPE if interactive else log,stderr=subprocess.STDOUT,
-                           stdin=subprocess.PIPE if interactive else subprocess.DEVNULL,creationflags=subprocess.CREATE_NO_WINDOW)
+                           stdin=subprocess.PIPE if interactive or controlled else subprocess.DEVNULL,creationflags=subprocess.CREATE_NO_WINDOW)
         children.append((p,cmd,name)); return p,log
     def stop(p, cmd, name):
         if p.poll() is None:
@@ -137,7 +138,13 @@ def run(a):
             ps="$p=Get-CimInstance Win32_Process -Filter 'ProcessId="+str(p.pid)+"';$p|Select-Object ProcessId,ExecutablePath,CommandLine|ConvertTo-Json -Compress"
             row=json.loads(subprocess.check_output(['powershell','-NoProfile','-Command',ps],text=True))
             require(Path(row['ExecutablePath']).resolve()==Path(cmd[0]).resolve() and all(x in row['CommandLine'] for x in cmd[1:]), 'Process ownership drift')
-            write(d/(name+'.owner.private.json'),row); p.terminate(); p.wait(25)
+            write(d/(name+'.owner.private.json'),row)
+            if name=='restart-app':
+                p.stdin.write(b'qixu-m9-graceful-stop\n');p.stdin.flush();p.wait(35)
+                marker='M9_GRACEFUL_STOP_REQUESTED' in (d/'restart-app.stdout.private.log').read_text(encoding='utf-8',errors='replace')
+                require(p.returncode==0 and marker,'Restart app did not stop normally')
+                record['restart']['normal_stop']={'method':'OWNED_STDIN_SYSTEM_EXIT_0','exit_code':p.returncode,'marker':marker}
+            else:p.terminate();p.wait(25)
     def sql(query):
         r=subprocess.run([str(mysql),'--protocol=TCP','-h','127.0.0.1','-P','6980','-u','root','--batch','--skip-column-names','--default-character-set=utf8mb4'],
              input=query.encode(),capture_output=True,env=dict(env,MYSQL_PWD=root_password),timeout=15)
@@ -187,10 +194,16 @@ def run(a):
         print(json.dumps({'state':'M9_NATIVE_COMPLETE','run':n,'native':str(native),'source_sha':c['source_sha']}),flush=True)
         command([sys.executable,'-B',str(work/'scripts/veritrail_frontend.py'),'--stage','m8','--node',tools['node'],'--npm',tools['npm']],'frontend',work)
         front=child_path('m8-frontend-*'); bundle(front/'bundle',c['source_sha'],'qixu-frontend/0.8',4); record['frontend']=str(front.relative_to(work))
+        agent_classes=d/'stop-agent-classes';agent_classes.mkdir()
+        command([str(Path(tools['java_home'])/'bin/javac.exe'),'-d',str(agent_classes),str(work/'scripts/java/M9StopAgent.java')],'agent-compile',work)
+        manifest=d/'agent-manifest.mf';manifest.write_text('Manifest-Version: 1.0\nPremain-Class: M9StopAgent\n\n',encoding='ascii')
+        agent=d/'stop-agent.jar'
+        command([str(Path(tools['java_home'])/'bin/jar.exe'),'--create','--file',str(agent),'--manifest',str(manifest),'-C',str(agent_classes),'.'],'agent-package',work)
+        record['stop_agent_sha256']=digest(agent)
         # A fresh demo world has its own journal. Never delete or recycle the native journal.
         sql('DROP DATABASE qixu_test;CREATE DATABASE qixu_test CHARACTER SET utf8mb4;')
         live_env=dict(db_env,QIXU_RECOVERY_JOURNAL=str(d/'live-transactions.journal'),QIXU_ALLOWED_ORIGINS='http://127.0.0.1:6968,http://127.0.0.1:6969',QIXU_BIND='127.0.0.1')
-        cmd=[sys.executable,'-B',str(work/'scripts/veritrail_future_batch.py'),'--stage','m9','--hold-for-browser','--producer-bundle',str(native/'bundle'),'--java',str(java),'--node',tools['node'],'--mysql',str(mysql),'--proxy',c['random_proxy']]
+        cmd=[sys.executable,'-B',str(work/'scripts/veritrail_future_batch.py'),'--stage','m9','--hold-for-browser','--stop-agent',str(agent),'--producer-bundle',str(native/'bundle'),'--java',str(java),'--node',tools['node'],'--mysql',str(mysql),'--proxy',c['random_proxy']]
         live, live_log=launch(cmd,'live',live_env,True); event=threading.Event()
         def drain():
             for line in iter(live.stdout.readline,b''):
@@ -204,7 +217,9 @@ def run(a):
         while not event.wait(.5):
             require(live.poll() is None,'Live stopped before browser readiness'); require(time.monotonic()<deadline,'Future batch readiness timeout')
         live_dir=child_path('m9-live-*'); record['live']=str(live_dir.relative_to(work))
-        front_cmd=[sys.executable,'-B',str(work/'scripts/serve_bound_frontend.py'),str(front)]
+        # Use the actual base interpreter for the Core-free server, not a
+        # Windows venv redirector whose child would outlive the wrapper handle.
+        front_cmd=[sys._base_executable,'-B',str(work/'scripts/serve_bound_frontend.py'),str(front)]
         server,_=launch(front_cmd,'frontend-server'); ready(server,lambda:all(not vacant()[str(p)] for p in (6968,6969)))
         (d/'captures').mkdir(); write(d/'browser-ready.json',{'source_sha':c['source_sha'],'live':record['live'],'frontend':record['frontend'],'ready_at':utc()})
         print(json.dumps({'state':'M9_CUA_READY','run':n,'captures':str(d/'captures'),'ports':[6968,6969],'live':str(live_dir)}),flush=True)
@@ -215,7 +230,7 @@ def run(a):
         require(live.returncode==0,'Live Core failed'); bundle(live_dir/'bundle',c['source_sha'],'qixu-live-observation/0.5',1)
         before=sql(counts_query); record['sql_before_restart']=before
         restart_env=dict(live_env,SPRING_PROFILES_ACTIVE='demo',QIXU_DB_URL=db_url,QIXU_DB_USERNAME='qixu_test_app',QIXU_DB_PASSWORD=app_password,QIXU_PORT='6967',QIXU_COOKIE_SECURE='false',QIXU_TASKS_ENABLED='false',QIXU_NODE=tools['node'],QIXU_RANDOM_VERIFIER=str(work/'randomness/verify.mjs'),QIXU_RANDOM_PROXY=c['random_proxy'])
-        app_cmd=[str(java),'-jar',str(jar)]; app,_=launch(app_cmd,'restart-app',restart_env)
+        app_cmd=[str(java),'-javaagent:'+str(agent),'-jar',str(jar)]; app,_=launch(app_cmd,'restart-app',restart_env,controlled=True)
         ready(app,lambda:req('GET','/api/health') is not None)
         token=req('POST','/api/v1/auth/login',{'username':'student1','password':'qixu-demo','mode':'BEARER'})['data']['token']
         own=req('GET','/api/v1/reservations',token=token)['data']; after=sql(counts_query)
@@ -244,12 +259,15 @@ def finish(a):
             require(record['execution_status']=='COMPLETED' and record['source_sha']==c['source_sha'],'Incomplete fresh run')
             require(datetime.fromisoformat(record['started_at'])>seal_time,'Run predates parent seal')
             clone=record['clone']; require(clone['origin']==REMOTE and clone['source_sha']==c['source_sha'] and clone['tree']==c['tree'] and clone['no_initial_instances'],'Not fresh public checkout')
-            observations={}; identity={}
+            observations={}; child_plans={}; identity={}
             for name,collector,pv in [('native','qixu-native/0.22',3),('frontend','qixu-frontend/0.8',4),('live','qixu-live-observation/0.5',1)]:
-                r,f,cp=bundle(work/record[name]/'bundle',c['source_sha'],collector,pv)
-                e=read(work/record[name]/'evidence.json'); require(datetime.fromisoformat(e['captured_at'])>seal_time,'Child predates seal')
+                r,f,cp,e=bundle(work/record[name]/'bundle',c['source_sha'],collector,pv)
+                require(seal_time<datetime.fromisoformat(record['started_at'])<datetime.fromisoformat(e['captured_at'])<=datetime.fromisoformat(record['finished_at']), 'Child outside this sealed run')
+                require(f['source_sha']==c['source_sha'] and f['source_clean'] is True, 'Child source drift')
                 observations[name]=f; identity[name]=r['acceptance_id']; ids.append(r['acceptance_id'])
+                child_plans[name]=cp
             native=observations['native']; front=observations['frontend']; live=observations['live']
+            require(digest(d/'stop-agent.jar')==record['stop_agent_sha256']==child_plans['live']['observation_specs'][0]['coordinates']['stop_agent_sha256'], 'Owned control agent drift')
             jar=d/'retained-package.jar'; require(digest(jar)==record['jar_sha256']==native['package']['sha256']==live['jar_sha256'],'Retained package drift')
             for name,relative in [('h5','student/dist/build/h5'),('wechat','student/dist/build/mp-weixin'),('admin','admin/dist')]:
                 folder=work/record['frontend']/'work'/relative
@@ -259,7 +277,7 @@ def finish(a):
                 folder=d/'captures'; meta=read(folder/(name+'.json')); dom=(folder/(name+'.txt')).read_text(encoding='utf-8'); image=folder/(name+'.jpg')
                 require(meta['url'].startswith('http://127.0.0.1:'+str(rule['port'])+'/') and rule['route'] in meta['url'],'Capture URL mismatch')
                 require(meta['width']==rule['width'] and meta['height']==rule['height'] and meta['scroll_width']<=rule['width'],'Viewport overflow/mismatch')
-                require(datetime.fromisoformat(meta['captured_at'].replace('Z','+00:00'))>datetime.fromisoformat(read(d/'browser-ready.json')['ready_at']),'Capture predates running fixture')
+                require(datetime.fromisoformat(read(d/'browser-ready.json')['ready_at'])<datetime.fromisoformat(meta['captured_at'].replace('Z','+00:00'))<=datetime.fromisoformat(record['finished_at']), 'Capture outside this running fixture')
                 require(all(w in dom for w in rule['words']) and image.read_bytes()[:3]==b'\xff\xd8\xff' and image.stat().st_size>5000,'Missing actual page evidence')
                 captured[name]={suffix:digest(folder/(name+suffix)) for suffix in ('.json','.txt','.jpg')}
             counts=list(map(int,record['sql_after_restart'].split('\t'))); require(counts==[1,1,1,1,1,10,1],'SQL does not support pages')
@@ -269,7 +287,7 @@ def finish(a):
                 'fresh_public':True,'bytes_checked':True,'native_181':len(native['tests'])==181 and all(native['tests'].values()) and native['command_exit']==0,
                 'frontend_61':len(front['tests'])==61 and all(front['tests'].values()) and len(front['commands'])==5 and all(x['exit_code']==0 for x in front['commands']),
                 'future_batch':live['database']=={'formal_results':1,'outcomes':2,'offers':2,'result_notices':2} and live['reproduction']['maximum']==2 and live['reproduction']['signature_verified'] and live['reproduction']['independent_bytes_equal'],
-                'all_pages':True,'sql_supported':True,'same_db_restart':restart['health']==200 and restart['authenticated_status']==200 and restart['own_reservations']==1 and restart['sql_unchanged'] and restart['journal_exists'],
+                'all_pages':True,'sql_supported':True,'same_db_restart':restart['health']==200 and restart['authenticated_status']==200 and restart['own_reservations']==1 and restart['sql_unchanged'] and restart['journal_exists'] and live['cleanup']['normal_exit'] and live['cleanup']['graceful_marker'] and restart['normal_stop']=={'method':'OWNED_STDIN_SYSTEM_EXIT_0','exit_code':0,'marker':True},
                 'owned_cleanup':all(x['stopped'] for x in cleanup['children']) and all(cleanup['ports_free'].values()) and cleanup['threads_stopped']})
         facts['distinct']=len(ids)==len(set(ids)) and len(ids)==6
     except Exception as e:
