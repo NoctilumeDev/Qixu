@@ -138,12 +138,19 @@ def run(a):
             ps="$p=Get-CimInstance Win32_Process -Filter 'ProcessId="+str(p.pid)+"';$p|Select-Object ProcessId,ExecutablePath,CommandLine|ConvertTo-Json -Compress"
             row=json.loads(subprocess.check_output(['powershell','-NoProfile','-Command',ps],text=True))
             require(Path(row['ExecutablePath']).resolve()==Path(cmd[0]).resolve() and all(x in row['CommandLine'] for x in cmd[1:]), 'Process ownership drift')
-            write(d/(name+'.owner.private.json'),row)
+            owner_path=d/(name+'.owner.private.json')
+            if owner_path.exists():require(read(owner_path)==row,'Owned process changed during cleanup')
+            else:write(owner_path,row)
             if name=='restart-app':
-                p.stdin.write(b'qixu-m9-graceful-stop\n');p.stdin.flush();p.wait(35)
+                try:
+                    p.stdin.write(b'qixu-m9-graceful-stop\n');p.stdin.flush();p.wait(35)
+                except (OSError,subprocess.TimeoutExpired):
+                    record.setdefault('restart',{})['normal_stop']={'method':'NOT_NORMAL_OWNED_FALLBACK','exit_code':p.poll(),'marker':False}
+                    if p.poll() is None:p.terminate();p.wait(25)
+                    raise RuntimeError('Normal JVM stop failed; owned fallback does not qualify restart')
                 marker='M9_GRACEFUL_STOP_REQUESTED' in (d/'restart-app.stdout.private.log').read_text(encoding='utf-8',errors='replace')
                 require(p.returncode==0 and marker,'Restart app did not stop normally')
-                record['restart']['normal_stop']={'method':'OWNED_STDIN_SYSTEM_EXIT_0','exit_code':p.returncode,'marker':marker}
+                record.setdefault('restart',{})['normal_stop']={'method':'OWNED_STDIN_SYSTEM_EXIT_0','exit_code':p.returncode,'marker':marker}
             else:p.terminate();p.wait(25)
     def sql(query):
         r=subprocess.run([str(mysql),'--protocol=TCP','-h','127.0.0.1','-P','6980','-u','root','--batch','--skip-column-names','--default-character-set=utf8mb4'],
