@@ -16,7 +16,7 @@
 | --- | --- |
 | M0–M7 | 已取得各自限定资格。[M7主线证据](docs/acceptance/m7.md)保留原失败、修复及有限停止线；不宣称零缺陷 |
 | M8 | [PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)受保护合入 `4c220626`；该主线 fresh 原生181、前端61及原条件实页/SQL通过，两名独立角色完成新原件对齐。见[M8限定资格](docs/acceptance/m8.md#2026-10-04--主线有限退出) |
-| M9 | 尚未完成。等待 M8 闭合后，执行干净检出、两次 fresh 运行、验迹裁决与公开交付对齐 |
+| M9 | IN_PROGRESS。[交付合同](docs/contracts/engineering-delivery.md)已冻结，正在准备[两次fresh运行](docs/m9-reproduction.md)、验迹裁决与公开候选；尚未授予资格 |
 | M10 | 已按用户要求后置；以后由用户参与并明确开启。最终视觉和微信真机仍为待验边界 |
 
 PM11已在真实开放窗口完成正常身份切换、双方参与/候补及原短约保留复验。原 Core **FAIL / ERROR** 与旧未执行计划均保留；后续通过不覆盖首败。阶段证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)、[M6](docs/acceptance/m6.md)、[M8](docs/acceptance/m8.md)；前端精修归[M10](docs/contracts/frontend-refinement.md)。
