@@ -1,0 +1,33 @@
+- generic: 反馈详情
+- generic: 反馈1 · 已解决
+- text: A001 · 西区单人位 1
+- button "查看空间档案"
+- generic: "DEMO_PRIVATE_M4_REPORT: installed synthetic outlet issue"
+- generic: 最多3张JPEG/PNG照片，每张不超过1MiB。
+- button "添加事实照片"
+- generic: Explicit synthetic restored facts
+- generic: 待核实 · 10/04 10:19
+- generic: "DEMO_PRIVATE_M4_REPORT: installed synthetic outlet issue"
+- generic: 已核实 · 10/04 10:19
+- generic: Installed synthetic verification
+- generic: 已关联维修 · 10/04 10:19
+- generic: 维修事项 1
+- generic: 维修完成，等待复验 · 10/04 10:19
+- generic: 维修工作完成，等待复验；尚未宣称问题已解决。
+- generic: 已解决 · 10/04 10:19
+- generic: Explicit synthetic restored facts
+- text: 补充事实
+- generic: 补充现状或说明仍未解决的问题
+- textbox "补充事实"
+- button "补充"
+- button "重新核实"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

@@ -1,0 +1,6 @@
+{
+  "frontend": "artifacts\\local\\m8-frontend-c6c30927ef5d44c6ae804fd2c848d4e8",
+  "live": "artifacts\\local\\m9-live-3bab2854a6b34b5d9916a057dd6adff1",
+  "ready_at": "2026-10-04T02:19:14.139716+00:00",
+  "source_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1"
+}

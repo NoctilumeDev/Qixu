@@ -104,3 +104,9 @@ NOT_RECONCILED时健康与业务入口503，原键/凭据保留，演示初始�
 单主机Connector/J连接固定connectTimeout=3000ms、socketTimeout=30000ms，Hikari取得连接3000ms、validation2000ms，每条新连接设置SESSION innodb_lock_wait_timeout=10s。启动前用实际驱动解析有效host属性，拒绝多主机、主机级超时覆盖、零/负/延长预算及缺失锁初始化；不是全API累计时限或生产SLA。URL不可自行放宽预算，生产TLS设置不受故障夹具明文配置影响。
 
 F15运行`python scripts/veritrail_m7_database.py --producer-bundle <同exact source的原native Bundle目录> --java <Java17> --mysql-bin <MySQL8.0.44 bin>`，使用上述producer绑定规则：只用本轮新MySQL6976、app6975和loopback relay6977，固定driver9.7.0/pool7.0.2，真实floor锁及已有业务连接的COM_QUERY回应丢失。15/35秒是观察窗口；同源原25标准不靠重启或改幂等key通过。端口已有监听立即停止，绝不接管共享实例。首次FAIL、观察器PENDING和主线限定复验见[M7数据库事实](acceptance/m7-database.md)。
+
+## M9工程候选与本机休眠
+
+实际两轮源码f0ef8e0、原验迹与边界见[M9](acceptance/m9.md)，复现步骤见[m9-reproduction](m9-reproduction.md)。[工程预发行包](https://github.com/NoctilumeDev/Qixu/releases/tag/v0.1.0-engineering.1)交付原JAR及三端ZIP；不是一键安装器，先读包内READ-ME-FIRST。包内docs保留源码时点原文，后续状态以公开验收记录为准。
+
+本轮结束停止owned实例并清理可重建依赖/编译实例；源码、Git、锁文件/迁移、原首败、正式Bundle/截图、原JAR/ZIP及账册保留。恢复时按本文重新安装两套依赖、配置自己的独立DB与账册，再构建/验收；不依赖本机node_modules长期存在，不清共享工具或其他项目数据。M10以后由用户参与，H5/微信编译成功不授予微信真机资格。

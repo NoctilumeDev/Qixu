@@ -1,6 +1,6 @@
 # 验迹接入与验收合同 0.1
 
-本文件为M0时冻结的验收设计与责任边界。实际M0–M7限定资格见各阶段acceptance；M7主线及有限退出见[M7](acceptance/m7.md)，M8/M9仍待闭合，M10按用户要求等待人参与。当前阶段见[里程碑](milestones.md)，合同不是执行结果。
+本文件为M0时冻结的验收设计与责任边界。实际M0–M9限定资格见各阶段acceptance；[M8](acceptance/m8.md)有限退出及[M9](acceptance/m9.md)两次fresh工程候选分别有原件，M10按用户要求等待人参与。当前阶段见[里程碑](milestones.md)，合同不是执行结果。
 
 ## 依据与固定坐标
 

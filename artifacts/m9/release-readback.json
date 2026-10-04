@@ -1,0 +1,29 @@
+{
+  "captured_at": "2026-10-04T02:56:55.835771+00:00",
+  "kind": "PUBLIC_TAG_AND_ASSET_READBACK_NOT_NEW_RUNTIME_QUALIFICATION",
+  "release_id": 402796600,
+  "release_url": "https://github.com/NoctilumeDev/Qixu/releases/tag/v0.1.0-engineering.1",
+  "tag": "v0.1.0-engineering.1",
+  "tag_target_sha": "f0ef8e0523b4441fbd710796f75d881f2476e4f1",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "Qixu-v0.1.0-engineering.1.zip",
+      "id": 609000781,
+      "bytes": 26857726,
+      "sha256": "25dce0d17754036431ba03eddedbf97bb94bf9b9d6cde4b90ef02f90c45275e2",
+      "github_digest_equal": true,
+      "downloaded_bytes_equal": true,
+      "download_url": "https://github.com/NoctilumeDev/Qixu/releases/download/v0.1.0-engineering.1/Qixu-v0.1.0-engineering.1.zip"
+    },
+    {
+      "name": "delivery-manifest.json",
+      "id": 609000779,
+      "bytes": 6310,
+      "sha256": "27692ebbddf326452efb54f9a8f0073ff5887b78fdcadf9a55bd77b7dff5c54b",
+      "github_digest_equal": true,
+      "downloaded_bytes_equal": true,
+      "download_url": "https://github.com/NoctilumeDev/Qixu/releases/download/v0.1.0-engineering.1/delivery-manifest.json"
+    }
+  ]
+}
