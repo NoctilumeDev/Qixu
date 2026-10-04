@@ -292,3 +292,16 @@ actual main f0ef8e0523b4441fbd710796f75d881f2476e4f1的CI37170285041三任务/32
 退出要求：已有客户端、三端构建、MySQL测试和原件校验通过；新增门禁有拒绝残留和断链的负控制；两名独立角色有限审查；公开主线与当前说明读回。仓库卫生通过只证明所列检查，不授予本机休眠、真机或新版本安装资格。本地清理逐项核实归属、消费者和证明职责，未知状态保留。正式证据不按体积或年代清理，不制造永久删除清单。
 
 本次新候选d2abfc3在独立MySQL8.0.44、utf8mb4_unicode_ci库中首次native181/180失败，原身份m8-3789345d6a704a79b4fb9da629a53e3e保留。AdminProjection审计查询503由真实SQL1267定位：连接CAST字符采用0900、实体列unicode，隐式等号产生collation冲突；公开默认库CI虽通过，不能覆盖这次失败。最小修正为实体ID的二进制精确比较，不更改权限范围或原断言，也不改变用户库排序配置。新提交、新Plan另验。
+
+第一次修正b7c6a00漏掉APPLICATION分支，原条件仍180/181、Core FAIL；补齐四处分支后的68cdf53在同一unicode_ci库取得181/181。每次均先seal新Plan，原失败不覆盖。维护原件独立留存，不改M8/M9历史索引：
+
+| 原身份 | 固定源码及实际结果 |
+| --- | --- |
+| [m8-3789345](../artifacts/maintenance/m8-3789345d6a704a79b4fb9da629a53e3e/acceptance-report.md) | d2abfc3；首次审计排序规则冲突，Core FAIL |
+| [m8-50fa467](../artifacts/maintenance/m8-50fa4671ccb74b808b58fe17198f89e2/acceptance-report.md) | b7c6a00；APPLICATION分支遗漏，Core FAIL |
+| [m8-3140332](../artifacts/maintenance/m8-3140332b253445de83a993c074facec7/acceptance-report.md) | 68cdf53；原排序规则配置下真实MySQL及单测181，Core PASS/COMPLETED |
+| [m8-frontend-31b9f4c](../artifacts/maintenance/m8-frontend-31b9f4cb80fb48068dbd580676587091/acceptance-report.md) | 68cdf53；61客户端控制、两端类型检查、H5/微信/管理端三构建，Core PASS/COMPLETED |
+
+两名独立测试/产品审阅者从固定候选有限复核：原断言、Java token和客户端AST检查未见弱化；门禁不能凭artifacts目录免检日志，已收紧为原manifest路径/大小/摘要绑定。源码内容与维护入口获支持，没有新的已确认阻断。候选[CI 37215525632](https://github.com/NoctilumeDev/Qixu/actions/runs/37215525632)三组成功。公开证据和文档追加提交另经CI及读回，不继承68cdf53的运行身份或旧M9 Release安装资格；本轮不授予新增真实页面、真机、生产容量或M10视觉资格。
+
+素材核对未发现本轮可以确认失去消费者的已跟踪图片，未为清理数量删图。阶段收尾仅回收本轮隔离工作区的依赖、构建实例和自建测试库，原Core Bundle、首败、producer包及原始记录按现有职责保留；卫生门禁自身不新增永久删除档案。
