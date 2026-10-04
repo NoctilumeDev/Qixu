@@ -14,9 +14,10 @@ from urllib.parse import quote
 from veritrail.acceptance_plan import observation_spec_digest, seal_acceptance_plan, verify_sealed_acceptance_plan
 from veritrail.acceptance_reporting import create_acceptance_bundle
 from veritrail.canonical import sha256_json
+from veritrail.privacy import redact_value
 
 ROOT = Path(__file__).resolve().parents[1]
-COLLECTOR = 'qixu-engineering/0.1'
+COLLECTOR = 'qixu-engineering/0.2'
 REMOTE = 'https://github.com/NoctilumeDev/Qixu.git'
 PORTS = (6980, 6967, 6968, 6969)
 CAPTURES = {
@@ -74,7 +75,7 @@ def seal(a):
          'tools':{k:str(Path(getattr(a,k)).resolve()) for k in ('mysql_bin','java_home','maven','node','npm')},
          'git_proxy':a.git_proxy, 'random_proxy':a.random_proxy,
          'boundary':'TWO_WINDOWS_FRESH_CHECKOUTS_LOCAL_DEMO_NOT_COLD_CACHE_WECHAT_DEVICE_PRODUCTION_OR_M10'}
-    spec = {'id':'fresh-engineering','contract':{'id':'qixu-engineering','version':'0.1'},
+    spec = {'id':'fresh-engineering','contract':{'id':'qixu-engineering','version':'0.2'},
             'evidence_type':'qixu.engineering.observation','coordinates':c,
             'projections':['source_sha','runs','distinct','boundary'], 'canonicalization_profile':'veritrail-json-c14n/1'}
     def assertion(name, path, value):
@@ -83,7 +84,7 @@ def seal(a):
     for n in range(2):
         for k in ('fresh_public','bytes_checked','native_181','frontend_61','future_batch','all_pages','sql_supported','same_db_restart','owned_cleanup'):
             assertions.append(assertion(f'run-{n+1}-{k}',f'/facts/runs/{n}/{k}',True))
-    plan = seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m9-engineering','version':1,
+    plan = seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-m9-engineering','version':2,
         'subject':{'id':'qixu-m9','version':c['source_sha'],'source_ref':'github:NoctilumeDev/Qixu'},
         'question':'Can two fresh public checkouts independently rebuild, execute the bounded demo and retain actual UI/SQL through a normal same-database restart?',
         'governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:engineering-adapter','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},
@@ -113,9 +114,17 @@ def bundle(folder, source, expected_collector, expected_plan):
     require(r['subject']==p['subject'] and r['subject']['id']==expected_subject and r['subject']['version']==source and r['plan']['version']==expected_plan
             and r['plan']['sha256']==p['seal']['digest'] and r['verdict']=='PASS' and r['execution_status']=='COMPLETED', 'Unqualified child')
     require(len(r['evidence'])==1, 'Ambiguous child evidence'); entry=r['evidence'][0]; e=read(folder/entry['path'])
+    raw_path=folder.parent/'evidence.json'; require(not raw_path.is_symlink(), 'Linked raw child evidence')
+    raw=read(raw_path); redacted,redaction_count=redact_value(raw)
     require(entry['path'] in seen and entry['sha256']==digest(folder/entry['path']) and e['source']==expected_collector
-            and entry['facts_digest']==sha256_json(e['facts']) and e['metadata']['veritrail_observation']['plan_digest']==p['seal']['digest'], 'Unbound child facts')
-    return r,e['facts'],p,e
+            and raw['source']==expected_collector and redacted==e and entry['redaction_rule_version']=='privacy/0.1'
+            and entry['redacted_fields']==redaction_count and entry['redacted']==(redaction_count>0)
+            and entry['facts_digest']==sha256_json(raw['facts'])
+            and raw['metadata']['veritrail_observation']['facts_digest']==entry['facts_digest']
+            and raw['metadata']['veritrail_observation']['plan_digest']==p['seal']['digest'], 'Unbound child facts')
+    # Core retains the pre-redaction facts digest while storing the privacy/0.1
+    # document. Bind both original producer facts and its exact Core projection.
+    return r,raw['facts'],p,raw
 
 def run(a):
     out, plan, c = bound(a.output); n=a.run; d=out/f'run-{n}'; d.mkdir()

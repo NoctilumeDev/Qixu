@@ -23,4 +23,6 @@ python scripts/veritrail_m9.py finish --output <同父观察目录>
 
 父finish核原Bundle所有字节、封存Plan/collector/source、确切JAR、三端静态文件、页面尺寸/文字/时间、SQL及重启事实，再交Core裁决。任一缺失或失败保留ERROR/FAIL，不覆盖原观察；修正边界后使用新父身份重新运行。
 
+当前父适配器0.2/Plan2同时绑定原producer Evidence的脱敏前事实摘要和Core privacy/0.1的完整脱敏投影。Core保留的原摘要不等于脱敏后事实摘要；原始事实改动、投影不一致、脱敏规则/次数漂移均拒绝。旧0.1入口ERROR独立保留，不修写旧Plan或Verdict。
+
 fresh指两份全新工作区、依赖实例、独占MySQL和运行数据，不宣称清空宿主共享下载缓存、无网构建、字节可复现JAR、生产容量、多节点、真实校园SSO、现实维修或微信设备。公开工程候选和最终视觉资格分开。
