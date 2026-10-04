@@ -1,4 +1,31 @@
 <script setup lang="ts">
-import {back} from '../../runtime';
+  import { back } from '../../runtime';
 </script>
-<template><view class="screen"><view class="page-heading"><button role="button" class="back-button" @click="back()">返回</button><text class="page-title">使用原则</text></view><view class="panel"><text class="section-title">先理解空间，再选择</text><text class="description">地图按公开空间坐标展示，照片是演示示意。设施未采集时标为未知，时段可用性以服务端查询为准。</text></view><view class="panel"><text class="section-title">资格、分配和使用权分开</text><text class="description">长期席位按冻结志愿与固定未来随机来源统一分配。首选未获得仍有明确候补或其他真实空间入口；暂离不会释放长期席位，不用每日打卡保席。</text></view><view class="panel"><text class="section-title">结果未知，先确认原请求</text><text class="description">断网或响应超时不表示提交失败。查看原回执或重试原键，不能通过重复点击生成另一个事实。通知是提醒，当前申请详情才是权威入口。</text></view><view class="panel"><text class="section-title">反馈是报告，核实才是事实</text><text class="description">反馈内容仅本人及有权管理员可见。维修完成还需复验；陈述与申诉有明确期限和独立复核。</text></view></view></template>
+<template>
+  <view class="screen"
+    ><view class="page-heading"
+      ><button role="button" class="back-button" @click="back()">返回</button
+      ><text class="page-title">使用原则</text></view
+    ><view class="panel"
+      ><text class="section-title">先理解空间，再选择</text
+      ><text class="description"
+        >地图按公开空间坐标展示，照片是演示示意。设施未采集时标为未知，时段可用性以服务端查询为准。</text
+      ></view
+    ><view class="panel"
+      ><text class="section-title">资格、分配和使用权分开</text
+      ><text class="description"
+        >长期席位按冻结志愿与固定未来随机来源统一分配。首选未获得仍有明确候补或其他真实空间入口；暂离不会释放长期席位，不用每日打卡保席。</text
+      ></view
+    ><view class="panel"
+      ><text class="section-title">结果未知，先确认原请求</text
+      ><text class="description"
+        >断网或响应超时不表示提交失败。查看原回执或重试原键，不能通过重复点击生成另一个事实。通知是提醒，当前申请详情才是权威入口。</text
+      ></view
+    ><view class="panel"
+      ><text class="section-title">反馈是报告，核实才是事实</text
+      ><text class="description"
+        >反馈内容仅本人及有权管理员可见。维修完成还需复验；陈述与申诉有明确期限和独立复核。</text
+      ></view
+    ></view
+  >
+</template>

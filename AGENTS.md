@@ -43,3 +43,7 @@
 - https://github.com/NoctilumeDev/NoctilumeDev/blob/main/docs/iteration-decision-fact-record.md
 - https://github.com/NoctilumeDev/NoctilumeDev/blob/main/docs/public-verification-loop.md
 - https://github.com/NoctilumeDev/NoctilumeDev/blob/main/docs/fresh-checkout-independent-audit.md
+
+## 维护与遗留物收口
+
+日常维护统一从`python -B scripts/check.py`选择hygiene/docs/frontend/backend/all；原阶段采集器只服务其冻结合同。重要阶段退出必须做[运行说明](docs/running.md#当前维护入口与阶段收尾)中的仓库检查及人工归属/消费者/证明职责审查。自动检查通过不授予本机休眠；未知资产保留待审。不得按体积KPI删除，不增加永久删除档案，不把卫生检查塞进VeriTrail核心。不改旧Plan、Bundle或资格坐标，维护提交需独立验证。

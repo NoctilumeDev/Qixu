@@ -1,41 +1,474 @@
 <script setup lang="ts">
-import {computed,ref,watch,nextTick} from 'vue';
-import {useRoute,useRouter,RouterLink} from 'vue-router';
-import {PhMapTrifold,PhBuildings,PhClipboardText,PhCalendarBlank,PhWrench,PhShieldCheck,PhChartBar,PhList,PhBell,PhSignOut,PhMagnifyingGlass,PhCaretRight,PhHeart,PhArrowClockwise,PhClock,PhPlug,PhSun,PhWind,PhWheelchair} from '@phosphor-icons/vue';
-import {ApiError,StaleResponse,factLabel,featureText,imageKey,label,formatTime,businessTime,localDateTime,query,type Space,type Floor,type Row,type Page} from '@qixu/client';
-import {api,auth,client,errorMessage,roles,kindLabel,modeLabel} from '../runtime';
-import RequestState from '../components/RequestState.vue';
-import SpaceMap from '../components/SpaceMap.vue';
-import ManagementFlows from '../components/ManagementFlows.vue';
-import {sectionLocation} from '../router';
-const route=useRoute(),router=useRouter(),section=computed(()=>String(route.params.section||'map')),id=computed(()=>Number(route.params.id||0));
-const isAdmin=computed(()=>auth.session?.actor.role==='ADMIN');
-const nav=computed(()=>[{path:'map',label:'空间地图',icon:PhMapTrifold},{path:'venues',label:isAdmin.value?'申请审批':'我的场地申请',icon:PhClipboardText},{path:'events',label:'活动组织',icon:PhCalendarBlank},...(isAdmin.value?[{path:'batches',label:'长期席位批次',icon:PhBuildings},{path:'blocks',label:'占用与冲突',icon:PhShieldCheck},{path:'feedback',label:'反馈与维修',icon:PhWrench},{path:'governance',label:'使用权处置',icon:PhShieldCheck},{path:'operations',label:'运行投影',icon:PhChartBar},{path:'audit',label:'审计记录',icon:PhClock}]:[]),{path:'inbox',label:'我的消息',icon:PhBell}]);
-const currentTitle=computed(()=>nav.value.find(n=>n.path===section.value)?.label||(section.value==='repairs'?'维修事项':'工作详情'));
-const sidebarOpen=ref(false),loading=ref(false),error=ref(''),message=ref(''),floors=ref<Floor[]>([]),spaces=ref<Space[]>([]),selected=ref<Space|null>(null),pending=ref<Row[]>([]),selectedTab=ref('profile'),mapMode=ref('map'),availability=ref<Row|null>(null),start=ref(''),end=ref('');let revision=0;
-const floor=computed(()=>Number(route.query.floor)||Number(floors.value[0]?.id)||100),search=computed(()=>String(route.query.search||'')),tag=computed(()=>String(route.query.tag||''));
-const currentFloor=computed(()=>floors.value.find(f=>Number(f.id)===floor.value));
-const detailPanel=ref<HTMLElement|null>(null),mapPanel=ref<HTMLElement|null>(null);
-async function load(){const run=++revision;loading.value=true;error.value='';try{if(section.value!=='map')return;const fs=await api<Floor[]>('/floors');const own=auth.session?.adminFloors||[];if(run!==revision)return;floors.value=isAdmin.value?fs.filter(f=>own.includes(Number(f.id))):fs;const collected:Space[]=[];for(let page=1;page<=40;page++){if(run!==revision)return;const r=await api<Page<Space>>('/spaces?'+query({floor:floor.value,search:search.value,tag:tag.value,page}),'map-spaces');if(run!==revision)return;collected.push(...r.items);if(collected.length>=r.total)break;if(page===40)throw new ApiError(503,'MAP_TOO_LARGE','请缩小筛选范围。');}spaces.value=collected;const chosen=spaces.value.find(s=>s.id===Number(route.query.space))||spaces.value.find(s=>s.kind==='SEAT')||null;selected.value=chosen;const rows=await api<Row[]>(isAdmin.value?'/admin/venue-requests':'/venue-requests');if(run!==revision)return;pending.value=rows.filter(r=>r.status==='SUBMITTED');const rule=await api<Row>('/booking-rules');if(!start.value){const d=new Date(rule.serverNow);d.setUTCSeconds(0,0);d.setUTCMinutes(d.getUTCMinutes()+15);start.value=localDateTime(d.toISOString());end.value=localDateTime(new Date(d.getTime()+3600000).toISOString());}}catch(e){if(run===revision&&!(e instanceof StaleResponse))error.value=errorMessage(e);}finally{if(run===revision)loading.value=false;}}
-function filter(values:Record<string,string|number|undefined>){router.replace({path:'/map',query:{...route.query,...values}});}
-function pick(s:Space){selected.value=s;availability.value=null;router.replace({path:'/map',query:{...route.query,space:s.id}});nextTick(()=>{if(window.matchMedia('(max-width:920px)').matches)detailPanel.value?.scrollIntoView({block:'start',behavior:'auto'});});}
-function backToMap(){mapPanel.value?.scrollIntoView({block:'start',behavior:'auto'});}
-async function check(){availability.value=null;const run=revision,space=selected.value?.id,a=start.value,z=end.value;try{if(space){const result=await api('/spaces/'+space+'/availability?'+query({start:businessTime(a),end:businessTime(z)}),'selected-availability');if(run===revision&&space===selected.value?.id&&a===start.value&&z===end.value)availability.value=result;}}catch(e){if(run===revision&&space===selected.value?.id&&a===start.value&&z===end.value)error.value=errorMessage(e);}}
-async function logout(){try{await client.logout();router.replace('/login');}catch(e){error.value=errorMessage(e);}}
-watch(()=>[section.value,route.query.floor,route.query.search,route.query.tag],()=>{revision++;selected.value=null;availability.value=null;load();},{immediate:true});
-watch(()=>route.query.space,()=>{selected.value=spaces.value.find(s=>s.id===Number(route.query.space))||selected.value;availability.value=null;});
-watch(()=>[start.value,end.value],()=>{availability.value=null;});
-watch(()=>auth.generation,()=>{revision++;floors.value=[];spaces.value=[];selected.value=null;pending.value=[];if(!auth.session)router.replace('/login');});
+  import { computed, ref, watch, nextTick } from 'vue';
+  import { useRoute, useRouter, RouterLink } from 'vue-router';
+  import {
+    PhMapTrifold,
+    PhBuildings,
+    PhClipboardText,
+    PhCalendarBlank,
+    PhWrench,
+    PhShieldCheck,
+    PhChartBar,
+    PhList,
+    PhBell,
+    PhSignOut,
+    PhMagnifyingGlass,
+    PhCaretRight,
+    PhHeart,
+    PhArrowClockwise,
+    PhClock,
+    PhPlug,
+    PhSun,
+    PhWind,
+    PhWheelchair,
+  } from '@phosphor-icons/vue';
+  import {
+    ApiError,
+    StaleResponse,
+    factLabel,
+    featureText,
+    imageKey,
+    label,
+    formatTime,
+    businessTime,
+    localDateTime,
+    query,
+    type Space,
+    type Floor,
+    type Row,
+    type Page,
+  } from '@qixu/client';
+  import { api, auth, client, errorMessage, roles, kindLabel, modeLabel } from '../runtime';
+  import RequestState from '../components/RequestState.vue';
+  import SpaceMap from '../components/SpaceMap.vue';
+  import ManagementFlows from '../components/ManagementFlows.vue';
+  import { sectionLocation } from '../router';
+  const route = useRoute(),
+    router = useRouter(),
+    section = computed(() => String(route.params.section || 'map')),
+    id = computed(() => Number(route.params.id || 0));
+  const isAdmin = computed(() => auth.session?.actor.role === 'ADMIN');
+  const nav = computed(() => [
+    { path: 'map', label: '空间地图', icon: PhMapTrifold },
+    { path: 'venues', label: isAdmin.value ? '申请审批' : '我的场地申请', icon: PhClipboardText },
+    { path: 'events', label: '活动组织', icon: PhCalendarBlank },
+    ...(isAdmin.value
+      ? [
+          { path: 'batches', label: '长期席位批次', icon: PhBuildings },
+          { path: 'blocks', label: '占用与冲突', icon: PhShieldCheck },
+          { path: 'feedback', label: '反馈与维修', icon: PhWrench },
+          { path: 'governance', label: '使用权处置', icon: PhShieldCheck },
+          { path: 'operations', label: '运行投影', icon: PhChartBar },
+          { path: 'audit', label: '审计记录', icon: PhClock },
+        ]
+      : []),
+    { path: 'inbox', label: '我的消息', icon: PhBell },
+  ]);
+  const currentTitle = computed(
+    () =>
+      nav.value.find((n) => n.path === section.value)?.label ||
+      (section.value === 'repairs' ? '维修事项' : '工作详情'),
+  );
+  const sidebarOpen = ref(false),
+    loading = ref(false),
+    error = ref(''),
+    message = ref(''),
+    floors = ref<Floor[]>([]),
+    spaces = ref<Space[]>([]),
+    selected = ref<Space | null>(null),
+    pending = ref<Row[]>([]),
+    selectedTab = ref('profile'),
+    mapMode = ref('map'),
+    availability = ref<Row | null>(null),
+    start = ref(''),
+    end = ref('');
+  let revision = 0;
+  const floor = computed(() => Number(route.query.floor) || Number(floors.value[0]?.id) || 100),
+    search = computed(() => String(route.query.search || '')),
+    tag = computed(() => String(route.query.tag || ''));
+  const currentFloor = computed(() => floors.value.find((f) => Number(f.id) === floor.value));
+  const detailPanel = ref<HTMLElement | null>(null),
+    mapPanel = ref<HTMLElement | null>(null);
+  async function load() {
+    const run = ++revision;
+    loading.value = true;
+    error.value = '';
+    try {
+      if (section.value !== 'map') return;
+      const fs = await api<Floor[]>('/floors');
+      const own = auth.session?.adminFloors || [];
+      if (run !== revision) return;
+      floors.value = isAdmin.value ? fs.filter((f) => own.includes(Number(f.id))) : fs;
+      const collected: Space[] = [];
+      for (let page = 1; page <= 40; page++) {
+        if (run !== revision) return;
+        const r = await api<Page<Space>>(
+          '/spaces?' + query({ floor: floor.value, search: search.value, tag: tag.value, page }),
+          'map-spaces',
+        );
+        if (run !== revision) return;
+        collected.push(...r.items);
+        if (collected.length >= r.total) break;
+        if (page === 40) throw new ApiError(503, 'MAP_TOO_LARGE', '请缩小筛选范围。');
+      }
+      spaces.value = collected;
+      const chosen =
+        spaces.value.find((s) => s.id === Number(route.query.space)) ||
+        spaces.value.find((s) => s.kind === 'SEAT') ||
+        null;
+      selected.value = chosen;
+      const rows = await api<Row[]>(isAdmin.value ? '/admin/venue-requests' : '/venue-requests');
+      if (run !== revision) return;
+      pending.value = rows.filter((r) => r.status === 'SUBMITTED');
+      const rule = await api<Row>('/booking-rules');
+      if (!start.value) {
+        const d = new Date(rule.serverNow);
+        d.setUTCSeconds(0, 0);
+        d.setUTCMinutes(d.getUTCMinutes() + 15);
+        start.value = localDateTime(d.toISOString());
+        end.value = localDateTime(new Date(d.getTime() + 3600000).toISOString());
+      }
+    } catch (e) {
+      if (run === revision && !(e instanceof StaleResponse)) error.value = errorMessage(e);
+    } finally {
+      if (run === revision) loading.value = false;
+    }
+  }
+  function filter(values: Record<string, string | number | undefined>) {
+    router.replace({ path: '/map', query: { ...route.query, ...values } });
+  }
+  function pick(s: Space) {
+    selected.value = s;
+    availability.value = null;
+    router.replace({ path: '/map', query: { ...route.query, space: s.id } });
+    nextTick(() => {
+      if (window.matchMedia('(max-width:920px)').matches)
+        detailPanel.value?.scrollIntoView({ block: 'start', behavior: 'auto' });
+    });
+  }
+  function backToMap() {
+    mapPanel.value?.scrollIntoView({ block: 'start', behavior: 'auto' });
+  }
+  async function check() {
+    availability.value = null;
+    const run = revision,
+      space = selected.value?.id,
+      a = start.value,
+      z = end.value;
+    try {
+      if (space) {
+        const result = await api(
+          '/spaces/' +
+            space +
+            '/availability?' +
+            query({ start: businessTime(a), end: businessTime(z) }),
+          'selected-availability',
+        );
+        if (
+          run === revision &&
+          space === selected.value?.id &&
+          a === start.value &&
+          z === end.value
+        )
+          availability.value = result;
+      }
+    } catch (e) {
+      if (run === revision && space === selected.value?.id && a === start.value && z === end.value)
+        error.value = errorMessage(e);
+    }
+  }
+  async function logout() {
+    try {
+      await client.logout();
+      router.replace('/login');
+    } catch (e) {
+      error.value = errorMessage(e);
+    }
+  }
+  watch(
+    () => [section.value, route.query.floor, route.query.search, route.query.tag],
+    () => {
+      revision++;
+      selected.value = null;
+      availability.value = null;
+      load();
+    },
+    { immediate: true },
+  );
+  watch(
+    () => route.query.space,
+    () => {
+      selected.value =
+        spaces.value.find((s) => s.id === Number(route.query.space)) || selected.value;
+      availability.value = null;
+    },
+  );
+  watch(
+    () => [start.value, end.value],
+    () => {
+      availability.value = null;
+    },
+  );
+  watch(
+    () => auth.generation,
+    () => {
+      revision++;
+      floors.value = [];
+      spaces.value = [];
+      selected.value = null;
+      pending.value = [];
+      if (!auth.session) router.replace('/login');
+    },
+  );
 </script>
 <template>
-<div class="workspace">
- <aside class="sidebar" :class="{open:sidebarOpen}"><RouterLink to="/map" class="admin-brand">期序 <span>· Qixu</span><small>校园空间预约与使用权管理</small></RouterLink><nav aria-label="工作台导航"><RouterLink v-for="n in nav" :key="n.path" :to="sectionLocation(n.path)" :class="{active:section===n.path}" @click="sidebarOpen=false"><component :is="n.icon" :size="22"/><span>{{n.label}}</span></RouterLink></nav><div class="sidebar-bottom"><img src="/assets/ink-sidebar.jpg" alt=""/><p>让每一处校园空间，<br/>各得其用。</p><small>期序 · Qixu</small></div></aside>
- <div class="workspace-body"><header class="topbar"><button class="mobile-menu icon-button" aria-label="展开工作台导航" @click="sidebarOpen=!sidebarOpen"><PhList :size="24"/></button><h1>{{currentTitle}}</h1><div class="topbar-right"><RouterLink to="/inbox" class="icon-button" aria-label="我的消息"><PhBell :size="22"/></RouterLink><span class="account-name">{{auth.session?.actor.displayName}}<small>{{roles[auth.session?.actor.role||'']}}</small></span><button class="icon-button" aria-label="退出当前账号" @click="logout"><PhSignOut :size="22"/></button></div></header>
- <main><RequestState/><div v-if="error" class="alert danger" role="alert">{{error}}<button @click="load">刷新当前事实</button></div><div v-if="message" class="alert">{{message}}</div><p v-if="loading" class="muted">正在读取授权范围内的事实…</p>
- <div v-if="section==='map'" class="map-workspace"><div class="map-main"><section ref="mapPanel" class="panel"><div class="map-toolbar"><label class="floor-select"><PhBuildings :size="22"/><select :value="floor" @change="filter({floor:Number(($event.target as HTMLSelectElement).value),space:undefined})"><option v-for="f in floors" :key="f.id" :value="f.id">{{f.building}} · {{f.name}}</option></select></label><div class="view-tabs"><button :class="{active:mapMode==='map'}" @click="mapMode='map'">平面图</button><button :class="{active:mapMode==='list'}" @click="mapMode='list'">列表</button></div></div><div class="map-filter"><label class="search"><PhMagnifyingGlass :size="18"/><input :value="search" placeholder="搜索空间名称或编号" maxlength="80" @change="filter({search:($event.target as HTMLInputElement).value})"/></label><select :value="tag" aria-label="设施筛选" @change="filter({tag:($event.target as HTMLSelectElement).value})"><option value="">全部公开条件</option><option value="window">靠窗</option><option value="outlet">有插座</option><option value="quiet">安静</option><option value="accessible">无障碍</option></select><button class="icon-button" aria-label="刷新空间" @click="load"><PhArrowClockwise :size="20"/></button></div><SpaceMap v-if="mapMode==='map'" :spaces="spaces" :selected="selected?.id||0" @select="pick"/><div v-else class="space-list"><button v-for="s in spaces.filter(s=>s.kind!=='AREA')" :key="s.id" :class="{selected:s.id===selected?.id}" @click="pick(s)"><strong>{{s.code}}</strong><span>{{s.name}}</span><small>{{modeLabel[s.useMode]}}</small><PhCaretRight :size="16"/></button></div><p v-if="!spaces.length&&!loading" class="empty">当前范围/筛选没有空间。可调整条件；管理员只能管理授权楼层。</p></section>
- <section class="panel todo-panel"><div class="section-header"><h2>待处理场地申请 <span class="count">{{pending.length}}</span></h2><RouterLink to="/venues">查看申请</RouterLink></div><div class="table-wrap"><table><thead><tr><th>使用时间</th><th>空间</th><th>用途</th><th>人数</th><th>状态</th><th>操作</th></tr></thead><tbody><tr v-for="r in pending.slice(0,5)" :key="r.id"><td>{{formatTime(r.starts_at)}}</td><td>{{r.code||r.space_id}}</td><td>{{r.purpose}}</td><td>{{r.people}}</td><td><span class="badge warning">待审核</span></td><td><RouterLink :to="'/venues/'+r.id">查看详情</RouterLink></td></tr></tbody></table></div><p v-if="!pending.length" class="empty">没有待处理场地申请。</p></section></div>
- <aside v-if="selected" ref="detailPanel" class="detail-panel panel"><button class="mobile-detail-back" @click="backToMap">返回地图与原筛选</button><div class="section-header"><h2>{{selected.code}}</h2><span class="badge">{{modeLabel[selected.useMode]}}</span></div><p class="muted">{{currentFloor?.building}} · {{selected.name}}</p><img class="detail-image" :src="'/assets/'+imageKey(selected.imageKey)+'.jpg'" alt="演示空间图片，非真实馆内照片"/><p class="small muted">演示示意图片 · 非真实现场</p><div class="view-tabs"><button :class="{active:selectedTab==='profile'}" @click="selectedTab='profile'">基本信息</button><button :class="{active:selectedTab==='rules'}" @click="selectedTab='rules'">使用规则</button><button :class="{active:selectedTab==='availability'}" @click="selectedTab='availability'">时段查询</button></div><dl v-if="selectedTab==='profile'" class="space-facts"><div><dt>类型</dt><dd>{{kindLabel[selected.kind]}} · 容量{{selected.capacity}}</dd></div><div v-for="(f,i) in featureText(selected)" :key="f.key"><dt><component :is="[PhSun,PhPlug,PhWind,PhWheelchair][i]" :size="17"/>{{f.label}}</dt><dd>{{f.value}}</dd></div><div v-for="(value,key) in selected.profile.conditions||{}" :key="key"><dt>{{factLabel[String(key)]||'其他已采集条件'}}</dt><dd>{{label(value)}}</dd></div><div><dt>档案说明</dt><dd>{{selected.profile.description||'尚未采集'}}</dd></div></dl><div v-else-if="selectedTab==='rules'"><p>{{selected.profile.notice||'请遵守空间使用规则。'}}</p><p class="muted">短期预约需到场确认；长期使用权不因暂离而重新分配。活动与维护限制要明确处理已有安排。</p></div><div v-else><label>开始<input v-model="start" type="datetime-local"/></label><label>结束<input v-model="end" type="datetime-local"/></label><button class="primary full" @click="check">查询当前时段</button><div v-if="availability" :class="['alert',availability.available?'':'danger']"><strong>{{availability.available?'当前查询可用':'已有使用权或限制'}}</strong><small>查询于{{formatTime(availability.asOf)}}；最终提交须重新裁决，不代表现场人数。</small></div></div><div class="actions detail-actions"><RouterLink v-if="isAdmin" :to="{path:'/blocks',query:{space:selected.id}}" class="button">查看/创建限制</RouterLink><RouterLink v-if="isAdmin" :to="{path:'/feedback',query:{space:selected.id}}" class="button">反馈与维修</RouterLink><RouterLink v-if="selected.useMode==='VENUE'" :to="{path:'/venues',query:{space:selected.id}}" class="button">申请使用场地</RouterLink></div></aside></div>
- <ManagementFlows v-else :section="section" :id="id"/>
- </main></div>
-</div>
+  <div class="workspace">
+    <aside class="sidebar" :class="{ open: sidebarOpen }">
+      <RouterLink to="/map" class="admin-brand"
+        >期序 <span>· Qixu</span><small>校园空间预约与使用权管理</small></RouterLink
+      >
+      <nav aria-label="工作台导航">
+        <RouterLink
+          v-for="n in nav"
+          :key="n.path"
+          :to="sectionLocation(n.path)"
+          :class="{ active: section === n.path }"
+          @click="sidebarOpen = false"
+          ><component :is="n.icon" :size="22" /><span>{{ n.label }}</span></RouterLink
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <img src="/assets/ink-sidebar.jpg" alt="" />
+        <p>让每一处校园空间，<br />各得其用。</p>
+        <small>期序 · Qixu</small>
+      </div>
+    </aside>
+    <div class="workspace-body">
+      <header class="topbar">
+        <button
+          class="mobile-menu icon-button"
+          aria-label="展开工作台导航"
+          @click="sidebarOpen = !sidebarOpen"
+        >
+          <PhList :size="24" />
+        </button>
+        <h1>{{ currentTitle }}</h1>
+        <div class="topbar-right">
+          <RouterLink to="/inbox" class="icon-button" aria-label="我的消息"
+            ><PhBell :size="22" /></RouterLink
+          ><span class="account-name"
+            >{{ auth.session?.actor.displayName
+            }}<small>{{ roles[auth.session?.actor.role || ''] }}</small></span
+          ><button class="icon-button" aria-label="退出当前账号" @click="logout">
+            <PhSignOut :size="22" />
+          </button>
+        </div>
+      </header>
+      <main>
+        <RequestState />
+        <div v-if="error" class="alert danger" role="alert">
+          {{ error }}<button @click="load">刷新当前事实</button>
+        </div>
+        <div v-if="message" class="alert">{{ message }}</div>
+        <p v-if="loading" class="muted">正在读取授权范围内的事实…</p>
+        <div v-if="section === 'map'" class="map-workspace">
+          <div class="map-main">
+            <section ref="mapPanel" class="panel">
+              <div class="map-toolbar">
+                <label class="floor-select"
+                  ><PhBuildings :size="22" /><select
+                    :value="floor"
+                    @change="
+                      filter({
+                        floor: Number(($event.target as HTMLSelectElement).value),
+                        space: undefined,
+                      })
+                    "
+                  >
+                    <option v-for="f in floors" :key="f.id" :value="f.id">
+                      {{ f.building }} · {{ f.name }}
+                    </option>
+                  </select></label
+                >
+                <div class="view-tabs">
+                  <button :class="{ active: mapMode === 'map' }" @click="mapMode = 'map'">
+                    平面图</button
+                  ><button :class="{ active: mapMode === 'list' }" @click="mapMode = 'list'">
+                    列表
+                  </button>
+                </div>
+              </div>
+              <div class="map-filter">
+                <label class="search"
+                  ><PhMagnifyingGlass :size="18" /><input
+                    :value="search"
+                    placeholder="搜索空间名称或编号"
+                    maxlength="80"
+                    @change="
+                      filter({ search: ($event.target as HTMLInputElement).value })
+                    " /></label
+                ><select
+                  :value="tag"
+                  aria-label="设施筛选"
+                  @change="filter({ tag: ($event.target as HTMLSelectElement).value })"
+                >
+                  <option value="">全部公开条件</option>
+                  <option value="window">靠窗</option>
+                  <option value="outlet">有插座</option>
+                  <option value="quiet">安静</option>
+                  <option value="accessible">无障碍</option></select
+                ><button class="icon-button" aria-label="刷新空间" @click="load">
+                  <PhArrowClockwise :size="20" />
+                </button>
+              </div>
+              <SpaceMap
+                v-if="mapMode === 'map'"
+                :spaces="spaces"
+                :selected="selected?.id || 0"
+                @select="pick"
+              />
+              <div v-else class="space-list">
+                <button
+                  v-for="s in spaces.filter((s) => s.kind !== 'AREA')"
+                  :key="s.id"
+                  :class="{ selected: s.id === selected?.id }"
+                  @click="pick(s)"
+                >
+                  <strong>{{ s.code }}</strong
+                  ><span>{{ s.name }}</span
+                  ><small>{{ modeLabel[s.useMode] }}</small
+                  ><PhCaretRight :size="16" />
+                </button>
+              </div>
+              <p v-if="!spaces.length && !loading" class="empty">
+                当前范围/筛选没有空间。可调整条件；管理员只能管理授权楼层。
+              </p>
+            </section>
+            <section class="panel todo-panel">
+              <div class="section-header">
+                <h2>
+                  待处理场地申请 <span class="count">{{ pending.length }}</span>
+                </h2>
+                <RouterLink to="/venues">查看申请</RouterLink>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>使用时间</th>
+                      <th>空间</th>
+                      <th>用途</th>
+                      <th>人数</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="r in pending.slice(0, 5)" :key="r.id">
+                      <td>{{ formatTime(r.starts_at) }}</td>
+                      <td>{{ r.code || r.space_id }}</td>
+                      <td>{{ r.purpose }}</td>
+                      <td>{{ r.people }}</td>
+                      <td><span class="badge warning">待审核</span></td>
+                      <td><RouterLink :to="'/venues/' + r.id">查看详情</RouterLink></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p v-if="!pending.length" class="empty">没有待处理场地申请。</p>
+            </section>
+          </div>
+          <aside v-if="selected" ref="detailPanel" class="detail-panel panel">
+            <button class="mobile-detail-back" @click="backToMap">返回地图与原筛选</button>
+            <div class="section-header">
+              <h2>{{ selected.code }}</h2>
+              <span class="badge">{{ modeLabel[selected.useMode] }}</span>
+            </div>
+            <p class="muted">{{ currentFloor?.building }} · {{ selected.name }}</p>
+            <img
+              class="detail-image"
+              :src="'/assets/' + imageKey(selected.imageKey) + '.jpg'"
+              alt="演示空间图片，非真实馆内照片"
+            />
+            <p class="small muted">演示示意图片 · 非真实现场</p>
+            <div class="view-tabs">
+              <button
+                :class="{ active: selectedTab === 'profile' }"
+                @click="selectedTab = 'profile'"
+              >
+                基本信息</button
+              ><button :class="{ active: selectedTab === 'rules' }" @click="selectedTab = 'rules'">
+                使用规则</button
+              ><button
+                :class="{ active: selectedTab === 'availability' }"
+                @click="selectedTab = 'availability'"
+              >
+                时段查询
+              </button>
+            </div>
+            <dl v-if="selectedTab === 'profile'" class="space-facts">
+              <div>
+                <dt>类型</dt>
+                <dd>{{ kindLabel[selected.kind] }} · 容量{{ selected.capacity }}</dd>
+              </div>
+              <div v-for="(f, i) in featureText(selected)" :key="f.key">
+                <dt>
+                  <component :is="[PhSun, PhPlug, PhWind, PhWheelchair][i]" :size="17" />{{
+                    f.label
+                  }}
+                </dt>
+                <dd>{{ f.value }}</dd>
+              </div>
+              <div v-for="(value, key) in selected.profile.conditions || {}" :key="key">
+                <dt>{{ factLabel[String(key)] || '其他已采集条件' }}</dt>
+                <dd>{{ label(value) }}</dd>
+              </div>
+              <div>
+                <dt>档案说明</dt>
+                <dd>{{ selected.profile.description || '尚未采集' }}</dd>
+              </div>
+            </dl>
+            <div v-else-if="selectedTab === 'rules'">
+              <p>{{ selected.profile.notice || '请遵守空间使用规则。' }}</p>
+              <p class="muted">
+                短期预约需到场确认；长期使用权不因暂离而重新分配。活动与维护限制要明确处理已有安排。
+              </p>
+            </div>
+            <div v-else>
+              <label>开始<input v-model="start" type="datetime-local" /></label
+              ><label>结束<input v-model="end" type="datetime-local" /></label
+              ><button class="primary full" @click="check">查询当前时段</button>
+              <div v-if="availability" :class="['alert', availability.available ? '' : 'danger']">
+                <strong>{{ availability.available ? '当前查询可用' : '已有使用权或限制' }}</strong
+                ><small
+                  >查询于{{
+                    formatTime(availability.asOf)
+                  }}；最终提交须重新裁决，不代表现场人数。</small
+                >
+              </div>
+            </div>
+            <div class="actions detail-actions">
+              <RouterLink
+                v-if="isAdmin"
+                :to="{ path: '/blocks', query: { space: selected.id } }"
+                class="button"
+                >查看/创建限制</RouterLink
+              ><RouterLink
+                v-if="isAdmin"
+                :to="{ path: '/feedback', query: { space: selected.id } }"
+                class="button"
+                >反馈与维修</RouterLink
+              ><RouterLink
+                v-if="selected.useMode === 'VENUE'"
+                :to="{ path: '/venues', query: { space: selected.id } }"
+                class="button"
+                >申请使用场地</RouterLink
+              >
+            </div>
+          </aside>
+        </div>
+        <ManagementFlows v-else :section="section" :id="id" />
+      </main>
+    </div>
+  </div>
 </template>
