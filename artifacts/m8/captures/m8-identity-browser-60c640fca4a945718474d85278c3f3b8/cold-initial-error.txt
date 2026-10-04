@@ -1,0 +1,16 @@
+- generic: 期序
+- generic: 无法确认登录身份。
+- button "查看连接设置"
+- generic: 先认识你，再安排空间
+- generic: 登录后查看申请、使用安排与通知。
+- button "去登录"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

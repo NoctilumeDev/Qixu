@@ -1,0 +1,28 @@
+{
+  "sealed_at": "2026-10-03T16:12:29.864777+00:00",
+  "checks": {
+    "cold-initial-error": [
+      "无法确认登录身份",
+      "去登录"
+    ],
+    "student-current-identity": [
+      "陈同学",
+      "student2",
+      "退出当前登录"
+    ],
+    "event-waitlisted": [
+      "我的状态：候补",
+      "预约截止",
+      "递补停止"
+    ],
+    "own-arrangements": [
+      "没有短期预约",
+      "候补"
+    ],
+    "event-venue-profile": [
+      "R-A",
+      "研讨室 A",
+      "容量8人"
+    ]
+  }
+}

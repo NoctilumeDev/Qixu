@@ -1,0 +1,10 @@
+{
+  "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+  "collector": "qixu-m8-browser/0.3",
+  "native_evidence_sha256": "34d273f90ceb42376beb055855adf8312407221a0902a8b8913a5dd3a0070010",
+  "frontend_evidence_sha256": "204ca4f91b7a00d4e5581606765b5cfa7ad02dfae0207cd96f730a2defdeb330",
+  "observer_sha256": "68158d6bdaefc48620ca7ef7ce784b7c7d0d6f6818689fe70db6a87726d55e58",
+  "fixture_sha256": "7a349b53a0679ef200e2f566e67b6d45df14e4cfc0be7de44bc4f229efd8c14b",
+  "contract_sha256": "3a42c4d2e4a88e1817d19a20ff0ee2bec9b1e58f1a3d3bdce5ea98ae0f7b6501",
+  "tasks_enabled": false
+}

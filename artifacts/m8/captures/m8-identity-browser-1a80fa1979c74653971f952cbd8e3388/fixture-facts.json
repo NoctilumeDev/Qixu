@@ -1,0 +1,17 @@
+{
+  "source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc",
+  "inbox": "1\t151\t151\r\n2\t5\t5\r\n4\t151\t151\r\n5\t5\t5",
+  "favorite_count": 0,
+  "lost_responses": [],
+  "request_count": 130,
+  "static_bytes_checked": true,
+  "m8": {
+    "outlet_true_facts": 0,
+    "outlet_false_facts": 0,
+    "published_events": 1,
+    "confirmed_parts": 1,
+    "waitlisted_parts": 1,
+    "kept_short": 1,
+    "exited_applications": 0
+  }
+}

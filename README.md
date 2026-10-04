@@ -10,16 +10,16 @@
 
 本轮自动施工与收尾止于 **M9 工程交付**。M10 前端精修由用户参与，待以后明确重新开启；工程交付资格、视觉精修与微信真机边界分别记录，不以M10延期提前授予M8/M9通过。
 
-2026-10-03：**M0–M7限定范围已验收；M8复验中，M9待交付，M10等待用户参与**。当前可运行代码、阶段限定资格和整个工程交付分别记录：
+2026-10-04：**M0–M8限定范围已验收；M9待交付，M10等待用户参与**。当前可运行代码、阶段限定资格和整个工程交付分别记录：
 
 | 阶段 | 当前事实 |
 | --- | --- |
 | M0–M7 | 已取得各自限定资格。[M7主线证据](docs/acceptance/m7.md)保留原失败、修复及有限停止线；不宣称零缺陷 |
-| M8 | 两名独立角色已复核，并发现新的登录错误投影问题（PM11）；修复仍在[草稿 PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)，尚未合入主线。候选 `19cfa925` 的[公开 CI](https://github.com/NoctilumeDev/Qixu/actions/runs/37132322289)通过，仍不能代替实际页面及 SQL 的完整复验 |
+| M8 | [PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)受保护合入 `4c220626`；该主线 fresh 原生181、前端61及原条件实页/SQL通过，两名独立角色完成新原件对齐。见[M8限定资格](docs/acceptance/m8.md#2026-10-04--主线有限退出) |
 | M9 | 尚未完成。等待 M8 闭合后，执行干净检出、两次 fresh 运行、验迹裁决与公开交付对齐 |
 | M10 | 已按用户要求后置；以后由用户参与并明确开启。最终视觉和微信真机仍为待验边界 |
 
-PM11已有五个命名页面状态的原始捕获支持显示问题修复，但该次采集缺少完整 SQL 和原短约保留见证，Core结果为 **FAIL / ERROR**；不能据此宣布M8结束。首败和后续修复见[PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)。夜间开放规则照常生效，不为复验伪造服务器时间。阶段证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)、[M6](docs/acceptance/m6.md)、[M8](docs/acceptance/m8.md)；前端精修归[M10](docs/contracts/frontend-refinement.md)。
+PM11已在真实开放窗口完成正常身份切换、双方参与/候补及原短约保留复验。原 Core **FAIL / ERROR** 与旧未执行计划均保留；后续通过不覆盖首败。阶段证据见 [M1](docs/acceptance/m1.md)、[M2](docs/acceptance/m2.md)、[M3](docs/acceptance/m3.md)、[M4](docs/acceptance/m4.md)、[M5](docs/acceptance/m5.md)、[M6](docs/acceptance/m6.md)、[M8](docs/acceptance/m8.md)；前端精修归[M10](docs/contracts/frontend-refinement.md)。
 
 以下为固定主线H5运行截图，空间、照片和活动明确标记为演示；不作为真实校园或微信设备证据。
 

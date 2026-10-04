@@ -1,0 +1,469 @@
+{
+  "plan_kind": "ACCEPTANCE",
+  "schema_version": "0.1",
+  "plan_id": "qixu-m8-identity-browser",
+  "version": 1,
+  "subject": {
+    "id": "qixu-m8-identity-browser",
+    "version": "8263723b129df63afaea5a5759bab36ca73f95fc",
+    "source_ref": "github:NoctilumeDev/Qixu"
+  },
+  "question": "Does the declared cold identity error disappear only after valid token-based login and stay absent on the three original PM11 routes, with actual participation and short reservation facts retained? Not all UI routes, async schedules, native devices or M10 design.",
+  "governance": {
+    "claim_owner_ref": "human:repository-owner",
+    "drafter_ref": "qixu:identity-browser-observer",
+    "seal_authority_ref": "human:repository-owner:authorized-engineering-goal",
+    "seal_decision": "CONFIRMED"
+  },
+  "observation_specs": [
+    {
+      "id": "browser",
+      "contract": {
+        "id": "qixu-m8-identity-browser",
+        "version": "0.1"
+      },
+      "evidence_type": "qixu.m8.identity.browser",
+      "coordinates": {
+        "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+        "collector": "qixu-m8-browser/0.3",
+        "native_evidence_sha256": "34d273f90ceb42376beb055855adf8312407221a0902a8b8913a5dd3a0070010",
+        "frontend_evidence_sha256": "204ca4f91b7a00d4e5581606765b5cfa7ad02dfae0207cd96f730a2defdeb330",
+        "observer_sha256": "68158d6bdaefc48620ca7ef7ce784b7c7d0d6f6818689fe70db6a87726d55e58",
+        "fixture_sha256": "7a349b53a0679ef200e2f566e67b6d45df14e4cfc0be7de44bc4f229efd8c14b",
+        "contract_sha256": "3a42c4d2e4a88e1817d19a20ff0ee2bec9b1e58f1a3d3bdce5ea98ae0f7b6501",
+        "tasks_enabled": false
+      },
+      "projections": [
+        "source_sha",
+        "source_clean",
+        "captures",
+        "sql",
+        "cleanup"
+      ],
+      "canonicalization_profile": "veritrail-json-c14n/1"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "browser",
+      "observation_spec_id": "browser",
+      "cardinality": "EXACTLY_ONE"
+    }
+  ],
+  "sufficiency_rules": [
+    {
+      "id": "complete",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/metadata/veritrail_observation/coverage"
+      },
+      "operator": "eq",
+      "right": "COMPLETE"
+    }
+  ],
+  "integrity_rules": [],
+  "assertions": [
+    {
+      "id": "source",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/source_sha"
+      },
+      "operator": "eq",
+      "right": "8263723b129df63afaea5a5759bab36ca73f95fc"
+    },
+    {
+      "id": "clean",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/source_clean"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "static",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/sql/static_bytes_checked"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "cleanup",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/cleanup"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "cold-initial-error-fresh",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/cold-initial-error/fresh"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "cold-initial-error-mobile",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/cold-initial-error/mobile"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "cold-initial-error-no_overflow",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/cold-initial-error/no_overflow"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "cold-initial-error-text-0",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/cold-initial-error/text/0"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "cold-initial-error-text-1",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/cold-initial-error/text/1"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-fresh",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/fresh"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-mobile",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/mobile"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-no_overflow",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/no_overflow"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-text-0",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/text/0"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-text-1",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/text/1"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-text-2",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/text/2"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "student-current-identity-no-old-identity-error",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/student-current-identity/old_identity_error_absent"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-fresh",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/fresh"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-mobile",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/mobile"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-no_overflow",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/no_overflow"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-text-0",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/text/0"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-text-1",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/text/1"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-text-2",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/text/2"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-waitlisted-no-old-identity-error",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-waitlisted/old_identity_error_absent"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "own-arrangements-fresh",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/own-arrangements/fresh"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "own-arrangements-mobile",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/own-arrangements/mobile"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "own-arrangements-no_overflow",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/own-arrangements/no_overflow"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "own-arrangements-text-0",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/own-arrangements/text/0"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "own-arrangements-text-1",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/own-arrangements/text/1"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "own-arrangements-no-old-identity-error",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/own-arrangements/old_identity_error_absent"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-fresh",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/fresh"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-mobile",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/mobile"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-no_overflow",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/no_overflow"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-text-0",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/text/0"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-text-1",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/text/1"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-text-2",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/text/2"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "event-venue-profile-no-old-identity-error",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/captures/event-venue-profile/old_identity_error_absent"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "both_participation_states",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/sql/both_participation_states"
+      },
+      "operator": "eq",
+      "right": true
+    },
+    {
+      "id": "short_kept",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "browser",
+        "path": "/facts/sql/short_kept"
+      },
+      "operator": "eq",
+      "right": true
+    }
+  ],
+  "resource_budget": {
+    "max_artifact_bytes": 2097152
+  },
+  "change_scope": {
+    "level": "L2_CONTRACT",
+    "owner": "Qixu PM11 focused repair",
+    "consumers": [
+      "M8-review"
+    ]
+  },
+  "reproduction_steps": [
+    "Seal on clean exact source before owned fixture installation.",
+    "CUA: same browser admin Cookie; unauthenticated student cold page then valid student login; event waitlist, own arrangements and public venue.",
+    "Preserve raw DOM/JPEG/URL/UTC/window plus actual SQL and owned cleanup; no browser fetch/evaluate mutations."
+  ],
+  "cleanup_steps": [
+    "Stop only fixture-owned processes/threads and close temporary tabs; retain first failure and original plans."
+  ],
+  "seal": {
+    "algorithm": "sha256",
+    "digest": "99e3dd688030a3ef4f584e3f27b8a943e50fde833acffb9f9ad60fe4273b98ab"
+  }
+}

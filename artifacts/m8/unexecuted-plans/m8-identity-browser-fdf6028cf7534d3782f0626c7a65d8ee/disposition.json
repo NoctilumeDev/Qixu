@@ -1,0 +1,5 @@
+{
+  "state": "UNEXECUTED_HISTORICAL",
+  "reason": "Pending producer package instance was mistakenly removed during rebuildable-output cleanup. A new artifact identity and new sealed plan were required. This old plan was not executed using a reconstructed package.",
+  "replacement_identity": "m8-identity-browser-60c640fca4a945718474d85278c3f3b8"
+}

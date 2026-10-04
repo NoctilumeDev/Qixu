@@ -66,6 +66,30 @@
       "source_sha": "1ffe245bf716713ad2c74de38326defda7d64ced",
       "original_report_sha256": "6467d0d03c97178334cbd21b8ea18d6f59fe407a192c41cea445b0bc2e67c16b",
       "original_report_size": 10234
+    },
+    {
+      "role_record": "m8-pm11-test-recheck-826",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "original_report_sha256": "33b9ef46d44cd9a25660c2063d0b0fedf8c9d133eb77ef70ac69e8e6e9b3a29c",
+      "original_report_size": 3117
+    },
+    {
+      "role_record": "m8-pm11-test-main-4c220626",
+      "source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc",
+      "original_report_sha256": "337e0246c6becc8f28c1d64092a959172614d1bf84566d774e0a1c1f3d19f003",
+      "original_report_size": 4660
+    },
+    {
+      "role_record": "m8-pm11-product-recheck-826",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "original_report_sha256": "cb9a9f14894d78ef24fad41684b58fe4a6193897721bea3eb9eabe6b99e61f57",
+      "original_report_size": 2897
+    },
+    {
+      "role_record": "m8-pm11-product-main-4c220626",
+      "source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc",
+      "original_report_sha256": "f1552d4cff103ddd3611d20fe77ee811a1f63d21aa221db3042ef1cd4fb729f7",
+      "original_report_size": 5012
     }
   ]
 }

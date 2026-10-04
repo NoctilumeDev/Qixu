@@ -253,3 +253,22 @@ F01–F15按机制有限收束，U01–U08逐项触发/影响/缺证据/环境/�
 用户要求更新仓库主页并排除文档漂移。从PR #26之后的main@036a167独立建立docs/status-reconciliation，不混入PR #25的PM11产品修复。当前状态入口统一为M0–M7限定资格、M8复验、M9待交付、M10等待人参与；PR #25候选19cfa925公开CI通过仍不等于主线安装或M8退出。PM11已有页面捕获支持显示修复，原Core FAIL/ERROR和缺少SQL/短约保留见证的事实明确保留。
 
 运行说明按源码核对根workspace与randomness两套依赖、IDE验签器绝对路径、demo/HTTPS/正式身份边界、Flyway迁移、专属测试库、恢复账册与producer版本约束。架构标明M1初始依赖计划及M5实际锁定版本；覆盖表和4fb验收段落标明历史快照，原Plan、Evidence、Bundle、截图与Verdict不改。文档检查只证明结构/链接与说明对齐，不创造新的产品运行资格；本次按受保护PR、CI及远端原字节读回完成文档交付。
+
+## 2026-10-04 · M8主线有限退出与M9入口
+
+
+PM11固定候选8263723的native181、frontend61与实页39规则全部PASS；两名独立角色从原件复核支持限定修复。PR#25在候选CI37135347273全部jobs/steps成功后正常受保护squash合入 **4c220626654a69a124054b5c03d3d7d920c66acc**。该主线CI[37164090998](https://github.com/NoctilumeDev/Qixu/actions/runs/37164090998)三个jobs及32步骤成功，远端HEAD一致。
+
+| 新主线原身份 | 实际证明 |
+| --- | --- |
+| [m8-c747142008c341b4b316b60e164a0105](../artifacts/m8/m8-c747142008c341b4b316b60e164a0105/acceptance-report.md) | native0.22/Plan3，181/181、真实HTTP/MySQL及新JAR，PASS |
+| [m8-frontend-408992e21ade465eb43a2d8a6829dd1c](../artifacts/m8/m8-frontend-408992e21ade465eb43a2d8a6829dd1c/acceptance-report.md) | frontend0.8/Plan4，61/61、五命令及三端真实新构建，PASS |
+| [m8-identity-browser-1a80fa1979c74653971f952cbd8e3388](../artifacts/m8/m8-identity-browser-1a80fa1979c74653971f952cbd8e3388/acceptance-report.md) | 先seal，再独占安装；原五状态39规则、合法参与/候补与短约SQL，PASS |
+
+主角色实际CUA操作，独立产品角色重新审九张原JPEG与DOM/meta，测试角色重新核三原包、source/产物绑定和原事实；均未继承826候选报告。原报告坐标追加review-records.json，未直接发布私有审查输入。两者未发现新已确认P0/P1/P2阻断。学生五状态CSS390×844，管理控制1280×720，JPEG像素尺寸另判；无裁切重绘。
+
+SQL：published_events=1、confirmed_parts=1、waitlisted_parts=1、kept_short=1；第二学生个人安排只显示本人候补。新增admin-after-switch原triplet在student2身份页之后、候补操作之前：管理身份仍为空间管理员，刷新版本3/剩余0，补足原候选管理换号后的留证缺口，不称候补之后另一次读取。SQL与cleanup原件见[capture manifest](../artifacts/m8/capture-manifest.json)。owned两进程停止、6980–6983全free、辅助线程退出，临时两标签关闭与视口恢复，其他服务保留。
+
+补充首败：native m8-74f1d75b3da5463a8898805a341199ab 因randomness依赖缺失正确拒绝（37观察、36通过）；补齐后使用新native身份，不修改原报告。清理可重建产物时误删了旧待复验JAR，该旧[sealed计划](../artifacts/m8/unexecuted-plans/m8-identity-browser-fdf6028cf7534d3782f0626c7a65d8ee/sealed-plan.json)为UNEXECUTED/HISTORICAL；重新构建产生新artifact identity及新Plan，未用重建包冒充旧对象。原候选首次1280误采以及主线第一次截图助手引用旧目录被拒均保留为采集前提错误；没有覆盖旧原件，不把工具错误算产品缺陷。
+
+**M8退出限定成立**：既有FT/PM反馈的阻断问题已处置、受保护主线和新证据对齐。历史段落/Plan/Verdict仍对应原身份；本次文档投影不为其新SHA授予未经运行的安装资格。M9须另seal、两次fresh复现和公开候选交付；M10仍DEFERRED_HUMAN_PARTICIPATION。P3内容与U01–U08未知入口保留，不宣称全部浏览器策略、微信真机、现实校园、校园SSO、多节点或生产容量通过。
