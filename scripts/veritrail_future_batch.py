@@ -23,16 +23,19 @@ if git('status','--porcelain'):raise RuntimeError('Refuse dirty source')
 source=git('rev-parse','HEAD');jar=ROOT/'backend/target/qixu-api-0.1.0-SNAPSHOT.jar'
 import argparse,urllib.parse
 parser=argparse.ArgumentParser(description='Real future-round observation on a dedicated test schema. Never resets or kills shared services.')
-parser.add_argument('--stage',choices=('m3','m4'),default='m3')
+parser.add_argument('--stage',choices=('m3','m4','m9'),default='m3')
+parser.add_argument('--hold-for-browser',action='store_true',help='M9 only: keep the exact installed app until stdin receives stop; parent Plan binds actual CUA captures')
 parser.add_argument('--java',default=str(Path(os.environ.get('JAVA_HOME',''))/'bin'/('java.exe' if os.name=='nt' else 'java')) if os.environ.get('JAVA_HOME') else 'java')
 parser.add_argument('--node',default=os.environ.get('QIXU_NODE','node'))
 parser.add_argument('--mysql',default='mysql')
 parser.add_argument('--proxy',default=os.environ.get('QIXU_RANDOM_PROXY',''))
-parser.add_argument('--producer-bundle',type=Path,required=True,help='Original native PASS Bundle: M3 Plan8/native0.8 or explicit M4 Plan2/native0.10, exact SHA and freshly built jar')
+parser.add_argument('--producer-bundle',type=Path,required=True,help='Original native Bundle: M3 Plan8/native0.8, M4 Plan2/native0.10, or explicit M9 entry using M8 Plan3/native0.22; exact SHA and freshly built jar')
 args=parser.parse_args()
-producer_version=8 if args.stage=='m3' else 2
-producer_collector='qixu-native/0.8' if args.stage=='m3' else 'qixu-native/0.10'
-live_version='0.3' if args.stage=='m3' else '0.4'
+if args.hold_for_browser and args.stage!='m9':raise RuntimeError('Browser hold belongs only to the new M9 contract')
+producer_stage='m8' if args.stage=='m9' else args.stage
+producer_version={'m3':8,'m4':2,'m9':3}[args.stage]
+producer_collector={'m3':'qixu-native/0.8','m4':'qixu-native/0.10','m9':'qixu-native/0.22'}[args.stage]
+live_version={'m3':'0.3','m4':'0.4','m9':'0.5'}[args.stage]
 live_collector='qixu-live-observation/'+live_version
 url=os.environ.get('QIXU_TEST_DB_URL','');parsed=urllib.parse.urlparse(url.removeprefix('jdbc:'))
 if parsed.scheme!='mysql' or parsed.path not in ('/qixu_test','/qixu_ci') or not parsed.hostname or parsed.username or parsed.password or not os.environ.get('QIXU_TEST_DB_PASSWORD'):
@@ -50,7 +53,7 @@ actual={p.relative_to(producer).as_posix() for p in producer.rglob('*') if p.is_
 if actual!=seen:raise RuntimeError('Missing or unmanifested producer files')
 report=json.loads((producer/'acceptance-report.json').read_text(encoding='utf-8'))
 producer_plan=json.loads((producer/'sealed-acceptance-plan.json').read_text(encoding='utf-8'));verify_sealed_acceptance_plan(producer_plan)
-if report['verdict']!='PASS' or report['execution_status']!='COMPLETED' or report['subject']['id']!='qixu-'+args.stage or report['subject']['version']!=source or report['plan']['version']!=producer_version or report['plan']['sha256']!=producer_plan['seal']['digest'] or producer_plan['subject']!=report['subject']:raise RuntimeError('Native producer does not qualify this source')
+if report['verdict']!='PASS' or report['execution_status']!='COMPLETED' or report['subject']['id']!='qixu-'+producer_stage or report['subject']['version']!=source or report['plan']['version']!=producer_version or report['plan']['sha256']!=producer_plan['seal']['digest'] or producer_plan['subject']!=report['subject']:raise RuntimeError('Native producer does not qualify this source')
 entries=[e for e in report['evidence'] if e['evidence_type']=='qixu.native.observation']
 if len(entries)!=1 or entries[0]['path'] not in seen:raise RuntimeError('Ambiguous native producer')
 entry=entries[0];evidence_path=producer/entry['path'];producer_evidence=json.loads(evidence_path.read_text(encoding='utf-8'));producer_facts=producer_evidence['facts'];package=producer_facts.get('package',{})
@@ -60,16 +63,17 @@ if producer_facts.get('source_sha')!=source or producer_facts.get('source_clean'
 with socket.socket() as probe:probe.bind(('127.0.0.1',6967))
 identity=args.stage+'-live-'+uuid.uuid4().hex;out=ROOT/'artifacts/local'/identity;out.mkdir(parents=True)
 coordinate={'collector_sha256':sha(Path(__file__)),'producer_manifest_sha256':sha(manifest),'producer_acceptance_id':report['acceptance_id'], 'source_sha':source,'jar_sha256':sha(jar),'stage':args.stage+'-fixed-future-batch','collector':live_collector}
+if args.stage=='m9':coordinate.update(hold_for_browser=args.hold_for_browser,contract_sha256=sha(ROOT/'docs/contracts/engineering-delivery.md'))
 spec={'id':'live-batch','contract':{'id':'qixu-live-batch','version':live_version},'evidence_type':'qixu.live.batch','coordinates':coordinate,'projections':['source_sha','source_clean','jar_sha256','producer','requests','batch','packet','database','reproduction','cleanup','installed'],'canonicalization_profile':'veritrail-json-c14n/1'}
 def assertion(name,path,value):return {'id':name,'severity':'HARD','left':{'requirement_id':'live','path':path},'operator':'eq','right':value}
 assertions=[assertion('producer-bytes','/facts/producer/bytes_checked',True),assertion('producer-manifest','/facts/producer/manifest_sha256',coordinate['producer_manifest_sha256']),assertion('exact-source','/facts/source_sha',source),assertion('clean-source','/facts/source_clean',True),assertion('installed-jar','/facts/jar_sha256',coordinate['jar_sha256']),assertion('full-result','/facts/database/formal_results',1),assertion('all-outcomes','/facts/database/outcomes',2),assertion('offers','/facts/database/offers',2),assertion('all-notifications','/facts/database/result_notices',2),assertion('independent-reproduction','/facts/reproduction/independent_bytes_equal',True),assertion('actual-bls','/facts/reproduction/signature_verified',True),assertion('maximum','/facts/reproduction/maximum',2),assertion('owned-runtime-stopped','/facts/cleanup/stopped',True)]
-if args.stage=='m4':
+if args.stage in ('m4','m9'):
     installed_expected={'private_report_status':404,'work_done_report':'IN_REPAIR','work_done_condition':'BROKEN','missing_repair_status':409,'missing_repair_receipts':0,'repair_status':'VERIFIED_CLOSED','report_status':'RESOLVED','condition':'WORKING','private_case_status':404,'premature_revoke_status':409,'premature_revoke_receipts':0,'notice_right_status':'ACTIVE','notice_penalties':0,'case_status':'DISMISSED','final_right_status':'ACTIVE','formal_hash_unchanged':True,'public_private_marker':False}
     assertions.extend(assertion('installed-'+name,'/facts/installed/'+name,value) for name,value in installed_expected.items())
-plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-'+args.stage+'-live','version':3 if args.stage=='m3' else 1,'subject':{'id':'qixu-'+args.stage+'-live','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this exact installed candidate freeze before a fixed future beacon, publish one full batch and permit independent public-byte reproduction with real BLS?'+(' Do installed repair and private governance notice preserve the declared real-clock facts?' if args.stage=='m4' else ''),'governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:live-adapter','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'live','observation_spec_id':spec['id'],'cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'live','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':420},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu live batch','consumers':[args.stage+'-native-stage']},'reproduction_steps':['Use the exact clean source and jar with a schema-scoped qixu demo DB and fixed official verifier dependencies.','Publish explicit future close/freeze/round/result deadlines before submitting two hard-constrained applicants.','Freeze before the fixed round; fetch that exact round, publish, download the public packet and independently verify all bytes/BLS.'],'cleanup_steps':['Stop only the java child created and retained by this probe; preserve other ports and shared MySQL.','Retain demonstration batch/history and the immutable packet and Bundle.']})
+plan=seal_acceptance_plan({'plan_kind':'ACCEPTANCE','schema_version':'0.1','plan_id':'qixu-'+args.stage+'-live','version':3 if args.stage=='m3' else 1,'subject':{'id':'qixu-'+args.stage+'-live','version':source,'source_ref':'github:NoctilumeDev/Qixu'},'question':'Does this exact installed candidate freeze before a fixed future beacon, publish one full batch and permit independent public-byte reproduction with real BLS?'+(' Do installed repair and private governance notice preserve the declared real-clock facts?' if args.stage in ('m4','m9') else ''),'governance':{'claim_owner_ref':'human:repository-owner','drafter_ref':'qixu:live-adapter','seal_authority_ref':'human:repository-owner:authorized-engineering-goal','seal_decision':'CONFIRMED'},'observation_specs':[spec],'evidence_requirements':[{'id':'live','observation_spec_id':spec['id'],'cardinality':'EXACTLY_ONE'}],'sufficiency_rules':[{'id':'complete','left':{'requirement_id':'live','path':'/metadata/veritrail_observation/coverage'},'operator':'eq','right':'COMPLETE'}],'integrity_rules':[],'assertions':assertions,'resource_budget':{'max_artifact_bytes':2097152,'command_timeout_seconds':420},'change_scope':{'level':'L2_CONTRACT','owner':'Qixu live batch','consumers':[args.stage+'-native-stage']},'reproduction_steps':['Use the exact clean source and jar with a schema-scoped qixu demo DB and fixed official verifier dependencies.','Publish explicit future close/freeze/round/result deadlines before submitting two hard-constrained applicants.','Freeze before the fixed round; fetch that exact round, publish, download the public packet and independently verify all bytes/BLS.'],'cleanup_steps':['Stop only the java child created and retained by this probe; preserve other ports and shared MySQL.','Retain demonstration batch/history and the immutable packet and Bundle.']})
 write(out/'sealed-plan.json',plan);write(out/'coordinate.json',coordinate)
 facts={'source_sha':source,'source_clean':True,'jar_sha256':coordinate['jar_sha256'],'producer':{'acceptance_id':report['acceptance_id'],'manifest_sha256':sha(manifest),'bytes_checked':True},'requests':[],'boundary':'ONE_ACTUAL_FUTURE_BATCH_NOT_FAULT_RECOVERY_CAPACITY_OR_UI'}
-if args.stage=='m4':facts['boundary']='M4_INSTALLED_FUTURE_BATCH_REPAIR_AND_REAL_CLOCK_NOTICE_NOT_DAY_LONG_GOVERNANCE_PHYSICAL_REPAIR_OR_UI'
+if args.stage in ('m4','m9'):facts['boundary']=args.stage.upper()+'_INSTALLED_FUTURE_BATCH_REPAIR_AND_REAL_CLOCK_NOTICE_NOT_DAY_LONG_GOVERNANCE_PHYSICAL_REPAIR_OR_UI'
 env=dict(os.environ,SPRING_PROFILES_ACTIVE='demo',QIXU_DB_URL=db['url'],QIXU_DB_USERNAME=db['username'],QIXU_DB_PASSWORD=db['password'],QIXU_PORT='6967',QIXU_COOKIE_SECURE='false',QIXU_TASKS_ENABLED='false',QIXU_NODE=args.node,QIXU_RANDOM_VERIFIER=str(ROOT/'randomness/verify.mjs'),QIXU_RANDOM_PROXY=args.proxy)
 execution='COMPLETED';child=None;owner={};base='http://127.0.0.1:6967';opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 def request(method,path,body=None,token=None,key=None,expected=200,code=None):
@@ -162,7 +166,15 @@ try:
     query=f"SELECT (SELECT COUNT(*) FROM allocation_result WHERE batch_id={bid}),(SELECT COUNT(*) FROM allocation_outcome WHERE batch_id={bid}),(SELECT COUNT(*) FROM long_offer WHERE batch_id={bid}),(SELECT COUNT(*) FROM notification_outbox WHERE event_key='batch:{bid}:result')"
     mysql_env=dict(os.environ,MYSQL_PWD=db['password']);raw=subprocess.check_output([args.mysql,'--host='+parsed.hostname,'--port='+str(parsed.port or 3306),'--user='+db['username'],'--database='+parsed.path.removeprefix('/'),'--batch','--skip-column-names','-e',query],env=mysql_env,text=True,timeout=10)
     facts['database']=dict(zip(['formal_results','outcomes','offers','result_notices'],map(int,raw.strip().split('\t'))))
-    if args.stage=='m4':installed_m4(admin,one,two,bid,packet)
+    if args.stage in ('m4','m9'):installed_m4(admin,one,two,bid,packet)
+    if args.hold_for_browser:
+        print(json.dumps({'identity':identity,'phase':'M9_BROWSER_READY','batch_id':bid}),flush=True)
+        for line in sys.stdin:
+            if line.strip()=='stop':break
+            raise RuntimeError('M9 hold accepts only lowercase stop')
+        else:raise RuntimeError('M9 browser hold ended without explicit stop')
+        raw=sql("SELECT (SELECT COUNT(*) FROM short_reservation WHERE user_id=1 AND status IN ('PENDING','CHECKED_IN')),(SELECT COUNT(*) FROM campus_event WHERE status='PUBLISHED'),(SELECT COUNT(*) FROM event_participation WHERE user_id=1 AND status='CONFIRMED'),(SELECT COUNT(*) FROM feedback_report WHERE status='RESOLVED'),(SELECT COUNT(*) FROM repair_ticket WHERE status='VERIFIED_CLOSED'),(SELECT COUNT(*) FROM flyway_schema_history WHERE success=1);")
+        facts['m9_browser_sql']=dict(zip(['shorts','events','participations','resolved_reports','verified_repairs','migrations'],map(int,raw.split('\t'))))
 except Exception as e:
     execution='ERROR';facts['failure']={'type':type(e).__name__,'message':str(e)};write(out/'failure.json',facts['failure'])
 finally:
