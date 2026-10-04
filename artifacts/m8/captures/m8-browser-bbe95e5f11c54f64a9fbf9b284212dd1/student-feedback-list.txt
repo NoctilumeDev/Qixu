@@ -1,0 +1,27 @@
+- generic: 空间反馈
+- generic: 反馈空间事实
+- generic: 反馈仅本人及有权管理员可见；核实后才改变公开空间画像。
+- text: A001 · 西区单人位 1
+- button "查看空间档案"
+- generic: 插座故障
+- text: 发生了什么
+- generic: 描述可以核实的问题；不要填写他人隐私
+- textbox "发生了什么"
+- button "保存私有反馈"
+- generic: 我的反馈
+- button "A001 · 西区单人位 1 · 待核实 插座故障 · 10/03 20:48":
+  - generic: A001 · 西区单人位 1 · 待核实
+  - generic: 插座故障 · 10/03 20:48
+- button "上一页" [disabled]
+- generic: 1 / 1
+- button "下一页" [disabled]
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

@@ -1,0 +1,24 @@
+- generic: 反馈详情
+- generic: 反馈1 · 待核实
+- text: A001 · 西区单人位 1
+- button "查看空间档案"
+- generic: M8主线演示：A001插座不能供电，请核实并维修；这是虚构验收输入。
+- generic: 最多3张JPEG/PNG照片，每张不超过1MiB。
+- button "添加事实照片"
+- generic: 等待核实与处理说明。
+- generic: 待核实 · 10/03 20:48
+- generic: M8主线演示：A001插座不能供电，请核实并维修；这是虚构验收输入。
+- text: 补充事实
+- generic: 补充现状或说明仍未解决的问题
+- textbox "补充事实"
+- button "补充"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的

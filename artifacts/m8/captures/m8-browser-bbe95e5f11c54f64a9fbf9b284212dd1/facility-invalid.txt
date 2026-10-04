@@ -1,0 +1,92 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "申请审批":
+      - /url: "#/venues"
+      - generic: 申请审批
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "长期席位批次":
+      - /url: "#/batches"
+      - generic: 长期席位批次
+    - link "占用与冲突":
+      - /url: "#/blocks"
+      - generic: 占用与冲突
+    - link "反馈与维修":
+      - /url: "#/feedback"
+      - generic: 反馈与维修
+    - link "使用权处置":
+      - /url: "#/governance"
+      - generic: 使用权处置
+    - link "运行投影":
+      - /url: "#/operations"
+      - generic: 运行投影
+    - link "审计记录":
+      - /url: "#/audit"
+      - generic: 审计记录
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "反馈与维修" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 空间管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - alert [active]:
+    - text: 请明确选择有或无；未知不能作为缺失事实提交。
+    - button "刷新事实（保留输入）"
+  - link "返回原列表":
+    - /url: "#/feedback?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "记录 1 待核实" [level=2]:
+    - text: 记录 1
+    - generic: 待核实
+  - term: 空间
+  - definition: A001 西区单人位 1
+  - term: 申请主体
+  - definition: "1"
+  - term: 当前版本
+  - definition: "1"
+  - paragraph: M8主线演示：A001插座不能供电，请核实并维修；这是虚构验收输入。
+  - article:
+    - strong: 待核实 · 10/03 20:48
+    - paragraph: M8主线演示：A001插座不能供电，请核实并维修；这是虚构验收输入。
+  - text: 处理说明
+  - textbox "处理说明":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+  - group "经核实的空间事实":
+    - generic: 经核实的空间事实
+    - combobox:
+      - option "插座状况"
+      - option "照明状况"
+      - option "桌面状况"
+      - option "环境状况"
+      - option "有插座" [selected]
+      - option "靠窗"
+      - option "安静条件"
+      - option "无障碍通行"
+    - combobox:
+      - option "请选择有或无" [disabled] [selected]
+      - option "有"
+      - option "无"
+    - button "加入事实项"
+    - paragraph: 只提交亲自核实的事实；工作完成仍须复验，已知损坏的设施必须明确恢复正常。
+  - button "受理"
+  - button "核实事实"
+  - button "未复现"
+  - button "驳回并说明"

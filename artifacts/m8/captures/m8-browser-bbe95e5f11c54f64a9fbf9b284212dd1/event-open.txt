@@ -1,0 +1,29 @@
+- generic: 活动详情
+- generic: M8 原条件读书会复验
+- generic: 预约开放
+- generic: M8演示周老师 · 10/03 21:20—10/03 21:50
+- generic: M8隔离的读书会演示，验证场地绑定、满额候补和短约保留。
+- generic: 虚构测试活动，请勿当作真实校园活动。
+- generic: 图书馆 · 三楼 · 学习与研讨 · R-A 研讨室 A
+- button "查看场地档案与位置"
+- generic: 预约开放
+- generic: 10/03 20:30
+- generic: 预约截止
+- generic: 10/03 21:19
+- generic: 递补停止
+- generic: 10/03 21:20
+- generic: 活动与1项有效短期预约重叠。仍可预约活动，请自行确认安排；系统不会自动取消已有预约。
+- generic: A001 · 10/03 21:18—10/03 21:24
+- button "查看我的已有安排"
+- generic: 当前剩余1/1名额；满额进入按预约顺序候补。
+- button "预约参加"
+- button "首页":
+  - generic: 首页
+- button "找空间":
+  - generic: 找空间
+- button "我的安排":
+  - generic: 我的安排
+- button "消息":
+  - generic: 消息
+- button "我的":
+  - generic: 我的
