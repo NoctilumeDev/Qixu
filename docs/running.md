@@ -55,7 +55,7 @@ python scripts/veritrail_native.py --stage m8 --maven <mvn可执行文件>
 python scripts/veritrail_frontend.py --stage m8 --node <node可执行文件> --npm <npm可执行文件>
 ```
 
-每次生成新的Plan、Evidence和Bundle身份；安装/浏览器采集必须绑定同一exact source的原producer、JAR与静态清单。主线当前frontend合同与PR #25的新合同分开，不能把候选61项结果归给旧主线59项合同。阶段资格还要求实际链路、独立角色、公开CI/主线读回，以上命令不单独授予M8退出。
+每次生成新的Plan、Evidence和Bundle身份；安装/浏览器采集必须绑定同一exact source的原producer、JAR与静态清单。PR #25已合入main@4c220626，当前frontend0.8/Plan4为61项；旧主线59项仅对应历史坐标，不混用producer。阶段资格还要求实际链路、独立角色、公开CI/主线读回，以上命令不单独授予M8退出。
 
 下列M1–M6命令保留为历史阶段复现入口，其producer版本受采集器严格约束，不是将最新M8 Bundle改名传入即可复用。
 

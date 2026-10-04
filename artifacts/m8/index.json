@@ -1,8 +1,8 @@
 {
-  "phase": "M8_CANDIDATE_REPAIR_RETEST_NOT_MAIN_QUALIFICATION",
+  "phase": "M8_LIMITED_MAIN_QUALIFIED",
   "entry_contract": "docs/contracts/independent-review.md",
   "candidate_source_sha": "4fb184ba2a77daecb0cc33436d6e29ef326e52be",
-  "qualification": "ORIGINAL_LIMITED_VERDICTS_ONLY",
+  "qualification": "LIMITED_NATIVE_BUILD_PM11_BROWSER_AND_INDEPENDENT_REVIEW_NOT_M9_M10_DEVICE_OR_PRODUCTION",
   "bundles": [
     {
       "identity": "m8-08ebbe5ee3bf4249bfebcccb1b7556d9",
@@ -213,6 +213,77 @@
       "verdict": "FAIL",
       "path": "artifacts/m8/m8-identity-browser-23ae656c03df4867bedfd986503c3ea9",
       "manifest_sha256": "25d9108992ad4947ae45794e6d0d6b223ab737516b36ee8d59e83d9977870c96"
+    },
+    {
+      "identity": "m8-106e87081e2346ecb4df06dc7328614d",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-106e87081e2346ecb4df06dc7328614d",
+      "manifest_sha256": "a8cd6391b17a9c5581628b716f24b3b16271ef908c2d67d2d89cb117aacefeb1"
+    },
+    {
+      "identity": "m8-21feb89ba5654d6b88500bbcd16a3006",
+      "source_sha": "19cfa925079b111dc226354db466ca9b98deb500",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-21feb89ba5654d6b88500bbcd16a3006",
+      "manifest_sha256": "131462f61b4ed7403f53ef1ded9c1b658dd5e4780e9ae37e74cbb144ab465425"
+    },
+    {
+      "identity": "m8-74f1d75b3da5463a8898805a341199ab",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "verdict": "FAIL",
+      "path": "artifacts/m8/m8-74f1d75b3da5463a8898805a341199ab",
+      "manifest_sha256": "a77123bdebf99241039ef331a39aacac66033e99bd2ef7be710d3bad607d83d8"
+    },
+    {
+      "identity": "m8-c747142008c341b4b316b60e164a0105",
+      "source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-c747142008c341b4b316b60e164a0105",
+      "manifest_sha256": "aec9b703c6b5aa83fbd17d966d441a4e8f432ba1e20a997ad21bb1c08a3b12b3"
+    },
+    {
+      "identity": "m8-d11f473280ba4151b33ead89e23379d0",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-d11f473280ba4151b33ead89e23379d0",
+      "manifest_sha256": "9bd28dab9a2961aa8815f2ebe00ab14151eb6ea70e6404aecb163419cfd1f218"
+    },
+    {
+      "identity": "m8-frontend-408992e21ade465eb43a2d8a6829dd1c",
+      "source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-frontend-408992e21ade465eb43a2d8a6829dd1c",
+      "manifest_sha256": "196f995fcdc9eae3bba288ffdae451d09b8c213f5f6f9343d36ee9c15c1761ca"
+    },
+    {
+      "identity": "m8-frontend-54b4a3d7e34f46088cbdde39ab374805",
+      "source_sha": "19cfa925079b111dc226354db466ca9b98deb500",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-frontend-54b4a3d7e34f46088cbdde39ab374805",
+      "manifest_sha256": "1d72cbd109f94a49863b0933358bfc05a5ed50b7327818889290473e60ec8062"
+    },
+    {
+      "identity": "m8-frontend-5a262e3c1916494584e75def6fec9507",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-frontend-5a262e3c1916494584e75def6fec9507",
+      "manifest_sha256": "521a29d1494972234d85a8bcd9a94e6d533fd5de15df5943e49c1793ac044b0a"
+    },
+    {
+      "identity": "m8-identity-browser-1a80fa1979c74653971f952cbd8e3388",
+      "source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-identity-browser-1a80fa1979c74653971f952cbd8e3388",
+      "manifest_sha256": "f1aa16a019e0745f4063fc27e2f09612f69279f4963cc4cea3a224caedb5b2ed"
+    },
+    {
+      "identity": "m8-identity-browser-60c640fca4a945718474d85278c3f3b8",
+      "source_sha": "8263723b129df63afaea5a5759bab36ca73f95fc",
+      "verdict": "PASS",
+      "path": "artifacts/m8/m8-identity-browser-60c640fca4a945718474d85278c3f3b8",
+      "manifest_sha256": "0ead699793b7e9e806d1b7f54e191eac8459c13abe175a19c97c360055010cf5"
     }
-  ]
+  ],
+  "qualified_source_sha": "4c220626654a69a124054b5c03d3d7d920c66acc"
 }

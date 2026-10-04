@@ -1,0 +1,19 @@
+{
+  "owned": [
+    {
+      "label": "app",
+      "stopped": true
+    },
+    {
+      "label": "mysql",
+      "stopped": true
+    }
+  ],
+  "ports_free": {
+    "6980": true,
+    "6981": true,
+    "6982": true,
+    "6983": true
+  },
+  "threads_stopped": true
+}

@@ -1,0 +1,41 @@
+- banner:
+  - button "展开工作台导航":
+  - heading "活动组织" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 空间管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 59896b9e。
+  - link "返回原列表":
+    - /url: "#/events?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "PM11 正常身份候补复验 预约开放" [level=2]:
+    - text: PM11 正常身份候补复验
+    - generic: 预约开放
+  - term: 空间
+  - definition: R-A 研讨室 A
+  - term: 当前版本
+  - definition: "2"
+  - term: 开始
+  - definition: 10/04 09:30
+  - term: 结束
+  - definition: 10/04 10:30
+  - term: 申请截止
+  - definition: 10/04 09:20
+  - paragraph: 按原定PM11合同，正常参与、候补与身份错误归属验收。
+  - text: 处理说明（必填）
+  - textbox "处理说明（必填）":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: 已核对研讨室使用权、时段和容量，发布隔离演示活动。
+  - paragraph: 发布、换地或取消前，请填写真实处理说明，最多500字。
+  - paragraph: 主讲人：演示老师 · 预约截止 10/04 09:20 · 递补停止 10/04 09:25
+  - paragraph: 剩余1/1；预约关系随合法换地保持。
+  - text: 换用本人已批准场地
+  - combobox "换用本人已批准场地":
+    - option "请选择"
+    - option "R-A · PM11 原定身份复验读书会 · 10/04 09:30" [selected]
+  - button "提交合法换地"
+  - button "取消活动并通知"

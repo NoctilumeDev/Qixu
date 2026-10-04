@@ -1,0 +1,80 @@
+- complementary:
+  - link "期序 · Qixu 校园空间预约与使用权管理":
+    - /url: "#/map"
+    - text: 期序 · Qixu
+    - generic: 校园空间预约与使用权管理
+  - navigation "工作台导航":
+    - link "空间地图":
+      - /url: "#/map"
+      - generic: 空间地图
+    - link "申请审批":
+      - /url: "#/venues"
+      - generic: 申请审批
+    - link "活动组织":
+      - /url: "#/events"
+      - generic: 活动组织
+    - link "长期席位批次":
+      - /url: "#/batches"
+      - generic: 长期席位批次
+    - link "占用与冲突":
+      - /url: "#/blocks"
+      - generic: 占用与冲突
+    - link "反馈与维修":
+      - /url: "#/feedback"
+      - generic: 反馈与维修
+    - link "使用权处置":
+      - /url: "#/governance"
+      - generic: 使用权处置
+    - link "运行投影":
+      - /url: "#/operations"
+      - generic: 运行投影
+    - link "审计记录":
+      - /url: "#/audit"
+      - generic: 审计记录
+    - link "我的消息":
+      - /url: "#/inbox"
+      - generic: 我的消息
+  - paragraph:
+    - text: 让每一处校园空间，
+    - text: 各得其用。
+  - generic: 期序 · Qixu
+- banner:
+  - heading "活动组织" [level=1]
+  - link "我的消息":
+    - /url: "#/inbox"
+  - text: 空间管理员
+  - generic: 空间管理员
+  - button "退出当前账号":
+- main:
+  - generic: 已确认回执 dce2d37d。
+  - link "返回原列表":
+    - /url: "#/events?page=1"
+    - text: 返回原列表
+  - button "刷新当前事实":
+  - heading "PM11 主线候补复验 预约开放" [level=2]:
+    - text: PM11 主线候补复验
+    - generic: 预约开放
+  - term: 空间
+  - definition: R-A 研讨室 A
+  - term: 当前版本
+  - definition: "2"
+  - term: 开始
+  - definition: 10/04 10:00
+  - term: 结束
+  - definition: 10/04 11:00
+  - term: 申请截止
+  - definition: 10/04 09:50
+  - paragraph: 演示数据的正常发布与学生候补回执
+  - text: 处理说明（必填）
+  - textbox "处理说明（必填）":
+    - /placeholder: 明确事实、理由和影响；输入不会因409被清空
+    - text: 场地已批准且容量合法，发布演示活动
+  - paragraph: 发布、换地或取消前，请填写真实处理说明，最多500字。
+  - paragraph: 主讲人：演示老师 · 预约截止 10/04 09:50 · 递补停止 10/04 09:55
+  - paragraph: 剩余1/1；预约关系随合法换地保持。
+  - text: 换用本人已批准场地
+  - combobox "换用本人已批准场地":
+    - option "请选择"
+    - option "R-A · PM11 主线正常开放复验 · 10/04 10:00" [selected]
+  - button "提交合法换地"
+  - button "取消活动并通知"
