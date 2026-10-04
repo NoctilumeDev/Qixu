@@ -272,3 +272,7 @@ SQL：published_events=1、confirmed_parts=1、waitlisted_parts=1、kept_short=1
 补充首败：native m8-74f1d75b3da5463a8898805a341199ab 因randomness依赖缺失正确拒绝（37观察、36通过）；补齐后使用新native身份，不修改原报告。清理可重建产物时误删了旧待复验JAR，该旧[sealed计划](../artifacts/m8/unexecuted-plans/m8-identity-browser-fdf6028cf7534d3782f0626c7a65d8ee/sealed-plan.json)为UNEXECUTED/HISTORICAL；重新构建产生新artifact identity及新Plan，未用重建包冒充旧对象。原候选首次1280误采以及主线第一次截图助手引用旧目录被拒均保留为采集前提错误；没有覆盖旧原件，不把工具错误算产品缺陷。
 
 **M8退出限定成立**：既有FT/PM反馈的阻断问题已处置、受保护主线和新证据对齐。历史段落/Plan/Verdict仍对应原身份；本次文档投影不为其新SHA授予未经运行的安装资格。M9须另seal、两次fresh复现和公开候选交付；M10仍DEFERRED_HUMAN_PARTICIPATION。P3内容与U01–U08未知入口保留，不宣称全部浏览器策略、微信真机、现实校园、校园SSO、多节点或生产容量通过。
+
+## 2026-10-04 · M9范围先冻结
+
+M8主线4c220626的两角色/原包/实页/SQL闭合后，冻结contracts/engineering-delivery.md 0.1。M9只验证两次公共fresh clone、锁定依赖/迁移、有限正常链、同库journal正常重启与工程候选公开对齐；不新增业务、不扩张攻击、不启动M10。父Plan在两次producer之前seal，原首败和当前未知保留。Windows本机owned工具链由采集器管理，不宣称通用部署托管。
