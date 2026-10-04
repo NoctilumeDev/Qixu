@@ -1,4 +1,6 @@
 import importlib.util
+import hashlib
+import json
 import os
 from pathlib import Path
 import tempfile
@@ -16,8 +18,22 @@ class MaintenanceBoundaryTest(unittest.TestCase):
             self.assertIsNotNone(m.residual_reason(name), name)
         for name in ["backend/pom.xml", "src/runtime.ts", "docs/assets/current.png", ".env.example"]:
             self.assertIsNone(m.residual_reason(name), name)
-        if m.PROTECTED:
+        self.assertIsNotNone(m.residual_reason("artifacts/original/run.log"))
+        self.assertIsNotNone(m.residual_reason("artifacts/original/node_modules/tool.js"))
+
+    def test_artifact_directory_alone_does_not_authorize_log_retention(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(m, "ROOT", Path(directory)):
+            bundle = m.ROOT / "artifacts/original"
+            bundle.mkdir(parents=True)
+            log = bundle / "run.log"
+            log.write_bytes(b"original witness")
+            self.assertIsNotNone(m.residual_reason("artifacts/original/run.log"))
+            manifest = {"files": [{"path": "run.log", "size": log.stat().st_size,
+                         "sha256": hashlib.sha256(log.read_bytes()).hexdigest()}]}
+            (bundle / "acceptance-bundle-manifest.json").write_text(json.dumps(manifest))
             self.assertIsNone(m.residual_reason("artifacts/original/run.log"))
+            log.write_bytes(b"changed witness")
+            self.assertIsNotNone(m.residual_reason("artifacts/original/run.log"))
 
     def test_current_links_are_checked_and_percent_encoded_assets_resolve(self):
         with tempfile.TemporaryDirectory() as directory:

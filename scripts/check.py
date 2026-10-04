@@ -1,5 +1,7 @@
 """Current maintenance checks. Read-only hygiene; never deletes local state."""
 import argparse
+import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -14,6 +16,25 @@ GENERATED = {"node_modules", "target", "dist", "__pycache__", "coverage",
 PRIVATE = {"local.ps1", "project.private.config.json", "database.local.json"}
 
 
+def bound_log(name):
+    target = (ROOT / name).resolve()
+    if not target.is_relative_to(ROOT) or not target.is_file():
+        return False
+    for directory in target.parents:
+        if directory == ROOT:
+            break
+        manifest = directory / "acceptance-bundle-manifest.json"
+        if manifest.is_file():
+            try:
+                entries = json.loads(manifest.read_text(encoding="utf-8"))["files"]
+                entry = next(e for e in entries if e["path"] == target.relative_to(directory).as_posix())
+                raw = target.read_bytes()
+                return entry["size"] == len(raw) and entry["sha256"] == hashlib.sha256(raw).hexdigest()
+            except (ValueError, KeyError, StopIteration, TypeError):
+                return False
+    return False
+
+
 def residual_reason(name):
     path = Path(name)
     if GENERATED.intersection(path.parts):
@@ -22,7 +43,8 @@ def residual_reason(name):
         return "tracked private environment"
     # Formal logs are retained by their original binding verifier. This never
     # exempts a cache directory or private environment inside artifacts.
-    if PROTECTED and path.parts and path.parts[0] in PROTECTED and path.suffix.lower() == ".log":
+    if (PROTECTED and path.parts and path.parts[0] in PROTECTED
+            and path.suffix.lower() == ".log" and bound_log(name)):
         return None
     if path.suffix.lower() in {".pyc", ".log", ".pid", ".tmp"}:
         return "tracked transient file"

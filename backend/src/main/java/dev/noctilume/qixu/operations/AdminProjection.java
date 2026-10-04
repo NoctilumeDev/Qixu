@@ -103,9 +103,9 @@ public class AdminProjection {
     parts.add(
         "("
             + a
-            + ".entity_type='APPLICATION' AND EXISTS(SELECT 1 FROM preparation_application x WHERE CAST(x.id AS CHAR)="
+            + ".entity_type='APPLICATION' AND EXISTS(SELECT 1 FROM preparation_application x WHERE CAST(x.id AS BINARY)=CAST("
             + a
-            + ".entity_id AND "
+            + ".entity_id AS BINARY) AND "
             + batch("x.batch_id")
             + "))");
     return "(" + String.join(" OR ", parts) + ")";
