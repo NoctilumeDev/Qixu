@@ -43,6 +43,13 @@ def vacant():
     for port in PORTS:
         with socket.socket() as s: free[str(port)] = s.connect_ex(('127.0.0.1', port)) != 0
     return free
+
+def checkout_path(out, n):
+    # Keep native Core's staging/evidence path below Windows MAX_PATH without
+    # changing host policy or relocating historical evidence.
+    work = ROOT/'.tools'/('m9w-'+out.name[-12:]+'-'+str(n))
+    require(work.resolve()==work and work.is_relative_to(ROOT/'.tools'), 'Unsafe fresh checkout path')
+    return work
 def bound(out):
     out = Path(out).resolve()
     require(out.is_relative_to(ROOT/'artifacts/local') and out.name.startswith('m9-engineering-'), 'Unsafe observation root')
@@ -113,7 +120,8 @@ def bundle(folder, source, expected_collector, expected_plan):
 def run(a):
     out, plan, c = bound(a.output); n=a.run; d=out/f'run-{n}'; d.mkdir()
     require(all(vacant().values()), 'Fixture ports in use; never adopt them')
-    work=d/'checkout'; children=[]; logs=[]; threads=[]; root_password=''; db_env={}; restart={}
+    work=checkout_path(out,n); require(not work.exists(), 'Fresh checkout path already exists; use a new identity')
+    children=[]; logs=[]; threads=[]; root_password=''; db_env={}; restart={}
     record={'run':n,'started_at':utc(),'source_sha':c['source_sha']}; execution='COMPLETED'
     tools=c['tools']; mysql=Path(tools['mysql_bin'])/'mysql.exe'; mysqld=Path(tools['mysql_bin'])/'mysqld.exe'
     java=Path(tools['java_home'])/'bin/java.exe'
@@ -183,7 +191,7 @@ def run(a):
         require(git('rev-parse','HEAD^{tree}',cwd=work)==c['tree'] and not git('status','--porcelain',cwd=work),'Fresh tree drift')
         absent=all(not list(work.rglob(name)) for name in ('target','dist','node_modules'))
         require(absent,'Fresh clone contains build instances')
-        record['clone']={'origin':git('remote','get-url','origin',cwd=work),'tree':c['tree'],'source_sha':c['source_sha'],'no_initial_instances':absent,'created_at':utc()}
+        record['clone']={'origin':git('remote','get-url','origin',cwd=work),'tree':c['tree'],'source_sha':c['source_sha'],'no_initial_instances':absent,'checkout_relative':work.relative_to(ROOT).as_posix(),'created_at':utc()}
         data=d/'mysql-data'; data.mkdir(); ini=d/'my.ini'
         ini.write_text('[mysqld]\nbasedir='+Path(tools['mysql_bin']).parent.as_posix()+'\ndatadir='+data.as_posix()+'\nport=6980\nbind-address=127.0.0.1\nmysqlx=0\ninnodb_buffer_pool_size=64M\nmax_connections=30\nskip-log-bin\nlog-error='+(d/'mysql.private.log').as_posix()+'\n',encoding='utf-8')
         command([str(mysqld),'--defaults-file='+str(ini),'--initialize-insecure'],'mysql-init',work,timeout=65)
@@ -262,10 +270,10 @@ def finish(a):
     try:
         ids=[]; seal_time=datetime.fromisoformat(c['sealed_at'])
         for n in (1,2):
-            d=out/f'run-{n}'; record=read(d/'run-record.json'); work=d/'checkout'
+            d=out/f'run-{n}'; record=read(d/'run-record.json'); work=checkout_path(out,n)
             require(record['execution_status']=='COMPLETED' and record['source_sha']==c['source_sha'],'Incomplete fresh run')
             require(datetime.fromisoformat(record['started_at'])>seal_time,'Run predates parent seal')
-            clone=record['clone']; require(clone['origin']==REMOTE and clone['source_sha']==c['source_sha'] and clone['tree']==c['tree'] and clone['no_initial_instances'],'Not fresh public checkout')
+            clone=record['clone']; require(clone['origin']==REMOTE and clone['source_sha']==c['source_sha'] and clone['tree']==c['tree'] and clone['no_initial_instances'] and clone['checkout_relative']==work.relative_to(ROOT).as_posix(),'Not fresh public checkout')
             observations={}; child_plans={}; identity={}
             for name,collector,pv in [('native','qixu-native/0.22',3),('frontend','qixu-frontend/0.8',4),('live','qixu-live-observation/0.5',1)]:
                 r,f,cp,e=bundle(work/record[name]/'bundle',c['source_sha'],collector,pv)
