@@ -1,6 +1,6 @@
 # 本地运行与验收
 
-M1–M8限定资格见各阶段acceptance；M9正在准备两次fresh工程复现，M10等待用户参与。当前阶段见[里程碑](milestones.md)，M8主线闭合见[PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)与[M8记录](acceptance/m8.md)。以下说明用于启动与复现，不授予当前提交新的工程、生产或微信真机资格。
+M1–M9限定资格见各阶段acceptance；[M9](acceptance/m9.md)两次fresh工程复现与预发行版已完成，M10等待用户参与。当前阶段见[里程碑](milestones.md)，M8主线闭合见[PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)与[M8记录](acceptance/m8.md)。以下说明用于启动与复现，不授予当前提交新的安装、生产或微信真机资格。
 
 ## 工具与隔离
 
