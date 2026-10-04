@@ -1,10 +1,38 @@
-import {watch} from 'vue';
-import {createRouter,createWebHashHistory} from 'vue-router';
-import {auth,initialize} from './runtime';
+import { watch } from 'vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
+import { auth, initialize } from './runtime';
 import Workspace from './views/Workspace.vue';
 import Login from './views/Login.vue';
-const scrolls=new Map<string,number>(),sectionPaths=new Map<string,string>();
-watch(()=>auth.generation,()=>{scrolls.clear();sectionPaths.clear();});
-export const sectionLocation=(section:string)=>sectionPaths.get(section)||'/'+section;
-export const router=createRouter({history:createWebHashHistory(),routes:[{path:'/login',component:Login},{path:'/:section?/:id?',component:Workspace}],scrollBehavior(to,from,saved){if(saved)return saved;if(to.path===from.path&&to.params.section==='map')return false;return {top:scrolls.get(to.fullPath)||0};}});
-router.beforeEach(async(to,from)=>{scrolls.set(from.fullPath,window.scrollY);if(!from.params.id&&from.params.section)sectionPaths.set(String(from.params.section),from.fullPath);await initialize();if(to.path==='/login')return true;if(!auth.session)return {path:'/login',query:{returnTo:to.fullPath}};if(!['ADMIN','TEACHER'].includes(auth.session.actor.role))return {path:'/login',query:{reason:'role'}};return true;});
+const scrolls = new Map<string, number>(),
+  sectionPaths = new Map<string, string>();
+watch(
+  () => auth.generation,
+  () => {
+    scrolls.clear();
+    sectionPaths.clear();
+  },
+);
+export const sectionLocation = (section: string) => sectionPaths.get(section) || '/' + section;
+export const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [
+    { path: '/login', component: Login },
+    { path: '/:section?/:id?', component: Workspace },
+  ],
+  scrollBehavior(to, from, saved) {
+    if (saved) return saved;
+    if (to.path === from.path && to.params.section === 'map') return false;
+    return { top: scrolls.get(to.fullPath) || 0 };
+  },
+});
+router.beforeEach(async (to, from) => {
+  scrolls.set(from.fullPath, window.scrollY);
+  if (!from.params.id && from.params.section)
+    sectionPaths.set(String(from.params.section), from.fullPath);
+  await initialize();
+  if (to.path === '/login') return true;
+  if (!auth.session) return { path: '/login', query: { returnTo: to.fullPath } };
+  if (!['ADMIN', 'TEACHER'].includes(auth.session.actor.role))
+    return { path: '/login', query: { reason: 'role' } };
+  return true;
+});

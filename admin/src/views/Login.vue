@@ -1,12 +1,103 @@
 <script setup lang="ts">
-import {onMounted,ref} from 'vue';
-import {useRoute,useRouter} from 'vue-router';
-import {ApiError,type Row} from '@qixu/client';
-import {api,auth,client,errorMessage,roles} from '../runtime';
-import RequestState from '../components/RequestState.vue';
-const route=useRoute(),router=useRouter();const username=ref(''),password=ref(''),error=ref(''),busy=ref(false),options=ref<Row[]>([]);
-onMounted(async()=>{try{options.value=await api<Row[]>('/auth/options');}catch(e){if(!(e instanceof ApiError&&e.status===404))error.value=errorMessage(e);}});
-async function login(){if(busy.value)return;busy.value=true;error.value='';try{await client.login(username.value,password.value);password.value='';await client.bootstrap();if(!['ADMIN','TEACHER'].includes(auth.session?.actor.role||'')){error.value='当前账号为学生，请使用学生端。';return;}const target=String(route.query.returnTo||'/map');await router.replace(target.startsWith('/')&&!target.startsWith('//')?target:'/map');}catch(e){error.value=errorMessage(e);}finally{busy.value=false;}}
-async function logout(){try{await client.logout();}catch(e){error.value=errorMessage(e);}}
+  import { onMounted, ref } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { ApiError, type Row } from '@qixu/client';
+  import { api, auth, client, errorMessage, roles } from '../runtime';
+  import RequestState from '../components/RequestState.vue';
+  const route = useRoute(),
+    router = useRouter();
+  const username = ref(''),
+    password = ref(''),
+    error = ref(''),
+    busy = ref(false),
+    options = ref<Row[]>([]);
+  onMounted(async () => {
+    try {
+      options.value = await api<Row[]>('/auth/options');
+    } catch (e) {
+      if (!(e instanceof ApiError && e.status === 404)) error.value = errorMessage(e);
+    }
+  });
+  async function login() {
+    if (busy.value) return;
+    busy.value = true;
+    error.value = '';
+    try {
+      await client.login(username.value, password.value);
+      password.value = '';
+      await client.bootstrap();
+      if (!['ADMIN', 'TEACHER'].includes(auth.session?.actor.role || '')) {
+        error.value = '当前账号为学生，请使用学生端。';
+        return;
+      }
+      const target = String(route.query.returnTo || '/map');
+      await router.replace(target.startsWith('/') && !target.startsWith('//') ? target : '/map');
+    } catch (e) {
+      error.value = errorMessage(e);
+    } finally {
+      busy.value = false;
+    }
+  }
+  async function logout() {
+    try {
+      await client.logout();
+    } catch (e) {
+      error.value = errorMessage(e);
+    }
+  }
 </script>
-<template><main class="login-page"><section class="login-art"><img src="/assets/window-seat.jpg" alt="演示示意：靠窗学习空间"/><div><h1>期序 · Qixu</h1><p>让每一处校园空间，各得其用。</p><small>校园空间预约与使用权管理</small></div></section><section class="login-form"><div class="eyebrow">QIXU WORKSPACE</div><h2>进入工作台</h2><p class="muted">老师组织活动，管理员在授权范围内处理空间与使用权。</p><RequestState/><div v-if="error||auth.error" class="alert danger" role="alert">{{error||auth.error}}</div><div v-if="auth.session" class="alert"><span>当前 {{auth.session.actor.displayName}} · {{roles[auth.session.actor.role]}}</span><button @click="logout">退出当前账号</button></div><form @submit.prevent="login"><label>账号<input v-model="username" autocomplete="username" maxlength="64" required/></label><label>密码<input v-model="password" type="password" autocomplete="current-password" maxlength="72" required/></label><button class="primary full" :disabled="busy||auth.needsReload">{{busy?'正在确认身份…':'登录'}}</button></form><details v-if="options.length"><summary>演示身份（当前服务明确开启）</summary><p class="muted">演示密码 qixu-demo</p><div class="demo-buttons"><button v-for="o in options.filter(o=>o.role!=='STUDENT')" :key="o.username" @click="username=o.username;password='qixu-demo'">{{o.displayName}} · {{roles[o.role]}}</button></div></details></section></main></template>
+<template>
+  <main class="login-page">
+    <section class="login-art">
+      <img src="/assets/window-seat.jpg" alt="演示示意：靠窗学习空间" />
+      <div>
+        <h1>期序 · Qixu</h1>
+        <p>让每一处校园空间，各得其用。</p>
+        <small>校园空间预约与使用权管理</small>
+      </div>
+    </section>
+    <section class="login-form">
+      <div class="eyebrow">QIXU WORKSPACE</div>
+      <h2>进入工作台</h2>
+      <p class="muted">老师组织活动，管理员在授权范围内处理空间与使用权。</p>
+      <RequestState />
+      <div v-if="error || auth.error" class="alert danger" role="alert">
+        {{ error || auth.error }}
+      </div>
+      <div v-if="auth.session" class="alert">
+        <span>当前 {{ auth.session.actor.displayName }} · {{ roles[auth.session.actor.role] }}</span
+        ><button @click="logout">退出当前账号</button>
+      </div>
+      <form @submit.prevent="login">
+        <label
+          >账号<input v-model="username" autocomplete="username" maxlength="64" required /></label
+        ><label
+          >密码<input
+            v-model="password"
+            type="password"
+            autocomplete="current-password"
+            maxlength="72"
+            required /></label
+        ><button class="primary full" :disabled="busy || auth.needsReload">
+          {{ busy ? '正在确认身份…' : '登录' }}
+        </button>
+      </form>
+      <details v-if="options.length">
+        <summary>演示身份（当前服务明确开启）</summary>
+        <p class="muted">演示密码 qixu-demo</p>
+        <div class="demo-buttons">
+          <button
+            v-for="o in options.filter((o) => o.role !== 'STUDENT')"
+            :key="o.username"
+            @click="
+              username = o.username;
+              password = 'qixu-demo';
+            "
+          >
+            {{ o.displayName }} · {{ roles[o.role] }}
+          </button>
+        </div>
+      </details>
+    </section>
+  </main>
+</template>

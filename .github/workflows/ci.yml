@@ -17,12 +17,11 @@ jobs:
           cache: npm
       - name: Install exact workspace dependencies
         run: npm ci --no-audit --no-fund
-      - name: Verify request ownership and recovery
-        run: npm run test:client
-      - name: Check both clients
-        run: npm run check
-      - name: Build H5, WeChat package and responsive admin
-        run: npm run build
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.10'
+      - name: Client ownership, types and three builds
+        run: python -B scripts/check.py frontend
   docs:
     name: Document integrity
     runs-on: ubuntu-latest
@@ -33,8 +32,8 @@ jobs:
           python-version: '3.10'
       - name: Check acceptance collector syntax
         run: python -m compileall -q scripts
-      - run: python scripts/verify_docs.py
-      - run: python scripts/verify_artifacts.py
+      - run: python -B scripts/check.py hygiene
+      - run: python -B scripts/check.py docs
   backend:
     name: Backend · MySQL
     runs-on: ubuntu-latest
@@ -63,7 +62,6 @@ jobs:
       - name: Install locked offline proof verifier and test real public signatures
         run: |
           npm ci --prefix randomness --ignore-scripts --no-audit --no-fund
-          npm test --prefix randomness
       - name: Provision schema-scoped ephemeral test identity
         env:
           MYSQL_PWD: qixu-ci-root-only
@@ -72,10 +70,12 @@ jobs:
           CREATE USER 'qixu_ci_app'@'%' IDENTIFIED BY 'qixu-ci-app-only';
           GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX,REFERENCES ON qixu_ci.* TO 'qixu_ci_app'@'%';
           SQL
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.10'
       - name: Build and real MySQL HTTP acceptance
-        working-directory: backend
         env:
           QIXU_TEST_DB_URL: jdbc:mysql://127.0.0.1:3306/qixu_ci?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8
           QIXU_TEST_DB_USER: qixu_ci_app
           QIXU_TEST_DB_PASSWORD: qixu-ci-app-only
-        run: mvn -B -ntp -Pmysql-it clean verify
+        run: python -B scripts/check.py backend

@@ -8,8 +8,11 @@ import tools.jackson.databind.DeserializationFeature;
 
 @Configuration
 public class ProtocolJson {
-    @Bean JsonMapperBuilderCustomizer unambiguousJson() {
-        return builder->builder.enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION)
-                .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
-    }
+  @Bean
+  JsonMapperBuilderCustomizer unambiguousJson() {
+    return builder ->
+        builder
+            .enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION)
+            .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+  }
 }

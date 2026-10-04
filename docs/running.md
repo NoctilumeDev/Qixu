@@ -2,6 +2,27 @@
 
 M1–M9限定资格见各阶段acceptance；[M9](acceptance/m9.md)两次fresh工程复现与预发行版已完成，M10等待用户参与。当前阶段见[里程碑](milestones.md)，M8主线闭合见[PR #25](https://github.com/NoctilumeDev/Qixu/pull/25)与[M8记录](acceptance/m8.md)。以下说明用于启动与复现，不授予当前提交新的安装、生产或微信真机资格。
 
+## 当前维护入口与阶段收尾
+
+从仓库根目录运行 `python -B scripts/check.py <group>`。先按下文安装锁定依赖、准备工具链和独立测试库；入口只执行检查，不自动下载工具、不建库、不删除文件。
+
+| group | 责任 |
+| --- | --- |
+| `hygiene` | Git已跟踪的已知缓存/运行态/私有配置、当前文档本地链接与门禁负控制 |
+| `docs` | 原结构检查与正式Bundle/捕获原字节校验 |
+| `frontend` | 实际客户端测试、两端类型检查、H5/微信包/管理端构建 |
+| `backend` | 固定随机验签器测试、独立MySQL的clean verify |
+| `all` | 上述四组顺序执行，任一失败即停止 |
+
+CI复用同一入口。历史`veritrail_*`脚本仍按原阶段/producer合同复验，不再把它们当成日常维护菜单；已封存合同和Verdict不改。格式维护使用Prettier 3.6.2（单引号、100列）与google-java-format 1.24.0（保留import顺序/未使用import/长字符串/Javadoc），先看diff再验证，不格式化artifacts或冻结合同。
+
+重要阶段退出顺序为：实现 → 测试/资格 → 文档与公开读回 → 遗留物收口 → 关闭阶段。`hygiene`是其中可自动检查的仓库部分，不能自动授予LOCAL_DORMANT。阶段负责人还须核对：
+
+- 图片：当前页面、主页、Gallery/Release或正式manifest仍依赖的保留；只有历史设计/迭代职责且无当前消费者的才可删除。找不到引用不等于确认无用途。
+- 证据：首败、关键反例、最终见证、正式回执和原绑定包保留；中间迭代只在没有证明职责时收缩。历史Plan不能换绑重建产物。
+- 构建/环境：可重建的本轮实例可清；Release原件和evidence绑定原件由对应交付/证据入口保留。先确认源码、锁文件、迁移、脚本已在远端，唯一数据/账册另留存，再停止并清理本人创建的实例。共享环境与其他项目不动。
+- 记录：通常只在阶段记录留检查范围、结果、必要例外；Git diff已记录删除，不再建立永久删除SHA清单。没有仓库大小指标。未检查或未知项标记REVIEW_REQUIRED，不写PASS。
+
 ## 工具与隔离
 
 Java17、Maven3.9、MySQL8；固定验收环境使用MySQL8.0.44。开发库 `qixu`，测试库 `qixu_test`；两套应用账号只有本库权限。迁移以[Flyway V1–V10源码](../backend/src/main/resources/db/migration)为准，启动自动执行并校验，默认不允许clean；不要另导入拼接SQL或改已执行迁移。MySQL全局隔离不改，应用连接与事务显式READ_COMMITTED。
