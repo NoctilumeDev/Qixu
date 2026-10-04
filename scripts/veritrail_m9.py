@@ -47,7 +47,7 @@ def vacant():
 def checkout_path(out, n):
     # Keep native Core's staging/evidence path below Windows MAX_PATH without
     # changing host policy or relocating historical evidence.
-    work = ROOT/'.tools'/('9'+out.name[-12:]+str(n))
+    work = ROOT/'.tools'/('9'+out.name[-8:]+str(n))
     require(work.resolve()==work and work.is_relative_to(ROOT/'.tools'), 'Unsafe fresh checkout path')
     return work
 def bound(out):
