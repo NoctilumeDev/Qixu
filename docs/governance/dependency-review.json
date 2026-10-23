@@ -1,0 +1,628 @@
+{
+  "schema": "qixu-dependency-review/1",
+  "source_revision": "74380570c422fea303700812193996dc6de7bec4",
+  "input_note": "Collected from this governance worktree; exact changed manifests are bound below. CI records the final candidate checkout.",
+  "observed_at": "2026-10-23",
+  "owner": "NoctilumeDev/Qixu maintainers",
+  "risk_accepted": false,
+  "inputs": {
+    "backend/pom.xml": "c28fa35a2143ba00588981d696deb4fc6d1d286a4eab6422bfc320c1c37c89a8",
+    "package.json": "e2a9bfb07921d24700f6417422db920249a9f195c4293c9903ce91cb8c8c4681",
+    "package-lock.json": "f4e1c1ba8f3c58d00e6239f36b5456e66516a4990d4148a4b14417332f26ccba",
+    "randomness/package.json": "efeb96a3532b3a3fd2d7d055f0b05155f3a8d49b71435a843a44d7ba784e7e17",
+    "randomness/package-lock.json": "8aa0e8e703cde6997405dc45bc44daced70e8f21c6aab7dfd1fe03cb0d1c1e29",
+    "admin/package.json": "e0ba5fa8743997bc1b586bf8d55a0b1a7efffe5eb4e5e4ab6656970849346e69",
+    "student/package.json": "90c848828b83911032029ad648cd33f49463a398176497f081d2793f3fe956a6",
+    "packages/client/package.json": "35fd223fd10adec27196dcad88eb791283eb68d0514de44627421cce7856449b"
+  },
+  "sources": {
+    "maven": {
+      "inventory_sha256": "c235b533a4f188659493ea6cae7accd2ded679a5da16f9852ce0c83cb368fede",
+      "package_count": 88,
+      "findings": {
+        "tools.jackson.core:jackson-core@3.1.5/GHSA-7hhh-6rmp-j9qf": {
+          "sha256": "f012c2888d3eeda96b8eae9fb4377ccd0b451202cdd5e5680fb11128ab923497",
+          "status": "UNRESOLVED",
+          "summary": "jackson-core: UTF8DataInputJsonParser._reportInvalidToken() missing maxErrorTokenLength limit -> unbounded StringBuilder growth (DoS)",
+          "aliases": [
+            "CVE-2026-89425"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-7hhh-6rmp-j9qf"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "tools.jackson.core:jackson-core@3.1.5/GHSA-p6pp-m3f8-5c89": {
+          "sha256": "0d3b38e084d27839b7a3b6c4b8b14037e6d8168f01dc703fb2265333b4ac3804",
+          "status": "UNRESOLVED",
+          "summary": " jackson-core: ReDoS: quadratic backtracking in NumberInput.PATTERN_FLOAT via looksLikeValidNumber()",
+          "aliases": [
+            "CVE-2026-89407"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-p6pp-m3f8-5c89"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "tools.jackson.core:jackson-databind@3.1.5/GHSA-cxp5-3px4-pw24": {
+          "sha256": "62ab870ee7a666118ed207fcafa2ee0c15d916342fd8a5fb92f1437ebc63f24a",
+          "status": "UNRESOLVED",
+          "summary": "jackson-databind quadratic forward-reference completion ",
+          "aliases": [
+            "CVE-2026-91777"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-cxp5-3px4-pw24"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "tools.jackson.core:jackson-databind@3.1.5/GHSA-gx83-3vf8-gh7j": {
+          "sha256": "be3a9e36aa40a7684249bce54a087b10cb7f8cb50c51b469e488dca881eb2ff4",
+          "status": "UNRESOLVED",
+          "summary": "jackson-databind: Comparable missing from DefaultBaseTypeLimitingValidator's unsafe base types (incomplete PolymorphicTypeValidator denylist)",
+          "aliases": [
+            "CVE-2026-83557"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-gx83-3vf8-gh7j"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "tools.jackson.core:jackson-databind@3.1.5/GHSA-q4xh-88c3-wmh7": {
+          "sha256": "5fb61819bc694348b50d121d51f996350f9b4f5ef5919ae11462df72749ede5d",
+          "status": "UNRESOLVED",
+          "summary": "jackson-databind: Duration XMLGregorianCalendar Unbounded Number Parse DoS",
+          "aliases": [
+            "CVE-2026-68497"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-q4xh-88c3-wmh7"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "tools.jackson.core:jackson-databind@3.1.5/GHSA-wjgm-6hv5-3cvf": {
+          "sha256": "9f419fbaeddd9f4ae7e709603d33956446c8abf6675fbefe738a4fc05fc8d84e",
+          "status": "UNRESOLVED",
+          "summary": "jackson-databind: Path Deserialization Missing Scheme Allowlist for FileSystemProvider Resolution",
+          "aliases": [
+            "CVE-2026-19032"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-wjgm-6hv5-3cvf"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "tools.jackson.core:jackson-databind@3.1.5/GHSA-wv8q-qhhj-9h54": {
+          "sha256": "5f2a9b541f4526d2849fd46c539d083a9d705c41609160bdc45923769fd02302",
+          "status": "UNRESOLVED",
+          "summary": "jackson-databind retains every unknown raw type ID ",
+          "aliases": [
+            "CVE-2026-91776"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-wv8q-qhhj-9h54"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-9xv2-5v5q-p794": {
+          "sha256": "806a09487332ccdd9b78c691467e6ca18990407a405d45da989e590634b6d02c",
+          "status": "UNRESOLVED",
+          "summary": "Apache Tomcat's DIGEST authenticator has an Authentication Bypass by Capture-replay vulnerability",
+          "aliases": [
+            "BIT-tomcat-2026-65905",
+            "CVE-2026-65905"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-9xv2-5v5q-p794"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-gcx9-497g-6cp6": {
+          "sha256": "2bc5ca0cfb47917e7f1b2c223d347ec9a97e1f682faa9a11341467366e6327b4",
+          "status": "UNRESOLVED",
+          "summary": "Apache Tomcat has an Improper Access Control, Incorrect Authorization vulnerability",
+          "aliases": [
+            "BIT-tomcat-2026-65182",
+            "CVE-2026-65182"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-gcx9-497g-6cp6"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-h3x4-894j-xpx5": {
+          "sha256": "a49d0caf871409b31cdf551979b83889815f5c56380be0fecf59aba22ceeac6e",
+          "status": "UNRESOLVED",
+          "summary": "Apache Tomcat's FORM authentication process has an Incorrect Authorization vulnerability",
+          "aliases": [
+            "BIT-tomcat-2026-68525",
+            "CVE-2026-68525"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-h3x4-894j-xpx5"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        }
+      }
+    },
+    "npm-workspaces": {
+      "inventory_sha256": "f4e1c1ba8f3c58d00e6239f36b5456e66516a4990d4148a4b14417332f26ccba",
+      "package_count": 704,
+      "findings": {
+        "@babel/core": {
+          "sha256": "9c70b1b912eabfd48541ffc921c6a57d69740e6167eba7af8e8bbdb738fe563d",
+          "status": "UNRESOLVED",
+          "summary": "@babel/core",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-4x5r-pxfx-6jf8"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-app": {
+          "sha256": "c7d487748b2b4a16642510837ac0aafe0bf5254aa0e8a789dfbee3e1812deec0",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-app",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-cli-shared": {
+          "sha256": "f8eceb0c014a0e8f1e52ea47f771287b4308004ab8fb6ad5a449783bf85158c6",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-cli-shared",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-cloud": {
+          "sha256": "7d5333724848c6fe4491429464920e60ece9d8bf578618805c53f8af352b479c",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-cloud",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-components": {
+          "sha256": "f9ac14cc6d3a63b45485271712f1b3503110a03c3938956f8b9e7a7b30f7c42f",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-components",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-console": {
+          "sha256": "0d176e0be010802353d0526681ee28d39f9fa788fa15008a729e048808e64bec",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-console",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-h5": {
+          "sha256": "81b7dfa84026fefda3d74b3f39038c391d134533c43822a92c43bddd401fd0e9",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-h5",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-h5-vite": {
+          "sha256": "7d7857f414bf67ad94cac555f03359adf15a4e035c8864079126636aa34b2bb8",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-h5-vite",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-h5-vue": {
+          "sha256": "ef445496d4239ac6c870518feb8adb794bd5bd76f78f6a343b14ac29065eb2b4",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-h5-vue",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-mp-compiler": {
+          "sha256": "4566cb8b5e4636ca86940f6b20c1ef18d2581adab646f999bec74bd816287937",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-mp-compiler",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-mp-vite": {
+          "sha256": "c2cff5f864c08fd0f3b89c4cbd91df903bf279a397318caaf2d5f0d964adbbd3",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-mp-vite",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-mp-weixin": {
+          "sha256": "0b6655556b175e7147587a568404896aad1e66f31222e284948d5176fbe7fcae",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-mp-weixin",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-nvue-styler": {
+          "sha256": "0e3bf4bcc5794179781635d79403e4e9c726b52d8b6aa9d1b8d6d01644538534",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-nvue-styler",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-push": {
+          "sha256": "39323d993d83607b5885d9edf13c5e6e7e2b5b1150b365c479e1dccd7139deb0",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-push",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/uni-stat": {
+          "sha256": "7199b2112c37fb03c4d8b17a9f3cf9d1f5e80c8f277817fc0ca106d248d6c92f",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/uni-stat",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@dcloudio/vite-plugin-uni": {
+          "sha256": "eacd7ca7449c188c57731f8f21860b85795e66d0dd5e9648353892cf39c8dae4",
+          "status": "UNRESOLVED",
+          "summary": "@dcloudio/vite-plugin-uni",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@intlify/core-base": {
+          "sha256": "e3bd24c3fda0803e65f1ad6decada09f2d9410c12c7bdf48a95aaf7a148f076e",
+          "status": "UNRESOLVED",
+          "summary": "@intlify/core-base",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-p2ph-7g93-hw3m",
+            "https://github.com/advisories/GHSA-x8qp-wqqm-57ph"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@intlify/message-compiler": {
+          "sha256": "5372c7234dd0495374a6009f59c711b8d57f9a47a79604b7c4aae0a229fae818",
+          "status": "UNRESOLVED",
+          "summary": "@intlify/message-compiler",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@intlify/message-resolver": {
+          "sha256": "58d8b2447c6a31ba7a46fbaddcbb5d9a93ec4df349f683b1074a473253ebeabf",
+          "status": "UNRESOLVED",
+          "summary": "@intlify/message-resolver",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-p2ph-7g93-hw3m"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@intlify/runtime": {
+          "sha256": "65defde3b553a75896c4b2b9ca87b03c1289baf65fd2f8930fb9b88769c9ecb7",
+          "status": "UNRESOLVED",
+          "summary": "@intlify/runtime",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@intlify/vue-devtools": {
+          "sha256": "db10c7dd9c2310f6ff3a26f89b16ff0ebae0d8419f2defef24feb081643533e0",
+          "status": "UNRESOLVED",
+          "summary": "@intlify/vue-devtools",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@jimp/core": {
+          "sha256": "4d770728095dd3b09ae2ae735dd1d8b8549c3979ab24586dfb9d17f476857053",
+          "status": "UNRESOLVED",
+          "summary": "@jimp/core",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@jimp/custom": {
+          "sha256": "0d0632b9a5476deeea1f0c08000d95c9e839d816d3aa8e281116f1ec440085a9",
+          "status": "UNRESOLVED",
+          "summary": "@jimp/custom",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@jimp/jpeg": {
+          "sha256": "9a8a3d965a64846e42a8c27f94c827263ce71297c8916855035feb720dd9739a",
+          "status": "UNRESOLVED",
+          "summary": "@jimp/jpeg",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@jimp/types": {
+          "sha256": "7828b374e84fd3a6ab05986a63eb7f6e749dc9b35e8c427aea7be1d79e389a75",
+          "status": "UNRESOLVED",
+          "summary": "@jimp/types",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@vue/server-renderer": {
+          "sha256": "5a36eb73cd48045b04a050b2b457fd8057affc882680414fcdf00d611b5a672a",
+          "status": "UNRESOLVED",
+          "summary": "@vue/server-renderer",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-g2v6-rqmx-r4w6"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "adm-zip": {
+          "sha256": "5012463955b6d3b54636ba5ed64fffbfa2eebffb7084d6293f60e4798dc6e3df",
+          "status": "UNRESOLVED",
+          "summary": "adm-zip",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-7q85-xj36-vmfc",
+            "https://github.com/advisories/GHSA-8238-w5pm-2374",
+            "https://github.com/advisories/GHSA-c6fg-446q-cg94",
+            "https://github.com/advisories/GHSA-j5f4-cc29-5x44",
+            "https://github.com/advisories/GHSA-p634-w6r4-rjp2",
+            "https://github.com/advisories/GHSA-rcw4-f5rp-g42v",
+            "https://github.com/advisories/GHSA-vwc7-r8mq-g2x9",
+            "https://github.com/advisories/GHSA-xcpc-8h2w-3j85"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "body-parser": {
+          "sha256": "5fc4b25943b1eb9da17717eae61bffeaab57b5f471dbcd7a68dc9532ff647ae3",
+          "status": "UNRESOLVED",
+          "summary": "body-parser",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-v422-hmwv-36x6"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "braces": {
+          "sha256": "7efba0e55c44eca559ec584bad8dc72824d9d9ab489bb52a82d28b9d7660ecb4",
+          "status": "UNRESOLVED",
+          "summary": "braces",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "chokidar": {
+          "sha256": "0781a19181787ef544caa6ad9b5bf42d41407f13206fba1338a873251337ee14",
+          "status": "UNRESOLVED",
+          "summary": "chokidar",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "cookie": {
+          "sha256": "9d34a71813609be17309cb9567872bb3042137e95fd3291fedf62944dcac12a7",
+          "status": "UNRESOLVED",
+          "summary": "cookie",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-pxg6-pf52-xh8x"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "esbuild": {
+          "sha256": "c3ad4ce27a5e39861bc0b182bb17092a5ae5c19dec90187b638c337faafd73f2",
+          "status": "UNRESOLVED",
+          "summary": "esbuild",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "express": {
+          "sha256": "c267fb6a4650840c1c4a1a667c6e94fd1e4fbd2019cb0b9eea9769558b865545",
+          "status": "UNRESOLVED",
+          "summary": "express",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "fast-glob": {
+          "sha256": "6e22f2258b6076c1e19e8ed9f00e9d70d82e27528a02a1c30d6b85e4d02fb9cd",
+          "status": "UNRESOLVED",
+          "summary": "fast-glob",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "jimp": {
+          "sha256": "dd1c87473661adea17079ecaa0630767921c9e7c947ce61f78eae982b8207fe0",
+          "status": "UNRESOLVED",
+          "summary": "jimp",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "jpeg-js": {
+          "sha256": "80c1623833f93f0467dbb70c3a1863fe4165f93230e87384598d474837d0f490",
+          "status": "UNRESOLVED",
+          "summary": "jpeg-js",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-w7q9-p3jq-fmhm",
+            "https://github.com/advisories/GHSA-xvf7-4v9q-58w6"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "micromatch": {
+          "sha256": "f81598080831d2533ce91b64e5de0b35805bc6dc89eb039253453e7bd435e484",
+          "status": "UNRESOLVED",
+          "summary": "micromatch",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "path-to-regexp": {
+          "sha256": "4b7c2cbc4415f3ded933dd430e878a046ebfc004db9a0eb6fab764e9ad9e5ff4",
+          "status": "UNRESOLVED",
+          "summary": "path-to-regexp",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-37ch-88jc-xwx2",
+            "https://github.com/advisories/GHSA-rhx6-c78j-4q9w"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "phin": {
+          "sha256": "093bef216674b6eef2a74895e79a79f021bf1d3c68e99ba05ba2e420364ec1e6",
+          "status": "UNRESOLVED",
+          "summary": "phin",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-x565-32qp-m3vf"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "postcss": {
+          "sha256": "413dfb8d669fb2046e34c17aed483b747c51ffd65653281846e51294410afb74",
+          "status": "UNRESOLVED",
+          "summary": "postcss",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-6g55-p6wh-862q",
+            "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp",
+            "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
+            "https://github.com/advisories/GHSA-r28c-9q8g-f849"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "postcss-selector-parser": {
+          "sha256": "5d0703e6f1a294a6f892c5cc97547724966814153844086f4cb0b95c084afce1",
+          "status": "UNRESOLVED",
+          "summary": "postcss-selector-parser",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+            "https://github.com/advisories/GHSA-w9m9-85wc-3x92"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "qs": {
+          "sha256": "e09771f01e864e9eba96394ae0505f6097003b2175aeffbd4755607dc855c6d9",
+          "status": "UNRESOLVED",
+          "summary": "qs",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+            "https://github.com/advisories/GHSA-6rw7-vpxm-498p",
+            "https://github.com/advisories/GHSA-q8mj-m7cp-5q26",
+            "https://github.com/advisories/GHSA-w7fw-mjwx-w883"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "send": {
+          "sha256": "acae1f45b1e8d2b36d68c8cd481536dd0eec8186701f4f71addeaa6986b04179",
+          "status": "UNRESOLVED",
+          "summary": "send",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-m6fv-jmcg-4jfg"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "serve-static": {
+          "sha256": "a156129a145fd41cda02a33201f319cad375775cf47afb0d05b50dbf95022672",
+          "status": "UNRESOLVED",
+          "summary": "serve-static",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "source-map-js": {
+          "sha256": "ed59cdc6e7bf50e99c80bf80d1ea8fbb950653020ae36cc7416538272ce7505e",
+          "status": "UNRESOLVED",
+          "summary": "source-map-js",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-68fv-2mgg-jv7q"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "unimport": {
+          "sha256": "fe84e534de2f9dd0bcbdcc69dc353959cfbadc9e50ce348a0af6b429ec656dcd",
+          "status": "UNRESOLVED",
+          "summary": "unimport",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "vite": {
+          "sha256": "d793a4487fa23ce55d8865c4c80681c103a96380790c387077c7faa7fcff0d3b",
+          "status": "UNRESOLVED",
+          "summary": "vite",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-356w-63v5-8wf4",
+            "https://github.com/advisories/GHSA-4r4m-qw57-chr8",
+            "https://github.com/advisories/GHSA-4w7w-66w2-5vf9",
+            "https://github.com/advisories/GHSA-587h-7wmj-h5pm",
+            "https://github.com/advisories/GHSA-64vr-g452-qvp3",
+            "https://github.com/advisories/GHSA-698v-4r3x-3vcv",
+            "https://github.com/advisories/GHSA-859w-5945-r5v3",
+            "https://github.com/advisories/GHSA-93m4-6634-74q7",
+            "https://github.com/advisories/GHSA-9cwx-2883-4wfx",
+            "https://github.com/advisories/GHSA-9jrq-w75r-8gcw",
+            "https://github.com/advisories/GHSA-c27g-q93r-2cwf",
+            "https://github.com/advisories/GHSA-fx2h-pf6j-xcff",
+            "https://github.com/advisories/GHSA-g4jq-h2w9-997c",
+            "https://github.com/advisories/GHSA-jqfw-vq24-v9c3",
+            "https://github.com/advisories/GHSA-r825-w8mm-5pxw",
+            "https://github.com/advisories/GHSA-rq7h-c2jc-7f22",
+            "https://github.com/advisories/GHSA-v6wh-96g9-6wx3",
+            "https://github.com/advisories/GHSA-vfpm-58rq-9qcg",
+            "https://github.com/advisories/GHSA-vg6x-rcgg-rjx6",
+            "https://github.com/advisories/GHSA-x574-m823-4x7w",
+            "https://github.com/advisories/GHSA-xcj6-pq6g-qj4x"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "vue": {
+          "sha256": "9900b69e6c6cd1aade0badce8605003ee85e9009960c6402286877396676c757",
+          "status": "UNRESOLVED",
+          "summary": "vue",
+          "aliases": [],
+          "advisory_urls": [],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "ws": {
+          "sha256": "a2174b482171cb6f9d5cc2a6f2475bc2fd2d1c558cb84401f958beed4804a643",
+          "status": "UNRESOLVED",
+          "summary": "ws",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-58qx-3vcg-4xpx",
+            "https://github.com/advisories/GHSA-96hv-2xvq-fx4p"
+          ],
+          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        }
+      }
+    },
+    "npm-randomness": {
+      "inventory_sha256": "8aa0e8e703cde6997405dc45bc44daced70e8f21c6aab7dfd1fe03cb0d1c1e29",
+      "package_count": 13,
+      "findings": {}
+    }
+  }
+}

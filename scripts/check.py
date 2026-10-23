@@ -126,17 +126,18 @@ def main():
 
 
 PROTECTED = {"artifacts"}
-CURRENT_DOCS = ["README.md", "CONTRIBUTING.md", "docs/running.md", "docs/milestones.md",
-                "docs/architecture.md", "docs/engineering-gates.md"]
+CURRENT_DOCS = ["README.md", "CONTRIBUTING.md", "SECURITY.md", "docs/running.md", "docs/milestones.md",
+                "docs/architecture.md", "docs/engineering-gates.md", "docs/governance-quality.md"]
 DB_SUFFIXES = ["_URL", "_USER", "_PASSWORD"]
-GROUPS = ["hygiene", "docs", "frontend", "backend", "all"]
-EXPAND = {"all": ["hygiene", "docs", "frontend", "backend"]}
+GROUPS = ["hygiene", "docs", "frontend", "backend", "dependencies", "static", "all"]
+EXPAND = {"all": ["hygiene", "docs", "frontend", "backend", "static", "dependencies"]}
 
 
 def check(group):
     if group == "hygiene":
         if hygiene():
             raise RuntimeError("Repository hygiene rejected")
+        run([sys.executable, "-B", str(ROOT / "scripts/check_credentials.py")])
         run([sys.executable, "-B", "-m", "unittest", "discover", "-s", "scripts/tests"])
         run([sys.executable, "-B", "-O", "-m", "unittest", "discover", "-s", "scripts/tests"])
     elif group == "docs":
@@ -148,7 +149,13 @@ def check(group):
     elif group == "backend":
         env = mysql_environment("QIXU_TEST_DB", {"qixu_test", "qixu_ci"})
         run([executable("npm"), "test", "--prefix", "randomness"])
-        run([executable("mvn"), "-B", "-ntp", "-Pmysql-it", "clean", "verify"], ROOT / "backend", env)
+        run([executable("mvn"), "-B", "-ntp", "-Pmysql-it,quality", "clean", "verify"], ROOT / "backend", env)
+        run([sys.executable, "-B", str(ROOT / "scripts/quality_gate.py"), "coverage"])
+    elif group == "dependencies":
+        run([sys.executable, "-B", str(ROOT / "scripts/dependency_gate.py")])
+    elif group == "static":
+        run([executable("mvn"), "-B", "-ntp", "-Pstatic-analysis", "clean", "compile", "com.github.spotbugs:spotbugs-maven-plugin:4.10.5.0:spotbugs"], ROOT / "backend")
+        run([sys.executable, "-B", str(ROOT / "scripts/quality_gate.py"), "static"])
 
 
 if __name__ == "__main__":

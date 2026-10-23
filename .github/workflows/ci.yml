@@ -3,6 +3,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 3 * * 1'
 permissions:
   contents: read
 jobs:
@@ -104,6 +107,10 @@ jobs:
           QIXU_TEST_DB_USER: qixu_ci_app
           QIXU_TEST_DB_PASSWORD: qixu-ci-app-only
         run: python -B scripts/check.py backend
+      - name: Fresh production bytecode and static finding change gate
+        run: python -B scripts/check.py static
+      - name: Complete current Maven and both npm lockfile advisory change gates
+        run: python -B scripts/check.py dependencies
       - name: Retain actual test reports on success or failure
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
@@ -115,5 +122,8 @@ jobs:
             backend/target/surefire-reports/*.txt
             backend/target/failsafe-reports/*.xml
             backend/target/failsafe-reports/*.txt
+            backend/target/site/jacoco/**
+            backend/target/static-analysis/spotbugsXml.xml
+            test-results/governance/**
           retention-days: 30
           if-no-files-found: warn

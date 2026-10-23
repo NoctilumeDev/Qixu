@@ -8,7 +8,7 @@
 
 ## 运行与维护
 
-启动、独立数据库与两端配置见[运行说明](docs/running.md)。当前维护统一入口为`python -B scripts/check.py all`；可按hygiene/docs/frontend/backend单项执行。先安装锁定依赖并配置独立测试库，缺前提直接停止。阶段退出另做[遗留物收口](docs/running.md#当前维护入口与阶段收尾)，保留仍有消费者和证明职责的资产。
+启动、独立数据库与两端配置见[运行说明](docs/running.md)。当前维护统一入口为`python -B scripts/check.py all`；可按 hygiene/docs/frontend/backend/static/dependencies 单项执行。先安装锁定依赖并配置独立测试库，缺前提直接停止。[质量与依赖护栏](docs/governance-quality.md)检查未经复核的变化，不把保留告警当成风险已解决；安全问题按[安全政策](SECURITY.md)私密报告。阶段退出另做[遗留物收口](docs/running.md#当前维护入口与阶段收尾)，保留仍有消费者和证明职责的资产。
 
 ## 当前状态
 
