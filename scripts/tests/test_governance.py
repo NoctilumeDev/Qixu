@@ -185,7 +185,7 @@ class DependencyGateTests(unittest.TestCase):
             if change == 'details': c['sources']['maven']['findings']['demo/GHSA-fixture']['severity'] = 'changed'
             if change == 'source': del c['sources']['maven']
             with self.subTest(change=change), self.assertRaises(ValueError): d.review(c, policy)
-        for change in ('accepted', 'not-applicable', 'remediated', 'no-owner', 'no-follow-up', 'invalid-sha'):
+        for change in ('accepted', 'not-applicable', 'remediated', 'no-owner', 'no-follow-up', 'unreadable-follow-up', 'invalid-sha'):
             p = deepcopy(policy)
             item = p['sources']['maven']['findings']['demo/GHSA-fixture']
             if change == 'accepted': p['risk_accepted'] = True
@@ -193,6 +193,7 @@ class DependencyGateTests(unittest.TestCase):
             if change == 'remediated': item['status'] = 'REMEDIATED'
             if change == 'no-owner': del p['owner']
             if change == 'no-follow-up': item['next_action'] = ''
+            if change == 'unreadable-follow-up': item['next_action'] = '\ufffd'
             if change == 'invalid-sha': p['source_revision'] = 'z' * 40
             with self.subTest(change=change), self.assertRaises(ValueError): d.review(current, p)
 

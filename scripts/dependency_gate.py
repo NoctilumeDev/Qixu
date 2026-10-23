@@ -169,6 +169,7 @@ def review(observation, policy):
             require(record.get('sha256') == digest(value), name + ': advisory details changed: ' + key)
             require(record.get('status') == 'UNRESOLVED', 'this initial gate cannot grant inapplicability or accept/close risk')
             require(isinstance(record.get('next_action'), str) and record['next_action'].strip(), 'missing follow-up')
+            require('\ufffd' not in record['next_action'], 'unreadable follow-up text; restore original UTF-8')
     return sum(len(x['findings']) for x in observation['sources'].values())
 
 
