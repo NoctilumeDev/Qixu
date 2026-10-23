@@ -30,18 +30,25 @@ def scan(root):
         data = path.read_bytes()
         if data.startswith((b'\xff\xfe', b'\xfe\xff')):
             text = data.decode('utf-16')
+            hits = matches(text)
+            texts += 1
         elif b'\0' in data:
             binaries += 1
-            continue
+            # A NUL is not proof of binary content: BOM-less UTF-16 tokens also
+            # contain NULs. Probe both byte orders, including a malformed tail;
+            # this is signature detection, not an archive/binary safety claim.
+            hits = sorted(set(matches(data.decode('utf-16-le', errors='replace')))
+                          | set(matches(data.decode('utf-16-be', errors='replace'))))
         else:
             text = data.decode('utf-8-sig')
-        texts += 1
-        for line, rule in matches(text):
+            hits = matches(text)
+            texts += 1
+        for line, rule in hits:
             failures += 1
             print(f'{name}:{line}: {rule}; value withheld', file=sys.stderr)
     if not texts:
         raise ValueError('empty text denominator')
-    print(f'Credential signatures: {texts} tracked texts; {binaries} binary files outside scope; {failures} matches.')
+    print(f'Credential signatures: {texts} decoded texts; {binaries} NUL inputs probed for UTF-16 signatures only; {failures} matches.')
     return 1 if failures else 0
 
 

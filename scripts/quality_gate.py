@@ -51,18 +51,54 @@ def static_review(current, policy):
     return len(current['findings'])
 
 
-def coverage_observation(report, classes):
-    require(report.tag == 'report' and report.findall('sessioninfo'), 'missing coverage session')
-    observed = [c.get('name') for c in report.findall('./package/class')]
-    require(len(observed) == len(set(observed)) and set(observed) == classes, 'coverage class denominator differs from production build')
+def coverage_counters(element):
     counters = {}
-    for counter in report.findall('counter'):
+    for counter in element.findall('counter'):
         kind = counter.get('type')
         require(kind not in counters, 'duplicate coverage counter')
         missed, covered = int(counter.get('missed', '-1')), int(counter.get('covered', '-1'))
         require(missed >= 0 and covered >= 0, 'invalid coverage count')
         counters[kind] = {'missed': missed, 'covered': covered}
+    return counters
+
+
+def coverage_observation(report, classes):
+    require(report.tag == 'report' and report.findall('sessioninfo'), 'missing coverage session')
+    observed = [c.get('name') for c in report.findall('./package/class')]
+    require(len(observed) == len(set(observed)) and set(observed) == classes, 'coverage class denominator differs from production build')
+    counters = coverage_counters(report)
     require(all(k in counters and sum(counters[k].values()) > 0 for k in ('LINE', 'BRANCH')), 'missing coverage denominator')
+    total = {k: {'missed': 0, 'covered': 0} for k in ('LINE', 'BRANCH')}
+    for package in report.findall('package'):
+        package_counts = coverage_counters(package)
+        source_files = package.findall('sourcefile')
+        names = [source.get('name') for source in source_files]
+        require(names and all(names) and len(names) == len(set(names)), 'missing or duplicate coverage source')
+        require(all(c.get('sourcefilename') in names for c in package.findall('class')), 'coverage class without source details')
+        source_counts = {k: {'missed': 0, 'covered': 0} for k in total}
+        for source in source_files:
+            declared = coverage_counters(source)
+            measured = {k: {'missed': 0, 'covered': 0} for k in total}
+            lines = source.findall('line')
+            numbers = [int(line.get('nr', '-1')) for line in lines]
+            require(lines and min(numbers) > 0 and len(numbers) == len(set(numbers)), 'missing or duplicate source lines')
+            for line in lines:
+                mi, ci, mb, cb = (int(line.get(k, '-1')) for k in ('mi', 'ci', 'mb', 'cb'))
+                require(min(mi, ci, mb, cb) >= 0 and mi + ci > 0, 'invalid source line counts')
+                measured['LINE']['covered' if ci else 'missed'] += 1
+                measured['BRANCH']['missed'] += mb
+                measured['BRANCH']['covered'] += cb
+            for kind in total:
+                zero = {'missed': 0, 'covered': 0}
+                require(declared.get(kind, zero) == measured[kind], 'source coverage counter differs from lines')
+                for outcome in zero:
+                    source_counts[kind][outcome] += measured[kind][outcome]
+        # LINE must sum source files, not classes: inner classes can share a line.
+        for kind in total:
+            require(package_counts.get(kind, {'missed': 0, 'covered': 0}) == source_counts[kind], 'package coverage counter differs from sources')
+            for outcome in total[kind]:
+                total[kind][outcome] += source_counts[kind][outcome]
+    require(all(counters[k] == total[k] for k in total), 'root coverage counter differs from packages')
     return counters
 
 

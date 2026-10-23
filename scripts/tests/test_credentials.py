@@ -44,6 +44,27 @@ class CredentialTests(unittest.TestCase):
             subprocess.run(['git', 'init', '-q', directory], check=True)
             self.assertNotEqual(subprocess.run([sys.executable, '-B', str(SCRIPT), '--root', directory], capture_output=True).returncode, 0)
 
+    def test_bomless_utf16_cannot_hide_among_binary_inputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(['git', 'init', '-q', directory], check=True)
+            (root / 'ordinary.txt').write_text('normal text', encoding='utf-8')
+            path = root / 'fixture.dat'
+            path.write_bytes(b'\0binary')
+            subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+            token = 'ghp_' + 'z' * 36
+            for optimized in ([], ['-O']):
+                cmd = [sys.executable, *optimized, '-B', str(SCRIPT), '--root', directory]
+                for encoding in ('utf-16-le', 'utf-16-be'):
+                    for tail in (b'', b'\xff'):
+                        path.write_bytes(('header\n' + token).encode(encoding) + tail)
+                        result = subprocess.run(cmd, text=True, capture_output=True)
+                        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                        self.assertIn('fixture.dat:2: github-token', result.stderr)
+                        self.assertNotIn(token, result.stdout + result.stderr)
+                path.write_bytes(b'\0binary')
+                self.assertEqual(subprocess.run(cmd, capture_output=True).returncode, 0)
+
 
 if __name__ == '__main__':
     unittest.main()

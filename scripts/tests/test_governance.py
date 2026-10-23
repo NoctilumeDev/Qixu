@@ -46,7 +46,14 @@ def static_fixture():
 
 def coverage_fixture():
     return ET.fromstring('''<report><sessioninfo id="fixture"/><package>
-        <class name="dev/noctilume/qixu/Demo"/></package>
+        <class name="dev/noctilume/qixu/Demo" sourcefilename="Demo.java"/>
+        <sourcefile name="Demo.java">
+        <line nr="1" mi="1" ci="0" mb="2" cb="0"/><line nr="2" mi="1" ci="0" mb="0" cb="0"/>
+        <line nr="3" mi="1" ci="0" mb="0" cb="0"/><line nr="4" mi="1" ci="0" mb="0" cb="0"/>
+        <counter type="LINE" missed="4" covered="0"/><counter type="BRANCH" missed="2" covered="0"/>
+        </sourcefile>
+        <counter type="LINE" missed="4" covered="0"/><counter type="BRANCH" missed="2" covered="0"/>
+        </package>
         <counter type="LINE" missed="4" covered="0"/>
         <counter type="BRANCH" missed="2" covered="0"/></report>''')
 
@@ -209,6 +216,22 @@ class QualityGateTests(unittest.TestCase):
     def test_empty_build_is_not_zero_findings(self):
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaises(ValueError): q.compiled_names(Path(directory))
+
+    def test_coverage_root_package_source_and_lines_agree(self):
+        for xpath in ('counter', 'package/counter', 'package/sourcefile/counter'):
+            r = coverage_fixture()
+            r.find(xpath).set('missed', '0')
+            r.find(xpath).set('covered', '1')
+            with self.subTest(xpath=xpath), self.assertRaises(ValueError):
+                q.coverage_observation(r, self.classes)
+        for change in ('duplicate-line', 'negative-line', 'missing-source', 'wrong-source'):
+            r = coverage_fixture()
+            source = r.find('package/sourcefile')
+            if change == 'duplicate-line': source.append(deepcopy(source.find('line')))
+            if change == 'negative-line': source.find('line').set('cb', '-1')
+            if change == 'missing-source': r.find('package').remove(source)
+            if change == 'wrong-source': r.find('package/class').set('sourcefilename', 'Other.java')
+            with self.subTest(change=change), self.assertRaises(ValueError): q.coverage_observation(r, self.classes)
 
 
 if __name__ == '__main__':
