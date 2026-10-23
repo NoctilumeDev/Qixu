@@ -1,0 +1,2966 @@
+{
+  "schema": "qixu-static-review/1",
+  "source_revision": "74380570c422fea303700812193996dc6de7bec4",
+  "observed_at": "2026-10-23",
+  "owner": "NoctilumeDev/Qixu maintainers",
+  "risk_accepted": false,
+  "status": "UNRESOLVED",
+  "next_action": "按规则与位置开展有限复核；确认缺陷修复并按原条件回归，不把当前候选清单当成误报豁免。",
+  "classes": [
+    "dev/noctilume/qixu/QixuApplication",
+    "dev/noctilume/qixu/booking/BookingController",
+    "dev/noctilume/qixu/booking/BookingTasks",
+    "dev/noctilume/qixu/booking/Favorites",
+    "dev/noctilume/qixu/booking/Favorites$Change",
+    "dev/noctilume/qixu/booking/IntentRecovery",
+    "dev/noctilume/qixu/booking/ShortReservations",
+    "dev/noctilume/qixu/booking/ShortReservations$Change",
+    "dev/noctilume/qixu/booking/ShortReservations$Create",
+    "dev/noctilume/qixu/booking/VenueRequests",
+    "dev/noctilume/qixu/booking/VenueRequests$Create",
+    "dev/noctilume/qixu/booking/VenueRequests$Decision",
+    "dev/noctilume/qixu/common/Api",
+    "dev/noctilume/qixu/common/ApiErrors",
+    "dev/noctilume/qixu/common/Business",
+    "dev/noctilume/qixu/common/Digests",
+    "dev/noctilume/qixu/common/DomainException",
+    "dev/noctilume/qixu/common/HealthController",
+    "dev/noctilume/qixu/config/DatabaseBudgets",
+    "dev/noctilume/qixu/config/DatabaseBudgets$1",
+    "dev/noctilume/qixu/config/DemoInitializer",
+    "dev/noctilume/qixu/config/ProtocolJson",
+    "dev/noctilume/qixu/config/RecoveryTransactions",
+    "dev/noctilume/qixu/events/Events",
+    "dev/noctilume/qixu/events/Events$Change",
+    "dev/noctilume/qixu/events/Events$Create",
+    "dev/noctilume/qixu/events/Events$Participate",
+    "dev/noctilume/qixu/governance/Feedback",
+    "dev/noctilume/qixu/governance/Feedback$Action",
+    "dev/noctilume/qixu/governance/Feedback$Attachment",
+    "dev/noctilume/qixu/governance/Feedback$Create",
+    "dev/noctilume/qixu/governance/Feedback$Fact",
+    "dev/noctilume/qixu/governance/Feedback$LimitLink",
+    "dev/noctilume/qixu/governance/Feedback$RepairAction",
+    "dev/noctilume/qixu/governance/Feedback$RepairCreate",
+    "dev/noctilume/qixu/governance/Feedback$ReportRef",
+    "dev/noctilume/qixu/governance/Feedback$Supplement",
+    "dev/noctilume/qixu/governance/FeedbackController",
+    "dev/noctilume/qixu/governance/GovernanceCases",
+    "dev/noctilume/qixu/governance/GovernanceCases$Create",
+    "dev/noctilume/qixu/governance/GovernanceCases$Decision",
+    "dev/noctilume/qixu/governance/GovernanceCases$Review",
+    "dev/noctilume/qixu/governance/GovernanceCases$Statement",
+    "dev/noctilume/qixu/governance/GovernanceController",
+    "dev/noctilume/qixu/governance/RasterEvidence",
+    "dev/noctilume/qixu/governance/RasterEvidence$Info",
+    "dev/noctilume/qixu/governance/SpaceBlockController",
+    "dev/noctilume/qixu/governance/SpaceBlocks",
+    "dev/noctilume/qixu/governance/SpaceBlocks$Context",
+    "dev/noctilume/qixu/governance/SpaceBlocks$Impact",
+    "dev/noctilume/qixu/governance/SpaceBlocks$Plan",
+    "dev/noctilume/qixu/governance/SpaceBlocks$Resolution",
+    "dev/noctilume/qixu/governance/SpaceBlocks$Revoke",
+    "dev/noctilume/qixu/identity/Actor",
+    "dev/noctilume/qixu/identity/AuthController",
+    "dev/noctilume/qixu/identity/AuthController$ExternalLoginRequest",
+    "dev/noctilume/qixu/identity/AuthController$LoginRequest",
+    "dev/noctilume/qixu/identity/AuthService",
+    "dev/noctilume/qixu/identity/AuthService$Attempt",
+    "dev/noctilume/qixu/identity/AuthService$ExternalProof",
+    "dev/noctilume/qixu/identity/AuthService$Login",
+    "dev/noctilume/qixu/identity/AuthService$Session",
+    "dev/noctilume/qixu/identity/DarkRoomGateway",
+    "dev/noctilume/qixu/identity/DarkRoomGateway$BoundedBody",
+    "dev/noctilume/qixu/identity/ExternalSessions",
+    "dev/noctilume/qixu/identity/ExternalTicketVault",
+    "dev/noctilume/qixu/identity/SessionFilter",
+    "dev/noctilume/qixu/identity/SessionValidity",
+    "dev/noctilume/qixu/notifications/Notifications",
+    "dev/noctilume/qixu/operations/AdminProjection",
+    "dev/noctilume/qixu/operations/AdminProjectionController",
+    "dev/noctilume/qixu/preparation/AllocationGraph",
+    "dev/noctilume/qixu/preparation/AllocationGraph$Assignment",
+    "dev/noctilume/qixu/preparation/AllocationGraph$Candidate",
+    "dev/noctilume/qixu/preparation/AllocationGraph$CounterStream",
+    "dev/noctilume/qixu/preparation/AllocationGraph$Edge",
+    "dev/noctilume/qixu/preparation/AllocationGraph$Input",
+    "dev/noctilume/qixu/preparation/AllocationGraph$Result",
+    "dev/noctilume/qixu/preparation/AllocationPublisher",
+    "dev/noctilume/qixu/preparation/AllocationPublisher$Work",
+    "dev/noctilume/qixu/preparation/AllocationWorker",
+    "dev/noctilume/qixu/preparation/BatchFreezer",
+    "dev/noctilume/qixu/preparation/BatchTermination",
+    "dev/noctilume/qixu/preparation/BatchTermination$Cancel",
+    "dev/noctilume/qixu/preparation/FrozenJson",
+    "dev/noctilume/qixu/preparation/HttpRandomnessSource",
+    "dev/noctilume/qixu/preparation/LongEligibility",
+    "dev/noctilume/qixu/preparation/LongSeats",
+    "dev/noctilume/qixu/preparation/LongSeats$Response",
+    "dev/noctilume/qixu/preparation/PreparationBatches",
+    "dev/noctilume/qixu/preparation/PreparationBatches$Action",
+    "dev/noctilume/qixu/preparation/PreparationBatches$Create",
+    "dev/noctilume/qixu/preparation/PreparationBatches$Preference",
+    "dev/noctilume/qixu/preparation/PreparationBatches$Submit",
+    "dev/noctilume/qixu/preparation/PreparationController",
+    "dev/noctilume/qixu/preparation/PreparationTasks",
+    "dev/noctilume/qixu/preparation/PreparationValidity",
+    "dev/noctilume/qixu/preparation/RandomnessSource",
+    "dev/noctilume/qixu/preparation/RandomnessSource$Proof",
+    "dev/noctilume/qixu/recovery/RecoveryFence",
+    "dev/noctilume/qixu/recovery/RecoveryFence$Prepared",
+    "dev/noctilume/qixu/recovery/RecoveryJournal",
+    "dev/noctilume/qixu/spaces/BlockNotices",
+    "dev/noctilume/qixu/spaces/SpaceController",
+    "dev/noctilume/qixu/spaces/SpaceFactChanges",
+    "dev/noctilume/qixu/spaces/SpaceFactChanges$Context",
+    "dev/noctilume/qixu/spaces/SpaceRights",
+    "dev/noctilume/qixu/spaces/SpaceService",
+    "dev/noctilume/qixu/spaces/SpaceService$Space",
+    "dev/noctilume/qixu/spaces/SpatialFacts",
+    "dev/noctilume/qixu/spaces/SpatialFacts$Arrangement",
+    "dev/noctilume/qixu/spaces/SpatialFacts$Limit",
+    "dev/noctilume/qixu/spaces/SpatialFacts$Piece",
+    "dev/noctilume/qixu/spaces/SpatialFacts$Root",
+    "dev/noctilume/qixu/spaces/SpatialFacts$Snapshot"
+  ],
+  "findings": [
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Root",
+      "Method": {
+        "name": "fact",
+        "signature": "()Ljava/util/Map;"
+      },
+      "Field": {
+        "name": "fact",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.common.Business",
+      "Method": {
+        "name": "admin",
+        "signature": "(Ldev/noctilume/qixu/identity/Actor;J)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/common/Business.java",
+        "start": "79",
+        "end": "79"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges",
+      "Method": {
+        "name": "notify",
+        "signature": "(JLdev/noctilume/qixu/spaces/SpaceFactChanges$Context;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "101",
+        "end": "101"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceService$Space",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JJLjava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJIIIILjava/lang/String;Ljava/util/Map;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "profile",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceService.java",
+        "start": "16",
+        "end": "16"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.spaces.SpaceRights",
+      "Method": {
+        "name": "personalFree",
+        "signature": "(JLjava/time/LocalDateTime;Ljava/time/LocalDateTime;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceRights.java",
+        "start": "154",
+        "end": "154"
+      }
+    },
+    {
+      "type": "CT_CONSTRUCTOR_THROW",
+      "priority": "2",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.preparation.HttpRandomnessSource",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ltools/jackson/databind/json/JsonMapper;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/HttpRandomnessSource.java",
+        "start": "42",
+        "end": "42"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.identity.AuthService",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ljava/time/Clock;Ldev/noctilume/qixu/identity/ExternalSessions;I)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/AuthService.java",
+        "start": "51",
+        "end": "51"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "personalShortFree",
+        "signature": "(JLjava/time/LocalDateTime;Ljava/time/LocalDateTime;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "130",
+        "end": "130"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/preparation/LongEligibility;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "39",
+        "end": "39"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Input",
+      "Method": {
+        "name": "candidates",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "candidates",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Result",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/util/List;)V"
+      },
+      "Field": {
+        "name": "order",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "22",
+        "end": "22"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V"
+      },
+      "Field": {
+        "name": "users",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongEligibility",
+      "Method": {
+        "name": "reason",
+        "signature": "(J)Ljava/lang/String;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongEligibility.java",
+        "start": "23",
+        "end": "23"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Piece",
+      "Method": {
+        "name": "sources",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "sources",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "54",
+        "end": "54"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "parents",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.booking.Favorites",
+      "Method": {
+        "name": "lambda$change$1",
+        "signature": "(Ldev/noctilume/qixu/booking/Favorites$Change;Ldev/noctilume/qixu/identity/Actor;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/Favorites.java",
+        "start": "46",
+        "end": "46"
+      }
+    },
+    {
+      "type": "CT_CONSTRUCTOR_THROW",
+      "priority": "2",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.identity.DarkRoomGateway",
+      "Method": {
+        "name": "<init>",
+        "signature": "(ZLjava/lang/String;Z)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/DarkRoomGateway.java",
+        "start": "41",
+        "end": "41"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V"
+      },
+      "Field": {
+        "name": "batches",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.FrozenJson",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/FrozenJson.java",
+        "start": "12",
+        "end": "12"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.booking.ShortReservations",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/ShortReservations.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Limit",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JJJLjava/lang/String;Ljava/lang/Long;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/util/Map;)V"
+      },
+      "Field": {
+        "name": "fact",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "35",
+        "end": "35"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "users",
+        "signature": "()Ljava/util/Set;"
+      },
+      "Field": {
+        "name": "users",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
+      "priority": "3",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.identity.DarkRoomGateway$BoundedBody",
+      "Method": {
+        "name": "onNext",
+        "signature": "(Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "subscription",
+        "signature": "Ljava/util/concurrent/Flow$Subscription;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/DarkRoomGateway.java",
+        "start": "197",
+        "end": "197"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V"
+      },
+      "Field": {
+        "name": "recipients",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.operations.AdminProjection",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/operations/AdminProjection.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$RepairCreate",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/List;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "reports",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "31",
+        "end": "31"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryFence",
+      "Method": {
+        "name": "hasExistingFacts",
+        "signature": "()Z"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/recovery/RecoveryFence.java",
+        "start": "127",
+        "end": "127"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Arrangement",
+      "Method": {
+        "name": "fact",
+        "signature": "()Ljava/util/Map;"
+      },
+      "Field": {
+        "name": "fact",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "45",
+        "end": "45"
+      }
+    },
+    {
+      "type": "DLS_DEAD_LOCAL_STORE",
+      "priority": "3",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "maintain",
+        "signature": "(J)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "533",
+        "end": "533"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.identity.SessionFilter",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/identity/AuthService;Ltools/jackson/databind/json/JsonMapper;Lorg/springframework/boot/availability/ApplicationAvailability;Ldev/noctilume/qixu/recovery/RecoveryFence;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/SessionFilter.java",
+        "start": "39",
+        "end": "39"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.identity.DarkRoomGateway$BoundedBody",
+      "Method": {
+        "name": "getBody",
+        "signature": "()Ljava/util/concurrent/CompletionStage;"
+      },
+      "Field": {
+        "name": "result",
+        "signature": "Ljava/util/concurrent/CompletableFuture;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/DarkRoomGateway.java",
+        "start": "177",
+        "end": "177"
+      }
+    },
+    {
+      "type": "CT_CONSTRUCTOR_THROW",
+      "priority": "2",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.identity.ExternalTicketVault",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/identity/DarkRoomGateway;Ljava/lang/String;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/ExternalTicketVault.java",
+        "start": "23",
+        "end": "23"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.BatchTermination",
+      "Method": {
+        "name": "lambda$cancel$0",
+        "signature": "(Ljava/util/Map;Ldev/noctilume/qixu/preparation/BatchTermination$Cancel;Ldev/noctilume/qixu/common/Business;JLdev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/BatchTermination.java",
+        "start": "47",
+        "end": "47"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "cannotRestore",
+        "signature": "(Ljava/util/Map;)Ljava/lang/String;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "414",
+        "end": "414"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "17",
+        "end": "17"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$RepairAction",
+      "Method": {
+        "name": "reports",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "reports",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "33",
+        "end": "33"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$RepairAction",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "facts",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "33",
+        "end": "33"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "list",
+        "signature": "(Ldev/noctilume/qixu/identity/Actor;ZI)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "173",
+        "end": "173"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Limit",
+      "Method": {
+        "name": "fact",
+        "signature": "()Ljava/util/Map;"
+      },
+      "Field": {
+        "name": "fact",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "35",
+        "end": "35"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/spaces/SpaceFactChanges;Ldev/noctilume/qixu/spaces/BlockNotices;Ldev/noctilume/qixu/governance/SpaceBlocks;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "53",
+        "end": "53"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.booking.BookingTasks",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/booking/ShortReservations;Ldev/noctilume/qixu/notifications/Notifications;Lorg/springframework/boot/availability/ApplicationAvailability;Ldev/noctilume/qixu/recovery/RecoveryFence;Z)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/BookingTasks.java",
+        "start": "26",
+        "end": "26"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/spaces/SpaceFactChanges;Ldev/noctilume/qixu/spaces/BlockNotices;Ldev/noctilume/qixu/governance/SpaceBlocks;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "58",
+        "end": "58"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.operations.AdminProjection",
+      "Method": {
+        "name": "blocks",
+        "signature": "(Ldev/noctilume/qixu/identity/AuthService$Session;Ljava/lang/Long;II)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/operations/AdminProjection.java",
+        "start": "121",
+        "end": "121"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.booking.Favorites",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceService;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/Favorites.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.BlockNotices",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/BlockNotices.java",
+        "start": "16",
+        "end": "16"
+      }
+    },
+    {
+      "type": "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION",
+      "priority": "3",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.identity.ExternalTicketVault",
+      "Method": {
+        "name": "cipher",
+        "signature": "(I[BLjava/lang/String;)Ljavax/crypto/Cipher;"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "lambda$submit$7",
+        "signature": "(Ldev/noctilume/qixu/identity/Actor;Ljava/util/Map;JLdev/noctilume/qixu/preparation/PreparationBatches$Submit;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "398",
+        "end": "398"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.booking.IntentRecovery",
+      "Method": {
+        "name": "stop",
+        "signature": "(Ldev/noctilume/qixu/identity/AuthService$Session;Ljava/lang/String;)Ljava/lang/Object;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/IntentRecovery.java",
+        "start": "24",
+        "end": "24"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Arrangement",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JJJLjava/lang/Long;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/util/Map;)V"
+      },
+      "Field": {
+        "name": "fact",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "45",
+        "end": "45"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Candidate",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "acceptable",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "16",
+        "end": "16"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.notifications.Notifications",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/notifications/Notifications.java",
+        "start": "14",
+        "end": "14"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "spaces",
+        "signature": "()Ljava/util/Map;"
+      },
+      "Field": {
+        "name": "spaces",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Result",
+      "Method": {
+        "name": "order",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "order",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "22",
+        "end": "22"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "json",
+        "signature": "()Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "61",
+        "end": "61"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches$Create",
+      "Method": {
+        "name": "seatIds",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "seatIds",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "20",
+        "end": "20"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$RepairAction",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "reports",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "33",
+        "end": "33"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.notifications.Notifications",
+      "Method": {
+        "name": "lambda$read$0",
+        "signature": "(JLdev/noctilume/qixu/identity/Actor;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/notifications/Notifications.java",
+        "start": "86",
+        "end": "86"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "events",
+        "signature": "()Ljava/util/Set;"
+      },
+      "Field": {
+        "name": "events",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Piece",
+      "Method": {
+        "name": "locations",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "locations",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "54",
+        "end": "54"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/preparation/LongEligibility;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "36",
+        "end": "36"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V"
+      },
+      "Field": {
+        "name": "events",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.common.HealthController",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/common/HealthController.java",
+        "start": "14",
+        "end": "14"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$Attachment",
+      "Method": {
+        "name": "<init>",
+        "signature": "([BLjava/lang/String;Ljava/lang/String;J)V"
+      },
+      "Field": {
+        "name": "bytes",
+        "signature": "[B"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "44",
+        "end": "44"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Piece",
+      "Method": {
+        "name": "unresolved",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "unresolved",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "54",
+        "end": "54"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.booking.Favorites",
+      "Method": {
+        "name": "lambda$change$1",
+        "signature": "(Ldev/noctilume/qixu/booking/Favorites$Change;Ldev/noctilume/qixu/identity/Actor;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/Favorites.java",
+        "start": "51",
+        "end": "51"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.booking.BookingController",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/booking/IntentRecovery;Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/booking/ShortReservations;Ldev/noctilume/qixu/booking/VenueRequests;Ldev/noctilume/qixu/events/Events;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/booking/Favorites;Ldev/noctilume/qixu/notifications/Notifications;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/BookingController.java",
+        "start": "35",
+        "end": "35"
+      }
+    },
+    {
+      "type": "FE_FLOATING_POINT_EQUALITY",
+      "priority": "3",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.HttpRandomnessSource",
+      "Method": {
+        "name": "verify",
+        "signature": "([BJ)Ldev/noctilume/qixu/preparation/RandomnessSource$Proof;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/HttpRandomnessSource.java",
+        "start": "98",
+        "end": "98"
+      }
+    },
+    {
+      "type": "DLS_DEAD_LOCAL_STORE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "checkSeat",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "93",
+        "end": "93"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Root",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;JJJJJJJLjava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/util/Map;)V"
+      },
+      "Field": {
+        "name": "fact",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationTasks",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/preparation/BatchFreezer;Ldev/noctilume/qixu/preparation/AllocationWorker;Ldev/noctilume/qixu/preparation/AllocationPublisher;Ldev/noctilume/qixu/preparation/LongSeats;Lorg/springframework/boot/availability/ApplicationAvailability;Ldev/noctilume/qixu/recovery/RecoveryFence;Z)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationTasks.java",
+        "start": "32",
+        "end": "32"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.SpaceBlocks$Plan",
+      "Method": {
+        "name": "resolutions",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "resolutions",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/SpaceBlocks.java",
+        "start": "48",
+        "end": "48"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$Attachment",
+      "Method": {
+        "name": "bytes",
+        "signature": "()[B"
+      },
+      "Field": {
+        "name": "bytes",
+        "signature": "[B"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "44",
+        "end": "44"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.events.Events",
+      "Method": {
+        "name": "lambda$change$4",
+        "signature": "(JLdev/noctilume/qixu/events/Events$Change;Ljava/util/Map;Ljava/util/Map;Ldev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/events/Events.java",
+        "start": "283",
+        "end": "283"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.spaces.SpaceService",
+      "Method": {
+        "name": "list",
+        "signature": "(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceService.java",
+        "start": "94",
+        "end": "94"
+      }
+    },
+    {
+      "type": "OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE",
+      "priority": "2",
+      "category": "EXPERIMENTAL",
+      "class": "dev.noctilume.qixu.common.Business",
+      "Method": {
+        "name": "lambda$insert$2",
+        "signature": "(Ljava/lang/String;[Ljava/lang/Object;Ljava/sql/Connection;)Ljava/sql/PreparedStatement;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/common/Business.java",
+        "start": "91",
+        "end": "91"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "cannotRestore",
+        "signature": "(Ljava/util/Map;)Ljava/lang/String;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "390",
+        "end": "390"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Candidate",
+      "Method": {
+        "name": "acceptable",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "acceptable",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "16",
+        "end": "16"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "limits",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "limits",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.common.Business",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ljava/time/Clock;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/common/Business.java",
+        "start": "23",
+        "end": "23"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "business",
+        "signature": "()Ldev/noctilume/qixu/common/Business;"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "53",
+        "end": "53"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.events.Events",
+      "Method": {
+        "name": "binding",
+        "signature": "(Ljava/util/Map;I)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/events/Events.java",
+        "start": "66",
+        "end": "66"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryJournal",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/nio/file/Path;Z)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/recovery/RecoveryJournal.java",
+        "start": "30",
+        "end": "30"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.operations.AdminProjection",
+      "Method": {
+        "name": "audit",
+        "signature": "(Ldev/noctilume/qixu/identity/AuthService$Session;II)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/operations/AdminProjection.java",
+        "start": "183",
+        "end": "183"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.booking.VenueRequests",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/VenueRequests.java",
+        "start": "28",
+        "end": "28"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Piece",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/spaces/SpatialFacts$Root;Ljava/lang/Long;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "sources",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "54",
+        "end": "54"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "spaces",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches$Submit",
+      "Method": {
+        "name": "preferences",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "preferences",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "37",
+        "end": "37"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Piece",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/spaces/SpatialFacts$Root;Ljava/lang/Long;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "locations",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "54",
+        "end": "54"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.config.DemoInitializer",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ltools/jackson/databind/json/JsonMapper;Lorg/springframework/core/env/Environment;ZLdev/noctilume/qixu/recovery/RecoveryFence;Lorg/springframework/transaction/PlatformTransactionManager;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/config/DemoInitializer.java",
+        "start": "40",
+        "end": "40"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "lambda$create$2",
+        "signature": "(Ldev/noctilume/qixu/governance/GovernanceCases$Create;Ldev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "210",
+        "end": "210"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "checkOtherParticipation",
+        "signature": "(JJLjava/time/LocalDateTime;Ljava/time/LocalDateTime;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "467",
+        "end": "467"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.SpaceBlocks",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/spaces/SpatialFacts;Ldev/noctilume/qixu/spaces/BlockNotices;Ldev/noctilume/qixu/events/Events;Ldev/noctilume/qixu/booking/VenueRequests;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/SpaceBlocks.java",
+        "start": "41",
+        "end": "41"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$RepairCreate",
+      "Method": {
+        "name": "reports",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "reports",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "31",
+        "end": "31"
+      }
+    },
+    {
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "priority": "3",
+      "category": "PERFORMANCE",
+      "class": "dev.noctilume.qixu.spaces.SpaceRights",
+      "Method": {
+        "name": "related",
+        "signature": "(JJLjava/util/Map;)Z"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "checkSeat",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "118",
+        "end": "118"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "arrangements",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "CT_CONSTRUCTOR_THROW",
+      "priority": "2",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.identity.DarkRoomGateway",
+      "Method": {
+        "name": "<init>",
+        "signature": "(ZLjava/lang/String;ZLorg/springframework/core/env/Environment;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/DarkRoomGateway.java",
+        "start": "51",
+        "end": "51"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.events.Events",
+      "Method": {
+        "name": "lambda$participate$6",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;JLdev/noctilume/qixu/identity/Actor;Ldev/noctilume/qixu/events/Events$Participate;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/events/Events.java",
+        "start": "396",
+        "end": "396"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.operations.AdminProjection",
+      "Method": {
+        "name": "entitlements",
+        "signature": "(Ldev/noctilume/qixu/identity/AuthService$Session;Ljava/lang/Long;II)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/operations/AdminProjection.java",
+        "start": "164",
+        "end": "164"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Result",
+      "Method": {
+        "name": "assignments",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "assignments",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "22",
+        "end": "22"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceService$Space",
+      "Method": {
+        "name": "profile",
+        "signature": "()Ljava/util/Map;"
+      },
+      "Field": {
+        "name": "profile",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceService.java",
+        "start": "16",
+        "end": "16"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Input",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "candidates",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Result",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/util/List;)V"
+      },
+      "Field": {
+        "name": "assignments",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "22",
+        "end": "22"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "roots",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "roots",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.SpaceBlocks$Plan",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JLjava/lang/String;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/util/List;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "resolutions",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/SpaceBlocks.java",
+        "start": "48",
+        "end": "48"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.booking.IntentRecovery",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/IntentRecovery.java",
+        "start": "15",
+        "end": "15"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "limits",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "lambda$linkLimit$11",
+        "signature": "(JLdev/noctilume/qixu/governance/Feedback$LimitLink;Ldev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "820",
+        "end": "820"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryFence",
+      "Method": {
+        "name": "initialize",
+        "signature": "(Ljava/nio/file/Path;Ljava/lang/String;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/recovery/RecoveryFence.java",
+        "start": "55",
+        "end": "55"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "cannotRestore",
+        "signature": "(Ljava/util/Map;)Ljava/lang/String;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "399",
+        "end": "399"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.HttpRandomnessSource",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ltools/jackson/databind/json/JsonMapper;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/HttpRandomnessSource.java",
+        "start": "29",
+        "end": "29"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Input",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "seats",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "REC_CATCH_EXCEPTION",
+      "priority": "3",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.RasterEvidence",
+      "Method": {
+        "name": "inspect",
+        "signature": "([B)Ldev/noctilume/qixu/governance/RasterEvidence$Info;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/RasterEvidence.java",
+        "start": "47",
+        "end": "47"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "arrangements",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "arrangements",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches$Submit",
+      "Method": {
+        "name": "<init>",
+        "signature": "(ILjava/util/List;Z)V"
+      },
+      "Field": {
+        "name": "preferences",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "37",
+        "end": "37"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.config.DemoInitializer",
+      "Method": {
+        "name": "seed",
+        "signature": "()V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/config/DemoInitializer.java",
+        "start": "70",
+        "end": "70"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "cannotRestore",
+        "signature": "(Ljava/util/Map;)Ljava/lang/String;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "407",
+        "end": "407"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.BatchTermination",
+      "Method": {
+        "name": "lambda$cancel$0",
+        "signature": "(Ljava/util/Map;Ldev/noctilume/qixu/preparation/BatchTermination$Cancel;Ldev/noctilume/qixu/common/Business;JLdev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/BatchTermination.java",
+        "start": "50",
+        "end": "50"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.config.DemoInitializer",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ltools/jackson/databind/json/JsonMapper;Lorg/springframework/core/env/Environment;ZLdev/noctilume/qixu/recovery/RecoveryFence;Lorg/springframework/transaction/PlatformTransactionManager;)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/config/DemoInitializer.java",
+        "start": "39",
+        "end": "39"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.SpaceBlocks",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ldev/noctilume/qixu/spaces/SpatialFacts;Ldev/noctilume/qixu/spaces/BlockNotices;Ldev/noctilume/qixu/events/Events;Ldev/noctilume/qixu/booking/VenueRequests;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/SpaceBlocks.java",
+        "start": "35",
+        "end": "35"
+      }
+    },
+    {
+      "type": "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION",
+      "priority": "3",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryFence",
+      "Method": {
+        "name": "baselineDigest",
+        "signature": "()Ljava/lang/String;"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "recipients",
+        "signature": "()Ljava/util/Set;"
+      },
+      "Field": {
+        "name": "recipients",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "lambda$createRepair$8",
+        "signature": "(Ldev/noctilume/qixu/governance/Feedback$RepairCreate;Ljava/util/Map;JLdev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "541",
+        "end": "541"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceRights",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpatialFacts;Ldev/noctilume/qixu/spaces/BlockNotices;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceRights.java",
+        "start": "17",
+        "end": "17"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ltools/jackson/databind/json/JsonMapper;Ldev/noctilume/qixu/preparation/LongEligibility;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "43",
+        "end": "43"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceService",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceService.java",
+        "start": "35",
+        "end": "35"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.booking.VenueRequests",
+      "Method": {
+        "name": "lambda$decide$1",
+        "signature": "(JLdev/noctilume/qixu/booking/VenueRequests$Decision;Ljava/lang/String;Ldev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/booking/VenueRequests.java",
+        "start": "160",
+        "end": "160"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.GovernanceCases",
+      "Method": {
+        "name": "list",
+        "signature": "(Ldev/noctilume/qixu/identity/Actor;ZI)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/GovernanceCases.java",
+        "start": "158",
+        "end": "158"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.identity.ExternalSessions",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ljava/time/Clock;Ldev/noctilume/qixu/identity/DarkRoomGateway;Ldev/noctilume/qixu/identity/ExternalTicketVault;Lorg/springframework/transaction/PlatformTransactionManager;I)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/ExternalSessions.java",
+        "start": "30",
+        "end": "30"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.LongEligibility",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongEligibility.java",
+        "start": "12",
+        "end": "12"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.events.Events",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/events/Events.java",
+        "start": "33",
+        "end": "33"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "checkOtherParticipation",
+        "signature": "(JJLjava/time/LocalDateTime;Ljava/time/LocalDateTime;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "454",
+        "end": "454"
+      }
+    },
+    {
+      "type": "REC_CATCH_EXCEPTION",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.identity.DarkRoomGateway",
+      "Method": {
+        "name": "verify",
+        "signature": "(Ljava/lang/String;)Ljava/lang/String;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/DarkRoomGateway.java",
+        "start": "163",
+        "end": "163"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V"
+      },
+      "Field": {
+        "name": "floors",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "floors",
+        "signature": "()Ljava/util/Set;"
+      },
+      "Field": {
+        "name": "floors",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.AllocationWorker",
+      "Method": {
+        "name": "prepare",
+        "signature": "(J)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationWorker.java",
+        "start": "25",
+        "end": "25"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/util/Map;Ljava/util/Map;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "roots",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$RepairAction",
+      "Method": {
+        "name": "facts",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "facts",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "33",
+        "end": "33"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$Action",
+      "Method": {
+        "name": "facts",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "facts",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "25",
+        "end": "25"
+      }
+    },
+    {
+      "type": "THROWS_METHOD_THROWS_RUNTIMEEXCEPTION",
+      "priority": "3",
+      "category": "BAD_PRACTICE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryFence",
+      "Method": {
+        "name": "beforeCommit",
+        "signature": "(Lorg/springframework/transaction/TransactionExecution;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/recovery/RecoveryFence.java",
+        "start": "224",
+        "end": "224"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryFence",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "source",
+        "signature": "Ljavax/sql/DataSource;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/recovery/RecoveryFence.java",
+        "start": "40",
+        "end": "40"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "minePage",
+        "signature": "(JI)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "70",
+        "end": "70"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.AllocationGraph$Input",
+      "Method": {
+        "name": "seats",
+        "signature": "()Ljava/util/List;"
+      },
+      "Field": {
+        "name": "seats",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/AllocationGraph.java",
+        "start": "18",
+        "end": "18"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.spaces.SpaceRights",
+      "Method": {
+        "name": "personalFree",
+        "signature": "(JLjava/time/LocalDateTime;Ljava/time/LocalDateTime;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceRights.java",
+        "start": "163",
+        "end": "163"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "lambda$attach$6",
+        "signature": "(JLdev/noctilume/qixu/governance/RasterEvidence$Info;Ljava/lang/String;[BLdev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "443",
+        "end": "443"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpaceRights;Ltools/jackson/databind/json/JsonMapper;Ldev/noctilume/qixu/preparation/LongEligibility;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "45",
+        "end": "45"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.identity.AuthController",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/identity/AuthService;Ldev/noctilume/qixu/identity/ExternalSessions;Lorg/springframework/jdbc/core/JdbcTemplate;ZZI)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/AuthController.java",
+        "start": "45",
+        "end": "45"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.recovery.RecoveryFence",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/String;)V"
+      },
+      "Field": {
+        "name": "jdbc",
+        "signature": "Lorg/springframework/jdbc/core/JdbcTemplate;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/recovery/RecoveryFence.java",
+        "start": "39",
+        "end": "39"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "maintain",
+        "signature": "(J)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "537",
+        "end": "537"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Snapshot",
+      "Method": {
+        "name": "parents",
+        "signature": "()Ljava/util/Map;"
+      },
+      "Field": {
+        "name": "parents",
+        "signature": "Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "63",
+        "end": "63"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.events.Events",
+      "Method": {
+        "name": "lambda$create$1",
+        "signature": "(Ldev/noctilume/qixu/events/Events$Create;Ldev/noctilume/qixu/identity/Actor;Ljava/lang/String;)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/events/Events.java",
+        "start": "112",
+        "end": "112"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceService",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Lorg/springframework/jdbc/core/JdbcTemplate;Ltools/jackson/databind/json/JsonMapper;)V"
+      },
+      "Field": {
+        "name": "json",
+        "signature": "Ltools/jackson/databind/json/JsonMapper;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceService.java",
+        "start": "36",
+        "end": "36"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.governance.Feedback$Action",
+      "Method": {
+        "name": "<init>",
+        "signature": "(JLjava/lang/String;Ljava/lang/String;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "facts",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "25",
+        "end": "25"
+      }
+    },
+    {
+      "type": "HRS_REQUEST_PARAMETER_TO_HTTP_HEADER",
+      "priority": "2",
+      "category": "SECURITY",
+      "class": "dev.noctilume.qixu.identity.SessionFilter",
+      "Method": {
+        "name": "doFilterInternal",
+        "signature": "(Ljakarta/servlet/http/HttpServletRequest;Ljakarta/servlet/http/HttpServletResponse;Ljakarta/servlet/FilterChain;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/identity/SessionFilter.java",
+        "start": "64",
+        "end": "64"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.governance.Feedback",
+      "Method": {
+        "name": "repairs",
+        "signature": "(Ldev/noctilume/qixu/identity/Actor;I)Ljava/util/Map;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/governance/Feedback.java",
+        "start": "607",
+        "end": "607"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.preparation.PreparationBatches$Create",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ljava/lang/String;Ljava/lang/String;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;Ljava/time/OffsetDateTime;ILjava/util/List;)V"
+      },
+      "Field": {
+        "name": "seatIds",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/PreparationBatches.java",
+        "start": "20",
+        "end": "20"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/common/Business;Ldev/noctilume/qixu/spaces/SpatialFacts;Ldev/noctilume/qixu/spaces/BlockNotices;)V"
+      },
+      "Field": {
+        "name": "b",
+        "signature": "Ldev/noctilume/qixu/common/Business;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "16",
+        "end": "16"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.preparation.LongSeats",
+      "Method": {
+        "name": "maintain",
+        "signature": "(J)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/preparation/LongSeats.java",
+        "start": "515",
+        "end": "515"
+      }
+    },
+    {
+      "type": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      "priority": "2",
+      "category": "STYLE",
+      "class": "dev.noctilume.qixu.events.Events",
+      "Method": {
+        "name": "promote",
+        "signature": "(Ljava/util/Map;)V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/events/Events.java",
+        "start": "462",
+        "end": "462"
+      }
+    },
+    {
+      "type": "IM_MULTIPLYING_RESULT_OF_IREM",
+      "priority": "3",
+      "category": "CORRECTNESS",
+      "class": "dev.noctilume.qixu.config.DemoInitializer",
+      "Method": {
+        "name": "seed",
+        "signature": "()V"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/config/DemoInitializer.java",
+        "start": "90",
+        "end": "90"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpaceFactChanges$Context",
+      "Method": {
+        "name": "batches",
+        "signature": "()Ljava/util/Set;"
+      },
+      "Field": {
+        "name": "batches",
+        "signature": "Ljava/util/Set;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpaceFactChanges.java",
+        "start": "21",
+        "end": "21"
+      }
+    },
+    {
+      "type": "EI_EXPOSE_REP2",
+      "priority": "2",
+      "category": "MALICIOUS_CODE",
+      "class": "dev.noctilume.qixu.spaces.SpatialFacts$Piece",
+      "Method": {
+        "name": "<init>",
+        "signature": "(Ldev/noctilume/qixu/spaces/SpatialFacts$Root;Ljava/lang/Long;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V"
+      },
+      "Field": {
+        "name": "unresolved",
+        "signature": "Ljava/util/List;"
+      },
+      "SourceLine": {
+        "sourcepath": "dev/noctilume/qixu/spaces/SpatialFacts.java",
+        "start": "54",
+        "end": "54"
+      }
+    }
+  ]
+}

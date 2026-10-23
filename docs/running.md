@@ -6,15 +6,19 @@ M1–M9限定资格见各阶段acceptance；[M9](acceptance/m9.md)两次fresh工
 
 贡献流程见 [CONTRIBUTING](../CONTRIBUTING.md)，必需检查、保护配置读回和证据边界见[仓库护栏](engineering-gates.md)。
 
-从仓库根目录运行 `python -B scripts/check.py <group>`。先按下文安装锁定依赖、准备工具链和独立测试库；入口只执行检查，不自动下载工具、不建库、不删除文件。
+从仓库根目录运行 `python -B scripts/check.py <group>`。先按下文安装锁定依赖、准备工具链和独立测试库；入口不建库、不删除源码或历史证据。Maven 的 clean 重建当前构建目录；`dependencies` 会将固定版本、固定 SHA-256 的 OSV 扫描器下载到忽略的 `.tools`，不安装全局工具、不升级业务依赖。
 
 | group | 责任 |
 | --- | --- |
-| `hygiene` | Git已跟踪的已知缓存/运行态/私有配置、当前文档本地链接与门禁负控制 |
+| `hygiene` | Git已跟踪的已知缓存/运行态/私有配置、有限凭据检测、当前文档本地链接与门禁负控制 |
 | `docs` | 原结构检查与正式Bundle/捕获原字节校验 |
 | `frontend` | 实际客户端测试、两端类型检查、H5/微信包/管理端构建 |
-| `backend` | 固定随机验签器测试、独立MySQL的clean verify |
-| `all` | 上述四组顺序执行，任一失败即停止 |
+| `backend` | 固定随机验签器测试、独立MySQL的clean verify、生产类覆盖分母核对与实测报告 |
+| `static` | 在独立 target/static-analysis 中 clean 编译生产类，执行 SpotBugs 并拒绝未经复核的候选变化 |
+| `dependencies` | 当前 Maven 解析与 SBOM/OSV、根 workspace 和 randomness 两套 npm audit，以及清单/公告变化核对 |
+| `all` | 上述六组顺序执行，任一失败即停止 |
+
+新增检查的版本、现有告警、许可来源与未测范围见[本批治理记录](governance-quality.md)。`dependencies` 需要访问 Maven 仓库、GitHub 下载、OSV 与 npm registry；服务不可用就失败，不读取旧成功报告代替。普通与 `-O` 负控均从 `hygiene` 执行。不要用 `--collect-only` 代替正常门禁，它只保存观察。
 
 CI复用同一入口。历史`veritrail_*`脚本仍按原阶段/producer合同复验，不再把它们当成日常维护菜单；已封存合同和Verdict不改。格式维护使用Prettier 3.6.2（单引号、100列）与google-java-format 1.24.0（保留import顺序/未使用import/长字符串/Javadoc），先看diff再验证，不格式化artifacts或冻结合同。
 
