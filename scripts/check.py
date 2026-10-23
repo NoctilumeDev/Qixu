@@ -126,7 +126,8 @@ def main():
 
 
 PROTECTED = {"artifacts"}
-CURRENT_DOCS = ["README.md", "docs/running.md", "docs/milestones.md", "docs/architecture.md"]
+CURRENT_DOCS = ["README.md", "CONTRIBUTING.md", "docs/running.md", "docs/milestones.md",
+                "docs/architecture.md", "docs/engineering-gates.md"]
 DB_SUFFIXES = ["_URL", "_USER", "_PASSWORD"]
 GROUPS = ["hygiene", "docs", "frontend", "backend", "all"]
 EXPAND = {"all": ["hygiene", "docs", "frontend", "backend"]}
@@ -137,6 +138,7 @@ def check(group):
         if hygiene():
             raise RuntimeError("Repository hygiene rejected")
         run([sys.executable, "-B", "-m", "unittest", "discover", "-s", "scripts/tests"])
+        run([sys.executable, "-B", "-O", "-m", "unittest", "discover", "-s", "scripts/tests"])
     elif group == "docs":
         for script in ["verify_docs.py", "verify_artifacts.py"]:
             run([sys.executable, "-B", str(ROOT / "scripts" / script)])
