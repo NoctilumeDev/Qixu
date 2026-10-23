@@ -4,6 +4,8 @@ M1–M9限定资格见各阶段acceptance；[M9](acceptance/m9.md)两次fresh工
 
 ## 当前维护入口与阶段收尾
 
+贡献流程见 [CONTRIBUTING](../CONTRIBUTING.md)，必需检查、保护配置读回和证据边界见[仓库护栏](engineering-gates.md)。
+
 从仓库根目录运行 `python -B scripts/check.py <group>`。先按下文安装锁定依赖、准备工具链和独立测试库；入口只执行检查，不自动下载工具、不建库、不删除文件。
 
 | group | 责任 |

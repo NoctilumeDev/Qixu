@@ -9,34 +9,57 @@ jobs:
   frontend:
     name: Frontend · H5 / WeChat / Admin
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.10'
+      - name: Retain actual checkout identity
+        run: python -B scripts/ci_context.py
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24.14.0'
           cache: npm
       - name: Install exact workspace dependencies
         run: npm ci --no-audit --no-fund
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        with:
-          python-version: '3.10'
       - name: Client ownership, types and three builds
         run: python -B scripts/check.py frontend
+      - name: Retain frontend check coordinate on success or failure
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: frontend-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/ci/checkout.json
+          retention-days: 30
+          if-no-files-found: warn
   docs:
     name: Document integrity
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.10'
+      - name: Retain actual checkout identity
+        run: python -B scripts/ci_context.py
       - name: Check acceptance collector syntax
         run: python -m compileall -q scripts
       - run: python -B scripts/check.py hygiene
       - run: python -B scripts/check.py docs
+      - name: Retain document check coordinate on success or failure
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: docs-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/ci/checkout.json
+          retention-days: 30
+          if-no-files-found: warn
   backend:
     name: Backend · MySQL
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     services:
       mysql:
         image: mysql:8.0.44
@@ -50,6 +73,11 @@ jobs:
           --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.10'
+      - name: Retain actual checkout identity
+        run: python -B scripts/ci_context.py
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
@@ -70,12 +98,22 @@ jobs:
           CREATE USER 'qixu_ci_app'@'%' IDENTIFIED BY 'qixu-ci-app-only';
           GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX,REFERENCES ON qixu_ci.* TO 'qixu_ci_app'@'%';
           SQL
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        with:
-          python-version: '3.10'
       - name: Build and real MySQL HTTP acceptance
         env:
           QIXU_TEST_DB_URL: jdbc:mysql://127.0.0.1:3306/qixu_ci?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&characterEncoding=utf8
           QIXU_TEST_DB_USER: qixu_ci_app
           QIXU_TEST_DB_PASSWORD: qixu-ci-app-only
         run: python -B scripts/check.py backend
+      - name: Retain actual test reports on success or failure
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: backend-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/ci/checkout.json
+            backend/target/surefire-reports/*.xml
+            backend/target/surefire-reports/*.txt
+            backend/target/failsafe-reports/*.xml
+            backend/target/failsafe-reports/*.txt
+          retention-days: 30
+          if-no-files-found: warn
