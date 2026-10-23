@@ -1,5 +1,5 @@
 {
-  "schema": "qixu-dependency-review/1",
+  "schema": "qixu-dependency-review/2",
   "source_revision": "74380570c422fea303700812193996dc6de7bec4",
   "input_note": "Collected from this governance worktree; exact changed manifests are bound below. CI records the final candidate checkout.",
   "observed_at": "2026-10-23",
@@ -30,7 +30,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-7hhh-6rmp-j9qf"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "tools.jackson.core:jackson-core@3.1.5/GHSA-p6pp-m3f8-5c89": {
           "sha256": "0d3b38e084d27839b7a3b6c4b8b14037e6d8168f01dc703fb2265333b4ac3804",
@@ -42,7 +42,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-p6pp-m3f8-5c89"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "tools.jackson.core:jackson-databind@3.1.5/GHSA-cxp5-3px4-pw24": {
           "sha256": "62ab870ee7a666118ed207fcafa2ee0c15d916342fd8a5fb92f1437ebc63f24a",
@@ -54,7 +54,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-cxp5-3px4-pw24"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "tools.jackson.core:jackson-databind@3.1.5/GHSA-gx83-3vf8-gh7j": {
           "sha256": "be3a9e36aa40a7684249bce54a087b10cb7f8cb50c51b469e488dca881eb2ff4",
@@ -66,7 +66,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-gx83-3vf8-gh7j"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "tools.jackson.core:jackson-databind@3.1.5/GHSA-q4xh-88c3-wmh7": {
           "sha256": "5fb61819bc694348b50d121d51f996350f9b4f5ef5919ae11462df72749ede5d",
@@ -78,7 +78,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-q4xh-88c3-wmh7"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "tools.jackson.core:jackson-databind@3.1.5/GHSA-wjgm-6hv5-3cvf": {
           "sha256": "9f419fbaeddd9f4ae7e709603d33956446c8abf6675fbefe738a4fc05fc8d84e",
@@ -90,7 +90,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-wjgm-6hv5-3cvf"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "tools.jackson.core:jackson-databind@3.1.5/GHSA-wv8q-qhhj-9h54": {
           "sha256": "5f2a9b541f4526d2849fd46c539d083a9d705c41609160bdc45923769fd02302",
@@ -102,7 +102,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-wv8q-qhhj-9h54"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-9xv2-5v5q-p794": {
           "sha256": "806a09487332ccdd9b78c691467e6ca18990407a405d45da989e590634b6d02c",
@@ -115,7 +115,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-9xv2-5v5q-p794"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-gcx9-497g-6cp6": {
           "sha256": "2bc5ca0cfb47917e7f1b2c223d347ec9a97e1f682faa9a11341467366e6327b4",
@@ -128,7 +128,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-gcx9-497g-6cp6"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-h3x4-894j-xpx5": {
           "sha256": "a49d0caf871409b31cdf551979b83889815f5c56380be0fecf59aba22ceeac6e",
@@ -141,7 +141,7 @@
           "advisory_urls": [
             "https://osv.dev/vulnerability/GHSA-h3x4-894j-xpx5"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         }
       }
     },
@@ -150,137 +150,137 @@
       "package_count": 704,
       "findings": {
         "@babel/core": {
-          "sha256": "9c70b1b912eabfd48541ffc921c6a57d69740e6167eba7af8e8bbdb738fe563d",
+          "sha256": "aa28a82858c108031f026e61400ed8c9edc64600a4a2735f721144568b34df2c",
           "status": "UNRESOLVED",
           "summary": "@babel/core",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-4x5r-pxfx-6jf8"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-app": {
-          "sha256": "c7d487748b2b4a16642510837ac0aafe0bf5254aa0e8a789dfbee3e1812deec0",
+          "sha256": "46bcdcc1a9a629d8a1b725a0f2d6748cb453ac080cfba5cecbd171b39caa3fb8",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-app",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-cli-shared": {
-          "sha256": "f8eceb0c014a0e8f1e52ea47f771287b4308004ab8fb6ad5a449783bf85158c6",
+          "sha256": "8618f6b80969b95547664fd78a8c4b7e82737e97f8020b3a4085f7f8bcb01c0c",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-cli-shared",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-cloud": {
-          "sha256": "7d5333724848c6fe4491429464920e60ece9d8bf578618805c53f8af352b479c",
+          "sha256": "497f3c7f4ceb2555629eb196546ec1448fab09703c6cec36dd3ecbdda029e686",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-cloud",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-components": {
-          "sha256": "f9ac14cc6d3a63b45485271712f1b3503110a03c3938956f8b9e7a7b30f7c42f",
+          "sha256": "76e1758458838e49a4660a3bc64b9f60535f80ed6cf5b0b368fb93a6af5f290e",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-components",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-console": {
-          "sha256": "0d176e0be010802353d0526681ee28d39f9fa788fa15008a729e048808e64bec",
+          "sha256": "6c47865034d63d7a2ad151667c8cb21a7ab5b2d6c755d66307f8a9af951f42f6",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-console",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-h5": {
-          "sha256": "81b7dfa84026fefda3d74b3f39038c391d134533c43822a92c43bddd401fd0e9",
+          "sha256": "dc9627035ee4bb96b7b1ed393f7bd7d0d9fc439a725c593c7d8e40494a5bf0cf",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-h5",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-h5-vite": {
-          "sha256": "7d7857f414bf67ad94cac555f03359adf15a4e035c8864079126636aa34b2bb8",
+          "sha256": "88a0c975e21cf941b431e77001ebdb991bbc9a9227f42a36494a38d56f738c78",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-h5-vite",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-h5-vue": {
-          "sha256": "ef445496d4239ac6c870518feb8adb794bd5bd76f78f6a343b14ac29065eb2b4",
+          "sha256": "556bfea60268aae560d2b80d9d80ae3a0a5540bb7d199dd43b324349140db0c5",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-h5-vue",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-mp-compiler": {
-          "sha256": "4566cb8b5e4636ca86940f6b20c1ef18d2581adab646f999bec74bd816287937",
+          "sha256": "f2a3edf597043a65437a784b3ca2262a9cbe31269f4d1de7b0e1369a23594e36",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-mp-compiler",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-mp-vite": {
-          "sha256": "c2cff5f864c08fd0f3b89c4cbd91df903bf279a397318caaf2d5f0d964adbbd3",
+          "sha256": "5bab54ab8472b8fb8d9774ec00b22716c2246b208ab2c462457a405e52a54934",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-mp-vite",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-mp-weixin": {
-          "sha256": "0b6655556b175e7147587a568404896aad1e66f31222e284948d5176fbe7fcae",
+          "sha256": "331c9d17197cf9437226d539a7668d8c8d9d0b3aa4654952b39c8cb60713267c",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-mp-weixin",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-nvue-styler": {
-          "sha256": "0e3bf4bcc5794179781635d79403e4e9c726b52d8b6aa9d1b8d6d01644538534",
+          "sha256": "d692b9c5f678dac6ef39987e11c4136deb5e1f350d4443d17e0c98bb3a944410",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-nvue-styler",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-push": {
-          "sha256": "39323d993d83607b5885d9edf13c5e6e7e2b5b1150b365c479e1dccd7139deb0",
+          "sha256": "83984035e7abdc112e768568dd6b7ba2604ad36d74d98acc13943c2281b5e794",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-push",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/uni-stat": {
-          "sha256": "7199b2112c37fb03c4d8b17a9f3cf9d1f5e80c8f277817fc0ca106d248d6c92f",
+          "sha256": "7a02949cdd1f1a4fed4673eda1fe0335d727c52920c9cc65394a72ee71548114",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-stat",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@dcloudio/vite-plugin-uni": {
-          "sha256": "eacd7ca7449c188c57731f8f21860b85795e66d0dd5e9648353892cf39c8dae4",
+          "sha256": "c561924bd4967803dbc27398504cd1028e4bfe5500a198298cb14b0663f8a48c",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/vite-plugin-uni",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@intlify/core-base": {
-          "sha256": "e3bd24c3fda0803e65f1ad6decada09f2d9410c12c7bdf48a95aaf7a148f076e",
+          "sha256": "86f0e534e173d3a8cb0f938d8beaa970e6ed489f269bda52a21b2e4ba89fd54c",
           "status": "UNRESOLVED",
           "summary": "@intlify/core-base",
           "aliases": [],
@@ -288,86 +288,86 @@
             "https://github.com/advisories/GHSA-p2ph-7g93-hw3m",
             "https://github.com/advisories/GHSA-x8qp-wqqm-57ph"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@intlify/message-compiler": {
-          "sha256": "5372c7234dd0495374a6009f59c711b8d57f9a47a79604b7c4aae0a229fae818",
+          "sha256": "e3b806c7b2e256467d677bc1a615c485485dd303c6a4bae9f92dcd719dfcc383",
           "status": "UNRESOLVED",
           "summary": "@intlify/message-compiler",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@intlify/message-resolver": {
-          "sha256": "58d8b2447c6a31ba7a46fbaddcbb5d9a93ec4df349f683b1074a473253ebeabf",
+          "sha256": "e6e64c6abd463c65ce6be228f33030be7b6c905a69ccc91daf450094afaa9cfe",
           "status": "UNRESOLVED",
           "summary": "@intlify/message-resolver",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-p2ph-7g93-hw3m"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@intlify/runtime": {
-          "sha256": "65defde3b553a75896c4b2b9ca87b03c1289baf65fd2f8930fb9b88769c9ecb7",
+          "sha256": "0502477ceda2ee05a0dd7855d1d037c8c88b44689e096aac9fde1bd0dadc7340",
           "status": "UNRESOLVED",
           "summary": "@intlify/runtime",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@intlify/vue-devtools": {
-          "sha256": "db10c7dd9c2310f6ff3a26f89b16ff0ebae0d8419f2defef24feb081643533e0",
+          "sha256": "40a0303ac1431eff225b69fb9beabaef04b1e494b7db943890689a2a24b73995",
           "status": "UNRESOLVED",
           "summary": "@intlify/vue-devtools",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@jimp/core": {
-          "sha256": "4d770728095dd3b09ae2ae735dd1d8b8549c3979ab24586dfb9d17f476857053",
+          "sha256": "768f554c4c88da1fa9dbb3f5e7698a94a010e8fe48482ce07c431913e38fcef9",
           "status": "UNRESOLVED",
           "summary": "@jimp/core",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@jimp/custom": {
-          "sha256": "0d0632b9a5476deeea1f0c08000d95c9e839d816d3aa8e281116f1ec440085a9",
+          "sha256": "29e3362491846a099a643b618f66d54429cac5447c22746a8badcaf96ce989f6",
           "status": "UNRESOLVED",
           "summary": "@jimp/custom",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@jimp/jpeg": {
-          "sha256": "9a8a3d965a64846e42a8c27f94c827263ce71297c8916855035feb720dd9739a",
+          "sha256": "bc0104ddd286071ae32e8aa7fe24c42f6a692d216346b27a3bffd0ef30715a51",
           "status": "UNRESOLVED",
           "summary": "@jimp/jpeg",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@jimp/types": {
-          "sha256": "7828b374e84fd3a6ab05986a63eb7f6e749dc9b35e8c427aea7be1d79e389a75",
+          "sha256": "fd19f1da1538a7b229d504367a2a34e0377801cd3faddc5530b73bdad845e895",
           "status": "UNRESOLVED",
           "summary": "@jimp/types",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "@vue/server-renderer": {
-          "sha256": "5a36eb73cd48045b04a050b2b457fd8057affc882680414fcdf00d611b5a672a",
+          "sha256": "7dc52241a61659f72dcb6df18dbbdc1acf2b39e8f1f16708d914ec20c6b0313c",
           "status": "UNRESOLVED",
           "summary": "@vue/server-renderer",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-g2v6-rqmx-r4w6"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "adm-zip": {
-          "sha256": "5012463955b6d3b54636ba5ed64fffbfa2eebffb7084d6293f60e4798dc6e3df",
+          "sha256": "774b11ea8360b259748aa506ab798cfe5821a615f31ee5496c9078164d010147",
           "status": "UNRESOLVED",
           "summary": "adm-zip",
           "aliases": [],
@@ -381,82 +381,82 @@
             "https://github.com/advisories/GHSA-vwc7-r8mq-g2x9",
             "https://github.com/advisories/GHSA-xcpc-8h2w-3j85"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "body-parser": {
-          "sha256": "5fc4b25943b1eb9da17717eae61bffeaab57b5f471dbcd7a68dc9532ff647ae3",
+          "sha256": "2694aeb40bbd6a67a625642824f9aab81e29828451794037d2e4c81cdaf76648",
           "status": "UNRESOLVED",
           "summary": "body-parser",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-v422-hmwv-36x6"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "braces": {
-          "sha256": "7efba0e55c44eca559ec584bad8dc72824d9d9ab489bb52a82d28b9d7660ecb4",
+          "sha256": "eacc90768f7893aebabd78c0a3636d1581147dc978da2dbd39875efecc4f8ac9",
           "status": "UNRESOLVED",
           "summary": "braces",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "chokidar": {
-          "sha256": "0781a19181787ef544caa6ad9b5bf42d41407f13206fba1338a873251337ee14",
+          "sha256": "96bf861cbc8b81ba8812647d5c0b2f821fc80b5dd7fbac610d0dace3ce7cb18a",
           "status": "UNRESOLVED",
           "summary": "chokidar",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "cookie": {
-          "sha256": "9d34a71813609be17309cb9567872bb3042137e95fd3291fedf62944dcac12a7",
+          "sha256": "be2e6b40caacb4caa474981687786572d6dec15e8a14d216a89ec9aba7d94091",
           "status": "UNRESOLVED",
           "summary": "cookie",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-pxg6-pf52-xh8x"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "esbuild": {
-          "sha256": "c3ad4ce27a5e39861bc0b182bb17092a5ae5c19dec90187b638c337faafd73f2",
+          "sha256": "63ac14b2cff38f17beccada6778b73f2e50072684f7e99fb25d19c88cf17826a",
           "status": "UNRESOLVED",
           "summary": "esbuild",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "express": {
-          "sha256": "c267fb6a4650840c1c4a1a667c6e94fd1e4fbd2019cb0b9eea9769558b865545",
+          "sha256": "f8e4535b27e02458ef31017ae2d235497a47af2b216e55c9135008ece5a8c724",
           "status": "UNRESOLVED",
           "summary": "express",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "fast-glob": {
-          "sha256": "6e22f2258b6076c1e19e8ed9f00e9d70d82e27528a02a1c30d6b85e4d02fb9cd",
+          "sha256": "a2117730627fbc22229982bbe6a8ffd075c3e47863a906290af9235af279c1b9",
           "status": "UNRESOLVED",
           "summary": "fast-glob",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "jimp": {
-          "sha256": "dd1c87473661adea17079ecaa0630767921c9e7c947ce61f78eae982b8207fe0",
+          "sha256": "3f89220d48e1d9159efa57475fb5956b50b01e0b478e0a6a66d9c76499073148",
           "status": "UNRESOLVED",
           "summary": "jimp",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "jpeg-js": {
-          "sha256": "80c1623833f93f0467dbb70c3a1863fe4165f93230e87384598d474837d0f490",
+          "sha256": "576d51b5e8ffb3839a6ba7e65089ee45f7e82ac3c768410711cf5e4a5bcab1cc",
           "status": "UNRESOLVED",
           "summary": "jpeg-js",
           "aliases": [],
@@ -464,18 +464,18 @@
             "https://github.com/advisories/GHSA-w7q9-p3jq-fmhm",
             "https://github.com/advisories/GHSA-xvf7-4v9q-58w6"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "micromatch": {
-          "sha256": "f81598080831d2533ce91b64e5de0b35805bc6dc89eb039253453e7bd435e484",
+          "sha256": "59b983b2884da952ab59387ed12d0f751db2dbe0f31e5f776e4433190ae3c5b1",
           "status": "UNRESOLVED",
           "summary": "micromatch",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "path-to-regexp": {
-          "sha256": "4b7c2cbc4415f3ded933dd430e878a046ebfc004db9a0eb6fab764e9ad9e5ff4",
+          "sha256": "8a1a1b2cd6f271fdc84cf4bd53938ed76460274219cb3297e5af170e265d1199",
           "status": "UNRESOLVED",
           "summary": "path-to-regexp",
           "aliases": [],
@@ -483,20 +483,20 @@
             "https://github.com/advisories/GHSA-37ch-88jc-xwx2",
             "https://github.com/advisories/GHSA-rhx6-c78j-4q9w"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "phin": {
-          "sha256": "093bef216674b6eef2a74895e79a79f021bf1d3c68e99ba05ba2e420364ec1e6",
+          "sha256": "ecd0841614b6e093c33f5acf471193c9a6ee501564ca6406a5c6e6f96e9dff1d",
           "status": "UNRESOLVED",
           "summary": "phin",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-x565-32qp-m3vf"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "postcss": {
-          "sha256": "413dfb8d669fb2046e34c17aed483b747c51ffd65653281846e51294410afb74",
+          "sha256": "c234f5c1cb982bfffe409629b359aab63f6349eff13fe94fb59baaa59914c25b",
           "status": "UNRESOLVED",
           "summary": "postcss",
           "aliases": [],
@@ -506,10 +506,10 @@
             "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
             "https://github.com/advisories/GHSA-r28c-9q8g-f849"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "postcss-selector-parser": {
-          "sha256": "5d0703e6f1a294a6f892c5cc97547724966814153844086f4cb0b95c084afce1",
+          "sha256": "43f7fa4149413ff1d1a3ad1c9e3b66f34ff4e4574fa9739a7e2d610b19a61e01",
           "status": "UNRESOLVED",
           "summary": "postcss-selector-parser",
           "aliases": [],
@@ -517,10 +517,10 @@
             "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
             "https://github.com/advisories/GHSA-w9m9-85wc-3x92"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "qs": {
-          "sha256": "e09771f01e864e9eba96394ae0505f6097003b2175aeffbd4755607dc855c6d9",
+          "sha256": "6a2a31f3f8020d3601d1ef9b8685e8226fbed12c7a16d7e0edc2b555a22c5e4f",
           "status": "UNRESOLVED",
           "summary": "qs",
           "aliases": [],
@@ -530,46 +530,46 @@
             "https://github.com/advisories/GHSA-q8mj-m7cp-5q26",
             "https://github.com/advisories/GHSA-w7fw-mjwx-w883"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "send": {
-          "sha256": "acae1f45b1e8d2b36d68c8cd481536dd0eec8186701f4f71addeaa6986b04179",
+          "sha256": "678dee803dd0ef00f90f6c08cff810ec4e309b705e081ce9b1e550905536c409",
           "status": "UNRESOLVED",
           "summary": "send",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-m6fv-jmcg-4jfg"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "serve-static": {
-          "sha256": "a156129a145fd41cda02a33201f319cad375775cf47afb0d05b50dbf95022672",
+          "sha256": "6315d771062739adbbfa336b728264d80ece006fef66e7d8f6a46fb99a6903b2",
           "status": "UNRESOLVED",
           "summary": "serve-static",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "source-map-js": {
-          "sha256": "ed59cdc6e7bf50e99c80bf80d1ea8fbb950653020ae36cc7416538272ce7505e",
+          "sha256": "c31adb953d6101369e336947691456336234eeacefa2a059cac71c4ab26b299c",
           "status": "UNRESOLVED",
           "summary": "source-map-js",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-68fv-2mgg-jv7q"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "unimport": {
-          "sha256": "fe84e534de2f9dd0bcbdcc69dc353959cfbadc9e50ce348a0af6b429ec656dcd",
+          "sha256": "04c9464f4c8184f2872ef7cba9098d79e370813556b0d632c588c92f4fd50246",
           "status": "UNRESOLVED",
           "summary": "unimport",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "vite": {
-          "sha256": "d793a4487fa23ce55d8865c4c80681c103a96380790c387077c7faa7fcff0d3b",
+          "sha256": "2fa5b96ddd0d021d0359dc38de458054babbb32fc1c970c2ab0f16c0488ef570",
           "status": "UNRESOLVED",
           "summary": "vite",
           "aliases": [],
@@ -596,18 +596,18 @@
             "https://github.com/advisories/GHSA-x574-m823-4x7w",
             "https://github.com/advisories/GHSA-xcj6-pq6g-qj4x"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "vue": {
-          "sha256": "9900b69e6c6cd1aade0badce8605003ee85e9009960c6402286877396676c757",
+          "sha256": "cb63be47ccb0b5b7c4b62dcde013e8431c342d6cbe96964ce09eb50e461f08cf",
           "status": "UNRESOLVED",
           "summary": "vue",
           "aliases": [],
           "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         },
         "ws": {
-          "sha256": "a2174b482171cb6f9d5cc2a6f2475bc2fd2d1c558cb84401f958beed4804a643",
+          "sha256": "84cd147a37f6bf5fa8ee6f9fa481b478739737d5b94a71f3cd713c786750b741",
           "status": "UNRESOLVED",
           "summary": "ws",
           "aliases": [],
@@ -615,7 +615,7 @@
             "https://github.com/advisories/GHSA-58qx-3vcg-4xpx",
             "https://github.com/advisories/GHSA-96hv-2xvq-fx4p"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "�˶Ե�ǰԴ�������õĴ����������������С����ԡ�����·����ȱ֤�ݱ���δ֪��ȷ��ȱ�������н��޸���"
         }
       }
     },

@@ -136,10 +136,14 @@ def npm_findings(report, lock, exit_code):
     require(totals.get('total') == len(findings), 'npm finding total mismatch')
     require(all(totals.get(k) == levels[k] for k in ('info', 'low', 'moderate', 'high', 'critical')), 'npm severity totals mismatch')
     require(exit_code == (1 if findings else 0), 'npm exit/report disagreement')
-    # Array order is not meaningful; paths, ranges, advisory details and propagation all remain bound.
+    # Keep raw reports. Remediation recommendations are not current risk facts.
+    # npm's mutable reverse-effects set can differ while its complete advisory
+    # 'via' relation is unchanged; reconstruct the inverse without losing edges.
     normalized = {}
     for name, finding in findings.items():
         value = dict(finding)
+        value.pop('fixAvailable', None)
+        value['effects'] = sorted(parent for parent, detail in findings.items() if name in detail['via'])
         for field in ('nodes', 'effects', 'via'):
             if isinstance(value.get(field), list):
                 value[field] = sorted(value[field], key=lambda x: json.dumps(x, sort_keys=True))
@@ -148,7 +152,7 @@ def npm_findings(report, lock, exit_code):
 
 
 def review(observation, policy):
-    require(policy.get('schema') == 'qixu-dependency-review/1', 'missing dependency review')
+    require(policy.get('schema') == 'qixu-dependency-review/2', 'missing dependency review')
     require(isinstance(policy.get('source_revision'), str) and re.fullmatch('[0-9a-f]{40}', policy['source_revision']), 'missing review source')
     require(policy.get('owner') == 'NoctilumeDev/Qixu maintainers' and policy.get('risk_accepted') is False, 'missing owner or unauthorized risk acceptance')
     require(policy.get('inputs') == observation['inputs'], 'dependency manifest or lockfile changed; review required')

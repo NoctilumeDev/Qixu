@@ -60,3 +60,7 @@ Maven 构建插件及其传递依赖、JDK/MySQL 服务端、操作系统、容�
 本地单测覆盖仅 22/115 类、558/5587 行、319/2813 分支，显然不能替代 HTTP/MySQL 集成覆盖。覆盖采集随后由本候选 CI 的原完整后端检查重新 clean 执行，实际最终数字取该运行附件。候选公开 CI、两角色独立复核及合并事实另按固定 SHA 留在 PR；本段不预填通过、不继承历史资格。
 
 首个候选 `cd840ceb875156ca004cb820fe23fb0d80bb983a` 的 [CI 39958722860](https://github.com/NoctilumeDev/Qixu/actions/runs/39958722860) 三项成功。但独立测试复核发现：无 BOM UTF-16 假凭据被误归为二进制而跳过；仅篡改覆盖顶层计数仍能通过。原候选不能据此退出。修复限于这两处检查器及负控，原 CI、审阅反例和日志保留；新候选重新跑原普通/优化负控及公开 CI，不把第一轮绿灯转授修复版。
+
+修复候选 `fd7fb4047bc2f2b883f831a6c2d0833d5f506a20` 的 [CI 39960017429](https://github.com/NoctilumeDev/Qixu/actions/runs/39960017429) 保留了一次依赖变化拒绝。逐字段对比原始报告：三套清单/分母、公告 `via`、severity、range、nodes 均未变化，只有 `@dcloudio/uni-cloud` 与 `uni-console` 的 `effects` 和 `fixAvailable` 互换。核对 [npm 11.9.0 实现](https://github.com/npm/cli/blob/v11.9.0/workspaces/arborist/lib/vuln.js)：`effects` 是内部反向关联集合，`fixAvailable` 是沿依赖传播的修复建议，不能把这些变化直接当成当前风险变化。
+
+因此仅将依赖比较合同升为 `qixu-dependency-review/2`：原始报告完整保留，`effects` 从完整 `via` 关系确定性反向重算，修复建议 `fixAvailable` 留原件但不参与风险身份。公告、严重度、版本范围、受影响节点、直接性、传播 `via`、锁文件、分母及许可摘要仍绑定；两份真实原报告在此规则下相同，改变公告或传播路径的负控仍须拒绝。不升级依赖、不删除候选、不改变任何 `UNRESOLVED` 状态；原 v1 合同、失败与账册在 Git/原运行身份中保留，不通过重跑或刷新一份原样快照碰绿灯。

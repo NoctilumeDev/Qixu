@@ -26,7 +26,7 @@ def npm_fixture():
 def dependency_fixture():
     current = {'inputs': {'lock': 'bound'}, 'sources': {'maven': {
         'inventory_sha256': 'inventory', 'package_count': 1, 'findings': {'demo/GHSA-fixture': {'id': 'fixture'}}}}}
-    policy = {'schema': 'qixu-dependency-review/1', 'source_revision': 'a' * 40,
+    policy = {'schema': 'qixu-dependency-review/2', 'source_revision': 'a' * 40,
         'owner': 'NoctilumeDev/Qixu maintainers', 'risk_accepted': False,
         'inputs': deepcopy(current['inputs']), 'sources': deepcopy(current['sources'])}
     policy['sources']['maven']['findings']['demo/GHSA-fixture'] = {
@@ -121,6 +121,56 @@ class DependencyGateTests(unittest.TestCase):
         r['metadata']['vulnerabilities']['total'] = r['metadata']['vulnerabilities']['high'] = 0
         self.assertEqual(d.npm_findings(r, lock, 0), {})
         with self.assertRaises(ValueError): d.npm_findings(r, lock, 1)
+
+    def test_npm_recommendations_are_not_advisory_identity(self):
+        r, lock = npm_fixture()
+        r['vulnerabilities']['demo'].update(effects=[], fixAvailable=True, range='<2', isDirect=False)
+        original = d.npm_findings(r, lock, 1)
+        varied = deepcopy(r)
+        varied['vulnerabilities']['demo'].update(effects=['display-only'], fixAvailable={'isSemVerMajor': True})
+        self.assertEqual(original, d.npm_findings(varied, lock, 1))
+        for field, value in [('range', '<3'), ('isDirect', True), ('via', [{'source': 2, 'url': 'https://example.invalid/changed', 'title': 'new'}])]:
+            changed = deepcopy(varied)
+            changed['vulnerabilities']['demo'][field] = value
+            self.assertNotEqual(original, d.npm_findings(changed, lock, 1))
+
+    def test_npm_propagation_inverse_is_derived_without_losing_edges(self):
+        r, lock = npm_fixture()
+        lock['packages']['node_modules/parent'] = {'version': '1.0'}
+        r['metadata']['dependencies']['total'] = 2
+        r['metadata']['vulnerabilities'].update(high=2, total=2)
+        r['vulnerabilities']['parent'] = {'name': 'parent', 'severity': 'high', 'nodes': ['node_modules/parent'], 'via': ['demo']}
+        result = d.npm_findings(r, lock, 1)
+        self.assertEqual(result['demo']['effects'], ['parent'])
+        self.assertEqual(result['parent']['via'], ['demo'])
+        changed = deepcopy(r)
+        changed['vulnerabilities']['parent']['via'] = deepcopy(r['vulnerabilities']['demo']['via'])
+        self.assertNotEqual(result, d.npm_findings(changed, lock, 1))
+
+    def test_npm_security_fields_still_reject_at_review(self):
+        r, lock = npm_fixture()
+        lock['packages']['node_modules/parent/node_modules/demo'] = {'version': '1.0'}
+        r['metadata']['dependencies']['total'] = 2
+        r['vulnerabilities']['demo'].update(range='<2', isDirect=False)
+        original = d.npm_findings(r, lock, 1)
+        current, policy = dependency_fixture()
+        current['sources']['maven']['findings'] = original
+        policy['sources']['maven']['findings'] = {k: {'sha256': d.digest(v), 'status': 'UNRESOLVED', 'next_action': 'review'} for k, v in original.items()}
+        self.assertEqual(d.review(current, policy), 1)
+        for change in ('severity', 'nodes', 'range', 'isDirect', 'nested-advisory', 'unknown-field'):
+            changed = deepcopy(r)
+            finding = changed['vulnerabilities']['demo']
+            if change == 'severity':
+                finding['severity'] = 'critical'
+                changed['metadata']['vulnerabilities'].update(high=0, critical=1)
+            if change == 'nodes': finding['nodes'] = ['node_modules/parent/node_modules/demo']
+            if change == 'range': finding['range'] = '<3'
+            if change == 'isDirect': finding['isDirect'] = True
+            if change == 'nested-advisory': finding['via'][0]['title'] = 'changed advisory details'
+            if change == 'unknown-field': finding['futureSecurityField'] = {'evidence': 'new'}
+            observation = deepcopy(current)
+            observation['sources']['maven']['findings'] = d.npm_findings(changed, lock, 1)
+            with self.subTest(change=change), self.assertRaises(ValueError): d.review(observation, policy)
 
     def test_dependency_review_rejects_changes_and_risk_acceptance(self):
         current, policy = dependency_fixture()
