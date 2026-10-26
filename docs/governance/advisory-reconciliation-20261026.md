@@ -18,7 +18,7 @@
 
 ### 上游撤回与传播关系
 
-[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) 于 2026-10-23 被上游撤回。`braces` 原条目只含此公告；`chokidar`、`micromatch`、`fast-glob`、`unimport` 的原 `via` 链也只回到此来源。五个条目退出当前扫描集合，原版本、哈希、`UNRESOLVED` 及后续动作保留在旧账册，不能重标为 `REMEDIATED`。
+[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) 于 2026-10-23 被上游撤回。`braces` 原条目只含此公告；`chokidar`、`micromatch`、`fast-glob`、`unimport` 的原 `via` 链也只回到此来源。五个条目退出当前扫描集合，原清单摘要、条目哈希、`UNRESOLVED` 及后续动作保留在旧账册，不能重标为 `REMEDIATED`。
 
 `@dcloudio/uni-cli-shared`、`@dcloudio/vite-plugin-uni` 移除了对应传播边；`@dcloudio/uni-cloud` 移除 `fast-glob` 传播边，registry 汇总评级由 high 变为 low。本批同时保留前后原始报告，不把汇总评级降低解释为项目安全结论。
 
