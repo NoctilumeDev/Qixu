@@ -1,8 +1,8 @@
 {
   "schema": "qixu-dependency-review/2",
-  "source_revision": "74380570c422fea303700812193996dc6de7bec4",
-  "input_note": "Collected from this governance worktree; exact changed manifests are bound below. CI records the final candidate checkout.",
-  "observed_at": "2026-10-23",
+  "source_revision": "3a751dc07cf0b611211f2d49b044cddf42f1ef0c",
+  "input_note": "Reconciled exact unchanged manifests against scheduled CI 40298648984; original 2026-10-23 ledger and per-change rationale are retained in adjacent files. Not risk acceptance.",
+  "observed_at": "2026-10-26",
   "owner": "NoctilumeDev/Qixu maintainers",
   "risk_accepted": false,
   "inputs": {
@@ -168,7 +168,7 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "@dcloudio/uni-cli-shared": {
-          "sha256": "8618f6b80969b95547664fd78a8c4b7e82737e97f8020b3a4085f7f8bcb01c0c",
+          "sha256": "1e8ecc570151fad4422933caf22c70b82086e51cc310505f8b422508e9ee96a6",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-cli-shared",
           "aliases": [],
@@ -176,7 +176,7 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "@dcloudio/uni-cloud": {
-          "sha256": "497f3c7f4ceb2555629eb196546ec1448fab09703c6cec36dd3ecbdda029e686",
+          "sha256": "92d29c40462fc5c9f73133232609ea7e38070ea4837149ccb3c2375233f1174d",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/uni-cloud",
           "aliases": [],
@@ -272,7 +272,7 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "@dcloudio/vite-plugin-uni": {
-          "sha256": "c561924bd4967803dbc27398504cd1028e4bfe5500a198298cb14b0663f8a48c",
+          "sha256": "3e796491edc6990602bc5ff987bf8c7e845bb9fa5710d0503ec6f60385847ec4",
           "status": "UNRESOLVED",
           "summary": "@dcloudio/vite-plugin-uni",
           "aliases": [],
@@ -384,32 +384,17 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "body-parser": {
-          "sha256": "2694aeb40bbd6a67a625642824f9aab81e29828451794037d2e4c81cdaf76648",
+          "sha256": "8e968e924ce66c1168af406a071189dc5683caf6532ba2ae02abcddbaaf6db23",
           "status": "UNRESOLVED",
           "summary": "body-parser",
-          "aliases": [],
-          "advisory_urls": [
-            "https://github.com/advisories/GHSA-v422-hmwv-36x6"
+          "aliases": [
+            "CVE-2026-111181"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
-        },
-        "braces": {
-          "sha256": "eacc90768f7893aebabd78c0a3636d1581147dc978da2dbd39875efecc4f8ac9",
-          "status": "UNRESOLVED",
-          "summary": "braces",
-          "aliases": [],
           "advisory_urls": [
-            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+            "https://github.com/advisories/GHSA-v422-hmwv-36x6",
+            "https://github.com/advisories/GHSA-27r3-jxmh-p828"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
-        },
-        "chokidar": {
-          "sha256": "96bf861cbc8b81ba8812647d5c0b2f821fc80b5dd7fbac610d0dace3ce7cb18a",
-          "status": "UNRESOLVED",
-          "summary": "chokidar",
-          "aliases": [],
-          "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+          "next_action": "保留 UNRESOLVED；当前开发入口未证实请求可达受影响解析器。引入 SSR、Express 解析器或改变服务暴露时重查；依赖维护单独验证兼容性。见 advisory-reconciliation-20261026.md。"
         },
         "cookie": {
           "sha256": "be2e6b40caacb4caa474981687786572d6dec15e8a14d216a89ec9aba7d94091",
@@ -439,14 +424,6 @@
           "advisory_urls": [],
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
-        "fast-glob": {
-          "sha256": "a2117730627fbc22229982bbe6a8ffd075c3e47863a906290af9235af279c1b9",
-          "status": "UNRESOLVED",
-          "summary": "fast-glob",
-          "aliases": [],
-          "advisory_urls": [],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
-        },
         "jimp": {
           "sha256": "3f89220d48e1d9159efa57475fb5956b50b01e0b478e0a6a66d9c76499073148",
           "status": "UNRESOLVED",
@@ -464,14 +441,6 @@
             "https://github.com/advisories/GHSA-w7q9-p3jq-fmhm",
             "https://github.com/advisories/GHSA-xvf7-4v9q-58w6"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
-        },
-        "micromatch": {
-          "sha256": "59b983b2884da952ab59387ed12d0f751db2dbe0f31e5f776e4433190ae3c5b1",
-          "status": "UNRESOLVED",
-          "summary": "micromatch",
-          "aliases": [],
-          "advisory_urls": [],
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "path-to-regexp": {
@@ -558,14 +527,6 @@
           "advisory_urls": [
             "https://github.com/advisories/GHSA-68fv-2mgg-jv7q"
           ],
-          "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
-        },
-        "unimport": {
-          "sha256": "04c9464f4c8184f2872ef7cba9098d79e370813556b0d632c588c92f4fd50246",
-          "status": "UNRESOLVED",
-          "summary": "unimport",
-          "aliases": [],
-          "advisory_urls": [],
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "vite": {
