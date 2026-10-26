@@ -1,8 +1,8 @@
 {
   "schema": "qixu-dependency-review/2",
-  "source_revision": "3a751dc07cf0b611211f2d49b044cddf42f1ef0c",
-  "input_note": "Reconciled exact unchanged manifests against scheduled CI 40298648984; original 2026-10-23 ledger and per-change rationale are retained in adjacent files. Not risk acceptance.",
-  "observed_at": "2026-10-26",
+  "source_revision": "3bade57b49cd50d8d60dff8f3675e9b48167f22d",
+  "input_note": "Reconciled only postcss-selector-parser advisory range/source details from main CI 40395809639; exact prior ledger is retained at source_revision. See postcss-advisory-range-20261027.md. Manifests and risk states unchanged; not risk acceptance.",
+  "observed_at": "2026-10-27",
   "owner": "NoctilumeDev/Qixu maintainers",
   "risk_accepted": false,
   "inputs": {
@@ -478,7 +478,7 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "postcss-selector-parser": {
-          "sha256": "43f7fa4149413ff1d1a3ad1c9e3b66f34ff4e4574fa9739a7e2d610b19a61e01",
+          "sha256": "c3c92d7a29f5d1edc6a5a16f9a85602ccbb4f3c3818cab91d6d9e739cbc072db",
           "status": "UNRESOLVED",
           "summary": "postcss-selector-parser",
           "aliases": [],
