@@ -2,6 +2,8 @@
 
 后续维护：[2026-10-26 公告来源校准](governance/advisory-reconciliation-20261026.md)记录同一主线定时扫描的拒绝、上游撤回和新增公告。原首次观察保留；校准不是依赖修复或风险接受。
 
+[2026-10-27 范围校准](governance/postcss-advisory-range-20261027.md)单独记录合并后 postcss-selector-parser 公告范围变化及原主线失败；风险状态继续保留。
+
 入口为 `main@74380570c422fea303700812193996dc6de7bec4`。本批补期序当前 Maven、根 npm workspace 与 randomness 独立 npm 锁文件的依赖检查、有限凭据检测、适用的静态质量检查与覆盖盲区记录。维护者负责保留扫描候选、来源、状态及后续动作；未知不等于已接受。
 
 不改 JDBC、显式 SQL、事务隔离、随机来源、公平分配算法、业务页面或历史 Plan/Bundle。不增加 ORM、缓存、消息队列，不重开 M9/M10，不创建 Release。中间件升级和专项复验另行授权。本文件先记录范围，后续实际结果按运行身份追加，不能预填通过。
