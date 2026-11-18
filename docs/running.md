@@ -41,14 +41,16 @@ Java17、Maven3.9、MySQL8；固定验收环境使用MySQL8.0.44。开发库 `qi
 
 在 IDE 运行 `dev.noctilume.qixu.QixuApplication`，或在 backend 下执行 `mvn spring-boot:run`。环境变量见 [模板](../backend/.env.example)；模板不会自动加载。必须提供 `QIXU_DB_PASSWORD`，按实际库设置 `QIXU_DB_URL` / `QIXU_DB_USERNAME`。
 
-先在仓库根目录安装前端workspace和独立随机验签器的锁定依赖。根目录`npm ci`不会安装randomness的依赖：
+在仓库根目录先确认 Node 24.22.3 与 npm 11.9.0，再安装前端工作区和独立随机验签器的锁定依赖。两份锁文件分别安装。
 
 ```powershell
+node --version
+npm --version
 npm ci --no-audit --no-fund
 npm ci --prefix randomness --ignore-scripts --no-audit --no-fund
 ```
 
-使用锁定的Node24.14.x/npm11.9.0。IDE或Maven的JVM工作目录通常是backend，必须将`QIXU_RANDOM_VERIFIER`设为本项目`randomness/verify.mjs`的绝对路径，并保证`QIXU_NODE`指向实际Node可执行文件。例如在仓库根目录取得路径后，将这些值加入IDE运行配置或当前启动进程环境：
+IDE或Maven的JVM工作目录通常是backend，必须将`QIXU_RANDOM_VERIFIER`设为本项目`randomness/verify.mjs`的绝对路径，并保证`QIXU_NODE`指向实际Node可执行文件。例如在仓库根目录取得路径后，将这些值加入IDE运行配置或当前启动进程环境：
 
 ```powershell
 $env:QIXU_RANDOM_VERIFIER = (Resolve-Path -LiteralPath 'randomness/verify.mjs').Path
