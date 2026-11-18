@@ -22,8 +22,13 @@ jobs:
         run: python -B scripts/ci_context.py
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24.14.0'
+          node-version: '24.22.3'
           cache: npm
+      - name: Keep the validated npm version
+        run: |
+          npm install --global npm@11.9.0 --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+          test "$(node --version)" = "v24.22.3"
+          test "$(npm --version)" = "11.9.0"
       - name: Install exact workspace dependencies
         run: npm ci --no-audit --no-fund
       - name: Client ownership, types and three builds
@@ -88,8 +93,13 @@ jobs:
           cache: maven
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24.14.0'
+          node-version: '24.22.3'
           package-manager-cache: false
+      - name: Keep the validated npm version
+        run: |
+          npm install --global npm@11.9.0 --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+          test "$(node --version)" = "v24.22.3"
+          test "$(npm --version)" = "11.9.0"
       - name: Install locked offline proof verifier and test real public signatures
         run: |
           npm ci --prefix randomness --ignore-scripts --no-audit --no-fund

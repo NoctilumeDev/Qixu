@@ -1,6 +1,6 @@
 {
   "name": "qixu", "version": "0.1.0", "private": true,
-  "engines": {"node": "24.14.x"}, "packageManager": "npm@11.9.0",
+  "engines": {"node": "24.22.3"}, "packageManager": "npm@11.9.0",
   "workspaces": ["packages/client", "student", "admin"],
   "scripts": {
     "test:client": "npm run test -w @qixu/client",

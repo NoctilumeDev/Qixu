@@ -1,14 +1,14 @@
 {
   "schema": "qixu-dependency-review/2",
-  "source_revision": "f39398e6e8263586883c66f95f1e90cae5a3f078",
-  "input_note": "Reconciled advisory records observed on unchanged main in CI 41438425450 and 43862418678 and confirmed locally on 2026-11-19. See advisory-reconciliation-20261119.md. Risk acceptance remains false.",
+  "source_revision": "2f34f91659feb3eb0909d8ce04c69a26490949d8",
+  "input_note": "Bind Node 24.22.3 engine metadata in the workspace manifest and lockfile. npm 11.9.0, installed package entries, advisory records, and risk states are unchanged. Prior advisory reconciliation is retained at source_revision.",
   "observed_at": "2026-11-19",
   "owner": "NoctilumeDev/Qixu maintainers",
   "risk_accepted": false,
   "inputs": {
     "backend/pom.xml": "c28fa35a2143ba00588981d696deb4fc6d1d286a4eab6422bfc320c1c37c89a8",
-    "package.json": "e2a9bfb07921d24700f6417422db920249a9f195c4293c9903ce91cb8c8c4681",
-    "package-lock.json": "f4e1c1ba8f3c58d00e6239f36b5456e66516a4990d4148a4b14417332f26ccba",
+    "package.json": "9c68662804020c984cbd3858774f18a5acd2b6584ce7bf6b6a8b11976541dc80",
+    "package-lock.json": "608291868f72d5dda56911d504dd04c04c9660401fa0d6491b3ddc48c2924ff4",
     "randomness/package.json": "efeb96a3532b3a3fd2d7d055f0b05155f3a8d49b71435a843a44d7ba784e7e17",
     "randomness/package-lock.json": "8aa0e8e703cde6997405dc45bc44daced70e8f21c6aab7dfd1fe03cb0d1c1e29",
     "admin/package.json": "e0ba5fa8743997bc1b586bf8d55a0b1a7efffe5eb4e5e4ab6656970849346e69",
@@ -159,7 +159,7 @@
       }
     },
     "npm-workspaces": {
-      "inventory_sha256": "f4e1c1ba8f3c58d00e6239f36b5456e66516a4990d4148a4b14417332f26ccba",
+      "inventory_sha256": "608291868f72d5dda56911d504dd04c04c9660401fa0d6491b3ddc48c2924ff4",
       "package_count": 704,
       "findings": {
         "@babel/core": {
