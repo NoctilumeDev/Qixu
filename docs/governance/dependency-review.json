@@ -1,8 +1,8 @@
 {
   "schema": "qixu-dependency-review/2",
-  "source_revision": "3bade57b49cd50d8d60dff8f3675e9b48167f22d",
-  "input_note": "Reconciled only postcss-selector-parser advisory range/source details from main CI 40395809639; exact prior ledger is retained at source_revision. See postcss-advisory-range-20261027.md. Manifests and risk states unchanged; not risk acceptance.",
-  "observed_at": "2026-10-27",
+  "source_revision": "f39398e6e8263586883c66f95f1e90cae5a3f078",
+  "input_note": "Reconciled advisory records observed on unchanged main in CI 41438425450 and 43862418678 and confirmed locally on 2026-11-19. See advisory-reconciliation-20261119.md. Risk acceptance remains false.",
+  "observed_at": "2026-11-19",
   "owner": "NoctilumeDev/Qixu maintainers",
   "risk_accepted": false,
   "inputs": {
@@ -142,6 +142,19 @@
             "https://osv.dev/vulnerability/GHSA-h3x4-894j-xpx5"
           ],
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "org.apache.tomcat.embed:tomcat-embed-core@11.0.24/GHSA-f525-44xv-f2qj": {
+          "sha256": "6ffdd8711b825386aa5682fbccb262804920f32ad399bb88d3715c75759230f1",
+          "status": "UNRESOLVED",
+          "summary": "Apache Tomcat - HTTP/2 no-authority bypass of strict SNI validation",
+          "aliases": [
+            "BIT-tomcat-2026-65637",
+            "CVE-2026-65637"
+          ],
+          "advisory_urls": [
+            "https://osv.dev/vulnerability/GHSA-f525-44xv-f2qj"
+          ],
+          "next_action": "Assess effective connector support and qualify a Tomcat 11.0.x security patch with the framework and database gates in a separate candidate."
         }
       }
     },
@@ -280,18 +293,20 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "@intlify/core-base": {
-          "sha256": "86f0e534e173d3a8cb0f938d8beaa970e6ed489f269bda52a21b2e4ba89fd54c",
+          "sha256": "68f1e8ca12aded7cd9c7e12c7b8ba63f57cb11d3984b164d8f39064021bc5467",
           "status": "UNRESOLVED",
           "summary": "@intlify/core-base",
           "aliases": [],
           "advisory_urls": [
+            "https://github.com/advisories/GHSA-83rm-6c8r-g728",
+            "https://github.com/advisories/GHSA-8rc2-428q-7ww3",
             "https://github.com/advisories/GHSA-p2ph-7g93-hw3m",
             "https://github.com/advisories/GHSA-x8qp-wqqm-57ph"
           ],
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "@intlify/message-compiler": {
-          "sha256": "e3b806c7b2e256467d677bc1a615c485485dd303c6a4bae9f92dcd719dfcc383",
+          "sha256": "ce69cdf12ab87e3c1d698d39b1b0a3625958e5423895bef66a89c6d794444d2d",
           "status": "UNRESOLVED",
           "summary": "@intlify/message-compiler",
           "aliases": [],
@@ -489,12 +504,13 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "qs": {
-          "sha256": "6a2a31f3f8020d3601d1ef9b8685e8226fbed12c7a16d7e0edc2b555a22c5e4f",
+          "sha256": "3f640db4c5e5ea70365768d155506c7da73999f21c96eb6f81f5b7d52112e8b5",
           "status": "UNRESOLVED",
           "summary": "qs",
           "aliases": [],
           "advisory_urls": [
             "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+            "https://github.com/advisories/GHSA-6pq8-jhm2-2vcw",
             "https://github.com/advisories/GHSA-6rw7-vpxm-498p",
             "https://github.com/advisories/GHSA-q8mj-m7cp-5q26",
             "https://github.com/advisories/GHSA-w7fw-mjwx-w883"
@@ -530,7 +546,7 @@
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
         },
         "vite": {
-          "sha256": "2fa5b96ddd0d021d0359dc38de458054babbb32fc1c970c2ab0f16c0488ef570",
+          "sha256": "312a6e0ad8f50304ae7164fd252a116d47fc55c60f733f6c4deac51b5b77e7c4",
           "status": "UNRESOLVED",
           "summary": "vite",
           "aliases": [],
@@ -577,6 +593,37 @@
             "https://github.com/advisories/GHSA-96hv-2xvq-fx4p"
           ],
           "next_action": "核对当前源码与配置的触发条件；区分运行、测试、构建路径，缺证据保持未知，确认缺陷另行有界修复。"
+        },
+        "@intlify/shared": {
+          "sha256": "d453b891a12b0a6762634b20fa009f436d8251ca221e9a7fd477cec4d54a2ee3",
+          "status": "UNRESOLVED",
+          "summary": "@intlify/shared",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-83rm-6c8r-g728"
+          ],
+          "next_action": "Evaluate a coordinated Vue I18n dependency update against the H5 and WeChat builds and locale behavior."
+        },
+        "follow-redirects": {
+          "sha256": "43b466e5791214f58e1d5722e4bffada5c9c59a05886794d2d352ac633249f18",
+          "status": "UNRESOLVED",
+          "summary": "follow-redirects",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-mrwp-f3q8-3g9p"
+          ],
+          "next_action": "Evaluate the published 1.16.2 fix within the existing Centra dependency path and validate the student build and development workflow."
+        },
+        "vue-i18n": {
+          "sha256": "c708573340c213fa48d45c64a88a2066f5903717befbe4b0988061d2add094a2",
+          "status": "UNRESOLVED",
+          "summary": "vue-i18n",
+          "aliases": [],
+          "advisory_urls": [
+            "https://github.com/advisories/GHSA-83rm-6c8r-g728",
+            "https://github.com/advisories/GHSA-8rc2-428q-7ww3"
+          ],
+          "next_action": "Evaluate a coordinated Vue I18n dependency update against the H5 and WeChat builds and locale behavior."
         }
       }
     },
